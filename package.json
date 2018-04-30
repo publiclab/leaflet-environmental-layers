@@ -1,0 +1,23 @@
+{
+  "name": "leaflet-environmental-layers",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/publiclab/leaflet-environmental-layers.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/publiclab/leaflet-environmental-layers/issues"
+  },
+  "homepage": "https://github.com/publiclab/leaflet-environmental-layers#readme"
+}
