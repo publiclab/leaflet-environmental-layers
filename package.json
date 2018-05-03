@@ -19,5 +19,26 @@
   "bugs": {
     "url": "https://github.com/publiclab/leaflet-environmental-layers/issues"
   },
-  "homepage": "https://github.com/publiclab/leaflet-environmental-layers#readme"
+  "homepage": "https://github.com/publiclab/leaflet-environmental-layers#readme",
+  "devDependencies": {
+    "bootstrap": "^4.1.1",
+    "grunt": "^1.0.1",
+    "grunt-browserify": "^5.0.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-jasmine": "^1.1.0",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-uglify": "^2.2.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-template-jasmine-requirejs": "^0.2.3",
+    "jasmine": "^2.5.3",
+    "jasmine-ajax": "^3.3.1",
+    "jasmine-jquery": "^2.1.1",
+    "require": "^2.4.20",
+    "resig-class": "^1.0.0",
+    "browserify": "latest"
+  },
+  "dependencies": {
+    "jquery": "^3.3.1",
+    "leaflet": "^1.3.1"
+  }
 }
