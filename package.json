@@ -33,6 +33,7 @@
     "jasmine": "^2.5.3",
     "jasmine-ajax": "^3.3.1",
     "jasmine-jquery": "^2.1.1",
+    "matchdep": "^1.0.1",
     "require": "^2.4.20",
     "resig-class": "^1.0.0",
     "browserify": "latest"
