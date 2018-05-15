@@ -1,6 +1,6 @@
 ### grunt ###
 # Grunt usually compiles files inside this directory
-# dist/
+#dist/
 
 # Grunt usually preprocesses files such as coffeescript, compass... inside the .tmp directory
 .tmp/
@@ -13,7 +13,7 @@
 # Icon must end with two \r
 Icon
 
-# Thumbnails
+# Thumbnailss
 ._*
 
 # Files that might appear in the root of a volume
