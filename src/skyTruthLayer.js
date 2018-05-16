@@ -20,6 +20,20 @@ L.icon.skyTruthIcon = function () {
 
 
 L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
+    {
+         options: {
+            url: 'https://alerts.skytruth.org/json?n=100',
+            clearOutsideBounds: true ,       // clears the marker which are outside the current bound
+        },
+        /*
+            Create the layer group using the passed options.
+        */
+        initialize: function (options) {
+            options = options || {};
+            L.Util.setOptions(this, options);  // this function merges the options to this.option
+            this._layers = {};  // hash map to check if a marker (at long / lat) is not already added to map , all markers are as value in this hash-map .
+        },
+    }
 
 );
 
