@@ -24189,7 +24189,6 @@ require('./skyTruthLayer.js') ;
 require('jquery') ; 
 require('leaflet') ; 
 
-
 L.Icon.SkyTruthIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://www.clker.com/cliparts/T/G/b/7/r/A/red-dot.svg',
@@ -24204,21 +24203,47 @@ L.icon.skyTruthIcon = function () {
 };
 
 L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
+
     {
-         options: {
+        options: {
             url: 'https://alerts.skytruth.org/json?n=100',
-            clearOutsideBounds: true ,      
+            popupOnMouseover: false,
+            clearOutsideBounds: true ,       
+        },
+       
+        initialize: function (options) {
+            
         },
         
-        initialize: function (options) {
-            options = options || {};
-            L.Util.setOptions(this, options);  
-            this._layers = {};  
+        onAdd: function (map) {
+
         },
+        
+        onRemove: function (map) {
+
+        },
+
+        requestData: function () {
+            
+        },
+
+        getMarker: function (data) {
+          
+        },
+
+        addMarker: function (data) {
+            
+        },
+    
+        parseData: function (data) {
+         
+        },
+       
+        clearOutsideBounds: function () {
+           
+        }
     }
-
 );
-
 
 L.layerGroup.skyTruthLayer = function (options) {
     return new L.LayerGroup.SkyTruthLayer(options);
