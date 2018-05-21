@@ -1,4 +1,3 @@
-/*global L*/
 
 require('jquery') ; 
 require('leaflet') ; 
@@ -16,45 +15,98 @@ L.icon.skyTruthIcon = function () {
     return new L.Icon.SkyTruthIcon();
 };
 
-L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
 
+L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
     {
         options: {
             url: 'https://alerts.skytruth.org/json?n=100',
             popupOnMouseover: false,
             clearOutsideBounds: true ,       
         },
-       
         initialize: function (options) {
-            
+            options = options || {};
+            L.Util.setOptions(this, options);  
+            this._layers = {};  
+
         },
-        
         onAdd: function (map) {
+            map.on('moveend', this.requestData, this);
+            this._map = map;
+            this.requestData();
 
         },
-        
         onRemove: function (map) {
-
+            map.off('moveend', this.requestData, this);
+            this.clearLayers();
+            this._layers = {};
         },
-
         requestData: function () {
+           var self = this;
+                (function() {
+                    var script = document.createElement("SCRIPT");
+                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
+                    script.type = 'text/javascript';
+                    var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
+                    script.onload = function() {
+                        var $ = window.jQuery;
+                        var SkyTruth_url = "https://alerts.skytruth.org/json?n=100&l="+parseInt(origin.lat+150)+","+parseInt(origin.lng-150)+","+parseInt(origin.lat-150)+","+parseInt(origin.lng+150) ;
+                      
+                        $.getJSON(SkyTruth_url , function(data){
+                             self.parseData(data) ;    
+                        });
+                    };
+                    document.getElementsByTagName("head")[0].appendChild(script);
+                })(); 
+            
             
         },
-
         getMarker: function (data) {
           
+              var redDotIcon =new L.icon.skyTruthIcon();
+              var lat = data.lat ;
+              var lng = data.lng;
+              var title = data.title ;
+              var url = data.link ;
+              var skymarker ; 
+              if (!isNaN(parseInt(lat)) && !isNaN(parseInt(lng)) ){
+                skymarker = L.marker([parseInt(lat) , parseInt(lng)] , {icon: redDotIcon}).bindPopup(title + "<br><a>" + url +"</a>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong>") ;
+              }
+            return skymarker;
         },
-
         addMarker: function (data) {
-            
+            var marker = this.getMarker(data),
+            key = data.id;   
+            if (!this._layers[key]) {
+                this._layers[key] = marker;
+                this.addLayer(marker);   
+            }
         },
-    
         parseData: function (data) {
-         
+    
+          if (!!data.feed){
+            for (i = 0 ; i < data.feed.length ; i++) { 
+             this.addMarker(data.feed[i]) ; 
+            }
+
+             if (this.options.clearOutsideBounds) {
+                this.clearOutsideBounds();
+            }  
+          }     
         },
-       
         clearOutsideBounds: function () {
-           
+            var bounds = this._map.getBounds(),
+                latLng,
+                key;
+
+            for (key in this._layers) {
+                if (this._layers.hasOwnProperty(key)) {
+                    latLng = this._layers[key].getLatLng();
+                    if (!bounds.contains(latLng)) {          
+                        this.removeLayer(this._layers[key]);
+                        delete this._layers[key];
+                    }
+                }
+            }
         }
     }
 );
