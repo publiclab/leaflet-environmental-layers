@@ -1,0 +1,10 @@
+v1.0.1:
+  date: 2018-03-01
+  changes:
+    - Update lodash to fix security warning
+v1.0.0:
+  date: 2016-04-03
+  changes:
+    - Add appveyor testing
+    - Fix node.js version support
+    - Peer dependency updates
