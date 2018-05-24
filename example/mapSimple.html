@@ -8,6 +8,10 @@
   <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet">
 <body>
   <div id="map"></div> 
+
+<!--  <p>  If there are too many points, you can click on the “Layers” button in the toolbar to see all of the data being shown on the map presently. From there, you can toggle layers on or off to your liking.</p>
+-->
+
   <script>   
     var map = L.map('map').setView([43, -83], 2);    
     var baselayer1 = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -18,6 +22,15 @@
        }) ;
     var SkyTruth = L.layerGroup.skyTruthLayer() ;
    // var ToxicRelease = L.layerGroup.toxicReleaseLayer() ;
+    var Justicemap_income = L.tileLayer.provider('JusticeMap.income') ;
+    var JusticeMap_americanIndian = L.tileLayer.provider('JusticeMap.americanIndian') ;
+    var JusticeMap_asian = L.tileLayer.provider('JusticeMap.asian') ;
+    var JusticeMap_black = L.tileLayer.provider('JusticeMap.black') ;
+    var JusticeMap_multi = L.tileLayer.provider('JusticeMap.multi') ;
+    var JusticeMap_hispanic = L.tileLayer.provider('JusticeMap.hispanic') ;
+    var JusticeMap_nonWhite = L.tileLayer.provider('JusticeMap.nonWhite') ;
+    var JusticeMap_white = L.tileLayer.provider('JusticeMap.white') ;
+    var JusticeMap_plurality = L.tileLayer.provider('JusticeMap.plurality') ;
 
     var baseMaps = {
       "Baselayer1": baselayer1 ,
@@ -25,6 +38,15 @@
     };
     var overlayMaps = {
       "SkyTruth": SkyTruth , 
+      "Justicemap_income": Justicemap_income,
+      "JusticeMap_americanIndian": JusticeMap_americanIndian ,
+      "JusticeMap_asian": JusticeMap_asian ,
+      "JusticeMap_black": JusticeMap_black,
+      "JusticeMap_multi": JusticeMap_multi ,
+      "JusticeMap_hispanic": JusticeMap_hispanic ,
+      "JusticeMap_nonWhite": JusticeMap_nonWhite,
+      "JusticeMap_white": JusticeMap_white ,
+      "JusticeMap_plurality": JusticeMap_plurality
     //  "ToxicRelease": ToxicRelease
     };
     L.control.layers(baseMaps, overlayMaps).addTo(map);
