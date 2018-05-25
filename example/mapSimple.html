@@ -3,17 +3,30 @@
 <head>
   <title>Leaflet Environmental Layers</title>
 </head>
-  <style>#map { height: 500px; width: 500px; }</style>
+  <style>#map { position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background: rgba(51,51,51,0.7);
+    z-index: 10; }</style>
   <script src="../dist/LeafletEnvironmentalLayers.js"></script> 
   <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet">
 <body>
+
   <div id="map"></div> 
 
 <!--  <p>  If there are too many points, you can click on the “Layers” button in the toolbar to see all of the data being shown on the map presently. From there, you can toggle layers on or off to your liking.</p>
 -->
 
   <script>   
-    var map = L.map('map').setView([43, -83], 2);    
+    var bounds = new L.LatLngBounds(new L.LatLng(84.67351257 , -172.96875) , new L.LatLng(-54.36775852 , 178.59375)) ;
+    var map = L.map('map' , {
+      maxBounds: bounds , 
+      maxBoundsViscosity: 0.75
+    }).setView([43, -83], 3);  
+    map.options.minZoom = 3 ;
+    
     var baselayer1 = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map) ;        
