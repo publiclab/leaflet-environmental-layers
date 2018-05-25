@@ -21,7 +21,7 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
         options: {
             url: 'https://alerts.skytruth.org/json?n=100',
             popupOnMouseover: false,
-            clearOutsideBounds: true ,       
+            clearOutsideBounds: false ,       
         },
         initialize: function (options) {
             options = options || {};
