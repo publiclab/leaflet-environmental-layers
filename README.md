@@ -40,4 +40,14 @@ Click on a point or marker on the map to learn more about it .
             <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet">
 
 
+## Real Time Layers : 
 
+1.) city (by openWeather) 
+     
+        var city = L.OWM.current({intervall: 15, minZoom: 3});
+
+2.) WindRose (by openWeather)
+
+        var windrose = L.OWM.current({intervall: 15, minZoom: 3, markerFunction: myWindroseMarker, popup: false, clusterSize:       50,imageLoadingBgUrl: 'https://openweathermap.org/img/w0/iwind.png' });
+    windrose.on('owmlayeradd', windroseAdded, windrose); 
+   
