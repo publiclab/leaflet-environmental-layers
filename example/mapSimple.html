@@ -11,13 +11,13 @@
     background: rgba(51,51,51,0.7);
     z-index: 10; }</style>
   <script src="../dist/LeafletEnvironmentalLayers.js"></script> 
+  <script src="../dist/windRoseLayer.js"></script> 
   <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet">
+  <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet">
 <body>
 
   <div id="map"></div> 
 
-<!--  <p>  If there are too many points, you can click on the “Layers” button in the toolbar to see all of the data being shown on the map presently. From there, you can toggle layers on or off to your liking.</p>
--->
 
   <script>   
     var bounds = new L.LatLngBounds(new L.LatLng(84.67351257 , -172.96875) , new L.LatLng(-54.36775852 , 178.59375)) ;
@@ -44,6 +44,22 @@
     var JusticeMap_nonWhite = L.tileLayer.provider('JusticeMap.nonWhite') ;
     var JusticeMap_white = L.tileLayer.provider('JusticeMap.white') ;
     var JusticeMap_plurality = L.tileLayer.provider('JusticeMap.plurality') ;
+    
+    var clouds = L.OWM.clouds({showLegend: true, opacity: 0.5});
+    var cloudscls = L.OWM.cloudsClassic({});
+    var precipitation = L.OWM.precipitation({});
+    var precipitationcls = L.OWM.precipitationClassic({});
+    var rain = L.OWM.rain({});
+    var raincls = L.OWM.rainClassic({});
+    var snow = L.OWM.snow({});
+    var pressure = L.OWM.pressure({});
+    var pressurecntr = L.OWM.pressureContour({});
+    var temp = L.OWM.temperature({});
+    var wind = L.OWM.wind({});
+
+    var city = L.OWM.current({intervall: 15, minZoom: 3});
+    var windrose = L.OWM.current({intervall: 15, minZoom: 3, markerFunction: myWindroseMarker, popup: false, clusterSize: 50,imageLoadingBgUrl: 'https://openweathermap.org/img/w0/iwind.png' });
+    windrose.on('owmlayeradd', windroseAdded, windrose); 
 
     var baseMaps = {
       "Baselayer1": baselayer1 ,
@@ -59,7 +75,20 @@
       "JusticeMap_hispanic": JusticeMap_hispanic ,
       "JusticeMap_nonWhite": JusticeMap_nonWhite,
       "JusticeMap_white": JusticeMap_white ,
-      "JusticeMap_plurality": JusticeMap_plurality
+      "JusticeMap_plurality": JusticeMap_plurality ,
+         "Clouds": clouds ,
+         "clouds (classic)": cloudscls ,
+         "precipitation": precipitation ,
+         "precipitation (classic)": precipitationcls , 
+         "rain": rain , 
+         "rain (classic)": raincls ,
+         "snow": snow , 
+         "pressure": pressure ,
+         "pressure contour (zoom in)": pressurecntr , 
+         "temp": temp , 
+         "wind": wind , 
+         "Cities (zoom in)": city  , 
+         "windrose (zoom in)": windrose
     //  "ToxicRelease": ToxicRelease
     };
     L.control.layers(baseMaps, overlayMaps).addTo(map);

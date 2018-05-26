@@ -27,3 +27,17 @@ Toggle certain layers on and off using the Layers button in the toolbar .
 
 Click on a point or marker on the map to learn more about it .
 
+## Dependencies : 
+
+### General (required for all layers)
+
+<script src="../dist/LeafletEnvironmentalLayers.js"></script> 
+<link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet">
+
+### To use Wind Rose Layer , add : 
+
+<script src="../dist/windRoseLayer.js"></script> 
+<link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet">
+
+
+
