@@ -16,7 +16,6 @@ L.icon.skyTruthIcon = function () {
 };
 
 L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
-<<<<<<< HEAD
   {
     options: {
       url: 'https://alerts.skytruth.org/json?n=100',
