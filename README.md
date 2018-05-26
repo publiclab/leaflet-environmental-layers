@@ -29,15 +29,15 @@ Click on a point or marker on the map to learn more about it .
 
 ## Dependencies : 
 
-### General (required for all layers)
+### General (required for all layers) :
 
-<script src="../dist/LeafletEnvironmentalLayers.js"></script> 
-<link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet">
+           <script src="../dist/LeafletEnvironmentalLayers.js"></script> 
+           <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet">
 
-### To use Wind Rose Layer , add : 
+### To use Wind Rose Layer : 
 
-<script src="../dist/windRoseLayer.js"></script> 
-<link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet">
+            <script src="../dist/windRoseLayer.js"></script> 
+            <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet">
 
 
 
