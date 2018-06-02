@@ -34,7 +34,6 @@
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
        }) ;
     var SkyTruth = L.layerGroup.skyTruthLayer() ;
-   // var ToxicRelease = L.layerGroup.toxicReleaseLayer() ;
     var Justicemap_income = L.tileLayer.provider('JusticeMap.income') ;
     var JusticeMap_americanIndian = L.tileLayer.provider('JusticeMap.americanIndian') ;
     var JusticeMap_asian = L.tileLayer.provider('JusticeMap.asian') ;
@@ -89,7 +88,6 @@
          "wind": wind , 
          "Cities (zoom in)": city  , 
          "windrose (zoom in)": windrose
-    //  "ToxicRelease": ToxicRelease
     };
     L.control.layers(baseMaps, overlayMaps).addTo(map);
   </script>
