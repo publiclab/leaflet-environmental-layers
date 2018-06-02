@@ -9,6 +9,7 @@ L.Icon.OdorReportIcon = L.Icon.extend({
       iconSize:     [30, 20], 
       iconAnchor:   [20 , 0], 
       popupAnchor:  [-5, -5] 
+  }
 });
 
 L.icon.odorReportIcon = function () {
