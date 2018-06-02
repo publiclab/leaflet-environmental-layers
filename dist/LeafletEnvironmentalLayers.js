@@ -24878,8 +24878,11 @@ exports.map = createMap;
 },{}],6:[function(require,module,exports){
 require('./skyTruthLayer.js') ; 
 require('./odorReportLayer.js') ;
+<<<<<<< HEAD
 require('./mapKnitterLayer.js') ; 
 require('./toxicReleaseLayer.js') ;
+=======
+>>>>>>> odorReport Layer completed
 require('leaflet-providers') ;
 require('./openWeatherMapLayer.js') ;
 },{"./mapKnitterLayer.js":7,"./odorReportLayer.js":8,"./openWeatherMapLayer.js":9,"./skyTruthLayer.js":10,"./toxicReleaseLayer.js":11,"leaflet-providers":3}],7:[function(require,module,exports){
@@ -25006,11 +25009,15 @@ L.LayerGroup.MapKnitterLayer = L.LayerGroup.extend(
 );
 
 
+<<<<<<< HEAD
 L.layerGroup.mapKnitterLayer = function (options) {
     return new L.LayerGroup.MapKnitterLayer(options) ;
 };
 
 },{"jquery":1,"leaflet":4}],8:[function(require,module,exports){
+=======
+},{"./odorReportLayer.js":7,"./openWeatherMapLayer.js":8,"./skyTruthLayer.js":9,"leaflet-providers":3}],7:[function(require,module,exports){
+>>>>>>> odorReport Layer completed
 /*global L*/
 
 require('jquery') ; 
@@ -25141,7 +25148,11 @@ L.layerGroup.odorReportLayer = function (options) {
     return new L.LayerGroup.OdorReportLayer(options);
 };
 
+<<<<<<< HEAD
 },{"jquery":1,"leaflet":4}],9:[function(require,module,exports){
+=======
+},{"jquery":1,"leaflet":4}],8:[function(require,module,exports){
+>>>>>>> odorReport Layer completed
 L.OWM = L.TileLayer.extend({
 	options: {
 		appId: '4c6704566155a7d0d5d2f107c5156d6e', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
@@ -26717,7 +26728,12 @@ L.OWM.Utils = {
 
 
 
+<<<<<<< HEAD
 },{}],10:[function(require,module,exports){
+=======
+},{}],9:[function(require,module,exports){
+
+>>>>>>> odorReport Layer completed
 require('jquery') ; 
 require('leaflet') ; 
 
