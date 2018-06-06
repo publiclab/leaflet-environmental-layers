@@ -26704,7 +26704,7 @@ require('leaflet') ;
 
 L.Icon.ToxicReleaseIcon = L.Icon.extend({
     options: {
-      iconUrl: 'http://www.clker.com/cliparts/r/M/L/o/R/i/green-dot.svg',
+      iconUrl: 'https://www.clker.com/cliparts/r/M/L/o/R/i/green-dot.svg',
       iconSize:     [30, 20], 
       iconAnchor:   [20 , 0], 
       popupAnchor:  [-5, -5] 
