@@ -26720,7 +26720,7 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
 
     {
         options: {
-            url: 'https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/41/rows/0:100/JSON',
+            url: 'https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/45/PREF_LONGITUDE/BEGINNING/72/rows/0:500/JSON',
             popupOnMouseover: false,
             clearOutsideBounds: false,       
             target: '_self',      
@@ -26757,8 +26757,9 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
                     var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
                     script.onload = function() {
                         var $ = window.jQuery;
-                        var TRI_url = "https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/41/rows/0:100/JSON" ;
+                        var TRI_url = "https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/"+parseInt(origin.lat)+"/PREF_LONGITUDE/BEGINNING/"+parseInt(origin.lng)+"/rows/0:500/JSON" ;
                          $.getJSON(TRI_url , function(data){
+                         // console.log(parseInt(origin.lat) +" and "+parseInt(origin.lng)) ;
                          self.parseData(data) ;    
                         });
                     };
