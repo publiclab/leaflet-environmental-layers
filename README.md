@@ -1,5 +1,10 @@
 # Leaflet Environmental Layers
 
+## About :
+
+The information of each layer can be found here :
+https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library
+
 ## Quick Setup : 
 
 To set up the library first clone this repo to your local environment; then run 'npm install' to install all the neccessary packages required. Open examples/index.html to look at the preview of the library.
