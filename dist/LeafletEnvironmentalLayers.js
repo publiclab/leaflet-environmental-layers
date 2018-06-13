@@ -26589,7 +26589,6 @@ L.OWM.Utils = {
 
 
 },{}],9:[function(require,module,exports){
-
 require('jquery') ; 
 require('leaflet') ; 
 
@@ -26634,10 +26633,10 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
         var script = document.createElement("SCRIPT");
         script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
         script.type = 'text/javascript';
-        var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
+        var zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
         script.onload = function() {
         var $ = window.jQuery;
-        var SkyTruth_url = "https://alerts.skytruth.org/json?n=100&l="+parseInt(origin.lat+150)+","+parseInt(origin.lng-150)+","+parseInt(origin.lat-150)+","+parseInt(origin.lng+150) ;
+        var SkyTruth_url = "https://alerts.skytruth.org/json?n=100&l="+parseInt(southwest.lat)+","+parseInt(southwest.lng)+","+parseInt(northeast.lat)+","+parseInt(northeast.lng) ;
         $.getJSON(SkyTruth_url , function(data){
           self.parseData(data) ;    
         });
@@ -26695,7 +26694,6 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
 L.layerGroup.skyTruthLayer = function (options) {
   return new L.LayerGroup.SkyTruthLayer(options);
 };
-
 },{"jquery":1,"leaflet":4}],10:[function(require,module,exports){
 require('jquery') ; 
 require('leaflet') ; 
