@@ -58,7 +58,7 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
                     var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
                     script.onload = function() {
                         var $ = window.jQuery;
-                        var TRI_url = "https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/"+parseInt(origin.lat)+"/PREF_LONGITUDE/BEGINNING/"+parseInt(origin.lng)+"/rows/0:300/JSON" ;
+                        var TRI_url = "https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/"+parseInt(origin.lat)+"/PREF_LONGITUDE/BEGINNING/"+parseInt(-1*origin.lng)+"/rows/0:300/JSON" ;
                          $.getJSON(TRI_url , function(data){
                          // console.log(parseInt(origin.lat) +" and "+parseInt(origin.lng)) ;
                          self.parseData(data) ;    
@@ -74,7 +74,7 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
           
             var greenDotIcon =new L.icon.toxicReleaseIcon();
               var lat = data.PREF_LATITUDE ;
-              var lng = data.PREF_LONGITUDE;
+              var lng = -1*data.PREF_LONGITUDE;
              // console.log(lat +"  "+lng) ;
               var fac_name = data.FACILITY_NAME ;
               var city = data.CITY_NAME ; 
