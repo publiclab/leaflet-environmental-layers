@@ -36,6 +36,8 @@
     var SkyTruth = L.layerGroup.skyTruthLayer() ;
     var OdorReport = L.layerGroup.odorReportLayer() ;
     var MapKnitter = L.layerGroup.mapKnitterLayer() ;
+    var ToxicRelease = L.layerGroup.toxicReleaseLayer() ;
+
     var Justicemap_income = L.tileLayer.provider('JusticeMap.income') ;
     var JusticeMap_americanIndian = L.tileLayer.provider('JusticeMap.americanIndian') ;
     var JusticeMap_asian = L.tileLayer.provider('JusticeMap.asian') ;
@@ -68,6 +70,7 @@
     };
     var overlayMaps = {
       "SkyTruth": SkyTruth , 
+      "ToxicRelease": ToxicRelease ,
       "OdorReport": OdorReport ,
       "MapKnitter": MapKnitter ,
       "Justicemap_income": Justicemap_income,
