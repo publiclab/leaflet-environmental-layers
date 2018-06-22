@@ -44,6 +44,13 @@ Click on a point or marker on the map to learn more about it .
             <script src="../dist/windRoseLayer.js"></script> 
             <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet">
 
+### To use Purple Layer :
+			
+			<script src="../node_modules/heatmap.js/build/heatmap.min.js"></script>
+			<script src="../node_modules/leaflet-heatmap/leaflet-heatmap.js"></script>
+
+  			
+
 
 ## Real Time Layers : 
 
