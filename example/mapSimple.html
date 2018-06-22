@@ -12,6 +12,10 @@
     z-index: 10; }</style>
   <script src="../dist/LeafletEnvironmentalLayers.js"></script> 
   <script src="../dist/windRoseLayer.js"></script> 
+
+  <script src="../node_modules/heatmap.js/build/heatmap.min.js"></script>
+  <script src="../node_modules/leaflet-heatmap/leaflet-heatmap.js"></script> 
+
   <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet">
   <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet">
 <body>
@@ -29,18 +33,21 @@
     
     var baselayer1 = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map) ;        
+    }) ;        
     var baselayer2 = L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png',{
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-       }) ;
+       }).addTo(map) ;
+
+
+  
+
+    var PurpleLayer = L.layerGroup.purpleLayer() ;
+   
     var SkyTruth = L.layerGroup.skyTruthLayer() ;
     var OdorReport = L.layerGroup.odorReportLayer() ;
-<<<<<<< HEAD
     var MapKnitter = L.layerGroup.mapKnitterLayer() ;
     var ToxicRelease = L.layerGroup.toxicReleaseLayer() ;
 
-=======
->>>>>>> odorReport Layer completed
     var Justicemap_income = L.tileLayer.provider('JusticeMap.income') ;
     var JusticeMap_americanIndian = L.tileLayer.provider('JusticeMap.americanIndian') ;
     var JusticeMap_asian = L.tileLayer.provider('JusticeMap.asian') ;
@@ -72,14 +79,11 @@
       "Baselayer2": baselayer2
     };
     var overlayMaps = {
+      "PurpleLayer": PurpleLayer ,
       "SkyTruth": SkyTruth , 
-<<<<<<< HEAD
       "ToxicRelease": ToxicRelease ,
       "OdorReport": OdorReport ,
       "MapKnitter": MapKnitter ,
-=======
-      "OdorReport": OdorReport ,
->>>>>>> odorReport Layer completed
       "Justicemap_income": Justicemap_income,
       "JusticeMap_americanIndian": JusticeMap_americanIndian ,
       "JusticeMap_asian": JusticeMap_asian ,
