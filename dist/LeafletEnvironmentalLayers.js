@@ -24879,9 +24879,10 @@ exports.map = createMap;
 require('./skyTruthLayer.js') ; 
 require('./odorReportLayer.js') ;
 require('./mapKnitterLayer.js') ; 
+require('./toxicReleaseLayer.js') ;
 require('leaflet-providers') ;
 require('./openWeatherMapLayer.js') ;
-},{"./mapKnitterLayer.js":7,"./odorReportLayer.js":8,"./openWeatherMapLayer.js":9,"./skyTruthLayer.js":10,"leaflet-providers":3}],7:[function(require,module,exports){
+},{"./mapKnitterLayer.js":7,"./odorReportLayer.js":8,"./openWeatherMapLayer.js":9,"./skyTruthLayer.js":10,"./toxicReleaseLayer.js":11,"leaflet-providers":3}],7:[function(require,module,exports){
 require('jquery') ; 
 require('leaflet') ; 
 
@@ -25010,10 +25011,6 @@ L.layerGroup.mapKnitterLayer = function (options) {
 };
 
 },{"jquery":1,"leaflet":4}],8:[function(require,module,exports){
-require('./toxicReleaseLayer.js') ;
-require('leaflet-providers') ;
-require('./openWeatherMapLayer.js') ;
-},{"./odorReportLayer.js":7,"./openWeatherMapLayer.js":8,"./skyTruthLayer.js":9,"./toxicReleaseLayer.js":10,"leaflet-providers":3}],7:[function(require,module,exports){
 /*global L*/
 
 require('jquery') ; 
@@ -26826,7 +26823,7 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
 L.layerGroup.skyTruthLayer = function (options) {
   return new L.LayerGroup.SkyTruthLayer(options);
 };
-},{"jquery":1,"leaflet":4}],10:[function(require,module,exports){
+},{"jquery":1,"leaflet":4}],11:[function(require,module,exports){
 require('jquery') ; 
 require('leaflet') ; 
 
