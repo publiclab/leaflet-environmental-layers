@@ -27695,21 +27695,7 @@ require('jquery') ;
 require('leaflet') ; 
 require('heatmap.js') ;
 require('leaflet-heatmap') ;
-/*
-L.Icon.MapKnitterIcon = L.Icon.extend({
-    options: {
-      iconUrl: 'http://static1.squarespace.com/static/5426194de4b0fb1d443aaaeb/t/542619a0e4b0a449ee28423c/1492072406427/',
-      iconSize:     [35, 50], 
-      iconAnchor:   [20 , 0], 
-      popupAnchor:  [-5, -5] 
-    }
-});
 
-L.icon.mapKnitterIcon = function () {
-    return new L.Icon.MapKnitterIcon();
-};
-
-*/
 L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
 
     {
@@ -27771,12 +27757,37 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
         getMarker: function (data) {
               var lat = data.Lat ;
               var lng = data.Lon;
-              var PM2_5Value = data.PM2_5Value ;
+              var value = parseFloat(data.PM2_5Value) ;  //PM2.5 VALUE in microgram per metre cube
 
               var purpleLayer_object = new Object() ; 
               purpleLayer_object.lat = lat ;
               purpleLayer_object.lng = lng ;
-              purpleLayer_object.count = parseFloat(PM2_5Value) ;
+
+              var aqi ;
+              if(value>=0 && value<=12.0)
+              {
+                aqi = ((50-0)*(value-0))/(12-0) + 0 ;
+              }
+              else if(value<=35.4){
+                aqi = ((100-51)*(value-12.1))/(35.4-12.1) + 51 ;
+              }
+              else if(value<=55.4){
+                aqi = ((150-101)*(value-35.5))/(55.4-35.5) + 101 ;
+              }
+              else if(value<=150.4){  
+                aqi = ((200-151)*(value-55.5))/(150.4-55.5) + 151 ; 
+              }
+              else if(value<=250.4){
+                aqi = ((3000-201)*(value-150.5))/(250.4-150.5) + 201 ;
+              }
+              else if(value<=350.4){
+                aqi = ((400-301)*(value-250.5))/(350.4-250.5) + 301 ;
+              }
+              else{
+                aqi = ((500-401)*(value-350.5))/(500.4-350.5) + 401 ;
+              }
+
+              purpleLayer_object.count = aqi ;
               return purpleLayer_object ;
         },
 
@@ -27789,7 +27800,7 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
             for (i = 0 ; i < data.results.length ; i++) { 
              this.addMarker(data.results[i]) ; 
             }
-            console.log(this._purpleLayerArray) ;
+            //console.log(this._purpleLayerArray) ;
             this.heatmapLayer.setData({data: this._purpleLayerArray}) ;
             this._map.addLayer(this.heatmapLayer) ;
         }
