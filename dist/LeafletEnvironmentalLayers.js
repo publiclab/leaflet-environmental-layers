@@ -24955,7 +24955,7 @@ L.LayerGroup.FracTrackerLayer = L.LayerGroup.extend(
               var phone = data.FIELD7 ;
               var street = data.FIELD8 ;
               var fracTracker ; 
-              fracTracker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(title + "<br><a>" + website +"</a>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong>"+"<br>Contact :"+contact+"<br>Phone :" + phone + "<br>Email :" + email + "<br>Street : " + street + "<br>State : "+state + "<br>City :"+ city +"<br><i>"+summary+"</i>") ;
+              fracTracker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(title + "<br><a>" + website +"</a>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong>"+"<br>Contact :"+contact+"<br>Phone :" + phone + "<br>Email :" + email + "<br>Street : " + street + "<br>State : "+state + "<br>City :"+ city +"<br><i>"+summary+"</i><br><br> <i>Data provided by <a>http://fractracker.org/</a></i>") ;
               
               return fracTracker ;
         },
@@ -26891,7 +26891,7 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
       var url = data.link ;
       var skymarker ; 
       if (!isNaN(lat) && !isNaN(lng) ){
-        skymarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(title + "<br><a>" + url +"</a>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong>") ;
+        skymarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(title + "<br><a>" + url +"</a>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong> <br><br>Data provided by <a>alerts.skytruth.org/</a>") ;
       }
       return skymarker;
     },

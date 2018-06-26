@@ -77,7 +77,7 @@ L.LayerGroup.FracTrackerLayer = L.LayerGroup.extend(
               var phone = data.FIELD7 ;
               var street = data.FIELD8 ;
               var fracTracker ; 
-              fracTracker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(title + "<br><a>" + website +"</a>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong>"+"<br>Contact :"+contact+"<br>Phone :" + phone + "<br>Email :" + email + "<br>Street : " + street + "<br>State : "+state + "<br>City :"+ city +"<br><i>"+summary+"</i>") ;
+              fracTracker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(title + "<br><a>" + website +"</a>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong>"+"<br>Contact :"+contact+"<br>Phone :" + phone + "<br>Email :" + email + "<br>Street : " + street + "<br>State : "+state + "<br>City :"+ city +"<br><i>"+summary+"</i><br><br> <i>Data provided by <a>http://fractracker.org/</a></i>") ;
               
               return fracTracker ;
         },
