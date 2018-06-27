@@ -3,8 +3,8 @@ require('leaflet') ;
 
 L.Icon.PurpleAirMarkerIcon = L.Icon.extend({
    options: {
-    iconUrl: 'http://www.clker.com/cliparts/2/3/f/a/11970909781608045989gramzon_Barrel.svg.med.png',
-    iconSize:     [30, 20], 
+    iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Location_dot_purple.svg/768px-Location_dot_purple.svg.png',
+    iconSize:     [15 , 10], 
     iconAnchor:   [20 , 0], 
     popupAnchor:  [-5, -5] 
   }
