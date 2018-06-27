@@ -39,7 +39,7 @@
        }).addTo(map) ;
 
     var PurpleLayer = L.layerGroup.purpleLayer() ;
-   
+    var PurpleAirMarkerLayer = L.layerGroup.purpleAirMarkerLayer() ;
     var SkyTruth = L.layerGroup.skyTruthLayer() ;
     var Fractracker = L.layerGroup.fracTrackerLayer() ;
     var OdorReport = L.layerGroup.odorReportLayer() ;
@@ -77,7 +77,8 @@
       "Baselayer2": baselayer2
     };
     var overlayMaps = {
-      "PurpleLayer-HeatMap": PurpleLayer ,
+      "PurpleAirLayer-HeatMap": PurpleLayer ,
+      "PurpleAirLayer-Markers": PurpleAirMarkerLayer ,
       "SkyTruth": SkyTruth , 
       "Fractracker" : Fractracker ,
       "ToxicRelease": ToxicRelease ,
