@@ -1,5 +1,3 @@
-require('jquery') ; 
-require('leaflet') ; 
 require('heatmap.js') ;
 require('leaflet-heatmap') ;
 
