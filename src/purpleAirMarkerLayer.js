@@ -70,22 +70,26 @@ L.LayerGroup.PurpleAirMarkerLayer = L.LayerGroup.extend(
               var hardware = data.DEVICE_HARDWAREDISCOVERED ;
 
               var purpleAirMarker ; 
+              if(lat!=null && lng!=null){
               purpleAirMarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup("Label : " + Label + "<br> <strong>PM2.5 Value : " + value +"</strong><br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong>"+"<br>temp_f :"+temp_f+"<br>humidity :" + humidity + "<br>pressure :" + pressure + "<br><br>Hardware type : " + type + "<br>DEVICE_HARDWAREDISCOVERED : "+hardware + "<br><br> <i>Data provided by <a>www.purpleair.com</a></i>") ;
-              
+              }
               return purpleAirMarker ;
         },
 
         addMarker: function (data) {
+
             var marker = this.getMarker(data) ; 
-            key = data.FIELD2;   
-            if (!this._layers[key]) {
-              this._layers[key] = marker;
-              this.addLayer(marker);   
+             if(marker != null){ 
+             key = data.ID ;   
+             if (!this._layers[key]) {
+               this._layers[key] = marker;
+               this.addLayer(marker);   
+             }
             }
         },
         
         parseData: function (data) {
-    
+            console.log(data.results.length) ;
             for (i = 0 ; i < data.results.length ; i++) { 
              this.addMarker(data.results[i]) ; 
             }
