@@ -27762,7 +27762,8 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
               var purpleLayer_object = new Object() ; 
               purpleLayer_object.lat = lat ;
               purpleLayer_object.lng = lng ;
-
+              purpleLayer_object.count = value ;
+              /*
               var aqi ;
               if(value>=0 && value<=12.0)
               {
@@ -27788,6 +27789,7 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
               }
 
               purpleLayer_object.count = aqi ;
+              */
               return purpleLayer_object ;
         },
 
