@@ -1,3 +1,4 @@
+require('./purpleLayer.js') ; 
 require('./fractracker.js') ;
 require('./skyTruthLayer.js') ; 
 require('./odorReportLayer.js') ;
