@@ -1,6 +1,3 @@
-require('jquery') ; 
-require('leaflet') ; 
-
 L.Icon.SkyTruthIcon = L.Icon.extend({
   options: {
     iconUrl: 'https://www.clker.com/cliparts/T/G/b/7/r/A/red-dot.svg',

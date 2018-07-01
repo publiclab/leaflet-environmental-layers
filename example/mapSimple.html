@@ -31,12 +31,18 @@
     }).setView([43, -83], 3);  
     map.options.minZoom = 3 ;
     
-    var baselayer1 = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    var baselayer1 = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.emerald/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2FnYXJwcmVldDk3IiwiYSI6ImNqaXhlZjgwaDJtb3EzcW1zdDdwMzJkODcifQ.MA2YIv6VpGLLAo-QYUudTA', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }) ;        
+    }) ; 
+    var baselayer3 = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.streets-basic/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2FnYXJwcmVldDk3IiwiYSI6ImNqaXhlZjgwaDJtb3EzcW1zdDdwMzJkODcifQ.MA2YIv6VpGLLAo-QYUudTA', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map) ;        
     var baselayer2 = L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png',{
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-       }).addTo(map) ;
+       }) ;
+    var baselayer4 = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.dark/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2FnYXJwcmVldDk3IiwiYSI6ImNqaXhlZjgwaDJtb3EzcW1zdDdwMzJkODcifQ.MA2YIv6VpGLLAo-QYUudTA', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }) ; 
 
     var PurpleLayer = L.layerGroup.purpleLayer() ;
    
@@ -74,7 +80,9 @@
 
     var baseMaps = {
       "Baselayer1": baselayer1 ,
-      "Baselayer2": baselayer2
+      "Baselayer2": baselayer2 , 
+      "Baselayer3": baselayer3 , 
+      "Baselayer4": baselayer4
     };
     var overlayMaps = {
       "PurpleLayer-HeatMap": PurpleLayer ,

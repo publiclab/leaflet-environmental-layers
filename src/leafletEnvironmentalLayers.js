@@ -1,3 +1,6 @@
+require('jquery') ; 
+require('leaflet') ; 
+
 require('./purpleLayer.js') ; 
 require('./fractracker.js') ;
 require('./skyTruthLayer.js') ; 
