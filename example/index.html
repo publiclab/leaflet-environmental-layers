@@ -18,6 +18,8 @@
 
   <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet">
   <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet">
+
+  <script src="../node_modules/leaflet-hash/leaflet-hash.js"></script>
 <body>
 
   <div id="map"></div> 
@@ -30,7 +32,9 @@
       maxBoundsViscosity: 0.75
     }).setView([43, -83], 3);  
     map.options.minZoom = 3 ;
-    
+       
+    var hash = new L.Hash(map) ;
+
     var baselayer1 = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.emerald/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2FnYXJwcmVldDk3IiwiYSI6ImNqaXhlZjgwaDJtb3EzcW1zdDdwMzJkODcifQ.MA2YIv6VpGLLAo-QYUudTA', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }) ; 
@@ -43,6 +47,8 @@
     var baselayer4 = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.dark/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2FnYXJwcmVldDk3IiwiYSI6ImNqaXhlZjgwaDJtb3EzcW1zdDdwMzJkODcifQ.MA2YIv6VpGLLAo-QYUudTA', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }) ; 
+
+
 
     var PurpleLayer = L.layerGroup.purpleLayer() ;
    
