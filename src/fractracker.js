@@ -23,14 +23,12 @@ L.LayerGroup.FracTrackerLayer = L.LayerGroup.extend(
             options = options || {};
             L.Util.setOptions(this, options); 
             this._layers = {};  
-
         },
         
         onAdd: function (map) {
            // map.on('moveend', this.requestData, this);
             this._map = map;
             this.requestData();
-
         },
         
         onRemove: function (map) {

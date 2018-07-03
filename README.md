@@ -50,8 +50,6 @@ Click on a point or marker on the map to learn more about it .
 			<script src="../node_modules/leaflet-heatmap/leaflet-heatmap.js"></script>
 
   			
-
-
 ## Real Time Layers : 
 
 1.) city (by openWeather) 
@@ -63,3 +61,18 @@ Click on a point or marker on the map to learn more about it .
         var windrose = L.OWM.current({intervall: 15, minZoom: 3, markerFunction: myWindroseMarker, popup: false, clusterSize:       50,imageLoadingBgUrl: 'https://openweathermap.org/img/w0/iwind.png' });
     windrose.on('owmlayeradd', windroseAdded, windrose); 
    
+## Add Leaflet-Hash for easy sharing of map :    
+
+### Steps To add : 
+
+1.) Add link : 
+    
+    <script src="../node_modules/leaflet-hash/leaflet-hash.js"></script>
+
+2.) Once you have initialized the map (an instance of L.Map), add the following code :
+
+    // Assuming your map instance is in a variable called map
+    var hash = new L.Hash(map);    
+
+  Read more about Leaflet-Hash here : https://github.com/mlevans/leaflet-hash
+
