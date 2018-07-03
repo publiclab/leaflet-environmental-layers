@@ -1,8 +1,3 @@
-require('jquery') ; 
-require('leaflet') ; 
-
-
-
 L.Icon.ToxicReleaseIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://www.clker.com/cliparts/r/M/L/o/R/i/green-dot.svg',

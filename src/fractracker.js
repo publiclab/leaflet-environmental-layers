@@ -1,6 +1,3 @@
-require('jquery') ; 
-require('leaflet') ; 
-
 L.Icon.FracTrackerIcon = L.Icon.extend({
    options: {
     iconUrl: 'http://www.clker.com/cliparts/2/3/f/a/11970909781608045989gramzon_Barrel.svg.med.png',
