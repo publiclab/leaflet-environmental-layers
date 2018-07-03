@@ -61,6 +61,36 @@ Click on a point or marker on the map to learn more about it .
         var windrose = L.OWM.current({intervall: 15, minZoom: 3, markerFunction: myWindroseMarker, popup: false, clusterSize:       50,imageLoadingBgUrl: 'https://openweathermap.org/img/w0/iwind.png' });
     windrose.on('owmlayeradd', windroseAdded, windrose); 
    
+## Open Infra Map : 
+
+##### OpenInfraMap_Power Layer : 
+    
+    var OpenInfraMap_Power = L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png',{
+        maxZoom: 18,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
+    });
+
+##### OpenInfraMap_Petroleum Layer : 
+
+    var OpenInfraMap_Petroleum = L.tileLayer('https://tiles-{s}.openinframap.org/petroleum/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
+    });
+
+##### OpenInfraMap_Telecom Layer : 
+
+    var OpenInfraMap_Telecom = L.tileLayer('https://tiles-{s}.openinframap.org/telecoms/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
+    });
+
+##### OpenInfraMap_Water Layer : 
+
+    var OpenInfraMap_Water = L.tileLayer('https://tiles-{s}.openinframap.org/water/{z}/{x}/{y}.png',{
+      maxZoom: 18,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
+    });   
+
 ## Add Leaflet-Hash for easy sharing of map :    
 
 ### Steps To add : 

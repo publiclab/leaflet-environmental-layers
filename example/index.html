@@ -58,6 +58,23 @@
     var MapKnitter = L.layerGroup.mapKnitterLayer() ;
     var ToxicRelease = L.layerGroup.toxicReleaseLayer() ;
 
+    var OpenInfraMap_Power = L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png',{
+        maxZoom: 18,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
+    });
+    var OpenInfraMap_Petroleum = L.tileLayer('https://tiles-{s}.openinframap.org/petroleum/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
+    });
+    var OpenInfraMap_Telecom = L.tileLayer('https://tiles-{s}.openinframap.org/telecoms/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
+    });
+    var OpenInfraMap_Water = L.tileLayer('https://tiles-{s}.openinframap.org/water/{z}/{x}/{y}.png',{
+      maxZoom: 18,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
+    });
+
     var Justicemap_income = L.tileLayer.provider('JusticeMap.income') ;
     var JusticeMap_americanIndian = L.tileLayer.provider('JusticeMap.americanIndian') ;
     var JusticeMap_asian = L.tileLayer.provider('JusticeMap.asian') ;
@@ -98,6 +115,10 @@
       "ToxicRelease": ToxicRelease ,
       "OdorReport": OdorReport ,
       "MapKnitter": MapKnitter ,
+      "OpenInfraMap_Power": OpenInfraMap_Power ,
+      "OpenInfraMap_Telecom": OpenInfraMap_Telecom ,
+      "OpenInfraMap_Petroleum": OpenInfraMap_Petroleum ,
+      "OpenInfraMap_Water": OpenInfraMap_Water ,
       "Justicemap_income": Justicemap_income,
       "JusticeMap_americanIndian": JusticeMap_americanIndian ,
       "JusticeMap_asian": JusticeMap_asian ,
