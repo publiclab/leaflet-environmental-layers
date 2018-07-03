@@ -80,10 +80,10 @@ L.LayerGroup.FracTrackerLayer = L.LayerGroup.extend(
         addMarker: function (data) {
             var marker = this.getMarker(data) ; 
             key = data.FIELD2;   
-		    if (!this._layers[key]) {
-		      this._layers[key] = marker;
-		      this.addLayer(marker);   
-		    }
+    		    if (!this._layers[key]) {
+    		      this._layers[key] = marker;
+    		      this.addLayer(marker);   
+    		    }
         },
         
         parseData: function (data) {
