@@ -1,0 +1,28 @@
+{
+  "name": "leaflet-environmental-layers",
+  "description": "Collection of different environmental map layers in an easy to use Leaflet library",
+  "main": "LeafletEnvironmentalLayers.js",
+  "authors": [
+    "Jeffrey Warren",
+    "Sagarpreet Chadha"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "PublicLab",
+    "Environment",
+    "Layers",
+    "Leaflet",
+    "Plugin",
+    "API",
+    "Maps",
+    "Map"
+  ],
+  "homepage": "https://github.com/publiclab/leaflet-environmental-layers",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
