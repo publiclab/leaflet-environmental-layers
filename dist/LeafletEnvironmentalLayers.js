@@ -25967,8 +25967,8 @@ require('./openWeatherMapLayer.js') ;
 },{"./fractracker.js":8,"./mapKnitterLayer.js":10,"./odorReportLayer.js":11,"./openWeatherMapLayer.js":12,"./purpleAirMarkerLayer.js":13,"./purpleLayer.js":14,"./skyTruthLayer.js":15,"./toxicReleaseLayer.js":16,"jquery":2,"leaflet":6,"leaflet-providers":5}],10:[function(require,module,exports){
  L.Icon.MapKnitterIcon = L.Icon.extend({
     options: {
-      iconUrl: 'http://static1.squarespace.com/static/5426194de4b0fb1d443aaaeb/t/542619a0e4b0a449ee28423c/1492072406427/',
-      iconSize:     [35, 50], 
+      iconUrl: 'http://images.clipartpanda.com/google-map-icon-marker.png',
+      iconSize:     [10,25], 
       iconAnchor:   [20 , 0], 
       popupAnchor:  [-5, -5] 
     }
