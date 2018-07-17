@@ -25967,10 +25967,12 @@ require('./openWeatherMapLayer.js') ;
 },{"./fractracker.js":8,"./mapKnitterLayer.js":10,"./odorReportLayer.js":11,"./openWeatherMapLayer.js":12,"./purpleAirMarkerLayer.js":13,"./purpleLayer.js":14,"./skyTruthLayer.js":15,"./toxicReleaseLayer.js":16,"jquery":2,"leaflet":6,"leaflet-providers":5}],10:[function(require,module,exports){
  L.Icon.MapKnitterIcon = L.Icon.extend({
     options: {
-      iconUrl: 'http://images.clipartpanda.com/google-map-icon-marker.png',
-      iconSize:     [10,25], 
-      iconAnchor:   [20 , 0], 
-      popupAnchor:  [-5, -5] 
+      iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
     }
 });
 
