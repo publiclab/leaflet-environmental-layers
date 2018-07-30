@@ -26036,10 +26036,13 @@ L.LayerGroup.MapKnitterLayer = L.LayerGroup.extend(
               var lat = data.lat ;
               var lng = data.lon;
               var title = data.name ;
-              var url = data.location ;
+              var location = data.location ;
+              var author = data.author ;
+              var url = "https://publiclab.org/profile/" + author ;
+              var map_page = "https://mapknitter.org/maps/"+ title ;
               var mapknitter ; 
               if (!isNaN(lat) && !isNaN(lng) ){
-                mapknitter = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(title + "<br><a>" + url +"</a>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong>"+"<br><i>For more info on <a href='https://github.com/publiclab/leaflet-environmental-layers/issues/10'>MapKnitter Layer</a>, visit <a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>here<a></i>" ) ;
+                mapknitter = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup("<strong>Title : </strong>"+ "<a href=" + map_page + ">" + title + "</a>" + "<br><strong>Author :</strong> " + "<a href="+url+">"  +  author +"</a>" + "<br><strong>Location : </strong>" + location  + "<br><strong> Lat : </strong>" + lat + "  ,  <strong> Lon : </strong>" + lng +"<br><i>For more info on <a href='https://github.com/publiclab/leaflet-environmental-layers/issues/10'>MapKnitter Layer</a>, visit <a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>here<a></i>" ) ;
               }
             return mapknitter ;
         },
