@@ -25969,10 +25969,10 @@ require('./openWeatherMapLayer.js') ;
     options: {
       iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
       shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-      iconSize: [15, 31],
-      iconAnchor: [6, 31],
+      iconSize: [12, 21],
+      iconAnchor: [6, 21],
       popupAnchor: [1, -34],
-      shadowSize: [10, 11]
+      shadowSize: [20, 20]
     }
 });
 
