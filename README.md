@@ -3,6 +3,7 @@
 ## The library is integrated to following places : 
 
 https://mapknitter.org/
+
 https://publiclab.org/maps/
 
 ##### NPM : 
