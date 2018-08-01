@@ -1,5 +1,19 @@
 # Leaflet Environmental Layers
 
+## The library is integrated to following places : 
+
+https://mapknitter.org/
+https://publiclab.org/maps/
+
+##### NPM : 
+
+https://www.npmjs.com/package/leaflet-environmental-layers
+
+##### Bower :
+Seach leaflet-environmental-layers here : https://bower.io/search/
+
+
+
 ## About :
 
 The information of each layer can be found here :
