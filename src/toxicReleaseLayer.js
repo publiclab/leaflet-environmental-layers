@@ -1,8 +1,3 @@
-require('jquery') ; 
-require('leaflet') ; 
-
-
-
 L.Icon.ToxicReleaseIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://www.clker.com/cliparts/r/M/L/o/R/i/green-dot.svg',
@@ -21,7 +16,7 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
 
     {
         options: {
-            url: 'https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/41/rows/0:100/JSON',
+            url: 'https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/45/PREF_LONGITUDE/BEGINNING/72/rows/0:500/JSON',
             popupOnMouseover: false,
             clearOutsideBounds: false,       
             target: '_self',      
@@ -58,8 +53,9 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
                     var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
                     script.onload = function() {
                         var $ = window.jQuery;
-                        var TRI_url = "https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/41/rows/0:100/JSON" ;
+                        var TRI_url = "https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/"+parseInt(origin.lat)+"/PREF_LONGITUDE/BEGINNING/"+parseInt(-1*origin.lng)+"/rows/0:300/JSON" ;
                          $.getJSON(TRI_url , function(data){
+                         // console.log(parseInt(origin.lat) +" and "+parseInt(origin.lng)) ;
                          self.parseData(data) ;    
                         });
                     };
@@ -73,14 +69,15 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
           
             var greenDotIcon =new L.icon.toxicReleaseIcon();
               var lat = data.PREF_LATITUDE ;
-              var lng = data.PREF_LONGITUDE;
+              var lng = -1*data.PREF_LONGITUDE;
+             // console.log(lat +"  "+lng) ;
               var fac_name = data.FACILITY_NAME ;
               var city = data.CITY_NAME ; 
               var mail_street_addr = data.MAIL_STREET_ADDRESS ;
               var contact = data.ASGN_PUBLIC_PHONE ; 
               var tri_marker ; 
-              if (!isNaN(parseInt(lat)) && !isNaN(parseInt(lng)) ){
-                tri_marker = L.marker([lat , lng] , {icon: greenDotIcon}).bindPopup("<strong>Name : </strong>" + fac_name + "<br><strong> City :" + city +"</strong>" + "<br><strong> Street address : " + mail_street_addr + "</strong><br><strong> Contact : " + contact + "</strong><br><i>From the <a href='https://github.com/publiclab/leaflet-environmental-layers/pull/8'>Toxic Release Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>") ;
+              if (!isNaN((lat)) && !isNaN((lng)) ){
+                tri_marker = L.marker([lat , lng] , {icon: greenDotIcon}).bindPopup("<strong>Name : </strong>" + fac_name + "<br><strong> City :" + city +"</strong>" + "<br><strong> Street address : " + mail_street_addr + "</strong><br><strong> Contact : " + contact + "</strong><br>Lat :"+lat+"<br>Lon :"+lng +"<br><i>From the <a href='https://github.com/publiclab/leaflet-environmental-layers/pull/8'>Toxic Release Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>") ;
               }
             return tri_marker ; 
         },

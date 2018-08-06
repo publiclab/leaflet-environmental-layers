@@ -1,10 +1,3 @@
-/*global L*/
-
-require('jquery') ; 
-require('leaflet') ; 
-
-
-
 L.Icon.OdorReportIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://www.clker.com/cliparts/T/3/6/T/S/8/ink-splash-md.png',
@@ -76,7 +69,7 @@ L.LayerGroup.OdorReportLayer = L.LayerGroup.extend(
               var url = data.url ;
               var odormarker ; 
               if (!isNaN(lat) && !isNaN(lng) ){
-                odormarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(title + "<br><a href="+url+">" + url +"</a>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong>") ;
+                odormarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(title + "<br><a href="+url+">" + url +"</a>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong><br><br>Data provided by <a>https://odorlog.ushahidi.io</a>") ;
               }
             return odormarker;
         },
