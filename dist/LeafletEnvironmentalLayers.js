@@ -25964,6 +25964,8 @@ require('./mapKnitterLayer.js') ;
 require('./toxicReleaseLayer.js') ;
 require('leaflet-providers') ;
 require('./openWeatherMapLayer.js') ;
+
+
 },{"./fractracker.js":8,"./mapKnitterLayer.js":10,"./odorReportLayer.js":11,"./openWeatherMapLayer.js":12,"./purpleAirMarkerLayer.js":13,"./purpleLayer.js":14,"./skyTruthLayer.js":15,"./toxicReleaseLayer.js":16,"jquery":2,"leaflet":6,"leaflet-providers":5}],10:[function(require,module,exports){
  L.Icon.MapKnitterIcon = L.Icon.extend({
     options: {
@@ -28203,6 +28205,7 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
               var mail_street_addr = data.MAIL_STREET_ADDRESS ;
               var contact = data.ASGN_PUBLIC_PHONE ; 
               var tri_marker ; 
+
               if (!isNaN((lat)) && !isNaN((lng)) ){
                 tri_marker = L.marker([lat , lng] , {icon: greenDotIcon}).bindPopup("<strong>Name : </strong>" + fac_name + "<br><strong> City :" + city +"</strong>" + "<br><strong> Street address : " + mail_street_addr + "</strong><br><strong> Contact : " + contact + "</strong><br>Lat :"+lat+"<br>Lon :"+lng +"<br><i>From the <a href='https://github.com/publiclab/leaflet-environmental-layers/pull/8'>Toxic Release Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>") ;
               }
