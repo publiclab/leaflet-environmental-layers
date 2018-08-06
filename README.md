@@ -27,7 +27,7 @@ To set up the library first clone this repo to your local environment; then run 
 
 ## Demo : 
 
-Checkout this demo : https://publiclab.github.io/leaflet-environmental-layers/example/mapSimple.html
+Checkout this demo : https://publiclab.github.io/leaflet-environmental-layers/example/index.html#3/43.00/-46.23
 
 ## Features : 
 
