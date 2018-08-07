@@ -42,7 +42,7 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
         var zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
         script.onload = function() {
         var $ = window.jQuery;
-        var SkyTruth_url = "https://alerts.skytruth.org/json?n=100&l="+parseInt(southwest.lat)+","+parseInt(southwest.lng)+","+parseInt(northeast.lat)+","+parseInt(northeast.lng) ;
+        var SkyTruth_url = "https://alerts.skytruth.org/json?n=100&l="+(southwest.lat)+","+(southwest.lng)+","+(northeast.lat)+","+(northeast.lng) ;
         $.getJSON(SkyTruth_url , function(data){
           self.parseData(data) ;    
         });
