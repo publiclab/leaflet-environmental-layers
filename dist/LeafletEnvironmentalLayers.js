@@ -25922,7 +25922,7 @@ L.LayerGroup.FracTrackerLayer = L.LayerGroup.extend(
               var phone = data.FIELD7 ;
               var street = data.FIELD8 ;
               var fracTracker ; 
-              fracTracker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(title + "<br><a>" + website +"</a>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong>"+"<br>Contact :"+contact+"<br>Phone :" + phone + "<br>Email :" + email + "<br>Street : " + street + "<br>State : "+state + "<br>City :"+ city +"<br><i>"+summary+"</i><br><br> <i>Data provided by <a>http://fractracker.org/</a></i>") ;
+              fracTracker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(title + "<br><a href=" + website + ">" + website +"</a>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong>"+"<br>Contact :"+contact+"<br>Phone :" + phone + "<br>Email :" + email + "<br>Street : " + street + "<br>State : "+state + "<br>City :"+ city +"<br><i>"+summary+"</i><br><br> <i>Data provided by <a href='http://fractracker.org/'>http://fractracker.org/</a></i>") ;
               
               return fracTracker ;
         },
@@ -26166,7 +26166,7 @@ L.LayerGroup.OdorReportLayer = L.LayerGroup.extend(
               var url = data.url ;
               var odormarker ; 
               if (!isNaN(lat) && !isNaN(lng) ){
-                odormarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(title + "<br><a href="+url+">" + url +"</a>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong><br><br>Data provided by <a>https://odorlog.ushahidi.io</a>") ;
+                odormarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(title + "<br><a href="+url+">" + url +"</a>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong><br><br>Data provided by <a href='https://odorlog.ushahidi.io'>https://odorlog.ushahidi.io</a>") ;
               }
             return odormarker;
         },
@@ -27868,7 +27868,7 @@ L.LayerGroup.PurpleAirMarkerLayer = L.LayerGroup.extend(
 
               var purpleAirMarker ; 
               if(lat!=null && lng!=null){
-              purpleAirMarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup("<i style='color: purple ; size : 20px'>Label : " + Label + "</i><br><br> <strong>PM2.5 Value : " + value +"</strong><br><strong> Lat: " + lat + "</strong><br><strong> Lon: " + lng + "<br>Temp (F) : "+temp_f+"<br>Humidity : " + humidity + "<br>Pressure : " + pressure + "<br><br>Hardware type : " + type + "<br>DEVICE_HARDWAREDISCOVERED : "+hardware + "</strong><br><br> <i>Data provided by <a>www.purpleair.com</a></i>") ;
+              purpleAirMarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup("<i style='color: purple ; size : 20px'>Label : " + Label + "</i><br><br> <strong>PM2.5 Value : " + value +"</strong><br><strong> Lat: " + lat + "</strong><br><strong> Lon: " + lng + "<br>Temp (F) : "+temp_f+"<br>Humidity : " + humidity + "<br>Pressure : " + pressure + "<br><br>Hardware type : " + type + "<br>DEVICE_HARDWAREDISCOVERED : "+hardware + "</strong><br><br> <i>Data provided by <a href='www.purpleair.com'>www.purpleair.com</a></i>") ;
               }
               return purpleAirMarker ;
         },
@@ -28082,7 +28082,7 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
       var url = data.link ;
       var skymarker ; 
       if (!isNaN(lat) && !isNaN(lng) ){
-        skymarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(title + "<br><a>" + url +"</a>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong> <br><br>Data provided by <a>alerts.skytruth.org/</a>") ;
+        skymarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup("<a href="+url+">" +title + "</a><br>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong> <br><br>Data provided by <a href='http://alerts.skytruth.org/'>alerts.skytruth.org/</a>") ;
       }
       return skymarker;
     },

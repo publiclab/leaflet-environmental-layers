@@ -58,7 +58,7 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
       var url = data.link ;
       var skymarker ; 
       if (!isNaN(lat) && !isNaN(lng) ){
-        skymarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(title + "<br><a>" + url +"</a>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong> <br><br>Data provided by <a>alerts.skytruth.org/</a>") ;
+        skymarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup("<a href="+url+">" +title + "</a><br>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong> <br><br>Data provided by <a href='http://alerts.skytruth.org/'>alerts.skytruth.org/</a>") ;
       }
       return skymarker;
     },
