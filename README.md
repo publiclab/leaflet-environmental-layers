@@ -20,6 +20,45 @@ Seach leaflet-environmental-layers here : https://bower.io/search/
 The information of each layer can be found here :
 https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library
 
+
+
+| Layer Name | Color |
+| --- | --- |
+| PurpleAirLayer-HeatMap | #8b0000 |
+| PurpleAirLayer-Markers | #800080 |
+| SkyTruth | #ff0000 |
+| Fractracker | #ffff00 |
+| ToxicRelease | #008000 |
+| OdorReport | #ff00ff |
+| MapKnitter | #D50039 |
+| OpenInfraMap_Power | #ffc0cb |
+| OpenInfraMap_Telecom | #0000ff |
+| OpenInfraMap_Petroleum | #a52a2a |
+| OpenInfraMap_Water | #4B0082 |
+| Justicemap_income | #006400 |
+| JusticeMap_americanIndian | #800000 |
+| JusticeMap_asian | #ffa500 |
+| JusticeMap_black | #FFD700 |
+| JusticeMap_multi | #ffc0cb |
+| JusticeMap_hispanic | #DCDCDC |
+| JusticeMap_nonWhite | #808080 |
+| JusticeMap_white | #a52a2a |
+| JusticeMap_plurality | #800000 |
+| Clouds | #80dfff |
+| clouds (classic) | #b3f0ff |
+| precipitation | #00ff55 |
+| precipitation (classic) | #00008b |
+| rain | #8080ff |
+| rain (classic) | #1a1aff |
+| snow | #80ffe5 |
+| pressure | #e62e00 |
+| pressure contour (zoom in) | #ff3300 |
+| temp | #ff3300 |
+| wind | #00008b |
+| Cities (zoom in) | #b3ffff |
+| windrose (zoom in) | #008000 |
+
+
 ## Quick Setup : 
 
 To set up the library first clone this repo to your local environment; then run 'npm install' to install all the neccessary packages required. Open examples/index.html to look at the preview of the library.
@@ -27,7 +66,7 @@ To set up the library first clone this repo to your local environment; then run 
 
 ## Demo : 
 
-Checkout this demo : https://publiclab.github.io/leaflet-environmental-layers/example/mapSimple.html
+Checkout this demo : https://publiclab.github.io/leaflet-environmental-layers/example/index.html#3/43.00/-46.23
 
 ## Features : 
 

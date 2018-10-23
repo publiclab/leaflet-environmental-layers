@@ -71,7 +71,7 @@ L.LayerGroup.PurpleAirMarkerLayer = L.LayerGroup.extend(
 
               var purpleAirMarker ; 
               if(lat!=null && lng!=null){
-              purpleAirMarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup("<i style='color: purple ; size : 20px'>Label : " + Label + "</i><br><br> <strong>PM2.5 Value : " + value +"</strong><br><strong> Lat: " + lat + "</strong><br><strong> Lon: " + lng + "<br>Temp (F) : "+temp_f+"<br>Humidity : " + humidity + "<br>Pressure : " + pressure + "<br><br>Hardware type : " + type + "<br>DEVICE_HARDWAREDISCOVERED : "+hardware + "</strong><br><br> <i>Data provided by <a>www.purpleair.com</a></i>") ;
+              purpleAirMarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup("<i style='color: purple ; size : 20px'>Label : " + Label + "</i><br><br> <strong>PM2.5 Value : " + value +"</strong><br><strong> Lat: " + lat + "</strong><br><strong> Lon: " + lng + "<br>Temp (F) : "+temp_f+"<br>Humidity : " + humidity + "<br>Pressure : " + pressure + "<br><br>Hardware type : " + type + "<br>DEVICE_HARDWAREDISCOVERED : "+hardware + "</strong><br><br> <i>Data provided by <a href='www.purpleair.com'>www.purpleair.com</a></i>") ;
               }
               return purpleAirMarker ;
         },

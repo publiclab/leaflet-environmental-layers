@@ -1,6 +1,6 @@
 L.Icon.FracTrackerIcon = L.Icon.extend({
    options: {
-    iconUrl: 'http://www.clker.com/cliparts/2/3/f/a/11970909781608045989gramzon_Barrel.svg.med.png',
+    iconUrl: 'https://www.clker.com/cliparts/2/3/f/a/11970909781608045989gramzon_Barrel.svg.med.png',
     iconSize:     [30, 20], 
     iconAnchor:   [20 , 0], 
     popupAnchor:  [-5, -5] 
@@ -72,7 +72,7 @@ L.LayerGroup.FracTrackerLayer = L.LayerGroup.extend(
               var phone = data.FIELD7 ;
               var street = data.FIELD8 ;
               var fracTracker ; 
-              fracTracker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(title + "<br><a>" + website +"</a>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong>"+"<br>Contact :"+contact+"<br>Phone :" + phone + "<br>Email :" + email + "<br>Street : " + street + "<br>State : "+state + "<br>City :"+ city +"<br><i>"+summary+"</i><br><br> <i>Data provided by <a>http://fractracker.org/</a></i>") ;
+              fracTracker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(title + "<br><a href=" + website + ">" + website +"</a>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong>"+"<br>Contact :"+contact+"<br>Phone :" + phone + "<br>Email :" + email + "<br>Street : " + street + "<br>State : "+state + "<br>City :"+ city +"<br><i>"+summary+"</i><br><br> <i>Data provided by <a href='http://fractracker.org/'>http://fractracker.org/</a></i>") ;
               
               return fracTracker ;
         },

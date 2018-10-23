@@ -1,6 +1,6 @@
 {
   "name": "leaflet-environmental-layers",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "",
   "main": "index.js",
   "directories": {
@@ -22,21 +22,21 @@
   "homepage": "https://github.com/publiclab/leaflet-environmental-layers#readme",
   "devDependencies": {
     "bootstrap": "^4.1.1",
-    "grunt": "^1.0.1",
+    "browserify": "latest",
+    "grunt": "^1.0.3",
     "grunt-browserify": "^5.0.0",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-jasmine": "^1.1.0",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-uglify": "^2.2.0",
-    "grunt-contrib-watch": "^1.0.0",
+    "grunt-contrib-watch": "^1.1.0",
     "grunt-template-jasmine-requirejs": "^0.2.3",
     "jasmine": "^2.5.3",
     "jasmine-ajax": "^3.3.1",
     "jasmine-jquery": "^2.1.1",
     "matchdep": "^1.0.1",
     "require": "^2.4.20",
-    "resig-class": "^1.0.0",
-    "browserify": "latest"
+    "resig-class": "^1.0.0"
   },
   "dependencies": {
     "jquery": "^3.3.1",
