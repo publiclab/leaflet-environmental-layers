@@ -1,6 +1,6 @@
 L.Icon.FracTrackerIcon = L.Icon.extend({
    options: {
-    iconUrl: 'http://www.clker.com/cliparts/2/3/f/a/11970909781608045989gramzon_Barrel.svg.med.png',
+    iconUrl: 'https://www.clker.com/cliparts/2/3/f/a/11970909781608045989gramzon_Barrel.svg.med.png',
     iconSize:     [30, 20], 
     iconAnchor:   [20 , 0], 
     popupAnchor:  [-5, -5] 
