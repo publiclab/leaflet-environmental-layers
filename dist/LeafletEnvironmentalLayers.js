@@ -25850,7 +25850,7 @@ exports.map = createMap;
 },{}],8:[function(require,module,exports){
 L.Icon.FracTrackerIcon = L.Icon.extend({
    options: {
-    iconUrl: 'http://www.clker.com/cliparts/2/3/f/a/11970909781608045989gramzon_Barrel.svg.med.png',
+    iconUrl: 'https://www.clker.com/cliparts/2/3/f/a/11970909781608045989gramzon_Barrel.svg.med.png',
     iconSize:     [30, 20], 
     iconAnchor:   [20 , 0], 
     popupAnchor:  [-5, -5] 
@@ -25952,6 +25952,158 @@ L.layerGroup.fracTrackerLayer = function (options) {
 };
 
 },{}],9:[function(require,module,exports){
+L.LayerGroup.IndigenousLandsTerritoriesLayer = L.LayerGroup.extend(
+
+    {
+        options: {
+            url: 'https://native-land.ca/api/index.php?maps=territories&position=45,-72',
+            popupOnMouseover: false,
+            clearOutsideBounds: true,
+            target: '_self',
+            //minZoom: 0,
+            //maxZoom: 18
+        },
+
+        initialize: function (options) {
+            options = options || {};
+            L.Util.setOptions(this, options);
+            this._layers = {};
+
+        },
+
+        onAdd: function (map) {
+            map.on('moveend', this.requestData, this);
+            this._map = map;
+            this.requestData();
+
+        },
+
+        onRemove: function (map) {
+            map.off('moveend', this.requestData, this);
+            this.clearLayers();
+            this._layers = {};
+        },
+
+        requestData: function () {
+                var self = this ;
+                (function() {
+                    var script = document.createElement("SCRIPT");
+                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
+                    script.type = 'text/javascript';
+                    var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
+                    script.onload = function() {
+                        var $ = window.jQuery;
+
+                        //Here is the URL that should be for loading 1 region at a time
+                        var ILT_url = "https://native-land.ca/api/index.php?maps=territories&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
+                        //this url loads all regions at once
+                        //var ILT_url = "https://native-land.ca/api/index.php?maps=territories";
+                        //Here is the getJSON method designed after the other layers
+                        $.getJSON(ILT_url , function(data){
+                          self.parseData(data) ;
+                        });
+
+                        /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
+                        This does all that parseData does in a much simpler format.*/
+
+                        /*$.getJSON(ILT_url , function(data){
+                          function onEachFeature(feature, layer) {
+                            layer.bindPopup("<strong>Name : </strong>" + feature.properties.Name + "<br><strong>Description: </strong> <a href=" + feature.properties.description + ">Native Lands - " + feature.properties.Name + "</a><br><i>From the  (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>");
+                          }
+
+                          function getStyle(feature, layer) {
+                            return {
+                              "color": feature.properties.color;
+                            }
+                          }
+
+                          self.addLayer(L.geoJSON(data, {style: getStyle, onEachFeature: onEachFeature}));
+                        });*/
+
+                    };
+                    document.getElementsByTagName("head")[0].appendChild(script);
+                })();
+
+
+        },
+
+
+        getPoly: function (data) {
+              var coords = data.geometry.coordinates;
+
+              //Because geoJSON has coordinates in lng, lat format, we must reverse them
+              for(var j = 0; j < coords[0].length; j++) {
+                var temp = coords[0][j][1];
+                coords[0][j][1] = coords[0][j][0];
+                coords[0][j][0] = temp;
+              }
+
+
+              var nme = data.properties.Name;
+              var frNme = data.properties.FrenchName;
+              var desc = data.properties.description;
+              var frDesc = data.properties.FrenchDescription;
+              var clr = data.properties.color;
+              var key = data.id;
+              var ill_poly ;
+              if (!isNaN((coords[0][0][0]) && !isNaN((coords[0][0][1]))) ){
+
+                ill_poly = L.polygon(coords, {color: clr}).bindPopup("<strong>Name : </strong>" + nme + "<br><strong>Description: </strong> <a href=" + desc + ">Native Lands - " + nme + "</a><br><i>From the <a href='https://github.com/publiclab/leaflet-environmental-layers/pull/76'>Indigenous Languages Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>") ;
+
+              }
+            return ill_poly ;
+        },
+
+        addPoly: function (data) {
+            var poly = this.getPoly(data), key = data.id ;
+
+            if (!this._layers[key]) {
+                this._layers[key] = poly;
+                this.addLayer(poly);
+
+            }
+        },
+
+        parseData: function (data) {
+
+        if (!!data){
+           for (var i = 0 ; i < data.length ; i++) {
+
+            this.addPoly(data[i]) ;
+
+           }
+
+
+             if (this.options.clearOutsideBounds) {
+                this.clearOutsideBounds();
+            }
+          }
+        },
+
+        clearOutsideBounds: function () {
+            var bounds = this._map.getBounds(),
+                polyBounds,
+                key;
+
+            for (key in this._layers) {
+                if (this._layers.hasOwnProperty(key)) {
+                    polyBounds = this._layers[key].getBounds();
+
+                    if (!bounds.intersects(polyBounds)) {
+                        this.removeLayer(this._layers[key]);
+                        delete this._layers[key];
+                    }
+                }
+            }
+        }
+    }
+);
+
+L.layerGroup.indigenousLandsTerritoriesLayer = function (options) {
+    return new L.LayerGroup.IndigenousLandsTerritoriesLayer(options);
+};
+
+},{}],10:[function(require,module,exports){
 require('jquery') ; 
 require('leaflet') ; 
 
@@ -25964,7 +26116,8 @@ require('./mapKnitterLayer.js') ;
 require('./toxicReleaseLayer.js') ;
 require('leaflet-providers') ;
 require('./openWeatherMapLayer.js') ;
-},{"./fractracker.js":8,"./mapKnitterLayer.js":10,"./odorReportLayer.js":11,"./openWeatherMapLayer.js":12,"./purpleAirMarkerLayer.js":13,"./purpleLayer.js":14,"./skyTruthLayer.js":15,"./toxicReleaseLayer.js":16,"jquery":2,"leaflet":6,"leaflet-providers":5}],10:[function(require,module,exports){
+require('./indigenousLandsTerritoriesLayer.js')
+},{"./fractracker.js":8,"./indigenousLandsTerritoriesLayer.js":9,"./mapKnitterLayer.js":11,"./odorReportLayer.js":12,"./openWeatherMapLayer.js":13,"./purpleAirMarkerLayer.js":14,"./purpleLayer.js":15,"./skyTruthLayer.js":16,"./toxicReleaseLayer.js":17,"jquery":2,"leaflet":6,"leaflet-providers":5}],11:[function(require,module,exports){
  L.Icon.MapKnitterIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -26094,7 +26247,7 @@ L.layerGroup.mapKnitterLayer = function (options) {
     return new L.LayerGroup.MapKnitterLayer(options) ;
 };
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 L.Icon.OdorReportIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://www.clker.com/cliparts/T/3/6/T/S/8/ink-splash-md.png',
@@ -26218,7 +26371,7 @@ L.layerGroup.odorReportLayer = function (options) {
     return new L.LayerGroup.OdorReportLayer(options);
 };
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 L.OWM = L.TileLayer.extend({
 	options: {
 		appId: '4c6704566155a7d0d5d2f107c5156d6e', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
@@ -27794,7 +27947,7 @@ L.OWM.Utils = {
 
 
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 require('jquery') ; 
 require('leaflet') ; 
 
@@ -27899,7 +28052,7 @@ L.layerGroup.purpleAirMarkerLayer = function (options) {
     return new L.LayerGroup.PurpleAirMarkerLayer(options) ;
 };
 
-},{"jquery":2,"leaflet":6}],14:[function(require,module,exports){
+},{"jquery":2,"leaflet":6}],15:[function(require,module,exports){
 require('heatmap.js') ;
 require('leaflet-heatmap') ;
 
@@ -28021,7 +28174,7 @@ L.layerGroup.purpleLayer = function (options) {
     return new L.LayerGroup.PurpleLayer(options) ;
 };
 
-},{"heatmap.js":1,"leaflet-heatmap":4}],15:[function(require,module,exports){
+},{"heatmap.js":1,"leaflet-heatmap":4}],16:[function(require,module,exports){
 L.Icon.SkyTruthIcon = L.Icon.extend({
   options: {
     iconUrl: 'https://www.clker.com/cliparts/T/G/b/7/r/A/red-dot.svg',
@@ -28124,7 +28277,7 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
 L.layerGroup.skyTruthLayer = function (options) {
   return new L.LayerGroup.SkyTruthLayer(options);
 };
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 L.Icon.ToxicReleaseIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://www.clker.com/cliparts/r/M/L/o/R/i/green-dot.svg',
@@ -28256,4 +28409,4 @@ L.layerGroup.toxicReleaseLayer = function (options) {
     return new L.LayerGroup.ToxicReleaseLayer(options);
 };
 
-},{}]},{},[3,7,9]);
+},{}]},{},[3,7,10]);
