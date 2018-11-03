@@ -25995,9 +25995,9 @@ L.LayerGroup.IndigenousLandsLanguagesLayer = L.LayerGroup.extend(
                         var $ = window.jQuery;
 
                         //Here is the URL that should be for loading 1 region at a time
-                        //var ILL_url = "https://native-land.ca/api/index.php?maps=languages&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
+                        var ILL_url = "https://native-land.ca/api/index.php?maps=languages&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
                         //this url loads all regions at once
-                        var ILL_url = "https://native-land.ca/api/index.php?maps=languages";
+                        //var ILL_url = "https://native-land.ca/api/index.php?maps=languages";
                         //Here is the getJSON method designed after the other layers
                         $.getJSON(ILL_url , function(data){
                           self.parseData(data) ;
@@ -26013,7 +26013,7 @@ L.LayerGroup.IndigenousLandsLanguagesLayer = L.LayerGroup.extend(
 
                           function getStyle(feature, layer) {
                             return {
-                              "color": feature.properties.color
+                              "color": feature.properties.color;
                             }
                           }
 
