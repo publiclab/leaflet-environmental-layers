@@ -97,6 +97,12 @@
     var temp = L.OWM.temperature({});
     var wind = L.OWM.wind({});
 
+    var  WAQI_URL    =  "https://tiles.waqi.info/tiles/usepa-pm25/{z}/{x}/{y}.png?token=demo";  
+    var  WAQI_ATTR  =  'Air  Quality  Tiles  &copy;  <a  href="http://waqi.info">waqi.info</a>';  
+    var  waqiLayer  =  L.tileLayer(WAQI_URL,  {attribution:  WAQI_ATTR});  
+    
+    var AQICNLayer = L.layerGroup.aqicnLayer();
+      
     var city = L.OWM.current({intervall: 15, minZoom: 3});
     var windrose = L.OWM.current({intervall: 15, minZoom: 3, markerFunction: myWindroseMarker, popup: false, clusterSize: 50,imageLoadingBgUrl: 'https://openweathermap.org/img/w0/iwind.png' });
     windrose.on('owmlayeradd', windroseAdded, windrose); 
@@ -147,8 +153,8 @@
          "<span style='color: green'><strong>windrose (zoom in)</strong></span>": windrose 
          "<span style='color: black'><strong>Indigenous Lands Territories</strong></span>": IndigenousLandsTerritories,
          "<span style='color: black'><strong>Indigenous Lands Languages</strong></span>": IndigenousLandsLanguages,
-         "<span style='color: black'><strong>Indigenous Lands Treaties</strong></span>": IndigenousLandsTreaties
-
+         "<span style='color: black'><strong>Indigenous Lands Treaties</strong></span>": IndigenousLandsTreaties,
+         "Test Custom WAQI": AQICNLayer
     };
     L.control.layers(baseMaps,overlayMaps).addTo(map);
   </script>
