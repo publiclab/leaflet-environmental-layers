@@ -101,8 +101,10 @@
     var windrose = L.OWM.current({intervall: 15, minZoom: 3, markerFunction: myWindroseMarker, popup: false, clusterSize: 50,imageLoadingBgUrl: 'https://openweathermap.org/img/w0/iwind.png' });
     windrose.on('owmlayeradd', windroseAdded, windrose); 
 
+
     var IndigenousLandsTerritories = L.layerGroup.indigenousLandsTerritoriesLayer();
-    
+	var IndigenousLandsLanguages = L.layerGroup.indigenousLandsLanguagesLayer();
+
     var baseMaps = {
       "Baselayer1": baselayer1 ,
       "Baselayer2": baselayer2 , 
@@ -142,8 +144,11 @@
          "<span style='color: #ff3300'><strong>temp</strong></span>": temp , 
          "<span style='color: darkblue'><strong>wind</strong></span>": wind , 
          "<span style='color: #b3ffff'><strong>Cities (zoom in)</strong></span>": city  , 
+
          "<span style='color: green'><strong>windrose (zoom in)</strong></span>": windrose ,
-         "<span style='color: black'><strong>Indigenous Lands Territories</strong></span>": IndigenousLandsTerritories
+         "<span style='color: black'><strong>Indigenous Lands Territories</strong></span>": IndigenousLandsTerritories,
+         "<span style='color: black'><strong>Indigenous Lands Languages</strong></span>": IndigenousLandsLanguages
+
     };
     L.control.layers(baseMaps,overlayMaps).addTo(map);
   </script>
