@@ -12,3 +12,4 @@ require('leaflet-providers') ;
 require('./openWeatherMapLayer.js') ;
 require('./indigenousLandsTerritoriesLayer.js');
 require('./indigenousLandsLanguagesLayer.js');
+require('./indigenousLandsTreatiesLayer.js') ;
