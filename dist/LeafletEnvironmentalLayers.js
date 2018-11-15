@@ -26256,6 +26256,7 @@ L.layerGroup.indigenousLandsTerritoriesLayer = function (options) {
 };
 
 },{}],11:[function(require,module,exports){
+
 require('jquery') ;
 require('leaflet') ;
 
@@ -26271,7 +26272,8 @@ require('./openWeatherMapLayer.js') ;
 require('./indigenousLandsTerritoriesLayer.js');
 require('./indigenousLandsLanguagesLayer.js');
 
-},{"./fractracker.js":8,"./indigenousLandsLanguagesLayer.js":9,"./indigenousLandsTerritoriesLayer.js":10,"./mapKnitterLayer.js":12,"./odorReportLayer.js":13,"./openWeatherMapLayer.js":14,"./purpleAirMarkerLayer.js":15,"./purpleLayer.js":16,"./skyTruthLayer.js":17,"./toxicReleaseLayer.js":18,"jquery":2,"leaflet":6,"leaflet-providers":5}],12:[function(require,module,exports){
+
+},{"./fractracker.js":8,"./indigenousLandsLanguagesLayer.js":9,"./indigenousLandsTerritoriesLayer.js":10,"./indigenousLandsTreatiesLayer.js":11,"./mapKnitterLayer.js":13,"./odorReportLayer.js":14,"./openWeatherMapLayer.js":15,"./purpleAirMarkerLayer.js":16,"./purpleLayer.js":17,"./skyTruthLayer.js":18,"./toxicReleaseLayer.js":19,"jquery":2,"leaflet":6,"leaflet-providers":5}],13:[function(require,module,exports){
  L.Icon.MapKnitterIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -26401,7 +26403,7 @@ L.layerGroup.mapKnitterLayer = function (options) {
     return new L.LayerGroup.MapKnitterLayer(options) ;
 };
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 L.Icon.OdorReportIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://www.clker.com/cliparts/T/3/6/T/S/8/ink-splash-md.png',
@@ -26525,7 +26527,7 @@ L.layerGroup.odorReportLayer = function (options) {
     return new L.LayerGroup.OdorReportLayer(options);
 };
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 L.OWM = L.TileLayer.extend({
 	options: {
 		appId: '4c6704566155a7d0d5d2f107c5156d6e', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
@@ -28208,7 +28210,7 @@ L.layerGroup.purpleAirMarkerLayer = function (options) {
     return new L.LayerGroup.PurpleAirMarkerLayer(options) ;
 };
 
-},{"jquery":2,"leaflet":6}],16:[function(require,module,exports){
+},{"jquery":2,"leaflet":6}],17:[function(require,module,exports){
 require('heatmap.js') ;
 require('leaflet-heatmap') ;
 
@@ -28330,7 +28332,7 @@ L.layerGroup.purpleLayer = function (options) {
     return new L.LayerGroup.PurpleLayer(options) ;
 };
 
-},{"heatmap.js":1,"leaflet-heatmap":4}],17:[function(require,module,exports){
+},{"heatmap.js":1,"leaflet-heatmap":4}],18:[function(require,module,exports){
 L.Icon.SkyTruthIcon = L.Icon.extend({
   options: {
     iconUrl: 'https://www.clker.com/cliparts/T/G/b/7/r/A/red-dot.svg',
@@ -28433,6 +28435,7 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
 L.layerGroup.skyTruthLayer = function (options) {
   return new L.LayerGroup.SkyTruthLayer(options);
 };
+
 },{}],18:[function(require,module,exports){
 L.Icon.ToxicReleaseIcon = L.Icon.extend({
     options: {
@@ -28565,4 +28568,4 @@ L.layerGroup.toxicReleaseLayer = function (options) {
     return new L.LayerGroup.ToxicReleaseLayer(options);
 };
 
-},{}]},{},[3,7,11]);
+},{}]},{},[3,7,12]);
