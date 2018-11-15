@@ -10,11 +10,11 @@
     top: 0;
     background: rgba(51,51,51,0.7);
     z-index: 10; }</style>
-  <script src="../dist/LeafletEnvironmentalLayers.js"></script> 
-  <script src="../dist/windRoseLayer.js"></script> 
+  <script src="../dist/LeafletEnvironmentalLayers.js"></script>
+  <script src="../dist/windRoseLayer.js"></script>
 
   <script src="../node_modules/heatmap.js/build/heatmap.min.js"></script>
-  <script src="../node_modules/leaflet-heatmap/leaflet-heatmap.js"></script> 
+  <script src="../node_modules/leaflet-heatmap/leaflet-heatmap.js"></script>
 
   <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet">
   <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet">
@@ -22,31 +22,31 @@
   <script src="../node_modules/leaflet-hash/leaflet-hash.js"></script>
 <body>
 
-  <div id="map"></div> 
+  <div id="map"></div>
 
 
-  <script>   
+  <script>
     var bounds = new L.LatLngBounds(new L.LatLng(84.67351257 , -172.96875) , new L.LatLng(-54.36775852 , 178.59375)) ;
     var map = L.map('map' , {
-      maxBounds: bounds , 
+      maxBounds: bounds ,
       maxBoundsViscosity: 0.75
-    }).setView([43, -83], 3);  
+    }).setView([43, -83], 3);
     map.options.minZoom = 3 ;
-       
+
     var hash = new L.Hash(map) ;
 
     var baselayer1 = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.emerald/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2FnYXJwcmVldDk3IiwiYSI6ImNqaXhlZjgwaDJtb3EzcW1zdDdwMzJkODcifQ.MA2YIv6VpGLLAo-QYUudTA', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }) ; 
+    }) ;
     var baselayer3 = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.streets-basic/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2FnYXJwcmVldDk3IiwiYSI6ImNqaXhlZjgwaDJtb3EzcW1zdDdwMzJkODcifQ.MA2YIv6VpGLLAo-QYUudTA', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map) ;        
+    }).addTo(map) ;
     var baselayer2 = L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png',{
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
        }) ;
     var baselayer4 = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.dark/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2FnYXJwcmVldDk3IiwiYSI6ImNqaXhlZjgwaDJtb3EzcW1zdDdwMzJkODcifQ.MA2YIv6VpGLLAo-QYUudTA', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }) ; 
+    }) ;
 
 
 
@@ -84,7 +84,7 @@
     var JusticeMap_nonWhite = L.tileLayer.provider('JusticeMap.nonWhite') ;
     var JusticeMap_white = L.tileLayer.provider('JusticeMap.white') ;
     var JusticeMap_plurality = L.tileLayer.provider('JusticeMap.plurality') ;
-    
+
     var clouds = L.OWM.clouds({showLegend: true, opacity: 0.5});
     var cloudscls = L.OWM.cloudsClassic({});
     var precipitation = L.OWM.precipitation({});
@@ -99,16 +99,16 @@
 
     var city = L.OWM.current({intervall: 15, minZoom: 3});
     var windrose = L.OWM.current({intervall: 15, minZoom: 3, markerFunction: myWindroseMarker, popup: false, clusterSize: 50,imageLoadingBgUrl: 'https://openweathermap.org/img/w0/iwind.png' });
-    windrose.on('owmlayeradd', windroseAdded, windrose); 
+    windrose.on('owmlayeradd', windroseAdded, windrose);
 
     var IndigenousLandsTerritories = L.layerGroup.indigenousLandsTerritoriesLayer();
-	var IndigenousLandsLanguages = L.layerGroup.indigenousLandsLanguagesLayer();
+	  var IndigenousLandsLanguages = L.layerGroup.indigenousLandsLanguagesLayer();
     var IndigenousLandsTreaties = L.layerGroup.indigenousLandsTreatiesLayer();
 
     var baseMaps = {
       "Baselayer1": baselayer1 ,
-      "Baselayer2": baselayer2 , 
-      "Baselayer3": baselayer3 , 
+      "Baselayer2": baselayer2 ,
+      "Baselayer3": baselayer3 ,
       "Baselayer4": baselayer4
     };
     var overlayMaps = {
@@ -135,16 +135,16 @@
          "<span style='color: #80dfff'><strong>Clouds</strong></span>": clouds ,
          "<span style='color: #b3f0ff'><strong>clouds (classic)</strong></span>": cloudscls ,
          "<span style='color: #00ff55'><strong>precipitation</strong></span>": precipitation ,
-         "<span style='color: darkblue'><strong>precipitation (classic)</strong></span>": precipitationcls , 
-         "<span style='color: #8080ff'><strong>rain</strong></span>": rain , 
+         "<span style='color: darkblue'><strong>precipitation (classic)</strong></span>": precipitationcls ,
+         "<span style='color: #8080ff'><strong>rain</strong></span>": rain ,
          "<span style='color: #1a1aff'><strong>rain (classic)</strong></span>": raincls ,
-         "<span style='color: #80ffe5'><strong>snow</strong></span>": snow , 
+         "<span style='color: #80ffe5'><strong>snow</strong></span>": snow ,
          "<span style='color: #e62e00'><strong>pressure</strong></span>": pressure ,
-         "<span style='color: #ff3300'><strong>pressure contour (zoom in)</strong></span>": pressurecntr , 
-         "<span style='color: #ff3300'><strong>temp</strong></span>": temp , 
-         "<span style='color: darkblue'><strong>wind</strong></span>": wind , 
-         "<span style='color: #b3ffff'><strong>Cities (zoom in)</strong></span>": city  , 
-         "<span style='color: green'><strong>windrose (zoom in)</strong></span>": windrose 
+         "<span style='color: #ff3300'><strong>pressure contour (zoom in)</strong></span>": pressurecntr ,
+         "<span style='color: #ff3300'><strong>temp</strong></span>": temp ,
+         "<span style='color: darkblue'><strong>wind</strong></span>": wind ,
+         "<span style='color: #b3ffff'><strong>Cities (zoom in)</strong></span>": city  ,
+         "<span style='color: green'><strong>windrose (zoom in)</strong></span>": windrose ,
          "<span style='color: black'><strong>Indigenous Lands Territories</strong></span>": IndigenousLandsTerritories,
          "<span style='color: black'><strong>Indigenous Lands Languages</strong></span>": IndigenousLandsLanguages,
          "<span style='color: black'><strong>Indigenous Lands Treaties</strong></span>": IndigenousLandsTreaties
