@@ -13,3 +13,4 @@ require('./openWeatherMapLayer.js') ;
 require('./indigenousLandsTerritoriesLayer.js');
 require('./indigenousLandsLanguagesLayer.js');
 require('./indigenousLandsTreatiesLayer.js') ;
+require('./aqicnLayer.js');
