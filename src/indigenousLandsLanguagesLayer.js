@@ -26,6 +26,7 @@ L.LayerGroup.IndigenousLandsLanguagesLayer = L.LayerGroup.extend(
 
         onRemove: function (map) {
             map.off('moveend', this.requestData, this);
+            map.spin(false) ;
             this.clearLayers();
             this._layers = {};
         },
@@ -45,8 +46,10 @@ L.LayerGroup.IndigenousLandsLanguagesLayer = L.LayerGroup.extend(
                         //this url loads all regions at once
                         //var ILL_url = "https://native-land.ca/api/index.php?maps=languages";
                         //Here is the getJSON method designed after the other layers
+                          map.spin(true) ;
                         $.getJSON(ILL_url , function(data){
                           self.parseData(data) ;
+                          map.spin(false) ;
                         });
 
                         /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format

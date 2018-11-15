@@ -25851,9 +25851,9 @@ exports.map = createMap;
 L.Icon.FracTrackerIcon = L.Icon.extend({
    options: {
     iconUrl: 'https://www.clker.com/cliparts/2/3/f/a/11970909781608045989gramzon_Barrel.svg.med.png',
-    iconSize:     [30, 20], 
-    iconAnchor:   [20 , 0], 
-    popupAnchor:  [-5, -5] 
+    iconSize:     [30, 20],
+    iconAnchor:   [20 , 0],
+    popupAnchor:  [-5, -5]
   }
 });
 
@@ -25866,49 +25866,52 @@ L.LayerGroup.FracTrackerLayer = L.LayerGroup.extend(
 
     {
         options: {
-            url: 'https://sagarpreet-chadha.github.io/FractrackerCSV.json',   
+            url: 'https://sagarpreet-chadha.github.io/FractrackerCSV.json',
         },
-        
+
         initialize: function (options) {
             options = options || {};
-            L.Util.setOptions(this, options); 
-            this._layers = {};  
+            L.Util.setOptions(this, options);
+            this._layers = {};
         },
-        
+
         onAdd: function (map) {
            // map.on('moveend', this.requestData, this);
             this._map = map;
             this.requestData();
         },
-        
+
         onRemove: function (map) {
            // map.off('moveend', this.requestData, this);
             this.clearLayers();
+            map.spin(false) ;
             this._layers = {};
         },
-        
+
         requestData: function () {
            var self = this;
                 (function() {
                     var script = document.createElement("SCRIPT");
                     script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
                     script.type = 'text/javascript';
-                    
+
                     script.onload = function() {
                         var $ = window.jQuery;
                         var FracTracker_URL = "https://sagarpreet-chadha.github.io/FractrackerCSV.json" ;
+                          map.spin(true) ;
                         $.getJSON(FracTracker_URL , function(data){
-                        	 self.parseData(data) ;    
+                        	 self.parseData(data) ;
+                             map.spin(false) ;
             		    });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);
-                })(); 
-            
-            
+                })();
+
+
         },
-       
+
         getMarker: function (data) {
-          
+
               var redDotIcon =new L.icon.fracTrackerIcon();
               var lat = parseFloat(data.FIELD12) ;
               var lng = parseFloat(data.FIELD13) ;
@@ -25921,27 +25924,27 @@ L.LayerGroup.FracTrackerLayer = L.LayerGroup.extend(
               var email = data.FIELD6 ;
               var phone = data.FIELD7 ;
               var street = data.FIELD8 ;
-              var fracTracker ; 
+              var fracTracker ;
               fracTracker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(title + "<br><a href=" + website + ">" + website +"</a>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong>"+"<br>Contact :"+contact+"<br>Phone :" + phone + "<br>Email :" + email + "<br>Street : " + street + "<br>State : "+state + "<br>City :"+ city +"<br><i>"+summary+"</i><br><br> <i>Data provided by <a href='http://fractracker.org/'>http://fractracker.org/</a></i>") ;
-              
+
               return fracTracker ;
         },
 
         addMarker: function (data) {
-            var marker = this.getMarker(data) ; 
-            key = data.FIELD2;   
+            var marker = this.getMarker(data) ;
+            key = data.FIELD2;
     		    if (!this._layers[key]) {
     		      this._layers[key] = marker;
-    		      this.addLayer(marker);   
+    		      this.addLayer(marker);
     		    }
         },
-        
+
         parseData: function (data) {
-    
-            for (i = 1 ; i < data.length ; i++) { 
-             this.addMarker(data[i]) ; 
+
+            for (i = 1 ; i < data.length ; i++) {
+             this.addMarker(data[i]) ;
             }
-             
+
         }
     }
 );
@@ -25980,6 +25983,7 @@ L.LayerGroup.IndigenousLandsLanguagesLayer = L.LayerGroup.extend(
 
         onRemove: function (map) {
             map.off('moveend', this.requestData, this);
+            map.spin(false) ;
             this.clearLayers();
             this._layers = {};
         },
@@ -25999,8 +26003,10 @@ L.LayerGroup.IndigenousLandsLanguagesLayer = L.LayerGroup.extend(
                         //this url loads all regions at once
                         //var ILL_url = "https://native-land.ca/api/index.php?maps=languages";
                         //Here is the getJSON method designed after the other layers
+                          map.spin(true) ;
                         $.getJSON(ILL_url , function(data){
                           self.parseData(data) ;
+                          map.spin(false) ;
                         });
 
                         /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
@@ -26132,6 +26138,7 @@ L.LayerGroup.IndigenousLandsTerritoriesLayer = L.LayerGroup.extend(
 
         onRemove: function (map) {
             map.off('moveend', this.requestData, this);
+            map.spin(false) ;
             this.clearLayers();
             this._layers = {};
         },
@@ -26151,8 +26158,10 @@ L.LayerGroup.IndigenousLandsTerritoriesLayer = L.LayerGroup.extend(
                         //this url loads all regions at once
                         //var ILT_url = "https://native-land.ca/api/index.php?maps=territories";
                         //Here is the getJSON method designed after the other layers
+                        map.spin(true) ;
                         $.getJSON(ILT_url , function(data){
                           self.parseData(data) ;
+                          map.spin(false) ;
                         });
 
                         /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
@@ -26284,6 +26293,7 @@ L.LayerGroup.IndigenousLandsTreatiesLayer = L.LayerGroup.extend(
 
         onRemove: function (map) {
             map.off('moveend', this.requestData, this);
+            map.spin(false) ;
             this.clearLayers();
             this._layers = {};
         },
@@ -26303,8 +26313,10 @@ L.LayerGroup.IndigenousLandsTreatiesLayer = L.LayerGroup.extend(
                         //this url loads all regions at once
                         //var ILTr_url = "https://native-land.ca/api/index.php?maps=treaties";
                         //Here is the getJSON method designed after the other layers
+                        map.spin(true) ;
                         $.getJSON(ILTr_url , function(data){
                           self.parseData(data) ;
+                          map.spin(false) ;
                         });
 
                         /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
@@ -26445,29 +26457,30 @@ L.LayerGroup.MapKnitterLayer = L.LayerGroup.extend(
     {
         options: {
             url: 'https://mapknitter.org/map/region/Gulf-Coast.json?minlon=-98.8&minlat=23.6&maxlon=-79.1&maxlat=31.8',
-            clearOutsideBounds: true ,     
+            clearOutsideBounds: true ,
         },
-        
+
         initialize: function (options) {
             options = options || {};
-            L.Util.setOptions(this, options); 
-            this._layers = {};  
+            L.Util.setOptions(this, options);
+            this._layers = {};
 
         },
-        
+
         onAdd: function (map) {
             map.on('moveend', this.requestData, this);
             this._map = map;
             this.requestData();
 
         },
-        
+
         onRemove: function (map) {
             map.off('moveend', this.requestData, this);
+            map.spin(false) ;
             this.clearLayers();
             this._layers = {};
         },
-        
+
         requestData: function () {
            var self = this;
                 (function() {
@@ -26475,22 +26488,24 @@ L.LayerGroup.MapKnitterLayer = L.LayerGroup.extend(
                     script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
                     script.type = 'text/javascript';
                     var zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
-                    
+
                     script.onload = function() {
                         var $ = window.jQuery;
                         var MapKnitter_url = "https://mapknitter.org/map/region/Gulf-Coast.json?minlon="+(southwest.lng)+"&minlat="+(southwest.lat)+"&maxlon="+(northeast.lng)+"&maxlat="+(northeast.lat);
+                        map.spin(true) ;  
                         $.getJSON(MapKnitter_url , function(data){
-                        	 self.parseData(data) ;    
+                        	 self.parseData(data) ;
+                           map.spin(false) ;
             		    });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);
-                })(); 
-            
-            
+                })();
+
+
         },
-       
+
         getMarker: function (data) {
-          
+
               var redDotIcon =new L.icon.mapKnitterIcon();
               var lat = data.lat ;
               var lng = data.lon;
@@ -26499,7 +26514,7 @@ L.LayerGroup.MapKnitterLayer = L.LayerGroup.extend(
               var author = data.author ;
               var url = "https://publiclab.org/profile/" + author ;
               var map_page = "https://mapknitter.org/maps/"+ title ;
-              var mapknitter ; 
+              var mapknitter ;
               if (!isNaN(lat) && !isNaN(lng) ){
                 mapknitter = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup("<strong>Title : </strong>"+ "<a href=" + map_page + ">" + title + "</a>" + "<br><strong>Author :</strong> " + "<a href="+url+">"  +  author +"</a>" + "<br><strong>Location : </strong>" + location  + "<br><strong> Lat : </strong>" + lat + "  ,  <strong> Lon : </strong>" + lng +"<br><i>For more info on <a href='https://github.com/publiclab/leaflet-environmental-layers/issues/10'>MapKnitter Layer</a>, visit <a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>here<a></i>" ) ;
               }
@@ -26507,28 +26522,28 @@ L.LayerGroup.MapKnitterLayer = L.LayerGroup.extend(
         },
         addMarker: function (data) {
             var marker = this.getMarker(data),
-            
-            key = data.id;  
+
+            key = data.id;
 
             if (!this._layers[key]) {
                 this._layers[key] = marker;
-                this.addLayer(marker);  
+                this.addLayer(marker);
             }
         },
-        
-        parseData: function (data) {
-    
 
-            for (i = 0 ; i < data.length ; i++) { 
-             this.addMarker(data[i]) ; 
+        parseData: function (data) {
+
+
+            for (i = 0 ; i < data.length ; i++) {
+             this.addMarker(data[i]) ;
             }
 
              if (this.options.clearOutsideBounds) {
                 this.clearOutsideBounds();
-            }  
-             
+            }
+
         },
-       
+
         clearOutsideBounds: function () {
             var bounds = this._map.getBounds(),
                 latLng,
@@ -26538,7 +26553,7 @@ L.LayerGroup.MapKnitterLayer = L.LayerGroup.extend(
                 if (this._layers.hasOwnProperty(key)) {
                     latLng = this._layers[key].getLatLng();
 
-                    if (!bounds.contains(latLng)) {         
+                    if (!bounds.contains(latLng)) {
                         this.removeLayer(this._layers[key]);
                         delete this._layers[key];
                     }
@@ -26557,9 +26572,9 @@ L.layerGroup.mapKnitterLayer = function (options) {
 L.Icon.OdorReportIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://www.clker.com/cliparts/T/3/6/T/S/8/ink-splash-md.png',
-      iconSize:     [30, 20], 
-      iconAnchor:   [20 , 0], 
-      popupAnchor:  [-5, -5] 
+      iconSize:     [30, 20],
+      iconAnchor:   [20 , 0],
+      popupAnchor:  [-5, -5]
     }
 });
 
@@ -26573,29 +26588,30 @@ L.LayerGroup.OdorReportLayer = L.LayerGroup.extend(
     {
         options: {
             url: ' https://odorlog.api.ushahidi.io/api/v3/posts/',
-            clearOutsideBounds: false 
+            clearOutsideBounds: false
         },
-        
+
         initialize: function (options) {
             options = options || {};
-            L.Util.setOptions(this, options);  
-            this._layers = {}; 
+            L.Util.setOptions(this, options);
+            this._layers = {};
 
         },
-        
+
         onAdd: function (map) {
             map.on('moveend', this.requestData, this);
             this._map = map;
             this.requestData();
 
         },
-       
+
         onRemove: function (map) {
             map.off('moveend', this.requestData, this);
+            map.spin(false) ;
             this.clearLayers();
             this._layers = {};
         },
-       
+
         requestData: function () {
            var self = this;
                 (function() {
@@ -26606,54 +26622,56 @@ L.LayerGroup.OdorReportLayer = L.LayerGroup.extend(
                     script.onload = function() {
                         var $ = window.jQuery;
                         var OdorReport_url = "https://odorlog.api.ushahidi.io/api/v3/posts/" ;
+                        map.spin(true) ;
                         $.getJSON(OdorReport_url , function(data){
-                             self.parseData(data) ;    
+                             self.parseData(data) ;
+                             map.spin(false) ;
                         });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);
-                })(); 
-            
-            
+                })();
+
+
         },
-        
+
         getMarker: function (data) {
-          
+
               var redDotIcon =new L.icon.odorReportIcon() ;
               var lat = data.values["bcc29002-c4d3-4c2c-92c7-1c9032c3b0fd"][0].lat ;
               var lng = data.values["bcc29002-c4d3-4c2c-92c7-1c9032c3b0fd"][0].lon ;
               var title = data.title ;
               var url = data.url ;
-              var odormarker ; 
+              var odormarker ;
               if (!isNaN(lat) && !isNaN(lng) ){
                 odormarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(title + "<br><a href="+url+">" + url +"</a>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong><br><br>Data provided by <a href='https://odorlog.ushahidi.io'>https://odorlog.ushahidi.io</a>") ;
               }
             return odormarker;
         },
-       
+
         addMarker: function (data) {
             var marker = this.getMarker(data),
-            
-            key = data.id;   
+
+            key = data.id;
 
             if (!this._layers[key]) {
                 this._layers[key] = marker;
-                this.addLayer(marker);   
+                this.addLayer(marker);
             }
         },
-        
+
         parseData: function (data) {
-    
+
           if (data.total_count != 0 ){
-            for (i = 0 ; i < data.total_count ; i++) { 
-             this.addMarker(data.results[i]) ; 
+            for (i = 0 ; i < data.total_count ; i++) {
+             this.addMarker(data.results[i]) ;
             }
 
              if (this.options.clearOutsideBounds) {
                 this.clearOutsideBounds();
-            }  
-          }     
+            }
+          }
         },
-        
+
         clearOutsideBounds: function () {
             var bounds = this._map.getBounds(),
                 latLng,
@@ -26663,7 +26681,7 @@ L.LayerGroup.OdorReportLayer = L.LayerGroup.extend(
                 if (this._layers.hasOwnProperty(key)) {
                     latLng = this._layers[key].getLatLng();
 
-                    if (!bounds.contains(latLng)) {          
+                    if (!bounds.contains(latLng)) {
                         this.removeLayer(this._layers[key]);
                         delete this._layers[key];
                     }
@@ -28254,15 +28272,15 @@ L.OWM.Utils = {
 
 
 },{}],16:[function(require,module,exports){
-require('jquery') ; 
-require('leaflet') ; 
+require('jquery') ;
+require('leaflet') ;
 
 L.Icon.PurpleAirMarkerIcon = L.Icon.extend({
    options: {
     iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Location_dot_purple.svg/768px-Location_dot_purple.svg.png',
-    iconSize:     [15 , 10], 
-    iconAnchor:   [20 , 0], 
-    popupAnchor:  [-5, -5] 
+    iconSize:     [15 , 10],
+    iconAnchor:   [20 , 0],
+    popupAnchor:  [-5, -5]
   }
 });
 
@@ -28273,45 +28291,48 @@ L.icon.purpleAirMarkerIcon = function () {
 L.LayerGroup.PurpleAirMarkerLayer = L.LayerGroup.extend(
     {
         options: {
-            url: 'https://www.purpleair.com/json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L',   
+            url: 'https://www.purpleair.com/json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L',
         },
 
         initialize: function (options) {
             options = options || {};
-            L.Util.setOptions(this, options); 
-            this._layers = {};  
+            L.Util.setOptions(this, options);
+            this._layers = {};
         },
-        
+
         onAdd: function (map) {
             this._map = map;
             this.requestData();
         },
-        
+
         onRemove: function (map) {
             this.clearLayers();
+            map.spin(false) ;
             this._layers = {};
         },
-        
+
         requestData: function () {
            var self = this;
                 (function() {
                     var script = document.createElement("SCRIPT");
                     script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
                     script.type = 'text/javascript';
-                    
+
                     script.onload = function() {
                         var $ = window.jQuery;
                         var PurpleLayer_url = "https://www.purpleair.com/json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L";
+                        map.spin(true) ;
                         $.getJSON(PurpleLayer_url , function(data){
-                        	 self.parseData(data) ;    
+                        	 self.parseData(data) ;
+                           map.spin(false) ;
             		    });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);
-                })(); 
-            
-            
+                })();
+
+
         },
-       
+
         getMarker: function (data) {
               var redDotIcon =new L.icon.purpleAirMarkerIcon();
               var lat = data.Lat ;
@@ -28325,7 +28346,7 @@ L.LayerGroup.PurpleAirMarkerLayer = L.LayerGroup.extend(
               var type = data.Type ;
               var hardware = data.DEVICE_HARDWAREDISCOVERED ;
 
-              var purpleAirMarker ; 
+              var purpleAirMarker ;
               if(lat!=null && lng!=null){
               purpleAirMarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup("<i style='color: purple ; size : 20px'>Label : " + Label + "</i><br><br> <strong>PM2.5 Value : " + value +"</strong><br><strong> Lat: " + lat + "</strong><br><strong> Lon: " + lng + "<br>Temp (F) : "+temp_f+"<br>Humidity : " + humidity + "<br>Pressure : " + pressure + "<br><br>Hardware type : " + type + "<br>DEVICE_HARDWAREDISCOVERED : "+hardware + "</strong><br><br> <i>Data provided by <a href='www.purpleair.com'>www.purpleair.com</a></i>") ;
               }
@@ -28334,20 +28355,20 @@ L.LayerGroup.PurpleAirMarkerLayer = L.LayerGroup.extend(
 
         addMarker: function (data) {
 
-            var marker = this.getMarker(data) ; 
-             if(marker != null){ 
-             key = data.ID ;   
+            var marker = this.getMarker(data) ;
+             if(marker != null){
+             key = data.ID ;
              if (!this._layers[key]) {
                this._layers[key] = marker;
-               this.addLayer(marker);   
+               this.addLayer(marker);
              }
             }
         },
-        
+
         parseData: function (data) {
             console.log(data.results.length) ;
-            for (i = 0 ; i < data.results.length ; i++) { 
-             this.addMarker(data.results[i]) ; 
+            for (i = 0 ; i < data.results.length ; i++) {
+             this.addMarker(data.results[i]) ;
             }
         }
     }
@@ -28365,67 +28386,69 @@ require('leaflet-heatmap') ;
 L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
 
     {
-        
+
         options: {
             "radius": 2,
-            "maxOpacity": 1 , 
-            "scaleRadius": true, 
+            "maxOpacity": 1 ,
+            "scaleRadius": true,
             "useLocalExtrema": true,
              latField: 'lat',
              lngField: 'lng',
              valueField: 'count' ,
-             blur: .75    
+             blur: .75
         },
-        
+
         initialize: function (options) {
             options = options || {};
-            L.Util.setOptions(this, options); 
-            this._layers = {};  
+            L.Util.setOptions(this, options);
+            this._layers = {};
             this._purpleLayerArray = [] ;
             this.heatmapLayer ;
         },
-        
+
         onAdd: function (map) {
              this._map = map;
              this.heatmapLayer = new HeatmapOverlay(this.options) ;
-           
              this.requestData();
 
 
         },
-        
+
         onRemove: function (map) {
             this._map.removeLayer(this.heatmapLayer) ;
+            map.spin(false) ;
             this.clearLayers();
             this._layers = {};
         },
-        
+
         requestData: function () {
            var self = this;
                 (function() {
                     var script = document.createElement("SCRIPT");
                     script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
                     script.type = 'text/javascript';
-                    
+
                     script.onload = function() {
                         var $ = window.jQuery;
                         var PurpleLayer_url = "https://www.purpleair.com/json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L";
+                        map.spin(true) ;
                         $.getJSON(PurpleLayer_url , function(data){
-                        	 self.parseData(data) ;    
+                        	 self.parseData(data) ;
+                           map.spin(false) ;
             		    });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);
-                })(); 
-            
-            
+                })();
+
+
         },
-       
+
         getMarker: function (data) {
               var lat = data.Lat ;
               var lng = data.Lon;
               var value = parseFloat(data.PM2_5Value) ;  //PM2.5 VALUE in microgram per metre cube
 
-              var purpleLayer_object = new Object() ; 
+              var purpleLayer_object = new Object() ;
               purpleLayer_object.lat = lat ;
               purpleLayer_object.lng = lng ;
               purpleLayer_object.count = value ;
@@ -28441,8 +28464,8 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
               else if(value<=55.4){
                 aqi = ((150-101)*(value-35.5))/(55.4-35.5) + 101 ;
               }
-              else if(value<=150.4){  
-                aqi = ((200-151)*(value-55.5))/(150.4-55.5) + 151 ; 
+              else if(value<=150.4){
+                aqi = ((200-151)*(value-55.5))/(150.4-55.5) + 151 ;
               }
               else if(value<=250.4){
                 aqi = ((3000-201)*(value-150.5))/(250.4-150.5) + 201 ;
@@ -28462,11 +28485,11 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
         addMarker: function (data) {
             this._purpleLayerArray.push(this.getMarker(data)) ;
         },
-        
+
         parseData: function (data) {
-    
-            for (i = 0 ; i < data.results.length ; i++) { 
-             this.addMarker(data.results[i]) ; 
+
+            for (i = 0 ; i < data.results.length ; i++) {
+             this.addMarker(data.results[i]) ;
             }
             //console.log(this._purpleLayerArray) ;
             this.heatmapLayer.setData({data: this._purpleLayerArray}) ;
@@ -28484,9 +28507,9 @@ L.layerGroup.purpleLayer = function (options) {
 L.Icon.SkyTruthIcon = L.Icon.extend({
   options: {
     iconUrl: 'https://www.clker.com/cliparts/T/G/b/7/r/A/red-dot.svg',
-    iconSize:     [30, 20], 
-    iconAnchor:   [20 , 0], 
-    popupAnchor:  [-5, -5] 
+    iconSize:     [30, 20],
+    iconAnchor:   [20 , 0],
+    popupAnchor:  [-5, -5]
   }
 });
 
@@ -28499,12 +28522,12 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
     options: {
       url: 'https://alerts.skytruth.org/json?n=100',
       popupOnMouseover: false,
-      clearOutsideBounds: false ,       
+      clearOutsideBounds: false ,
     },
     initialize: function (options) {
       options = options || {};
-      L.Util.setOptions(this, options);  
-      this._layers = {};  
+      L.Util.setOptions(this, options);
+      this._layers = {};
     },
     onAdd: function (map) {
       map.on('moveend', this.requestData, this);
@@ -28513,6 +28536,7 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
     },
     onRemove: function (map) {
       map.off('moveend', this.requestData, this);
+      map.spin(false) ;
       this.clearLayers();
       this._layers = {};
     },
@@ -28526,12 +28550,14 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
         script.onload = function() {
         var $ = window.jQuery;
         var SkyTruth_url = "https://alerts.skytruth.org/json?n=100&l="+(southwest.lat)+","+(southwest.lng)+","+(northeast.lat)+","+(northeast.lng) ;
+        map.spin(true) ;
         $.getJSON(SkyTruth_url , function(data){
-          self.parseData(data) ;    
+          self.parseData(data) ;
+          map.spin(false) ;
         });
         };
       document.getElementsByTagName("head")[0].appendChild(script);
-      })();      
+      })();
     },
     getMarker: function (data) {
       var redDotIcon =new L.icon.skyTruthIcon();
@@ -28539,7 +28565,7 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
       var lng = data.lng;
       var title = data.title ;
       var url = data.link ;
-      var skymarker ; 
+      var skymarker ;
       if (!isNaN(lat) && !isNaN(lng) ){
         skymarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup("<a href="+url+">" +title + "</a><br>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong> <br><br>Data provided by <a href='http://alerts.skytruth.org/'>alerts.skytruth.org/</a>") ;
       }
@@ -28547,21 +28573,21 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
     },
     addMarker: function (data) {
       var marker = this.getMarker(data),
-      key = data.id;   
+      key = data.id;
       if (!this._layers[key]) {
         this._layers[key] = marker;
-        this.addLayer(marker);   
+        this.addLayer(marker);
       }
     },
     parseData: function (data) {
       if (!!data.feed){
-        for (i = 0 ; i < data.feed.length ; i++) { 
-          this.addMarker(data.feed[i]) ; 
+        for (i = 0 ; i < data.feed.length ; i++) {
+          this.addMarker(data.feed[i]) ;
         }
         if (this.options.clearOutsideBounds) {
           this.clearOutsideBounds();
-        }  
-      }     
+        }
+      }
     },
     clearOutsideBounds: function () {
       var bounds = this._map.getBounds(),
@@ -28570,7 +28596,7 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
       for (key in this._layers) {
         if (this._layers.hasOwnProperty(key)) {
           latLng = this._layers[key].getLatLng();
-          if (!bounds.contains(latLng)) {          
+          if (!bounds.contains(latLng)) {
             this.removeLayer(this._layers[key]);
             delete this._layers[key];
           }
@@ -28583,13 +28609,14 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
 L.layerGroup.skyTruthLayer = function (options) {
   return new L.LayerGroup.SkyTruthLayer(options);
 };
+
 },{}],19:[function(require,module,exports){
 L.Icon.ToxicReleaseIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://www.clker.com/cliparts/r/M/L/o/R/i/green-dot.svg',
-      iconSize:     [30, 20], 
-      iconAnchor:   [20 , 0], 
-      popupAnchor:  [-5, -5] 
+      iconSize:     [30, 20],
+      iconAnchor:   [20 , 0],
+      popupAnchor:  [-5, -5]
     }
 });
 
@@ -28604,34 +28631,35 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
         options: {
             url: 'https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/45/PREF_LONGITUDE/BEGINNING/72/rows/0:500/JSON',
             popupOnMouseover: false,
-            clearOutsideBounds: false,       
-            target: '_self',      
+            clearOutsideBounds: false,
+            target: '_self',
             minZoom: 0,
             maxZoom: 18
         },
-      
+
         initialize: function (options) {
             options = options || {};
-            L.Util.setOptions(this, options);  
-            this._layers = {}; 
+            L.Util.setOptions(this, options);
+            this._layers = {};
 
         },
-        
+
         onAdd: function (map) {
             map.on('moveend', this.requestData, this);
             this._map = map;
             this.requestData();
 
         },
-        
+
         onRemove: function (map) {
             map.off('moveend', this.requestData, this);
+            map.spin(false) ;
             this.clearLayers();
             this._layers = {};
         },
-        
+
         requestData: function () {
-                var self = this ; 
+                var self = this ;
                 (function() {
                     var script = document.createElement("SCRIPT");
                     script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
@@ -28640,58 +28668,60 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
                     script.onload = function() {
                         var $ = window.jQuery;
                         var TRI_url = "https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/"+parseInt(origin.lat)+"/PREF_LONGITUDE/BEGINNING/"+parseInt(-1*origin.lng)+"/rows/0:300/JSON" ;
-                         $.getJSON(TRI_url , function(data){
+                        map.spin(true) ;
+                        $.getJSON(TRI_url , function(data){
                          // console.log(parseInt(origin.lat) +" and "+parseInt(origin.lng)) ;
-                         self.parseData(data) ;    
+                         self.parseData(data) ;
+                         map.spin(false) ;
                         });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);
-                })(); 
-            
-            
+                })();
+
+
         },
-       
+
         getMarker: function (data) {
-          
+
             var greenDotIcon =new L.icon.toxicReleaseIcon();
               var lat = data.PREF_LATITUDE ;
               var lng = -1*data.PREF_LONGITUDE;
              // console.log(lat +"  "+lng) ;
               var fac_name = data.FACILITY_NAME ;
-              var city = data.CITY_NAME ; 
+              var city = data.CITY_NAME ;
               var mail_street_addr = data.MAIL_STREET_ADDRESS ;
-              var contact = data.ASGN_PUBLIC_PHONE ; 
-              var tri_marker ; 
+              var contact = data.ASGN_PUBLIC_PHONE ;
+              var tri_marker ;
               if (!isNaN((lat)) && !isNaN((lng)) ){
                 tri_marker = L.marker([lat , lng] , {icon: greenDotIcon}).bindPopup("<strong>Name : </strong>" + fac_name + "<br><strong> City :" + city +"</strong>" + "<br><strong> Street address : " + mail_street_addr + "</strong><br><strong> Contact : " + contact + "</strong><br>Lat :"+lat+"<br>Lon :"+lng +"<br><i>From the <a href='https://github.com/publiclab/leaflet-environmental-layers/pull/8'>Toxic Release Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>") ;
               }
-            return tri_marker ; 
+            return tri_marker ;
         },
-        
+
         addMarker: function (data) {
             var marker = this.getMarker(data),
-            
-             key = data.TRI_FACILITY_ID ;   
+
+             key = data.TRI_FACILITY_ID ;
 
             if (!this._layers[key]) {
                 this._layers[key] = marker;
-                this.addLayer(marker);   
+                this.addLayer(marker);
             }
         },
 
         parseData: function (data) {
-             
+
         if (!!data){
-           for (i = 0 ; i < data.length ; i++) { 
-            this.addMarker(data[i]) ; 
+           for (i = 0 ; i < data.length ; i++) {
+            this.addMarker(data[i]) ;
            }
 
              if (this.options.clearOutsideBounds) {
                 this.clearOutsideBounds();
-            }  
-          }     
+            }
+          }
         },
-        
+
         clearOutsideBounds: function () {
             var bounds = this._map.getBounds(),
                 latLng,
@@ -28701,7 +28731,7 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
                 if (this._layers.hasOwnProperty(key)) {
                     latLng = this._layers[key].getLatLng();
 
-                    if (!bounds.contains(latLng)) {         
+                    if (!bounds.contains(latLng)) {
                         this.removeLayer(this._layers[key]);
                         delete this._layers[key];
                     }
