@@ -26352,7 +26352,7 @@ L.LayerGroup.IndigenousLandsTerritoriesLayer = L.LayerGroup.extend(
                         self._map.spin(true) ;
                         $.getJSON(ILT_url , function(data){
                           self.parseData(data) ;
-                          self._map.spin(true) ;
+                          self._map.spin(false) ;
                         });
 
                         /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
