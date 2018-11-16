@@ -89,9 +89,11 @@ Click on a point or marker on the map to learn more about it .
 ## Dependencies : 
 
 ### General (required for all layers) :
-
+	
            <script src="../dist/LeafletEnvironmentalLayers.js"></script> 
            <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet">
+	   <script src="../node_modules/leaflet-spin/example/spin/dist/spin.min.js"></script>  <!-- Compulsory to add -->
+ 	   <script src="../node_modules/leaflet-spin/example/leaflet.spin.min.js"></script>
 
 ### To use Wind Rose Layer : 
 
