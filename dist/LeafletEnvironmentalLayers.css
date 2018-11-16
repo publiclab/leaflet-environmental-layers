@@ -63,3 +63,62 @@
 
 .owm-legend-item {
 }
+
+.aqiSign {
+    position: absolute;
+    color:#FFFFFF;
+    background-color: #009966;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 26px;
+    font-family: Arial, Helvetica, sans-serif;
+	font-size: 18px;
+    box-shadow: 0 0 0 1px #FFFFFF, 0 0 0 2px #000000;
+}
+
+.aqiSign::after {
+    content:"";
+    position: absolute;
+    left: 16px;
+    bottom: -15px;
+    width:3px;
+    height:12px;
+    background-color: white;
+    border-left: 1px solid #000000;
+    border-right: 1px solid #000000;
+    border-bottom: 1px solid #000000;
+}
+
+.aqiGood {
+	background-color: #009966;
+}
+
+.aqiMod {
+	background-color: #FFDE33;
+	color: #000000;
+}
+
+.aqiSens {
+	background-color: #FF9933;
+	color: #000000;
+}
+
+.aqiUnhealth {
+	background-color: #CC0033
+}
+
+.aqiVUnhealth {
+	background-color: #660099;
+}
+
+.aqiHazard {
+	background-color: #7E0023;
+}
+
+.aqiNull {
+	background-color: #CCCCCC;
+}
+
+.city-container {
+	width: 200px;
+}
