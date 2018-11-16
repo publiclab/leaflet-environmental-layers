@@ -52,6 +52,7 @@
     }) ;
 
 
+
     var PurpleLayer = L.layerGroup.purpleLayer() ;
     var PurpleAirMarkerLayer = L.layerGroup.purpleAirMarkerLayer() ;
     var SkyTruth = L.layerGroup.skyTruthLayer() ;
@@ -100,13 +101,13 @@
     var wind = L.OWM.wind({});
 
     var AQICNLayer = L.layerGroup.aqicnLayer();
-      
+
     var city = L.OWM.current({intervall: 15, minZoom: 3});
     var windrose = L.OWM.current({intervall: 15, minZoom: 3, markerFunction: myWindroseMarker, popup: false, clusterSize: 50,imageLoadingBgUrl: 'https://openweathermap.org/img/w0/iwind.png' });
     windrose.on('owmlayeradd', windroseAdded, windrose);
 
     var IndigenousLandsTerritories = L.layerGroup.indigenousLandsTerritoriesLayer();
-	var IndigenousLandsLanguages = L.layerGroup.indigenousLandsLanguagesLayer();
+	  var IndigenousLandsLanguages = L.layerGroup.indigenousLandsLanguagesLayer();
     var IndigenousLandsTreaties = L.layerGroup.indigenousLandsTreatiesLayer();
 
     var baseMaps = {
