@@ -55,11 +55,11 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
                     script.onload = function() {
                         var $ = window.jQuery;
                         var TRI_url = "https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/"+parseInt(origin.lat)+"/PREF_LONGITUDE/BEGINNING/"+parseInt(-1*origin.lng)+"/rows/0:300/JSON" ;
-                        map.spin(true) ;
+                        self._map.spin(true) ;
                         $.getJSON(TRI_url , function(data){
                          // console.log(parseInt(origin.lat) +" and "+parseInt(origin.lng)) ;
                          self.parseData(data) ;
-                         map.spin(false) ;
+                         self._map.spin(false) ;
                         });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);

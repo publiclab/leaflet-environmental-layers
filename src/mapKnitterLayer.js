@@ -54,10 +54,10 @@ L.LayerGroup.MapKnitterLayer = L.LayerGroup.extend(
                     script.onload = function() {
                         var $ = window.jQuery;
                         var MapKnitter_url = "https://mapknitter.org/map/region/Gulf-Coast.json?minlon="+(southwest.lng)+"&minlat="+(southwest.lat)+"&maxlon="+(northeast.lng)+"&maxlat="+(northeast.lat);
-                        map.spin(true) ;  
+                        self._map.spin(true) ;
                         $.getJSON(MapKnitter_url , function(data){
                         	 self.parseData(data) ;
-                           map.spin(false) ;
+                           self._map.spin(false) ;
             		    });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);

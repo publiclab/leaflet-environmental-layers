@@ -49,10 +49,10 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
                     script.onload = function() {
                         var $ = window.jQuery;
                         var PurpleLayer_url = "https://www.purpleair.com/json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L";
-                        map.spin(true) ;
+                        self._map.spin(true) ;
                         $.getJSON(PurpleLayer_url , function(data){
                         	 self.parseData(data) ;
-                           map.spin(false) ;
+                           self._map.spin(false) ;
             		    });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);

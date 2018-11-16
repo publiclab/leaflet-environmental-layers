@@ -44,10 +44,10 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
         script.onload = function() {
         var $ = window.jQuery;
         var SkyTruth_url = "https://alerts.skytruth.org/json?n=100&l="+(southwest.lat)+","+(southwest.lng)+","+(northeast.lat)+","+(northeast.lng) ;
-        map.spin(true) ;
+        self._map.spin(true) ;
         $.getJSON(SkyTruth_url , function(data){
           self.parseData(data) ;
-          map.spin(false) ;
+          self._map.spin(false) ;
         });
         };
       document.getElementsByTagName("head")[0].appendChild(script);
