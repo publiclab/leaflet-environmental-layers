@@ -48,10 +48,10 @@ L.LayerGroup.FracTrackerLayer = L.LayerGroup.extend(
                     script.onload = function() {
                         var $ = window.jQuery;
                         var FracTracker_URL = "https://sagarpreet-chadha.github.io/FractrackerCSV.json" ;
-                          map.spin(true) ;
+                        self._map.spin(true) ;
                         $.getJSON(FracTracker_URL , function(data){
                         	 self.parseData(data) ;
-                             map.spin(false) ;
+                           self._map.spin(false) ;
             		    });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);

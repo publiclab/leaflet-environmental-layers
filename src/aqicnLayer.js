@@ -40,10 +40,11 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
                         var AQI_url = "https://api.waqi.info/map/bounds/?latlng=" + southwest.lat + "," + southwest.lng + "," + northeast.lat + "," + northeast.lng + "&token=" + self.options.tokenID;
 
 
-
+                         self._map.spin(true) ;
                          $.getJSON(AQI_url , function(regionalData){
 
                              self.parseData(regionalData) ;
+                             self._map.spin(false) ;
                          });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);
@@ -57,7 +58,7 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
             var uid = data.uid;
             var clName = "aqiSign ";
             var aqiN;
-            
+
             if (isNaN(aqi))  { //If it is not a number
                 clName += "aqiNull";
             }
@@ -82,28 +83,28 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
                     clName += "aqiHazard";
                 }
             }
-            
+
             return L.marker([lat, lon], {icon: L.divIcon({className: clName, iconSize: [36,25], iconAnchor: [18, 40], popupAnchor: [0, -25], html: aqi})});
 
         },
-        
+
         addMarker: function(data) {
             var self = this;
             var marker = this.getMarker(data);
             var key = data.uid;
             //Code provided by widget API
-            (function(w,d,t,f){  w[f]=w[f]||function(c,k,n){s=w[f],k=s['k']=(s['k']||(k?('&k='+k):''));s['c']=  
-            c=(c  instanceof  Array)?c:[c];s['n']=n=n||0;Apa=d.createElement(t),e=d.getElementsByTagName(t)[0];  
-            Apa.async=1;Apa.src='http://feed.aqicn.org/feed/'+(c[n].city)+'/'+(c[n].lang||'')+'/feed.v1.js?n='+n+k; 
+            (function(w,d,t,f){  w[f]=w[f]||function(c,k,n){s=w[f],k=s['k']=(s['k']||(k?('&k='+k):''));s['c']=
+            c=(c  instanceof  Array)?c:[c];s['n']=n=n||0;Apa=d.createElement(t),e=d.getElementsByTagName(t)[0];
+            Apa.async=1;Apa.src='http://feed.aqicn.org/feed/'+(c[n].city)+'/'+(c[n].lang||'')+'/feed.v1.js?n='+n+k;
             e.parentNode.insertBefore(Apa,e);  };  })(  window,document,'script','_aqiFeed'  );
-            
+
             marker.bindPopup( function() { //Fetch popup content only when clicked; else the quota will be reached
                 var el = document.createElement('div');
                 el.classList.add("city-container");
                 el.id = "city-aqi-container";
-                
+
                 var stationURL = "https://api.waqi.info/feed/@" + data.uid + "/?token=" + self.options.tokenID
-                
+
                 $.getJSON(stationURL, function(stationData) {
                     var labels = {
 			             pm25: "PM<sub>2.5</sub>",
@@ -119,10 +120,10 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
 			             d: "Dew",
 			             p: "Atmostpheric Pressure"
 		            }
-                    
+
                     var strContent = "";
                     var name = "<h2>" + stationData.data.city.name + "</h2><br> "; //Set the default content first
-                
+
                     for(var species in stationData.data.iaqi) {
                         strContent += "<strong>" + labels[species] + "</strong>: " + stationData.data.iaqi[species].v + ";<br>";
                     }
@@ -135,19 +136,19 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
                     var cityName = res[res.length - 1];
                     if(cityName.length <= 1) cityName = res[res.length - 2];
                     //if city can be found, display is reset to include details
-                    _aqiFeed({ display: name + "%details <br>" + strContent, container:"city-aqi-container",  city: cityName  }); 
+                    _aqiFeed({ display: name + "%details <br>" + strContent, container:"city-aqi-container",  city: cityName  });
                 });
                 return el;
             });
-            
-            
+
+
             if (!this._layers[key]) {
                 this._layers[key] = marker;
-                this.addLayer(marker);   
+                this.addLayer(marker);
             }
-            
+
         },
-        
+
         parseData: function(regionalData) {
             if(!!regionalData) {
 
@@ -163,7 +164,7 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
             }
 
         },
-        
+
         clearOutsideBounds: function () {
             var bounds = this._map.getBounds(),
                 latLng,
@@ -173,7 +174,7 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
                 if (this._layers.hasOwnProperty(key)) {
                     latLng = this._layers[key].getLatLng();
 
-                    if (!bounds.contains(latLng)) {         
+                    if (!bounds.contains(latLng)) {
                         this.removeLayer(this._layers[key]);
                         delete this._layers[key];
                     }

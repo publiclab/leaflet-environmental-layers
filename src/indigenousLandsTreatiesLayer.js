@@ -46,10 +46,10 @@ L.LayerGroup.IndigenousLandsTreatiesLayer = L.LayerGroup.extend(
                         //this url loads all regions at once
                         //var ILTr_url = "https://native-land.ca/api/index.php?maps=treaties";
                         //Here is the getJSON method designed after the other layers
-                        map.spin(true) ;
+                        self._map.spin(true) ;
                         $.getJSON(ILTr_url , function(data){
                           self.parseData(data) ;
-                          map.spin(false) ;
+                          self._map.spin(false) ;
                         });
 
                         /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format

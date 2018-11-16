@@ -51,10 +51,10 @@ L.LayerGroup.OdorReportLayer = L.LayerGroup.extend(
                     script.onload = function() {
                         var $ = window.jQuery;
                         var OdorReport_url = "https://odorlog.api.ushahidi.io/api/v3/posts/" ;
-                        map.spin(true) ;
+                        self._map.spin(true) ;
                         $.getJSON(OdorReport_url , function(data){
                              self.parseData(data) ;
-                             map.spin(false) ;
+                             self._map.spin(false) ;
                         });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);

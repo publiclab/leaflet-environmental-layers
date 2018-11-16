@@ -25890,10 +25890,11 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
                         var AQI_url = "https://api.waqi.info/map/bounds/?latlng=" + southwest.lat + "," + southwest.lng + "," + northeast.lat + "," + northeast.lng + "&token=" + self.options.tokenID;
 
 
-
+                         self._map.spin(true) ;
                          $.getJSON(AQI_url , function(regionalData){
 
                              self.parseData(regionalData) ;
+                             self._map.spin(false) ;
                          });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);
@@ -25907,7 +25908,7 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
             var uid = data.uid;
             var clName = "aqiSign ";
             var aqiN;
-            
+
             if (isNaN(aqi))  { //If it is not a number
                 clName += "aqiNull";
             }
@@ -25932,28 +25933,28 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
                     clName += "aqiHazard";
                 }
             }
-            
+
             return L.marker([lat, lon], {icon: L.divIcon({className: clName, iconSize: [36,25], iconAnchor: [18, 40], popupAnchor: [0, -25], html: aqi})});
 
         },
-        
+
         addMarker: function(data) {
             var self = this;
             var marker = this.getMarker(data);
             var key = data.uid;
             //Code provided by widget API
-            (function(w,d,t,f){  w[f]=w[f]||function(c,k,n){s=w[f],k=s['k']=(s['k']||(k?('&k='+k):''));s['c']=  
-            c=(c  instanceof  Array)?c:[c];s['n']=n=n||0;Apa=d.createElement(t),e=d.getElementsByTagName(t)[0];  
-            Apa.async=1;Apa.src='http://feed.aqicn.org/feed/'+(c[n].city)+'/'+(c[n].lang||'')+'/feed.v1.js?n='+n+k; 
+            (function(w,d,t,f){  w[f]=w[f]||function(c,k,n){s=w[f],k=s['k']=(s['k']||(k?('&k='+k):''));s['c']=
+            c=(c  instanceof  Array)?c:[c];s['n']=n=n||0;Apa=d.createElement(t),e=d.getElementsByTagName(t)[0];
+            Apa.async=1;Apa.src='http://feed.aqicn.org/feed/'+(c[n].city)+'/'+(c[n].lang||'')+'/feed.v1.js?n='+n+k;
             e.parentNode.insertBefore(Apa,e);  };  })(  window,document,'script','_aqiFeed'  );
-            
+
             marker.bindPopup( function() { //Fetch popup content only when clicked; else the quota will be reached
                 var el = document.createElement('div');
                 el.classList.add("city-container");
                 el.id = "city-aqi-container";
-                
+
                 var stationURL = "https://api.waqi.info/feed/@" + data.uid + "/?token=" + self.options.tokenID
-                
+
                 $.getJSON(stationURL, function(stationData) {
                     var labels = {
 			             pm25: "PM<sub>2.5</sub>",
@@ -25969,10 +25970,10 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
 			             d: "Dew",
 			             p: "Atmostpheric Pressure"
 		            }
-                    
+
                     var strContent = "";
                     var name = "<h2>" + stationData.data.city.name + "</h2><br> "; //Set the default content first
-                
+
                     for(var species in stationData.data.iaqi) {
                         strContent += "<strong>" + labels[species] + "</strong>: " + stationData.data.iaqi[species].v + ";<br>";
                     }
@@ -25985,19 +25986,19 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
                     var cityName = res[res.length - 1];
                     if(cityName.length <= 1) cityName = res[res.length - 2];
                     //if city can be found, display is reset to include details
-                    _aqiFeed({ display: name + "%details <br>" + strContent, container:"city-aqi-container",  city: cityName  }); 
+                    _aqiFeed({ display: name + "%details <br>" + strContent, container:"city-aqi-container",  city: cityName  });
                 });
                 return el;
             });
-            
-            
+
+
             if (!this._layers[key]) {
                 this._layers[key] = marker;
-                this.addLayer(marker);   
+                this.addLayer(marker);
             }
-            
+
         },
-        
+
         parseData: function(regionalData) {
             if(!!regionalData) {
 
@@ -26013,7 +26014,7 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
             }
 
         },
-        
+
         clearOutsideBounds: function () {
             var bounds = this._map.getBounds(),
                 latLng,
@@ -26023,7 +26024,7 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
                 if (this._layers.hasOwnProperty(key)) {
                     latLng = this._layers[key].getLatLng();
 
-                    if (!bounds.contains(latLng)) {         
+                    if (!bounds.contains(latLng)) {
                         this.removeLayer(this._layers[key]);
                         delete this._layers[key];
                     }
@@ -26088,10 +26089,10 @@ L.LayerGroup.FracTrackerLayer = L.LayerGroup.extend(
                     script.onload = function() {
                         var $ = window.jQuery;
                         var FracTracker_URL = "https://sagarpreet-chadha.github.io/FractrackerCSV.json" ;
-                          map.spin(true) ;
+                        self._map.spin(true) ;
                         $.getJSON(FracTracker_URL , function(data){
                         	 self.parseData(data) ;
-                             map.spin(false) ;
+                           self._map.spin(false) ;
             		    });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);
@@ -26193,10 +26194,10 @@ L.LayerGroup.IndigenousLandsLanguagesLayer = L.LayerGroup.extend(
                         //this url loads all regions at once
                         //var ILL_url = "https://native-land.ca/api/index.php?maps=languages";
                         //Here is the getJSON method designed after the other layers
-                          map.spin(true) ;
+                        self._map.spin(true) ;
                         $.getJSON(ILL_url , function(data){
                           self.parseData(data) ;
-                          map.spin(false) ;
+                          self._map.spin(false) ;
                         });
 
                         /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
@@ -26348,10 +26349,10 @@ L.LayerGroup.IndigenousLandsTerritoriesLayer = L.LayerGroup.extend(
                         //this url loads all regions at once
                         //var ILT_url = "https://native-land.ca/api/index.php?maps=territories";
                         //Here is the getJSON method designed after the other layers
-                        map.spin(true) ;
+                        self._map.spin(true) ;
                         $.getJSON(ILT_url , function(data){
                           self.parseData(data) ;
-                          map.spin(false) ;
+                          self._map.spin(true) ;
                         });
 
                         /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
@@ -26503,10 +26504,10 @@ L.LayerGroup.IndigenousLandsTreatiesLayer = L.LayerGroup.extend(
                         //this url loads all regions at once
                         //var ILTr_url = "https://native-land.ca/api/index.php?maps=treaties";
                         //Here is the getJSON method designed after the other layers
-                        map.spin(true) ;
+                        self._map.spin(true) ;
                         $.getJSON(ILTr_url , function(data){
                           self.parseData(data) ;
-                          map.spin(false) ;
+                          self._map.spin(false) ;
                         });
 
                         /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
@@ -26683,10 +26684,10 @@ L.LayerGroup.MapKnitterLayer = L.LayerGroup.extend(
                     script.onload = function() {
                         var $ = window.jQuery;
                         var MapKnitter_url = "https://mapknitter.org/map/region/Gulf-Coast.json?minlon="+(southwest.lng)+"&minlat="+(southwest.lat)+"&maxlon="+(northeast.lng)+"&maxlat="+(northeast.lat);
-                        map.spin(true) ;  
+                        self._map.spin(true) ;
                         $.getJSON(MapKnitter_url , function(data){
                         	 self.parseData(data) ;
-                           map.spin(false) ;
+                           self._map.spin(false) ;
             		    });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);
@@ -26813,10 +26814,10 @@ L.LayerGroup.OdorReportLayer = L.LayerGroup.extend(
                     script.onload = function() {
                         var $ = window.jQuery;
                         var OdorReport_url = "https://odorlog.api.ushahidi.io/api/v3/posts/" ;
-                        map.spin(true) ;
+                        self._map.spin(true) ;
                         $.getJSON(OdorReport_url , function(data){
                              self.parseData(data) ;
-                             map.spin(false) ;
+                             self._map.spin(false) ;
                         });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);
@@ -28516,10 +28517,10 @@ L.LayerGroup.PurpleAirMarkerLayer = L.LayerGroup.extend(
                       script.onload = function() {
                           var $ = window.jQuery;
                           var PurpleLayer_url = "https://www.purpleair.com/data.json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat="+(northwest.lat)+"&selat="+(southeast.lat)+"&nwlng="+(northwest.lng)+"&selng="+(southeast.lng) ;
-                          map.spin(true) ;
+                          self._map.spin(true) ;
                           $.getJSON(PurpleLayer_url , function(data){
                           	 self.parseData(data) ;
-                             map.spin(false) ;
+                             self._map.spin(false) ;
               		    });
                       };
                       document.getElementsByTagName("head")[0].appendChild(script);
@@ -28624,10 +28625,10 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
                     script.onload = function() {
                         var $ = window.jQuery;
                         var PurpleLayer_url = "https://www.purpleair.com/json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L";
-                        map.spin(true) ;
+                        self._map.spin(true) ;
                         $.getJSON(PurpleLayer_url , function(data){
                         	 self.parseData(data) ;
-                           map.spin(false) ;
+                           self._map.spin(false) ;
             		    });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);
@@ -28743,10 +28744,10 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
         script.onload = function() {
         var $ = window.jQuery;
         var SkyTruth_url = "https://alerts.skytruth.org/json?n=100&l="+(southwest.lat)+","+(southwest.lng)+","+(northeast.lat)+","+(northeast.lng) ;
-        map.spin(true) ;
+        self._map.spin(true) ;
         $.getJSON(SkyTruth_url , function(data){
           self.parseData(data) ;
-          map.spin(false) ;
+          self._map.spin(false) ;
         });
         };
       document.getElementsByTagName("head")[0].appendChild(script);
@@ -28861,11 +28862,11 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
                     script.onload = function() {
                         var $ = window.jQuery;
                         var TRI_url = "https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/"+parseInt(origin.lat)+"/PREF_LONGITUDE/BEGINNING/"+parseInt(-1*origin.lng)+"/rows/0:300/JSON" ;
-                        map.spin(true) ;
+                        self._map.spin(true) ;
                         $.getJSON(TRI_url , function(data){
                          // console.log(parseInt(origin.lat) +" and "+parseInt(origin.lng)) ;
                          self.parseData(data) ;
-                         map.spin(false) ;
+                         self._map.spin(false) ;
                         });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);
