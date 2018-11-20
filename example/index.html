@@ -12,14 +12,13 @@
     z-index: 10; }</style>
   <script src="../dist/LeafletEnvironmentalLayers.js"></script>
   <script src="../dist/windRoseLayer.js"></script>
+  <script src="../dist/leaflet-fullHash.js"></script>
 
   <script src="../node_modules/heatmap.js/build/heatmap.min.js"></script>
   <script src="../node_modules/leaflet-heatmap/leaflet-heatmap.js"></script>
 
   <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet">
   <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet">
-
-  <script src="../node_modules/leaflet-hash/leaflet-hash.js"></script>
 
   <script src="../node_modules/leaflet-spin/example/spin/dist/spin.min.js"></script>  <!-- Compulsory to add -->
   <script src="../node_modules/leaflet-spin/example/leaflet.spin.min.js"></script>
@@ -35,8 +34,6 @@
       maxBoundsViscosity: 0.75
     }).setView([43, -83], 3);
     map.options.minZoom = 3 ;
-
-    var hash = new L.Hash(map) ;
 
     var baselayer1 = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.emerald/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2FnYXJwcmVldDk3IiwiYSI6ImNqaXhlZjgwaDJtb3EzcW1zdDdwMzJkODcifQ.MA2YIv6VpGLLAo-QYUudTA', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -156,7 +153,51 @@
          "<span style='color: black'><strong>Air Quality Index</strong></span>": AQICNLayer
 
     };
+    var allMapLayers = {"Baselayer1": baselayer1 ,
+    "Baselayer2": baselayer2 ,
+    "Baselayer3": baselayer3 ,
+    "Baselayer4": baselayer4 ,
+    "PurpleAirLayer-HeatMap": PurpleLayer ,
+    "PurpleAirMarkerLayer": PurpleAirMarkerLayer,
+    "SkyTruth": SkyTruth,
+    "Fractracker": Fractracker,
+    "ToxicRelease": ToxicRelease,
+    "OdorReport": OdorReport,
+    "MapKnitter": MapKnitter,
+    "OpenInfraMap_Power": OpenInfraMap_Power ,
+    "<span style='color: blue'><strong>OpenInfraMap_Telecom": OpenInfraMap_Telecom ,
+    "OpenInfraMap_Petroleum": OpenInfraMap_Petroleum ,
+    "OpenInfraMap_Water": OpenInfraMap_Water ,
+    "Justicemap_income": Justicemap_income,
+    "JusticeMap_americanIndian": JusticeMap_americanIndian ,
+    "JusticeMap_asian": JusticeMap_asian ,
+    "JusticeMap_black": JusticeMap_black,
+    "JusticeMap_multi": JusticeMap_multi ,
+    "JusticeMap_hispanic": JusticeMap_hispanic ,
+    "JusticeMap_nonWhite": JusticeMap_nonWhite,
+    "JusticeMap_white": JusticeMap_white ,
+    "JusticeMap_plurality": JusticeMap_plurality ,
+       "Clouds": clouds ,
+       "cloudsclassic": cloudscls ,
+       "precipitation": precipitation ,
+       "precipitation": precipitationcls ,
+       "rain": rain ,
+       "rain": raincls ,
+       "snow": snow ,
+       "pressure": pressure ,
+       "pressure contour": pressurecntr ,
+       "temp": temp ,
+       "wind": wind ,
+       "Cities": city  ,
+       "windrose": windrose ,
+       "Territories": IndigenousLandsTerritories,
+       "Languages": IndigenousLandsLanguages,
+       "Treaties": IndigenousLandsTreaties,
+       "Air Quality Index": AQICNLayer} ;
+    var hash = new L.Hash(map, allMapLayers);
     L.control.layers(baseMaps,overlayMaps).addTo(map);
+
+
   </script>
 </body>
 </html>
