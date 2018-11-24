@@ -12,7 +12,7 @@
     z-index: 10; }</style>
   <script src="../dist/LeafletEnvironmentalLayers.js"></script>
   <script src="../dist/windRoseLayer.js"></script>
-  <script src="../dist/leaflet-fullHash.js"></script>
+  <script src="../node_modules/leaflet-fullhash/leaflet-fullHash.js"></script>
 
   <script src="../node_modules/heatmap.js/build/heatmap.min.js"></script>
   <script src="../node_modules/leaflet-heatmap/leaflet-heatmap.js"></script>
@@ -153,30 +153,30 @@
          "<span style='color: black'><strong>Air Quality Index</strong></span>": AQICNLayer
 
     };
-    var allMapLayers = {"Baselayer1": baselayer1 ,
-    "Baselayer2": baselayer2 ,
-    "Baselayer3": baselayer3 ,
-    "Baselayer4": baselayer4 ,
-    "PurpleAirLayer-HeatMap": PurpleLayer ,
-    "PurpleAirMarkerLayer": PurpleAirMarkerLayer,
-    "SkyTruth": SkyTruth,
-    "Fractracker": Fractracker,
-    "ToxicRelease": ToxicRelease,
-    "OdorReport": OdorReport,
-    "MapKnitter": MapKnitter,
-    "OpenInfraMap_Power": OpenInfraMap_Power ,
-    "<span style='color: blue'><strong>OpenInfraMap_Telecom": OpenInfraMap_Telecom ,
-    "OpenInfraMap_Petroleum": OpenInfraMap_Petroleum ,
-    "OpenInfraMap_Water": OpenInfraMap_Water ,
-    "Justicemap_income": Justicemap_income,
-    "JusticeMap_americanIndian": JusticeMap_americanIndian ,
-    "JusticeMap_asian": JusticeMap_asian ,
-    "JusticeMap_black": JusticeMap_black,
-    "JusticeMap_multi": JusticeMap_multi ,
-    "JusticeMap_hispanic": JusticeMap_hispanic ,
-    "JusticeMap_nonWhite": JusticeMap_nonWhite,
-    "JusticeMap_white": JusticeMap_white ,
-    "JusticeMap_plurality": JusticeMap_plurality ,
+    var allMapLayers = {"BL1": baselayer1 ,
+    "BL2": baselayer2 ,
+    "BL3": baselayer3 ,
+    "BL4": baselayer4 ,
+    "PurpleHeat": PurpleLayer ,
+    "Purple": PurpleAirMarkerLayer,
+    "STruth": SkyTruth,
+    "FracTL": Fractracker,
+    "ToxicR": ToxicRelease,
+    "OdorR": OdorReport,
+    "MapK": MapKnitter,
+    "OIMPower": OpenInfraMap_Power ,
+    "OIMapTelecom": OpenInfraMap_Telecom ,
+    "OIMPetroleum": OpenInfraMap_Petroleum ,
+    "OIMWater": OpenInfraMap_Water ,
+    "JMincome": Justicemap_income,
+    "JMamericanIndian": JusticeMap_americanIndian ,
+    "JMasian": JusticeMap_asian ,
+    "JMblack": JusticeMap_black,
+    "JMmulti": JusticeMap_multi ,
+    "JMhispanic": JusticeMap_hispanic ,
+    "JMnonWhite": JusticeMap_nonWhite,
+    "JMwhite": JusticeMap_white ,
+    "JMplurality": JusticeMap_plurality ,
        "Clouds": clouds ,
        "cloudsclassic": cloudscls ,
        "precipitation": precipitation ,
@@ -185,7 +185,7 @@
        "rain": raincls ,
        "snow": snow ,
        "pressure": pressure ,
-       "pressure contour": pressurecntr ,
+       "pressurecontour": pressurecntr ,
        "temp": temp ,
        "wind": wind ,
        "Cities": city  ,
@@ -193,7 +193,7 @@
        "Territories": IndigenousLandsTerritories,
        "Languages": IndigenousLandsLanguages,
        "Treaties": IndigenousLandsTreaties,
-       "Air Quality Index": AQICNLayer} ;
+       "AQI": AQICNLayer} ;
     var hash = new L.Hash(map, allMapLayers);
     L.control.layers(baseMaps,overlayMaps).addTo(map);
 
