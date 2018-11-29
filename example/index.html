@@ -117,7 +117,7 @@
      }) ;
 
      FracTracker_mobile.bindPopup(function (layer) {
-       return L.Util.template('<p><strong>Id : </strong>{OBJECTID}<br><strong>FT_MV_ID : </strong>{FT_MV_ID}<br><strong>Long : </strong>{Long}<br><strong>Lat :</strong> {Lat} <br> <strong>Caption : </strong>{caption} <br> <strong>issue :</strong> {issue} <br> <strong>facility :</strong> {facility} <br><strong> Location :</strong> {location} <br> <strong>URL :</strong> {URL2} <br> <img src={URL2} height="280" width="290"></p>', layer.feature.properties);
+       return L.Util.template('<p><strong>Id : </strong>{OBJECTID}<br><strong>FT_MV_ID : </strong>{FT_MV_ID}<br><strong>Long : </strong>{Long}<br><strong>Lat :</strong> {Lat} <br> <strong>Caption : </strong>{caption} <br> <strong>issue :</strong> {issue} <br> <strong>facility :</strong> {facility} <br><strong> Location :</strong> {location} <br> <strong>URL :</strong> <a href={URL2}>{URL2}</a> <br> <img src={URL2} height="280" width="290"></p>', layer.feature.properties);
      });
 
      FracTracker_mobile.on('loading', function(e){
@@ -126,6 +126,10 @@
      FracTracker_mobile.on('load', function(e){
          map.spin(false) ;
      });
+
+     // FracTracker_mobile.on('add', function(e){
+     //   map.setView([37.3491 , -108.4344], 10);
+     // });
 
     var baseMaps = {
       "Baselayer1": baselayer1 ,
