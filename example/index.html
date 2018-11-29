@@ -22,6 +22,10 @@
 
   <script src="../node_modules/leaflet-spin/example/spin/dist/spin.min.js"></script>  <!-- Compulsory to add -->
   <script src="../node_modules/leaflet-spin/example/leaflet.spin.min.js"></script>
+
+  <script src="https://unpkg.com/esri-leaflet@2.2.3/dist/esri-leaflet.js"></script>
+  <script src="https://unpkg.com/esri-leaflet-renderers@2.0.6"></script>
+
 <body>
 
   <div id="map"></div>
@@ -40,10 +44,10 @@
     }) ;
     var baselayer3 = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.streets-basic/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2FnYXJwcmVldDk3IiwiYSI6ImNqaXhlZjgwaDJtb3EzcW1zdDdwMzJkODcifQ.MA2YIv6VpGLLAo-QYUudTA', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map) ;
+    }) ;
     var baselayer2 = L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png',{
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-       }) ;
+       }).addTo(map) ;
     var baselayer4 = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.dark/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2FnYXJwcmVldDk3IiwiYSI6ImNqaXhlZjgwaDJtb3EzcW1zdDdwMzJkODcifQ.MA2YIv6VpGLLAo-QYUudTA', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }) ;
@@ -107,6 +111,22 @@
 	  var IndigenousLandsLanguages = L.layerGroup.indigenousLandsLanguagesLayer();
     var IndigenousLandsTreaties = L.layerGroup.indigenousLandsTreatiesLayer();
 
+     var FracTracker_mobile  = L.esri.featureLayer({
+       url: 'https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/FracTrackerMobileAppNPCAMesaVerdeNationalPark_051416/FeatureServer/0/',
+       simplifyFactor: 1
+     }) ;
+
+     FracTracker_mobile.bindPopup(function (layer) {
+       return L.Util.template('<p><strong>Id : </strong>{OBJECTID}<br><strong>FT_MV_ID : </strong>{FT_MV_ID}<br><strong>Long : </strong>{Long}<br><strong>Lat :</strong> {Lat} <br> <strong>Caption : </strong>{caption} <br> <strong>issue :</strong> {issue} <br> <strong>facility :</strong> {facility} <br><strong> Location :</strong> {location} <br> <strong>URL :</strong> {URL2} <br> <img src={URL2} height="280" width="290"></p>', layer.feature.properties);
+     });
+
+     FracTracker_mobile.on('loading', function(e){
+         map.spin(true) ;
+     });
+     FracTracker_mobile.on('load', function(e){
+         map.spin(false) ;
+     });
+
     var baseMaps = {
       "Baselayer1": baselayer1 ,
       "Baselayer2": baselayer2 ,
@@ -114,6 +134,7 @@
       "Baselayer4": baselayer4
     };
     var overlayMaps = {
+      "FracTracker_mobile" : FracTracker_mobile ,
       "<span style='color: darkred'><strong>PurpleAirLayer-HeatMap</strong></span>": PurpleLayer ,
       "<img src='https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Location_dot_purple.svg/768px-Location_dot_purple.svg.png' height='10px' width='10px'>PurpleAirMarkerLayer": PurpleAirMarkerLayer,
       "<img src='https://www.clker.com/cliparts/T/G/b/7/r/A/red-dot.svg' height='15px' width='10px'>SkyTruth": SkyTruth,
@@ -157,6 +178,7 @@
     "BL2": baselayer2 ,
     "BL3": baselayer3 ,
     "BL4": baselayer4 ,
+    "FT_mobile": FracTracker_mobile,
     "PurpleHeat": PurpleLayer ,
     "Purple": PurpleAirMarkerLayer,
     "STruth": SkyTruth,
