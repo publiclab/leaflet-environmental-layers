@@ -100,6 +100,19 @@ Click on a point or marker on the map to learn more about it .
             <script src="../dist/windRoseLayer.js"></script>
             <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet">
 
+### To use Wisconsin Non-Metallic Layer :
+
+* Same dependencies as of Fractracker Mobile Layer .
+
+              var Wisconsin_NM  = L.esri.featureLayer({
+                url: 'https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/Nonmetallic_and_Potential_frac_sand_mine_proposals_in_West_Central_Wisconsin/FeatureServer/0/',
+                simplifyFactor: 1
+              }) ;
+
+              Wisconsin_NM.bindPopup(function (layer) {
+                return L.Util.template('<p><strong>Id : </strong>{FID}<br><strong>PLACENAME : </strong>{PLACENAME}<br><strong>STATE : </strong>{STATE}<br><strong>Lat :</strong> {LATITUDE} <br> <strong>Lon : </strong>{LONGITUDE} <br> <strong>Owner :</strong> {OWNERNME1} <br> <strong>POSTAL ADRESS :</strong> {PSTLADRESS} <br><strong> Assessed Acres :</strong> {ASSDACRES} <br> <strong>County Name :</strong> {CONAME} <br> </p>', layer.feature.properties);
+              });
+
 ### To use Fractracker Mobile Layer :
 
 							<script src="https://unpkg.com/esri-leaflet@2.2.3/dist/esri-leaflet.js"></script>
@@ -169,17 +182,15 @@ Click on a point or marker on the map to learn more about it .
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
     });   
 
-## Add Leaflet-Hash for easy sharing of map :    
+## Add Leaflet-FullHash for easy sharing of map :    
 
 ### Steps To add :
 
 1.) Add link :
 
-    <script src="../node_modules/leaflet-hash/leaflet-hash.js"></script>
+    <script src="../node_modules/leaflet-fullhash/leaflet-fullHash.js"></script>
 
 2.) Once you have initialized the map (an instance of L.Map), add the following code :
 
     // Assuming your map instance is in a variable called map
     var hash = new L.Hash(map);    
-
-  Read more about Leaflet-Hash here : https://github.com/mlevans/leaflet-hash
