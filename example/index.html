@@ -111,6 +111,7 @@
 	  var IndigenousLandsLanguages = L.layerGroup.indigenousLandsLanguagesLayer();
     var IndigenousLandsTreaties = L.layerGroup.indigenousLandsTreatiesLayer();
 
+
      var Wisconsin_NM  = L.esri.featureLayer({
        url: 'https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/Nonmetallic_and_Potential_frac_sand_mine_proposals_in_West_Central_Wisconsin/FeatureServer/0/',
        simplifyFactor: 1
@@ -130,6 +131,27 @@
        map.setView([43.9929 , -90.3883], 12);
      });
 
+     var FracTracker_mobile  = L.esri.featureLayer({
+       url: 'https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/FracTrackerMobileAppNPCAMesaVerdeNationalPark_051416/FeatureServer/0/',
+       simplifyFactor: 1
+     }) ;
+
+     FracTracker_mobile.bindPopup(function (layer) {
+       return L.Util.template('<p><strong>Id : </strong>{OBJECTID}<br><strong>FT_MV_ID : </strong>{FT_MV_ID}<br><strong>Long : </strong>{Long}<br><strong>Lat :</strong> {Lat} <br> <strong>Caption : </strong>{caption} <br> <strong>issue :</strong> {issue} <br> <strong>facility :</strong> {facility} <br><strong> Location :</strong> {location} <br> <strong>URL :</strong> <a href={URL2}>{URL2}</a> <br> <img src={URL2} height="280" width="290"></p>', layer.feature.properties);
+     });
+
+     FracTracker_mobile.on('loading', function(e){
+         map.spin(true) ;
+     });
+     FracTracker_mobile.on('load', function(e){
+         map.spin(false) ;
+     });
+
+     // FracTracker_mobile.on('add', function(e){
+     //   map.setView([37.3491 , -108.4344], 10);
+     // });
+
+
     var baseMaps = {
       "Baselayer1": baselayer1 ,
       "Baselayer2": baselayer2 ,
@@ -137,7 +159,8 @@
       "Baselayer4": baselayer4
     };
     var overlayMaps = {
-      "Wisconsin Non-Metallic" : Wisconsin_NM ,
+      "Wisconsin Non-Metal" : Wisconsin_NM ,
+      "FracTracker_mobile" : FracTracker_mobile ,
       "<span style='color: darkred'><strong>PurpleAirLayer-HeatMap</strong></span>": PurpleLayer ,
       "<img src='https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Location_dot_purple.svg/768px-Location_dot_purple.svg.png' height='10px' width='10px'>PurpleAirMarkerLayer": PurpleAirMarkerLayer,
       "<img src='https://www.clker.com/cliparts/T/G/b/7/r/A/red-dot.svg' height='15px' width='10px'>SkyTruth": SkyTruth,
@@ -181,7 +204,9 @@
     "BL2": baselayer2 ,
     "BL3": baselayer3 ,
     "BL4": baselayer4 ,
+
     "Wisconsin_NM": Wisconsin_NM,
+    "FT_mobile": FracTracker_mobile,
     "PurpleHeat": PurpleLayer ,
     "Purple": PurpleAirMarkerLayer,
     "STruth": SkyTruth,
