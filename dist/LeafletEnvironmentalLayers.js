@@ -28597,7 +28597,7 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
                 content += "<strong>" + key + ": </strong>" + val + "<br>";
             });
             content += "<hr>The data included in this layer is from www.openstreetmap.org. The data is made available under ODbL.<br>";
-            content += "From the <a href=#>OSM LMQ Inventory</a> (<a href = https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515>info</a>).";
+            content += "From the <a href=https://github.com/publiclab/leaflet-environmental-layers/pull/94>OSM LMQ Inventory</a> (<a href = https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515>info</a>).";
             return content;
         },
 
