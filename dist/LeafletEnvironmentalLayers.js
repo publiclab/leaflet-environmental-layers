@@ -26124,7 +26124,8 @@ L.LayerGroup.FracTrackerLayer = L.LayerGroup.extend(
 
         generatePopup: function(item) {
             var content = "<strong>" + item["name"] + "</strong> ";
-            if(item["website"]) content += "(<a href=" + item["website"] + ">website</a>" + ")<hr>";
+            if(item["website"]) content += "(<a href=" + item["website"] + ">website</a>" + ")";
+            content += "<hr>";
             if(!!item["Descrition"]) content += "Description: <i>" + item["summary"] + "</i><br>";
             if(!!item["contact"]) content += "<strong>Contact: " + item["contact"] + "<br></strong>";
             var generics = ["phone", "email", "street", "city", "state", "zipcode", "timestamp", "latitude", "longitude"];
