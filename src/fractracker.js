@@ -61,6 +61,15 @@ L.LayerGroup.FracTrackerLayer = L.LayerGroup.extend(
         },
 
         getMarker: function(data) {
+            function capitalizeString(string) {
+              string = string.replace(/^\s+|\s+$/g, "");
+              var words = string.split(" ");
+              for(var i = 0; i < words.length; i++) {
+                words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+              }
+              return words.join(" ");
+            }
+
             var redDotIcon = new L.icon.fracTrackerIcon();
             var props = ["timestamp", "name", "summary", "website", "contact", "email", "phone", "streetaddress", "city", "state", "zipcode", "latitude", "longitude", "category"];
             var item = {};
@@ -82,7 +91,7 @@ L.LayerGroup.FracTrackerLayer = L.LayerGroup.extend(
         },
 
         generatePopup: function(item) {
-            var content = "<strong>" + item["name"] + "</strong> ";
+            var content = "<strong>" + capitalizeString(item["name"]) + "</strong> ";
             if(item["website"]) content += "(<a href=" + item["website"] + ">website</a>" + ")<hr>";
             if(!!item["Descrition"]) content += "Description: <i>" + item["summary"] + "</i><br>";
             if(!!item["contact"]) content += "<strong>Contact: " + item["contact"] + "<br></strong>";
