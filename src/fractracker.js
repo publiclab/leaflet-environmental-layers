@@ -16,7 +16,7 @@ L.LayerGroup.FracTrackerLayer = L.LayerGroup.extend(
 
     {
         options: {
-            url: 'https://sagarpreet-chadha.github.io/FractrackerCSV.json',
+            url: 'https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json',
         },
 
         initialize: function (options) {
@@ -47,11 +47,11 @@ L.LayerGroup.FracTrackerLayer = L.LayerGroup.extend(
 
                     script.onload = function() {
                         var $ = window.jQuery;
-                        var FracTracker_URL = "https://sagarpreet-chadha.github.io/FractrackerCSV.json" ;
+                        var FracTracker_URL = "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json" ;
                         self._map.spin(true) ;
                         $.getJSON(FracTracker_URL , function(data){
-                        	 self.parseData(data) ;
-                           self._map.spin(false) ;
+                        self.parseData(data.feed.entry);
+                        self._map.spin(false) ;
             		    });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);
@@ -60,41 +60,70 @@ L.LayerGroup.FracTrackerLayer = L.LayerGroup.extend(
 
         },
 
-        getMarker: function (data) {
+        getMarker: function(data) {
+            function capitalizeString(string) {
+              string = string.replace(/^\s+|\s+$/g, "");
+              var words = string.split(" ");
+              for(var i = 0; i < words.length; i++) {
+                words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+              }
+              return words.join(" ");
+            }
 
-              var redDotIcon =new L.icon.fracTrackerIcon();
-              var lat = parseFloat(data.FIELD12) ;
-              var lng = parseFloat(data.FIELD13) ;
-              var title = data.FIELD2 ;
-              var summary = data.FIELD3 ;
-              var city = data.FIELD9 ;
-              var state = data.FIELD10 ;
-              var website = data.FIELD4 ;
-              var contact = data.FIELD5 ;
-              var email = data.FIELD6 ;
-              var phone = data.FIELD7 ;
-              var street = data.FIELD8 ;
-              var fracTracker ;
-              fracTracker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(title + "<br><a href=" + website + ">" + website +"</a>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong>"+"<br>Contact :"+contact+"<br>Phone :" + phone + "<br>Email :" + email + "<br>Street : " + street + "<br>State : "+state + "<br>City :"+ city +"<br><i>"+summary+"</i><br><br> <i>Data provided by <a href='http://fractracker.org/'>http://fractracker.org/</a></i>") ;
+            var redDotIcon = new L.icon.fracTrackerIcon();
+            var props = ["timestamp", "name", "summary", "website", "contact", "email", "phone", "streetaddress", "city", "state", "zipcode", "latitude", "longitude", "category"];
+            var item = {};
+            props.forEach(function(element) {
+                item[element] = data["gsx$" + element]["$t"];
+            });
 
-              return fracTracker ;
+            item["updated"] = data.updated.$t;
+            item["use"] = (data.gsx$useformap.$t.replace(/\s+/g, '').toLowerCase() === "use");
+            item["latitude"] = item["latitude"].replace(/[^\d.-]/g, "");
+            item["latitude"] = item["latitude"].replace(/[^\d.-]/g, "");
+
+            var fracTracker;
+            fracTracker = L.marker([item["latitude"], item["longitude"]], {
+                icon: redDotIcon
+            }).bindPopup(this.generatePopup(item));
+
+            return fracTracker;
+        },
+
+        generatePopup: function(item) {
+            var content = "<strong>" + capitalizeString(item["name"]) + "</strong> ";
+            if(item["website"]) content += "(<a href=" + item["website"] + ">website</a>" + ")<hr>";
+            if(!!item["Descrition"]) content += "Description: <i>" + item["summary"] + "</i><br>";
+            if(!!item["contact"]) content += "<strong>Contact: " + item["contact"] + "<br></strong>";
+            var generics = ["phone", "email", "street", "city", "state", "zipcode", "timestamp", "latitude", "longitude"];
+
+            for (var i = 0; i < generics.length; i++) {
+                var key = generics[i];
+                if (!!item[generics[i]]) {
+                    itemContent = item[generics[i]];
+                    key = key.charAt(0).toUpperCase() + key.slice(1);
+                    content += key + ": " + itemContent + "<br>";
+                }
+            }
+
+            content += "<hr>Data last updated " + item["updated"] + "<br>";
+            content += "<i>Data provided by <a href='http://fractracker.org/'>http://fractracker.org/</a></i>";
+            return content;
         },
 
         addMarker: function (data) {
-            var marker = this.getMarker(data) ;
-            key = data.FIELD2;
-    		    if (!this._layers[key]) {
-    		      this._layers[key] = marker;
-    		      this.addLayer(marker);
-    		    }
+            var key = data.gsx$name.$t;
+            if (!this._layers[key]) {
+                var marker = this.getMarker(data);
+                this._layers[key] = marker;
+                this.addLayer(marker);
+            }
         },
 
         parseData: function (data) {
-
             for (i = 1 ; i < data.length ; i++) {
              this.addMarker(data[i]) ;
             }
-
         }
     }
 );
