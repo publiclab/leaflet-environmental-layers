@@ -86,6 +86,10 @@ Toggle certain layers on and off using the Layers button in the toolbar .
 
 Click on a point or marker on the map to learn more about it .
 
+#### Add a legend
+
+In `dist/legendCreation.js`, add `addLayerNameURLPair(layer_var, "img_url");`, where `layer_var` is consistent with the variable used in `example/index.html` and `img_url` is the source of the image to be used as the legend. 
+
 ## Dependencies :
 
 ### General (required for all layers) :

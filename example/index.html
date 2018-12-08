@@ -15,6 +15,7 @@
   <script src="../dist/LeafletEnvironmentalLayers.js"></script>
   <script src="../dist/windRoseLayer.js"></script>
   <script src="../node_modules/leaflet-fullhash/leaflet-fullHash.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 
   <script src="../node_modules/heatmap.js/build/heatmap.min.js"></script>
   <script src="../node_modules/leaflet-heatmap/leaflet-heatmap.js"></script>
@@ -24,7 +25,7 @@
 
   <script src="../node_modules/leaflet-spin/example/spin/dist/spin.min.js"></script>  <!-- Compulsory to add -->
   <script src="../node_modules/leaflet-spin/example/leaflet.spin.min.js"></script>
-
+  
   <script src="https://unpkg.com/esri-leaflet@2.2.3/dist/esri-leaflet.js"></script>
   <script src="https://unpkg.com/esri-leaflet-renderers@2.0.6"></script>
 
@@ -245,9 +246,11 @@
       "LSM": OSMLandfillMineQuarryLayer
     };
     var hash = new L.Hash(map, allMapLayers);
-    L.control.layers(baseMaps,overlayMaps).addTo(map);
-
+    var leafletControl = new L.control.layers(baseMaps,overlayMaps);
+    leafletControl.addTo(map);
 
   </script>
+  <script src="../dist/legendCreation.js"></script>
+
 </body>
 </html>
