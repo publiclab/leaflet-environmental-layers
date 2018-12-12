@@ -36,11 +36,11 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
             this._parsedToOrig[parsedColumnName] = columns[i];
             columns[i] = parsedColumnName;
         }
-        if(columns.indexOf(this._lat) <= -1) {
+        if(L.Util.indexOf(columns, this._lat) <= -1) {
             columns.push(this._lat);
             this._parsedToOrig[this._lat] = this.options.lat;
         }
-        if(columns.indexOf(this._lon) <= -1) {
+        if(L.Util.indexOf(columns, this._lon) <= -1) {
             columns.push(this._lon);
             this._parsedToOrig[this._lon] = this.options.lon;
         }
@@ -59,30 +59,48 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
         this._map = map;
         var self = this;
         //this.requestData();
-        this.getURL().then(function() {
+        this._getURL().then(function() {
             console.log("it worked");
             self.requestData();
         });
     },
 
     onRemove: function(map) {
-        map.off('moveend', this.requestData, this);
+        //map.off('moveend', this.requestData, this);
         this.clearLayers();
         map.spin(false);
         this._layers = {};
     },
 
-    getURL: function() {
+    _getURL: function() {
+        var spreadsheetID = this._getSpreadsheetID();
+        console.log(spreadsheetID);
+        var self = this;
+        var spreadsheetFeedURL = "https://spreadsheets.google.com/feeds/worksheets/" + spreadsheetID + "/public/basic?alt=json";
+        
+        return this._getWorksheetID(spreadsheetID, spreadsheetFeedURL);
+        //Replace in here: https://spreadsheets.google.com/feeds/worksheets/spreadsheetID/public/basic?alt=json
+        //1SMLuC_61MLgGGik4rby-cBCiKM5kQ-t0qITVdSVPNNk
+        //https://spreadsheets.google.com/feeds/worksheets/1SMLuC_61MLgGGik4rby-cBCiKM5kQ-t0qITVdSVPNNk/public/basic?alt=json
+        //Replace in here: https://spreadsheets.google.com/feeds/list/spreadsheetID/worksheetID/public/values?alt=json
+        //Replace in here: https://spreadsheets.google.com/feeds/list/1SMLuC_61MLgGGik4rby-cBCiKM5kQ-t0qITVdSVPNNk/od6/public/values?alt=json
+    },
+    
+    _getSpreadsheetID: function() {
         var sections = this.options.url.split('/');
         var spreadsheetID;
         var len = sections.length;
         for (var i = 1; i < len; i++) {
             if (sections[i - 1].length === 1) {
                 spreadsheetID = sections[i];
+                break;
             }
         }
+        return spreadsheetID;
+    },
+    
+    _getWorksheetID: function(spreadsheetID, spreadsheetFeedURL) {
         var self = this;
-        var spreadsheetFeedURL = "https://spreadsheets.google.com/feeds/worksheets/" + spreadsheetID + "/public/basic?alt=json";
         return $.getJSON(spreadsheetFeedURL, function(data) {
             var tmpLink = data.feed.entry[self.options.sheetNum].id.$t;
             var sections = tmpLink.split('/');
@@ -90,39 +108,29 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
 
             self.options.url = 'https://spreadsheets.google.com/feeds/list/' + spreadsheetID + '/' + sheetID + "/public/values?alt=json";
             self._urlObtained = true;
-            });
-        //Replace in here: https://spreadsheets.google.com/feeds/worksheets/spreadsheetID/public/basic?alt=json
-        //1SMLuC_61MLgGGik4rby-cBCiKM5kQ-t0qITVdSVPNNk
-        //https://spreadsheets.google.com/feeds/worksheets/1SMLuC_61MLgGGik4rby-cBCiKM5kQ-t0qITVdSVPNNk/public/basic?alt=json
-        //Replace in here: https://spreadsheets.google.com/feeds/list/spreadsheetID/worksheetID/public/values?alt=json
-        //Replace in here: https://spreadsheets.google.com/feeds/list/1SMLuC_61MLgGGik4rby-cBCiKM5kQ-t0qITVdSVPNNk/od6/public/values?alt=json
+        });
     },
 
     requestData: function() {
-        if (this._urlObtained) {
-            var self = this;
-            (function() {
-                var script = document.createElement("SCRIPT");
-                script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                script.type = 'text/javascript';
-
-                script.onload = function() {
-                    var $ = window.jQuery;
-                    var ssURL = self.options.url || "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json";
-                    self._map.spin(true);
-                    $.getJSON(ssURL, function(data) {
-                        console.log("Data fetched:", data.feed.entry);
-                        self.parseData(data.feed.entry);
-                        self._map.spin(false);
-                    });
-                };
-                document.getElementsByTagName("head")[0].appendChild(script);
-            })();
-        }
-
+        var self = this;
+        (function() {
+            var script = document.createElement("SCRIPT");
+            script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
+            script.type = 'text/javascript';
+            script.onload = function() {
+                var $ = window.jQuery;
+                var ssURL = self.options.url || "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json";
+                self._map.spin(true);
+                $.getJSON(ssURL, function(data) {
+                    console.log("Data fetched:", data.feed.entry);
+                    self.parseData(data.feed.entry);
+                    self._map.spin(false);
+                });
+            };
+            document.getElementsByTagName("head")[0].appendChild(script);
+        })();
+        
     },
-
-    //generatePopup
     
     _createOrigInfo: function(info) {
         var origInfo = {};
