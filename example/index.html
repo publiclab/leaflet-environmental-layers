@@ -252,9 +252,16 @@
 
   </script>
   <script>
-    var options = {url: "https://docs.google.com/spreadsheets/d/1SMLuC_61MLgGGik4rby-cBCiKM5kQ-t0qITVdSVPNNk/edit#gid=0"
-                  }
-    var test = new L.SpreadsheetLayer(options);
+  function generatePopup(info) {
+      var content = info['a'] + info ['b'] + info ["c         "];
+      return content;
+  }
+    var options = {url: "https://docs.google.com/spreadsheets/d/1SMLuC_61MLgGGik4rby-cBCiKM5kQ-t0qITVdSVPNNk/edit#gid=0",
+                   columns: ["lat", "a", "b", "c         ", "1241$!@$!@$!@$D eeznuts 987987"], 
+                   lat: "lat",
+                   lon: "lng",
+                   generatePopup: generatePopup}
+    var test = new L.SpreadsheetLayer(options, generatePopup);
     test.addTo(map);
     test.getURL();
   </script>
