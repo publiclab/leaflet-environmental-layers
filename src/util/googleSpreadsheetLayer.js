@@ -4,7 +4,13 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
         //url: String url of data sheet
         //columns: Array of column names to be used
         //sheet number: n
-        //lat, lon columns
+        //lat, lon column names
+        
+        //Optional:
+        //imageOptions: defaults to blank
+        //sheet index: defaults to 0 (first sheet)
+        
+        
     //},
 
     initialize: function(options) {
@@ -13,12 +19,14 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
         this._layers = {};
         this._urlObtained = false;
         this._columns = this.options.columns || [];
+        this.options.imageOptions = this.options.imageOptions || {};
+        this.options.sheetNum = this.options.sheetNum || 0;
         console.log("columns:", this._columns);
         this._parsedToOrig = {};
         this._lat = this._cleanColumnName(this.options.lat);
         this._lon = this._cleanColumnName(this.options.lon);
         this._columns = this._cleanColumns(this._columns);
-        this.getURL();
+        //this.getURL();
     },
     
     _cleanColumns: function(columns) {
@@ -47,9 +55,14 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
     },
     
     onAdd: function(map) {
-        map.on('moveend', this.requestData, this);
+        //map.on('moveend', this.requestData, this);
         this._map = map;
-        this.requestData();
+        var self = this;
+        //this.requestData();
+        this.getURL().then(function() {
+            console.log("it worked");
+            self.requestData();
+        });
     },
 
     onRemove: function(map) {
@@ -60,9 +73,7 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
     },
 
     getURL: function() {
-        //console.log(this.options.url);
         var sections = this.options.url.split('/');
-        //console.log(sections);
         var spreadsheetID;
         var len = sections.length;
         for (var i = 1; i < len; i++) {
@@ -70,21 +81,16 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
                 spreadsheetID = sections[i];
             }
         }
-        //console.log("Spreadsheet ID:", spreadsheetID);
         var self = this;
         var spreadsheetFeedURL = "https://spreadsheets.google.com/feeds/worksheets/" + spreadsheetID + "/public/basic?alt=json";
-        //console.log("Spreadsheet Feed URL", spreadsheetFeedURL);
-        $.getJSON(spreadsheetFeedURL, function(data) {
-            //console.log(data.feed.entry[0].id);
-            var tmpLink = data.feed.entry[0].id.$t;
+        return $.getJSON(spreadsheetFeedURL, function(data) {
+            var tmpLink = data.feed.entry[self.options.sheetNum].id.$t;
             var sections = tmpLink.split('/');
             var sheetID = sections[sections.length - 1];
-            //console.log(sheetID);
 
             self.options.url = 'https://spreadsheets.google.com/feeds/list/' + spreadsheetID + '/' + sheetID + "/public/values?alt=json";
             self._urlObtained = true;
-            //console.log("URL Obtained:", self.options.url);
-        });
+            });
         //Replace in here: https://spreadsheets.google.com/feeds/worksheets/spreadsheetID/public/basic?alt=json
         //1SMLuC_61MLgGGik4rby-cBCiKM5kQ-t0qITVdSVPNNk
         //https://spreadsheets.google.com/feeds/worksheets/1SMLuC_61MLgGGik4rby-cBCiKM5kQ-t0qITVdSVPNNk/public/basic?alt=json
@@ -130,7 +136,7 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
     getMarker: function(data) {
         var info = {};
         for (var i = 0; i < this._columns.length; i++) {
-            info[this._columns[i]] = data["gsx$" + this._columns[i]].$t;
+            info[this._columns[i]] = data["gsx$" + this._columns[i]].$t || "";
         }
         console.log("Info for 1 row:", info);
         console.log(this.options.lon);
@@ -141,7 +147,7 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
         console.log(latlon);
         var generatePopup = this.options.generatePopup || this.generatePopup || function() {return;};
         var origInfo = this._createOrigInfo(info);
-        return L.marker(latlon).bindPopup(generatePopup(origInfo));
+        return L.marker(latlon, imageOptions).bindPopup(generatePopup(origInfo));
     },
     
     addMarker: function(data) {
