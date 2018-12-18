@@ -143,7 +143,8 @@
 	  var IndigenousLandsLanguages = L.layerGroup.indigenousLandsLanguagesLayer();
     var IndigenousLandsTreaties = L.layerGroup.indigenousLandsTreatiesLayer();
 
-
+    var OSMLandfillMineQuarryLayer = L.layerGroup.osmLandfillMineQuarryLayer();
+    
      var Wisconsin_NM  = L.esri.featureLayer({
        url: 'https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/Nonmetallic_and_Potential_frac_sand_mine_proposals_in_West_Central_Wisconsin/FeatureServer/0/',
        simplifyFactor: 1
@@ -229,7 +230,8 @@
          "<span style='color: black'><strong>Indigenous Lands Territories</strong></span>": IndigenousLandsTerritories,
          "<span style='color: black'><strong>Indigenous Lands Languages</strong></span>": IndigenousLandsLanguages,
          "<span style='color: black'><strong>Indigenous Lands Treaties</strong></span>": IndigenousLandsTreaties,
-         "<span style='color: black'><strong>Air Quality Index</strong></span>": AQICNLayer
+         "<span style='color: black'><strong>Air Quality Index</strong></span>": AQICNLayer,
+         "<strong>OSM <span style='color: red'>Landfills</span>, <span style='color: blue'>Mines</span>, <span style='color: green'>Quarries</span></strong>": OSMLandfillMineQuarryLayer
 
     };
     var allMapLayers = {"BL1": baselayer1 ,
@@ -275,7 +277,8 @@
        "Territories": IndigenousLandsTerritories,
        "Languages": IndigenousLandsLanguages,
        "Treaties": IndigenousLandsTreaties,
-       "AQI": AQICNLayer} ;
+       "AQI": AQICNLayer,
+       "LSM": OSMLandfillMineQuarryLayer} ;
     var hash = new L.Hash(map, allMapLayers);
     L.control.layers(baseMaps,overlayMaps).addTo(map);
 
