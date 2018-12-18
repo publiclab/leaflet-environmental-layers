@@ -13,7 +13,7 @@ module.exports = function(grunt) {
 
         browserify: {
             dist: {
-                src: ['node_modules/jquery/dist/jquery.min.js', 'node_modules/leaflet/dist/leaflet.js', 'src/leafletEnvironmentalLayers.js'],
+                src: ['node_modules/jquery/dist/jquery.min.js', 'node_modules/leaflet/dist/leaflet.js', 'src/leafletEnvironmentalLayers.js', 'src/util/*.js'],
                 dest: 'dist/LeafletEnvironmentalLayers.js'
             }
         },
