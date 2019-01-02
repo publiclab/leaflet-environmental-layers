@@ -38,7 +38,9 @@ L.LayerGroup.MapKnitterLayer = L.LayerGroup.extend(
 
         onRemove: function (map) {
             map.off('moveend', this.requestData, this);
-            map.spin(false) ;
+            if(typeof map.spin === 'function'){
+              map.spin(false) ;
+            }
             this.clearLayers();
             this._layers = {};
         },
@@ -54,10 +56,14 @@ L.LayerGroup.MapKnitterLayer = L.LayerGroup.extend(
                     script.onload = function() {
                         var $ = window.jQuery;
                         var MapKnitter_url = "https://mapknitter.org/map/region/Gulf-Coast.json?minlon="+(southwest.lng)+"&minlat="+(southwest.lat)+"&maxlon="+(northeast.lng)+"&maxlat="+(northeast.lat);
-                        self._map.spin(true) ;
+                        if(typeof self._map.spin === 'function'){
+                          self._map.spin(true) ;
+                        }
                         $.getJSON(MapKnitter_url , function(data){
                         	 self.parseData(data) ;
-                           self._map.spin(false) ;
+                           if(typeof self._map.spin === 'function'){
+                             self._map.spin(false) ;
+                           }
             		    });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);

@@ -28,7 +28,9 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
 
         onRemove: function(map) {
             map.off('moveend', this.requestData, this);
-            map.spin(false);
+            if(typeof map.spin === 'function'){
+              map.spin(false);
+            }
             this.clearLayers();
             this._layers = {};
         },
@@ -48,13 +50,17 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
                     for (var key in self._colorOptions) {
                         //Generate URL for each type
                         var LMQ_url = "http://www.overpass-api.de/api/xapi?*[landuse=" + key + "][bbox=" + (southwest.lng) + "," + (southwest.lat) + "," + (northeast.lng) + "," + (northeast.lat) + "]";
-                        self._map.spin(true);
+                        if(typeof self._map.spin === 'function'){
+                          self._map.spin(true);
+                        }
                         $.ajax({
                             url: LMQ_url,
                             dataType: "xml",
                             success: function(data) {
                                 self.parseData(data);
-                                self._map.spin(false);
+                                if(typeof self._map.spin === 'function'){
+                                  self._map.spin(false);
+                                }
                             }
                         });
                         /* The structure of the document is as follows:
@@ -81,7 +87,7 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
         getPolygon: function(selector) {
             var latlngs = [];
             var self = this;
-            
+
             var id = $(selector).attr('id');
             $(selector).find('nd').each(function() {
                 if (self._nodes[$(this).attr('ref')]) { //Find the coordinates based on the node id
@@ -120,7 +126,7 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
                 var poly = this.getPolygon(selector, key);
                 this._layers[key] = poly;
                 this.addLayer(poly);
-            } 
+            }
         },
 
         parseData: function(data) {
@@ -148,7 +154,7 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
                     self.addPolygon(this);
                 })
             })();
-            
+
             if (this.options.clearOutsideBounds) {
                this.clearOutsideBounds();
             }

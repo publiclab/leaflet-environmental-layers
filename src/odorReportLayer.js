@@ -36,7 +36,9 @@ L.LayerGroup.OdorReportLayer = L.LayerGroup.extend(
 
         onRemove: function (map) {
             map.off('moveend', this.requestData, this);
-            map.spin(false) ;
+            if(typeof map.spin === 'function'){
+              map.spin(false) ;
+            }
             this.clearLayers();
             this._layers = {};
         },
@@ -51,10 +53,14 @@ L.LayerGroup.OdorReportLayer = L.LayerGroup.extend(
                     script.onload = function() {
                         var $ = window.jQuery;
                         var OdorReport_url = "https://odorlog.api.ushahidi.io/api/v3/posts/" ;
-                        self._map.spin(true) ;
+                        if(typeof self._map.spin === 'function'){
+                          self._map.spin(true) ;
+                        }
                         $.getJSON(OdorReport_url , function(data){
                              self.parseData(data) ;
-                             self._map.spin(false) ;
+                             if(typeof self._map.spin === 'function'){
+                               self._map.spin(false) ;
+                             }
                         });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);

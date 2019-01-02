@@ -30,7 +30,9 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
     },
     onRemove: function (map) {
       map.off('moveend', this.requestData, this);
-      map.spin(false) ;
+      if(typeof map.spin === 'function'){
+        map.spin(false) ;
+      }
       this.clearLayers();
       this._layers = {};
     },
@@ -44,10 +46,14 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
         script.onload = function() {
         var $ = window.jQuery;
         var SkyTruth_url = "https://alerts.skytruth.org/json?n=100&l="+(southwest.lat)+","+(southwest.lng)+","+(northeast.lat)+","+(northeast.lng) ;
-        self._map.spin(true) ;
+        if(typeof self._map.spin === 'function'){
+          self._map.spin(true) ;
+        }
         $.getJSON(SkyTruth_url , function(data){
           self.parseData(data) ;
-          self._map.spin(false) ;
+          if(typeof self._map.spin === 'function'){
+            self._map.spin(false) ;
+          }
         });
         };
       document.getElementsByTagName("head")[0].appendChild(script);
