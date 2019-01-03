@@ -26,7 +26,9 @@ L.LayerGroup.IndigenousLandsTreatiesLayer = L.LayerGroup.extend(
 
         onRemove: function (map) {
             map.off('moveend', this.requestData, this);
-            map.spin(false) ;
+            if(typeof map.spin === 'function'){
+              map.spin(false) ;
+            }
             this.clearLayers();
             this._layers = {};
         },
@@ -46,10 +48,14 @@ L.LayerGroup.IndigenousLandsTreatiesLayer = L.LayerGroup.extend(
                         //this url loads all regions at once
                         //var ILTr_url = "https://native-land.ca/api/index.php?maps=treaties";
                         //Here is the getJSON method designed after the other layers
-                        self._map.spin(true) ;
+                        if(typeof self._map.spin === 'function'){
+                          self._map.spin(true) ;
+                        }
                         $.getJSON(ILTr_url , function(data){
                           self.parseData(data) ;
-                          self._map.spin(false) ;
+                          if(typeof self._map.spin === 'function'){
+                            self._map.spin(false) ;
+                          }
                         });
 
                         /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format

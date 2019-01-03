@@ -39,12 +39,15 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
                         var $ = window.jQuery;
                         var AQI_url = "https://api.waqi.info/map/bounds/?latlng=" + southwest.lat + "," + southwest.lng + "," + northeast.lat + "," + northeast.lng + "&token=" + self.options.tokenID;
 
-
+                        if(typeof self._map.spin === 'function'){
                          self._map.spin(true) ;
+                        }
                          $.getJSON(AQI_url , function(regionalData){
 
                              self.parseData(regionalData) ;
-                             self._map.spin(false) ;
+                             if(typeof self._map.spin === 'function'){
+                               self._map.spin(false) ;
+                             }
                          });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);

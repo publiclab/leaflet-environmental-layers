@@ -34,7 +34,9 @@ L.LayerGroup.FracTrackerLayer = L.LayerGroup.extend(
         onRemove: function (map) {
            // map.off('moveend', this.requestData, this);
             this.clearLayers();
-            map.spin(false) ;
+            if(typeof map.spin === 'function'){
+              map.spin(false) ;
+            }
             this._layers = {};
         },
 
@@ -48,10 +50,14 @@ L.LayerGroup.FracTrackerLayer = L.LayerGroup.extend(
                     script.onload = function() {
                         var $ = window.jQuery;
                         var FracTracker_URL = "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json" ;
-                        self._map.spin(true) ;
+                        if(typeof self._map.spin === 'function'){
+                          self._map.spin(true) ;
+                        }
                         $.getJSON(FracTracker_URL , function(data){
                         self.parseData(data.feed.entry);
-                        self._map.spin(false) ;
+                        if(typeof self._map.spin === 'function'){
+                          self._map.spin(false) ;
+                        }
             		    });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);

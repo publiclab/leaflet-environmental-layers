@@ -34,7 +34,9 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
 
         onRemove: function (map) {
             this._map.removeLayer(this.heatmapLayer) ;
-            map.spin(false) ;
+            if(typeof map.spin === 'function'){
+              map.spin(false) ;
+            }
             this.clearLayers();
             this._layers = {};
         },
@@ -49,10 +51,14 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
                     script.onload = function() {
                         var $ = window.jQuery;
                         var PurpleLayer_url = "https://www.purpleair.com/json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L";
-                        self._map.spin(true) ;
+                        if(typeof self._map.spin === 'function'){
+                          self._map.spin(true) ;
+                        }
                         $.getJSON(PurpleLayer_url , function(data){
                         	 self.parseData(data) ;
-                           self._map.spin(false) ;
+                           if(typeof self._map.spin === 'function'){
+                             self._map.spin(false) ;
+                           }
             		    });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);

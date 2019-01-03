@@ -36,7 +36,9 @@ L.LayerGroup.PurpleAirMarkerLayer = L.LayerGroup.extend(
         onRemove: function (map) {
             map.off('moveend', this.requestData, this);
             this.clearLayers();
-            map.spin(false) ;
+            if(typeof map.spin === 'function'){
+              map.spin(false) ;
+            }
             this._layers = {};
         },
 
@@ -51,10 +53,14 @@ L.LayerGroup.PurpleAirMarkerLayer = L.LayerGroup.extend(
                       script.onload = function() {
                           var $ = window.jQuery;
                           var PurpleLayer_url = "https://www.purpleair.com/data.json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat="+(northwest.lat)+"&selat="+(southeast.lat)+"&nwlng="+(northwest.lng)+"&selng="+(southeast.lng) ;
-                          self._map.spin(true) ;
+                          if(typeof self._map.spin === 'function'){
+                            self._map.spin(true) ;
+                          }
                           $.getJSON(PurpleLayer_url , function(data){
                           	 self.parseData(data) ;
-                             self._map.spin(false) ;
+                             if(typeof self._map.spin === 'function'){
+                               self._map.spin(false) ;
+                             }
               		    });
                       };
                       document.getElementsByTagName("head")[0].appendChild(script);
