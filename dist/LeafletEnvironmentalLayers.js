@@ -26042,6 +26042,31 @@ L.layerGroup.aqicnLayer = function(options) {
 }
 
 },{}],9:[function(require,module,exports){
+fracTrackerMobileLayer = function(map) {
+  var FracTracker_mobile  = L.esri.featureLayer({
+    url: 'https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/FracTrackerMobileAppNPCAMesaVerdeNationalPark_051416/FeatureServer/0/',
+    simplifyFactor: 1
+  }) ;
+
+  FracTracker_mobile.bindPopup(function (layer) {
+    return L.Util.template('<p><strong>Id : </strong>{OBJECTID}<br><strong>FT_MV_ID : </strong>{FT_MV_ID}<br><strong>Long : </strong>{Long}<br><strong>Lat :</strong> {Lat} <br> <strong>Caption : </strong>{caption} <br> <strong>issue :</strong> {issue} <br> <strong>facility :</strong> {facility} <br><strong> Location :</strong> {location} <br> <strong>URL :</strong> <a href={URL2}>{URL2}</a> <br> <img src={URL2} height="280" width="290"></p>', layer.feature.properties);
+  });
+
+  FracTracker_mobile.on('loading', function(e){
+    if(typeof map.spin === 'function'){
+      map.spin(true) ;
+    }
+  });
+  FracTracker_mobile.on('load', function(e){
+    if(typeof map.spin === 'function'){
+      map.spin(false) ;
+    }
+  });
+
+  return FracTracker_mobile ;
+}
+
+},{}],10:[function(require,module,exports){
 L.Icon.FracTrackerIcon = L.Icon.extend({
    options: {
     iconUrl: 'https://www.clker.com/cliparts/2/3/f/a/11970909781608045989gramzon_Barrel.svg.med.png',
@@ -26175,7 +26200,7 @@ L.layerGroup.fracTrackerLayer = function (options) {
     return new L.LayerGroup.FracTrackerLayer(options) ;
 };
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 L.LayerGroup.IndigenousLandsLanguagesLayer = L.LayerGroup.extend(
 
     {
@@ -26336,7 +26361,7 @@ L.layerGroup.indigenousLandsLanguagesLayer = function (options) {
     return new L.LayerGroup.IndigenousLandsLanguagesLayer(options);
 };
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 L.LayerGroup.IndigenousLandsTerritoriesLayer = L.LayerGroup.extend(
 
     {
@@ -26497,7 +26522,7 @@ L.layerGroup.indigenousLandsTerritoriesLayer = function (options) {
     return new L.LayerGroup.IndigenousLandsTerritoriesLayer(options);
 };
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 L.LayerGroup.IndigenousLandsTreatiesLayer = L.LayerGroup.extend(
 
     {
@@ -26657,7 +26682,7 @@ L.layerGroup.indigenousLandsTreatiesLayer = function (options) {
     return new L.LayerGroup.IndigenousLandsTreatiesLayer(options);
 };
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 require('jquery') ;
 require('leaflet') ;
 
@@ -26675,7 +26700,10 @@ require('./indigenousLandsLanguagesLayer.js');
 require('./indigenousLandsTreatiesLayer.js') ;
 require('./aqicnLayer.js');
 require('./osmLandfillMineQuarryLayer.js');
-},{"./aqicnLayer.js":8,"./fractracker.js":9,"./indigenousLandsLanguagesLayer.js":10,"./indigenousLandsTerritoriesLayer.js":11,"./indigenousLandsTreatiesLayer.js":12,"./mapKnitterLayer.js":14,"./odorReportLayer.js":15,"./openWeatherMapLayer.js":16,"./osmLandfillMineQuarryLayer.js":17,"./purpleAirMarkerLayer.js":18,"./purpleLayer.js":19,"./skyTruthLayer.js":20,"./toxicReleaseLayer.js":21,"jquery":2,"leaflet":6,"leaflet-providers":5}],14:[function(require,module,exports){
+require('./wisconsinLayer.js');
+require('./fracTrackerMobileLayer.js');
+
+},{"./aqicnLayer.js":8,"./fracTrackerMobileLayer.js":9,"./fractracker.js":10,"./indigenousLandsLanguagesLayer.js":11,"./indigenousLandsTerritoriesLayer.js":12,"./indigenousLandsTreatiesLayer.js":13,"./mapKnitterLayer.js":15,"./odorReportLayer.js":16,"./openWeatherMapLayer.js":17,"./osmLandfillMineQuarryLayer.js":18,"./purpleAirMarkerLayer.js":19,"./purpleLayer.js":20,"./skyTruthLayer.js":21,"./toxicReleaseLayer.js":22,"./wisconsinLayer.js":24,"jquery":2,"leaflet":6,"leaflet-providers":5}],15:[function(require,module,exports){
  L.Icon.MapKnitterIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -26814,7 +26842,7 @@ L.layerGroup.mapKnitterLayer = function (options) {
     return new L.LayerGroup.MapKnitterLayer(options) ;
 };
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 L.Icon.OdorReportIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://www.clker.com/cliparts/T/3/6/T/S/8/ink-splash-md.png',
@@ -26947,7 +26975,7 @@ L.layerGroup.odorReportLayer = function (options) {
     return new L.LayerGroup.OdorReportLayer(options);
 };
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 L.OWM = L.TileLayer.extend({
 	options: {
 		appId: '4c6704566155a7d0d5d2f107c5156d6e', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
@@ -28523,7 +28551,7 @@ L.OWM.Utils = {
 
 
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
 
     {
@@ -28710,7 +28738,7 @@ L.layerGroup.osmLandfillMineQuarryLayer = function(options) {
     return new L.LayerGroup.OSMLandfillMineQuarryLayer(options);
 };
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 require('jquery') ;
 require('leaflet') ;
 
@@ -28826,7 +28854,7 @@ L.layerGroup.purpleAirMarkerLayer = function (options) {
     return new L.LayerGroup.PurpleAirMarkerLayer(options) ;
 };
 
-},{"jquery":2,"leaflet":6}],19:[function(require,module,exports){
+},{"jquery":2,"leaflet":6}],20:[function(require,module,exports){
 require('heatmap.js') ;
 require('leaflet-heatmap') ;
 
@@ -28956,7 +28984,7 @@ L.layerGroup.purpleLayer = function (options) {
     return new L.LayerGroup.PurpleLayer(options) ;
 };
 
-},{"heatmap.js":1,"leaflet-heatmap":4}],20:[function(require,module,exports){
+},{"heatmap.js":1,"leaflet-heatmap":4}],21:[function(require,module,exports){
 L.Icon.SkyTruthIcon = L.Icon.extend({
   options: {
     iconUrl: 'https://www.clker.com/cliparts/T/G/b/7/r/A/red-dot.svg',
@@ -29069,7 +29097,7 @@ L.layerGroup.skyTruthLayer = function (options) {
   return new L.LayerGroup.SkyTruthLayer(options);
 };
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 L.Icon.ToxicReleaseIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://www.clker.com/cliparts/r/M/L/o/R/i/green-dot.svg',
@@ -29210,7 +29238,7 @@ L.layerGroup.toxicReleaseLayer = function (options) {
     return new L.LayerGroup.ToxicReleaseLayer(options);
 };
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 L.SpreadsheetLayer = L.LayerGroup.extend({
     //options: {
         //Must be supplied:
@@ -29376,4 +29404,32 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
 L.spreadsheetLayer = function(options) {
     return new L.SpreadsheetLayer(options);
 };
-},{}]},{},[3,7,13,22]);
+},{}],24:[function(require,module,exports){
+wisconsinLayer = function (map) {
+   var Wisconsin_NM  = L.esri.featureLayer({
+     url: 'https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/Nonmetallic_and_Potential_frac_sand_mine_proposals_in_West_Central_Wisconsin/FeatureServer/0/',
+     simplifyFactor: 1
+   }) ;
+
+   Wisconsin_NM.bindPopup(function (layer) {
+     return L.Util.template('<p><strong>Id : </strong>{FID}<br><strong>PLACENAME : </strong>{PLACENAME}<br><strong>STATE : </strong>{STATE}<br><strong>Lat :</strong> {LATITUDE} <br> <strong>Lon : </strong>{LONGITUDE} <br> <strong>Owner :</strong> {OWNERNME1} <br> <strong>POSTAL ADRESS :</strong> {PSTLADRESS} <br><strong> Assessed Acres :</strong> {ASSDACRES} <br> <strong>County Name :</strong> {CONAME} <br> </p>', layer.feature.properties);
+   });
+
+   Wisconsin_NM.on('loading', function(e){
+    if(typeof map.spin === 'function'){
+       map.spin(true) ;
+     }
+   });
+   Wisconsin_NM.on('load', function(e){
+    if(typeof map.spin === 'function'){
+       map.spin(false) ;
+     }
+   });
+   Wisconsin_NM.on('add', function(e){
+     map.setView([43.9929 , -90.3883], 12);
+   });
+
+   return Wisconsin_NM ;
+};
+
+},{}]},{},[3,7,14,23]);
