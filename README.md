@@ -102,37 +102,16 @@ Click on a point or marker on the map to learn more about it .
 
 ### To use Wisconsin Non-Metallic Layer :
 
-* Same dependencies as of Fractracker Mobile Layer .
+            <script src="https://unpkg.com/esri-leaflet@2.2.3/dist/esri-leaflet.js"></script>
+            <script src="https://unpkg.com/esri-leaflet-renderers@2.0.6"></script>
 
-              var Wisconsin_NM  = L.esri.featureLayer({
-                url: 'https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/Nonmetallic_and_Potential_frac_sand_mine_proposals_in_West_Central_Wisconsin/FeatureServer/0/',
-                simplifyFactor: 1
-              }) ;
-
-              Wisconsin_NM.bindPopup(function (layer) {
-                return L.Util.template('<p><strong>Id : </strong>{FID}<br><strong>PLACENAME : </strong>{PLACENAME}<br><strong>STATE : </strong>{STATE}<br><strong>Lat :</strong> {LATITUDE} <br> <strong>Lon : </strong>{LONGITUDE} <br> <strong>Owner :</strong> {OWNERNME1} <br> <strong>POSTAL ADRESS :</strong> {PSTLADRESS} <br><strong> Assessed Acres :</strong> {ASSDACRES} <br> <strong>County Name :</strong> {CONAME} <br> </p>', layer.feature.properties);
-              });
+              var Wisconsin_NM = wisconsinLayer(map) ;
 
 ### To use Fractracker Mobile Layer :
 
-							<script src="https://unpkg.com/esri-leaflet@2.2.3/dist/esri-leaflet.js"></script>
-							<script src="https://unpkg.com/esri-leaflet-renderers@2.0.6"></script>
+* Same dependencies as of wisconsin Non-Metallic Layer .
 
-							var FracTracker_mobile  = L.esri.featureLayer({
-						 	 url: 'https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/FracTrackerMobileAppNPCAMesaVerdeNationalPark_051416/FeatureServer/0/',
-						 	 simplifyFactor: 1
-						  }) ;
-
-						  FracTracker_mobile.bindPopup(function (layer) {
-						 	 return L.Util.template('<p><strong>Id : </strong>{OBJECTID}<br><strong>FT_MV_ID : </strong>{FT_MV_ID}<br><strong>Long : </strong>{Long}<br><strong>Lat :</strong> {Lat} <br> <strong>Caption : </strong>{caption} <br> <strong>issue :</strong> {issue} <br> <strong>facility :</strong> {facility} <br><strong> Location :</strong> {location} <br> <strong>URL :</strong> {URL2} <br> <img src={URL2} height="280" width="290"></p>', layer.feature.properties);
-						  });
-
-						  FracTracker_mobile.on('loading', function(e){
-						 		 map.spin(true) ;
-						  });
-						  FracTracker_mobile.on('load', function(e){
-						 		 map.spin(false) ;
-						  });
+              var FracTracker_mobile = fracTrackerMobileLayer(map) ;
 
 
 ### To use Purple Layer :
