@@ -14,7 +14,7 @@ L.icon.skyTruthIcon = function () {
 L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
   {
     options: {
-      url: 'https://alerts.skytruth.org/json?n=100',
+      url: 'https://alerts1.skytruth.org/json?n=100',
       popupOnMouseover: false,
       clearOutsideBounds: false ,
     },
@@ -45,7 +45,7 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
         var zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
         script.onload = function() {
         var $ = window.jQuery;
-        var SkyTruth_url = "https://alerts.skytruth.org/json?n=100&l="+(southwest.lat)+","+(southwest.lng)+","+(northeast.lat)+","+(northeast.lng) ;
+        var SkyTruth_url = "https://alerts1.skytruth.org/json?n=100&l="+(southwest.lat)+","+(southwest.lng)+","+(northeast.lat)+","+(northeast.lng) ;
         if(typeof self._map.spin === 'function'){
           self._map.spin(true) ;
         }
