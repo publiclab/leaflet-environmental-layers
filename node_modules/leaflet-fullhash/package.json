@@ -1,0 +1,19 @@
+{
+  "name": "leaflet-fullhash",
+  "version": "1.0.0",
+  "description": "leaflet-fullHash ================",
+  "main": "leaflet-fullHash.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sagarpreet-chadha/leaflet-fullHash.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sagarpreet-chadha/leaflet-fullHash/issues"
+  },
+  "homepage": "https://github.com/sagarpreet-chadha/leaflet-fullHash#readme"
+}
