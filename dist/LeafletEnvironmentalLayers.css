@@ -122,3 +122,71 @@
 .city-container {
 	width: 200px;
 }
+
+.popup {
+    position: absolute;
+    width: 230px;
+    height: auto;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    right: 250px;
+    padding: 10px;
+    font: 18px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+    z-index: 1000;
+}
+
+.popup::before, .popup::after {
+    content: "";
+    height: 0;
+    width: 0;
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    border-left: 5px solid white;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+}
+
+.popup::before {
+    margin-top: -6px;
+    border-left: 6px solid black;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+}
+
+.popup::after {
+    margin-top: -5px;
+    border-left: 5px solid white;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+}
+
+.popup.hide {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 0.5s, opacity 0.5s linear;
+}
+
+.popup:hover {
+    background-color: #F5F5F5;
+}
+
+.popup:hover::after {
+    border-left-color: #F5F5F5;
+}
+
+.popup-close {
+    line-height: 10px;
+    height: auto;
+    width: auto;
+    color: black;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+}
+
+.popup-close:hover {
+    color: red;
+}
