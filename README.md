@@ -90,6 +90,37 @@ Click on a point or marker on the map to learn more about it .
 
 In `dist/legendCreation.js`, add `addLayerNameURLPair(layer_var, "img_url");`, where `layer_var` is consistent with the variable used in `example/index.html` and `img_url` is the source of the image to be used as the legend. 
 
+### Spreadsheet-based layers
+
+We can source locations from a spreadsheet in a format like this:
+
+| Title  | Latitude | Longitude   | Notes             |
+|--------|----------|-------------|-------------------|
+| First	 | 29.671282 | -95.17829  | The first marker  |
+| Second | 29.760371 | -95.504828 | The second marker |
+| Third  | 29.917755 | -95.283494 | The third marker  |
+
+The layer is constructed like this:
+
+```js
+var layer = L.SpreadsheetLayer({
+  url: 'https://docs.google.com/spreadsheets/d/14BvU3mEqvI8moLp0vANc7jeEvb0mnmYvH4I0GkwVsiU/edit?usp=sharing', // String url of data sheet
+  lat: 'Latitude', // name of latitude column
+  lon: 'Longitude', // name of longitude column
+  columns: ['Title', 'Notes'], // Array of column names to be used
+  generatePopup: function() {
+    // function used to create content of popups
+  },
+  // imageOptions: // optional, defaults to blank
+  // sheetNum: // optional, defaults to 0 (first sheet)
+});
+layer.addTo(map);
+```
+
+Read more here: https://github.com/publiclab/leaflet-environmental-layers/blob/master/src/util/googleSpreadsheetLayer.js
+
+We're going to try spinning this out into its own library; see: https://github.com/publiclab/leaflet-environmental-layers/issues/121
+
 ## Dependencies :
 
 ### General (required for all layers) :
