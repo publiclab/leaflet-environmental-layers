@@ -26703,7 +26703,7 @@ require('./osmLandfillMineQuarryLayer.js');
 require('./wisconsinLayer.js');
 require('./fracTrackerMobileLayer.js');
 
-},{"./aqicnLayer.js":8,"./fracTrackerMobileLayer.js":9,"./fractracker.js":10,"./indigenousLandsLanguagesLayer.js":11,"./indigenousLandsTerritoriesLayer.js":12,"./indigenousLandsTreatiesLayer.js":13,"./mapKnitterLayer.js":15,"./odorReportLayer.js":16,"./openWeatherMapLayer.js":17,"./osmLandfillMineQuarryLayer.js":18,"./purpleAirMarkerLayer.js":19,"./purpleLayer.js":20,"./skyTruthLayer.js":21,"./toxicReleaseLayer.js":22,"./wisconsinLayer.js":24,"jquery":2,"leaflet":6,"leaflet-providers":5}],15:[function(require,module,exports){
+},{"./aqicnLayer.js":8,"./fracTrackerMobileLayer.js":9,"./fractracker.js":10,"./indigenousLandsLanguagesLayer.js":11,"./indigenousLandsTerritoriesLayer.js":12,"./indigenousLandsTreatiesLayer.js":13,"./mapKnitterLayer.js":15,"./odorReportLayer.js":16,"./openWeatherMapLayer.js":17,"./osmLandfillMineQuarryLayer.js":18,"./purpleAirMarkerLayer.js":19,"./purpleLayer.js":20,"./skyTruthLayer.js":21,"./toxicReleaseLayer.js":22,"./wisconsinLayer.js":26,"jquery":2,"leaflet":6,"leaflet-providers":5}],15:[function(require,module,exports){
  L.Icon.MapKnitterIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -29001,7 +29001,7 @@ L.icon.skyTruthIcon = function () {
 L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
   {
     options: {
-      url: 'https://alerts.skytruth.org/json?n=100',
+      url: 'https://alerts1.skytruth.org/json?n=100',
       popupOnMouseover: false,
       clearOutsideBounds: false ,
     },
@@ -29032,7 +29032,7 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
         var zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
         script.onload = function() {
         var $ = window.jQuery;
-        var SkyTruth_url = "https://alerts.skytruth.org/json?n=100&l="+(southwest.lat)+","+(southwest.lng)+","+(northeast.lat)+","+(northeast.lng) ;
+        var SkyTruth_url = "https://alerts1.skytruth.org/json?n=100&l="+(southwest.lat)+","+(southwest.lng)+","+(northeast.lat)+","+(northeast.lng) ;
         if(typeof self._map.spin === 'function'){
           self._map.spin(true) ;
         }
@@ -29239,6 +29239,23 @@ L.layerGroup.toxicReleaseLayer = function (options) {
 };
 
 },{}],23:[function(require,module,exports){
+L.Control.Layers.include({
+  getActiveOverlayNames: function() {
+    
+    var layers = [];
+    var control = this;
+    this._layers.forEach(function(layerObj) {
+      if(layerObj.overlay) {
+        
+        layerName = layerObj.name;
+        if(control._map.hasLayer(layerObj.layer)) layers.push(layerObj.name);
+      }
+    });
+    
+    return layers;
+  }
+});
+},{}],24:[function(require,module,exports){
 L.SpreadsheetLayer = L.LayerGroup.extend({
     //options: {
         //Must be supplied:
@@ -29404,7 +29421,66 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
 L.spreadsheetLayer = function(options) {
     return new L.SpreadsheetLayer(options);
 };
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
+L.Control.LegendControl = L.Control.extend({
+  options: {
+    position: 'bottomleft',
+  },
+  
+  initialize: function(options) {
+    L.Util.setOptions(this, options);
+    this._legendElement = L.DomUtil.create('div', 'legend-container');
+    this._legendElement.style.display = 'none';
+    this._legendURLs = []; //Array of URLs
+  },
+  
+  onAdd: function(map) {
+    return this._legendElement;
+  },
+  
+  onRemove: function(map) {
+    this._legendURLs = [];
+    this._drawLegend();
+    this._legendElement.style.display = 'none';
+  },
+  
+  addLegend: function(legendURL) {
+    this._legendURLs.push(legendURL);
+    this._drawLegend();
+    this._legendElement.style.display = 'block';
+  },
+  
+  removeLegend: function(legendURL) {
+    var index = this._legendURLs.indexOf(legendURL);
+    if(index > -1) {
+      this._legendURLs.splice(index, 1); //remove URL from the array
+    }    
+    if(!this._legendURLs.length) { //if no more URLs
+      this._legendElement.style.display = 'none';
+    }
+    this._drawLegend();
+  },
+  
+  _drawLegend: function() {
+
+    this._legendElement.innerHTML = '';
+    var self = this;
+    for(var i = 0; i < this._legendURLs.length; i++) {
+      var item = L.DomUtil.create('div', 'legend-item', this._legendElement)
+      item.innerHTML = '<img src="' + this._legendURLs[i] + '" style="height: 200px;"/>';
+      item.style.cssFloat = 'left';
+      item.style.margin = '5px';
+
+    }
+  }
+  
+});
+
+L.control.legendControl = function(options) { 
+  return new L.Control.LegendControl(options);
+}
+
+},{}],26:[function(require,module,exports){
 wisconsinLayer = function (map) {
    var Wisconsin_NM  = L.esri.featureLayer({
      url: 'https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/Nonmetallic_and_Potential_frac_sand_mine_proposals_in_West_Central_Wisconsin/FeatureServer/0/',
@@ -29432,4 +29508,4 @@ wisconsinLayer = function (map) {
    return Wisconsin_NM ;
 };
 
-},{}]},{},[3,7,14,23]);
+},{}]},{},[3,7,14,23,24,25]);
