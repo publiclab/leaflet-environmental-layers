@@ -113,7 +113,13 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
                 var val = $(this).attr('v');
                 if (key === 'landuse') val = val.charAt(0).toUpperCase() + val.slice(1); //Capitalize first letter of the landuse
                 key = key.charAt(0).toUpperCase() + key.slice(1); //Capitalize first letter
-                content += "<strong>" + key + ": </strong>" + val + "<br>";
+                //Check if the value is a link
+                if (/^((http|https|ftp):\/\/)/.test(val)) {
+                    content += "<strong>" + key + ": </strong><a href='" + val + "' target='_blank'>" + val + "</a><br>";
+                }
+                else {
+                    content += "<strong>" + key + ": </strong>" + val + "<br>";
+                }
             });
             content += "<hr>The data included in this layer is from www.openstreetmap.org. The data is made available under ODbL.<br>";
             content += "From the <a href=https://github.com/publiclab/leaflet-environmental-layers/pull/94>OSM LMQ Inventory</a> (<a href = https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515>info</a>).";
