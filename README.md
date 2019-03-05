@@ -88,7 +88,7 @@ Click on a point or marker on the map to learn more about it .
 
 #### Add a legend
 
-In `dist/legendCreation.js`, add `addLayerNameURLPair(layer_var, "img_url");`, where `layer_var` is consistent with the variable used in `example/index.html` and `img_url` is the source of the image to be used as the legend. 
+In `src/legendCreation.js`, add `addLayerNameURLPair(layer_var, "img_url");`, where `layer_var` is consistent with the variable used in `example/index.html` and `img_url` is the source of the image to be used as the legend. 
 
 ### Spreadsheet-based layers
 
@@ -132,7 +132,7 @@ We're going to try spinning this out into its own library; see: https://github.c
 
 ### To use Wind Rose Layer :
 
-            <script src="../dist/windRoseLayer.js"></script>
+            <script src="../src/windRoseLayer.js"></script>
             <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet">
 
 ### To use Wisconsin Non-Metallic Layer :
