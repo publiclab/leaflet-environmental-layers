@@ -135,6 +135,7 @@
     var wind = L.OWM.wind({});
 
     var AQICNLayer = L.layerGroup.aqicnLayer();
+    var OpenAqLayer = L.layerGroup.openaqLayer();
 
     var city = L.OWM.current({intervall: 15, minZoom: 3});
     var windrose = L.OWM.current({intervall: 15, minZoom: 3, markerFunction: myWindroseMarker, popup: false, clusterSize: 50,imageLoadingBgUrl: 'https://openweathermap.org/img/w0/iwind.png' });
@@ -195,6 +196,7 @@
          "<span style='color: black'><strong>Indigenous Lands Languages</strong></span>": IndigenousLandsLanguages,
          "<span style='color: black'><strong>Indigenous Lands Treaties</strong></span>": IndigenousLandsTreaties,
          "<span style='color: black'><strong>Air Quality Index</strong></span>": AQICNLayer,
+         "<span style='color: black'><strong>Open AQ </strong></span>": OpenAqLayer,
          "<strong>OSM <span style='color: red'>Landfills</span>, <span style='color: blue'>Mines</span>, <span style='color: green'>Quarries</span></strong>": OSMLandfillMineQuarryLayer
 
     };
@@ -243,6 +245,7 @@
       "Languages": IndigenousLandsLanguages,
       "Treaties": IndigenousLandsTreaties,
       "AQI": AQICNLayer,
+      "OpenAq":OpenAqLayer,
       "LSM": OSMLandfillMineQuarryLayer
     };
     var hash = new L.Hash(map, allMapLayers);
