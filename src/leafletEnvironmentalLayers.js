@@ -14,6 +14,7 @@ require('./indigenousLandsTerritoriesLayer.js');
 require('./indigenousLandsLanguagesLayer.js');
 require('./indigenousLandsTreatiesLayer.js') ;
 require('./aqicnLayer.js');
+require('./openaqLayer.js');
 require('./osmLandfillMineQuarryLayer.js');
 require('./wisconsinLayer.js');
 require('./fracTrackerMobileLayer.js');

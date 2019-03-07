@@ -25893,7 +25893,6 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
                          self._map.spin(true) ;
                         }
                          $.getJSON(AQI_url , function(regionalData){
-
                              self.parseData(regionalData) ;
                              if(typeof self._map.spin === 'function'){
                                self._map.spin(false) ;
@@ -26042,6 +26041,148 @@ L.layerGroup.aqicnLayer = function(options) {
 }
 
 },{}],9:[function(require,module,exports){
+		L.Icon.OpenAqIcon = L.Icon.extend({
+			options: {
+				iconUrl: 'https://i.stack.imgur.com/6cDGi.png',
+				shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+				iconSize: [20, 20],
+				iconAnchor: [6, 21],
+				popupAnchor: [1, -34],
+				shadowSize: [20, 20]
+			}
+	});
+
+	L.icon.openaqIcon = function () {
+			return new L.Icon.OpenAqIcon();
+	};
+	L.LayerGroup.OpenAqLayer = L.LayerGroup.extend(
+	
+			{
+					options: {
+							popupOnMouseover: true,
+							clearOutsideBounds: true
+					},
+	
+					initialize: function (options) {
+							options = options || {};
+							L.Util.setOptions(this, options);
+							this._layers = {};
+					},
+	
+					onAdd: function (map) {
+							map.on('moveend', this.requestRegionData, this);
+							this._map = map;
+							this.requestRegionData();
+					},
+	
+					onRemove: function (map) {
+							map.off('moveend', this.requestRegionData, this);
+							this.clearLayers();
+							this._layers = {};
+					},
+	
+					requestRegionData: function () {
+									var self = this ;
+	
+									(function() {
+											var script = document.createElement("SCRIPT");
+											script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
+											script.type = 'text/javascript';
+										
+											script.onload = function() {
+													var $ = window.jQuery;
+													var url = "https://api.openaq.org/v1/latest?limit=1000";
+
+													if(typeof self._map.spin === 'function'){
+													 self._map.spin(true) ;
+													}
+													 $.getJSON(url , function(regionalData){
+	
+															 self.parseData(regionalData.results) ;
+															 if(typeof self._map.spin === 'function'){
+																 self._map.spin(false) ;
+															 }
+													 });
+											};
+											document.getElementsByTagName("head")[0].appendChild(script);
+									})();
+					},
+	
+					getMarker: function(data) {
+							var redDotIcon = new L.icon.openaqIcon()
+							var distance = data.distance;
+							var lat = data.coordinates.latitude;
+							var lon = data.coordinates.longitude;
+  						var  contentData = "";
+  						var labels = {
+  								pm25: "PM<sub>2.5</sub>",
+  								pm10: "PM<sub>10</sub>",
+  								o3: "Ozone (o3)",
+  								no2: "Nitrogen Dioxide (no2)",
+  								so2: "Sulphur Dioxide (so2)",
+  								co: "Carbon Monoxide (co)",
+  						}
+  						for(var i = 0; i < data.measurements.length; i++) {
+  							contentData+="<strong>"+labels[data.measurements[i].parameter]+" : </strong>"+data.measurements[i].value+" "+data.measurements[i].unit+"<br>"
+  						}
+  							return L.marker([lat, lon], {icon: redDotIcon}).bindPopup(
+  								"<h3>"+data.location+", "+data.country+"</h3><br>"+
+  								"<strong>distance: "+"</strong>"+data.distance+"<br>"+contentData
+  							);
+	
+					},
+	
+					addMarker: function(data,i) {
+							var self = this;
+							var marker = this.getMarker(data);
+							var key = i;	
+							if (!this._layers[key]) {
+									this._layers[key] = marker;
+									this.addLayer(marker);
+							}
+	
+					},
+	
+					parseData: function(regionalData) {
+							if(!!regionalData) {
+									for(var i = 0; i < regionalData.length; i++) {
+
+											if(!!regionalData[i].coordinates){
+												this.addMarker(regionalData[i],i);
+											}
+									}
+	
+									if(this.options.clearOutsideBounds) {
+											this.clearOutsideBounds();
+									}
+							}
+	
+					},
+	
+					clearOutsideBounds: function () {
+							var bounds = this._map.getBounds(),
+									latLng,
+									key;
+	
+							for (key in this._layers) {	
+									if (this._layers.hasOwnProperty(key)) {
+											latLng = this._layers[key].getLatLng();
+	
+											if (!bounds.contains(latLng)) {
+													this.removeLayer(this._layers[key]);
+													delete this._layers[key];
+											}
+									}
+							}
+					}
+			}
+	);
+	
+	L.layerGroup.openaqLayer = function(options) {
+			return new L.LayerGroup.OpenAqLayer(options);
+	}
+	
+	},{}],10:[function(require,module,exports){
 fracTrackerMobileLayer = function(map) {
   var FracTracker_mobile  = L.esri.featureLayer({
     url: 'https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/FracTrackerMobileAppNPCAMesaVerdeNationalPark_051416/FeatureServer/0/',
@@ -26066,7 +26207,7 @@ fracTrackerMobileLayer = function(map) {
   return FracTracker_mobile ;
 }
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 L.Icon.FracTrackerIcon = L.Icon.extend({
    options: {
     iconUrl: 'https://www.clker.com/cliparts/2/3/f/a/11970909781608045989gramzon_Barrel.svg.med.png',
@@ -26200,7 +26341,7 @@ L.layerGroup.fracTrackerLayer = function (options) {
     return new L.LayerGroup.FracTrackerLayer(options) ;
 };
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 L.LayerGroup.IndigenousLandsLanguagesLayer = L.LayerGroup.extend(
 
     {
@@ -26361,7 +26502,7 @@ L.layerGroup.indigenousLandsLanguagesLayer = function (options) {
     return new L.LayerGroup.IndigenousLandsLanguagesLayer(options);
 };
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 L.LayerGroup.IndigenousLandsTerritoriesLayer = L.LayerGroup.extend(
 
     {
@@ -26522,7 +26663,7 @@ L.layerGroup.indigenousLandsTerritoriesLayer = function (options) {
     return new L.LayerGroup.IndigenousLandsTerritoriesLayer(options);
 };
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 L.LayerGroup.IndigenousLandsTreatiesLayer = L.LayerGroup.extend(
 
     {
@@ -26682,7 +26823,7 @@ L.layerGroup.indigenousLandsTreatiesLayer = function (options) {
     return new L.LayerGroup.IndigenousLandsTreatiesLayer(options);
 };
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 require('jquery') ;
 require('leaflet') ;
 
@@ -26699,11 +26840,12 @@ require('./indigenousLandsTerritoriesLayer.js');
 require('./indigenousLandsLanguagesLayer.js');
 require('./indigenousLandsTreatiesLayer.js') ;
 require('./aqicnLayer.js');
+require('./openaqLayer.js');
 require('./osmLandfillMineQuarryLayer.js');
 require('./wisconsinLayer.js');
 require('./fracTrackerMobileLayer.js');
 
-},{"./aqicnLayer.js":8,"./fracTrackerMobileLayer.js":9,"./fractracker.js":10,"./indigenousLandsLanguagesLayer.js":11,"./indigenousLandsTerritoriesLayer.js":12,"./indigenousLandsTreatiesLayer.js":13,"./mapKnitterLayer.js":15,"./odorReportLayer.js":16,"./openWeatherMapLayer.js":17,"./osmLandfillMineQuarryLayer.js":18,"./purpleAirMarkerLayer.js":19,"./purpleLayer.js":20,"./skyTruthLayer.js":21,"./toxicReleaseLayer.js":22,"./wisconsinLayer.js":26,"jquery":2,"leaflet":6,"leaflet-providers":5}],15:[function(require,module,exports){
+},{"./aqicnLayer.js":8,"./openaqLayer.js":9,"./fracTrackerMobileLayer.js":10,"./fractracker.js":11,"./indigenousLandsLanguagesLayer.js":12,"./indigenousLandsTerritoriesLayer.js":13,"./indigenousLandsTreatiesLayer.js":14,"./mapKnitterLayer.js":16,"./odorReportLayer.js":17,"./openWeatherMapLayer.js":18,"./osmLandfillMineQuarryLayer.js":19,"./purpleAirMarkerLayer.js":20,"./purpleLayer.js":21,"./skyTruthLayer.js":22,"./toxicReleaseLayer.js":23,"./wisconsinLayer.js":27,"jquery":2,"leaflet":6,"leaflet-providers":5}],16:[function(require,module,exports){
  L.Icon.MapKnitterIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -26842,7 +26984,7 @@ L.layerGroup.mapKnitterLayer = function (options) {
     return new L.LayerGroup.MapKnitterLayer(options) ;
 };
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 L.Icon.OdorReportIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://www.clker.com/cliparts/T/3/6/T/S/8/ink-splash-md.png',
@@ -26975,7 +27117,7 @@ L.layerGroup.odorReportLayer = function (options) {
     return new L.LayerGroup.OdorReportLayer(options);
 };
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 L.OWM = L.TileLayer.extend({
 	options: {
 		appId: '4c6704566155a7d0d5d2f107c5156d6e', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
@@ -28551,7 +28693,7 @@ L.OWM.Utils = {
 
 
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
 
     {
@@ -28744,7 +28886,7 @@ L.layerGroup.osmLandfillMineQuarryLayer = function(options) {
     return new L.LayerGroup.OSMLandfillMineQuarryLayer(options);
 };
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 require('jquery') ;
 require('leaflet') ;
 
@@ -28860,7 +29002,7 @@ L.layerGroup.purpleAirMarkerLayer = function (options) {
     return new L.LayerGroup.PurpleAirMarkerLayer(options) ;
 };
 
-},{"jquery":2,"leaflet":6}],20:[function(require,module,exports){
+},{"jquery":2,"leaflet":6}],21:[function(require,module,exports){
 require('heatmap.js') ;
 require('leaflet-heatmap') ;
 
@@ -28978,7 +29120,7 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
             for (i = 0 ; i < data.results.length ; i++) {
              this.addMarker(data.results[i]) ;
             }
-            //console.log(this._purpleLayerArray) ;
+
             this.heatmapLayer.setData({data: this._purpleLayerArray}) ;
             this._map.addLayer(this.heatmapLayer) ;
         }
@@ -28990,7 +29132,7 @@ L.layerGroup.purpleLayer = function (options) {
     return new L.LayerGroup.PurpleLayer(options) ;
 };
 
-},{"heatmap.js":1,"leaflet-heatmap":4}],21:[function(require,module,exports){
+},{"heatmap.js":1,"leaflet-heatmap":4}],22:[function(require,module,exports){
 L.Icon.SkyTruthIcon = L.Icon.extend({
   options: {
     iconUrl: 'https://www.clker.com/cliparts/T/G/b/7/r/A/red-dot.svg',
@@ -29103,7 +29245,7 @@ L.layerGroup.skyTruthLayer = function (options) {
   return new L.LayerGroup.SkyTruthLayer(options);
 };
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 L.Icon.ToxicReleaseIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://www.clker.com/cliparts/r/M/L/o/R/i/green-dot.svg',
@@ -29167,7 +29309,7 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
                           self._map.spin(true) ;
                         }
                         $.getJSON(TRI_url , function(data){
-                         // console.log(parseInt(origin.lat) +" and "+parseInt(origin.lng)) ;
+
                          self.parseData(data) ;
                          if(typeof self._map.spin === 'function'){
                            self._map.spin(false) ;
@@ -29185,7 +29327,6 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
             var greenDotIcon =new L.icon.toxicReleaseIcon();
               var lat = data.PREF_LATITUDE ;
               var lng = -1*data.PREF_LONGITUDE;
-             // console.log(lat +"  "+lng) ;
               var fac_name = data.FACILITY_NAME ;
               var city = data.CITY_NAME ;
               var mail_street_addr = data.MAIL_STREET_ADDRESS ;
@@ -29244,7 +29385,7 @@ L.layerGroup.toxicReleaseLayer = function (options) {
     return new L.LayerGroup.ToxicReleaseLayer(options);
 };
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 L.Control.Layers.include({
   getActiveOverlayNames: function() {
     
@@ -29261,7 +29402,7 @@ L.Control.Layers.include({
     return layers;
   }
 });
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 L.SpreadsheetLayer = L.LayerGroup.extend({
     //options: {
         //Must be supplied:
@@ -29427,7 +29568,7 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
 L.spreadsheetLayer = function(options) {
     return new L.SpreadsheetLayer(options);
 };
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 L.Control.LegendControl = L.Control.extend({
   options: {
     position: 'bottomleft',
@@ -29486,7 +29627,7 @@ L.control.legendControl = function(options) {
   return new L.Control.LegendControl(options);
 }
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 wisconsinLayer = function (map) {
    var Wisconsin_NM  = L.esri.featureLayer({
      url: 'https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/Nonmetallic_and_Potential_frac_sand_mine_proposals_in_West_Central_Wisconsin/FeatureServer/0/',
@@ -29514,4 +29655,4 @@ wisconsinLayer = function (map) {
    return Wisconsin_NM ;
 };
 
-},{}]},{},[3,7,14,23,24,25]);
+},{}]},{},[3,7,15,24,25,26]);
