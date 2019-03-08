@@ -26104,7 +26104,7 @@ L.layerGroup.aqicnLayer = function(options) {
 															 }
 													 });
 											};
-											document.getElementsByTagName("head")[0].appendChild(script);
+												document.getElementsByTagName("head")[0].appendChild(script);
 									})();
 					},
 	
@@ -26183,6 +26183,139 @@ L.layerGroup.aqicnLayer = function(options) {
 	}
 	
 	},{}],10:[function(require,module,exports){
+
+		L.Icon.LuftdatenIcon = L.Icon.extend({
+			options: {
+				iconUrl: 'http://www.myiconfinder.com/uploads/iconsets/256-256-82a679a558f2fe4c3964c4123343f844.png',
+				iconSize: [15, 30],
+				iconAnchor: [6, 21],
+				popupAnchor: [1, -34]
+			}
+		});
+		
+		L.icon.luftdatenIcon = function () {
+			return new L.Icon.LuftdatenIcon();
+		};
+	
+		L.LayerGroup.LuftdatenLayer = L.LayerGroup.extend(
+	
+			{
+				options: {
+					popupOnMouseover: true,
+					clearOutsideBounds: true
+				},
+		
+				initialize: function (options) {
+					options = options || {};
+					L.Util.setOptions(this, options);
+					this._layers = {};
+				},
+		
+				onAdd: function (map) {
+					map.on('moveend', this.requestRegionData, this);
+					this._map = map;
+					this.requestRegionData();
+				},
+		
+				onRemove: function (map) {
+					map.off('moveend', this.requestRegionData, this);
+					this.clearLayers();
+					this._layers = {};
+				},
+		
+				requestRegionData: function () {
+					var self = this;
+		
+					(function () {
+						var script = document.createElement("SCRIPT");
+						script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
+						script.type = 'text/javascript';
+		
+						script.onload = function () {
+							var $ = window.jQuery;
+							var url = "https://maps.luftdaten.info/data/v2/data.dust.min.json";
+		
+							if (typeof self._map.spin === 'function') {
+								self._map.spin(true);
+							}
+							$.getJSON(url, function (records) {
+								self.parseData(records);
+								if (typeof self._map.spin === 'function') {
+									self._map.spin(false);
+								}
+							});
+						};
+						document.getElementsByTagName("head")[0].appendChild(script);
+					})();
+				},
+		
+				getMarker: function (data) {
+		
+					var greenIcon = new L.icon.luftdatenIcon();
+					var country = data.location.country;
+					var lng = data.location.longitude;
+					var lat = data.location.latitude;
+					var sensorID = data.sensor.id;
+					var popupContent = "";
+
+					if(country){
+						popupContent += "<h3>Country: " + country + "</h3>";
+					}
+					if(sensorID){
+						popupContent += "<h4><b>Sensor ID: </b>" + sensorID + "</h4>"
+					}
+					if(data.sensordatavalues.length > 0){
+						for(let i in data.sensordatavalues){
+							popupContent += "<b>" + data.sensordatavalues[i].value_type + "</b>: " + data.sensordatavalues[i].value + "<br/>";
+						}
+					}
+
+					return L.marker([lat,lng], { icon: greenIcon }).bindPopup(popupContent);	
+		
+				},
+		
+				addMarker: function(data,i) {
+					var self = this;
+					var marker = this.getMarker(data);
+					var key = i;	
+					if (!this._layers[key]) {
+							this._layers[key] = marker;
+							this.addLayer(marker);
+					}
+				},
+		
+				parseData: function (data) {
+					for (var i = 0; i < data.length; i++) {
+						this.addMarker(data[i],i);
+					}
+				},
+		
+				clearOutsideBounds: function () {
+					var bounds = this._map.getBounds(),
+						latLng,
+						key;
+		
+					for (key in this._layers) {
+						if (this._layers.hasOwnProperty(key)) {
+							latLng = this._layers[key].getLatLng();
+		
+							if (!bounds.contains(latLng)) {
+								this.removeLayer(this._layers[key]);
+								delete this._layers[key];
+							}
+						}
+					}
+		
+				}
+		
+			}
+		);
+	
+		L.layerGroup.luftdatenLayer = function (options) {
+			return new L.LayerGroup.LuftdatenLayer(options);
+		}
+	
+	},{}],11:[function(require,module,exports){
 fracTrackerMobileLayer = function(map) {
   var FracTracker_mobile  = L.esri.featureLayer({
     url: 'https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/FracTrackerMobileAppNPCAMesaVerdeNationalPark_051416/FeatureServer/0/',
@@ -26207,7 +26340,7 @@ fracTrackerMobileLayer = function(map) {
   return FracTracker_mobile ;
 }
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 L.Icon.FracTrackerIcon = L.Icon.extend({
    options: {
     iconUrl: 'https://www.clker.com/cliparts/2/3/f/a/11970909781608045989gramzon_Barrel.svg.med.png',
@@ -26341,7 +26474,7 @@ L.layerGroup.fracTrackerLayer = function (options) {
     return new L.LayerGroup.FracTrackerLayer(options) ;
 };
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 L.LayerGroup.IndigenousLandsLanguagesLayer = L.LayerGroup.extend(
 
     {
@@ -26502,7 +26635,7 @@ L.layerGroup.indigenousLandsLanguagesLayer = function (options) {
     return new L.LayerGroup.IndigenousLandsLanguagesLayer(options);
 };
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 L.LayerGroup.IndigenousLandsTerritoriesLayer = L.LayerGroup.extend(
 
     {
@@ -26663,7 +26796,7 @@ L.layerGroup.indigenousLandsTerritoriesLayer = function (options) {
     return new L.LayerGroup.IndigenousLandsTerritoriesLayer(options);
 };
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 L.LayerGroup.IndigenousLandsTreatiesLayer = L.LayerGroup.extend(
 
     {
@@ -26823,7 +26956,7 @@ L.layerGroup.indigenousLandsTreatiesLayer = function (options) {
     return new L.LayerGroup.IndigenousLandsTreatiesLayer(options);
 };
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 require('jquery') ;
 require('leaflet') ;
 
@@ -26841,11 +26974,12 @@ require('./indigenousLandsLanguagesLayer.js');
 require('./indigenousLandsTreatiesLayer.js') ;
 require('./aqicnLayer.js');
 require('./openaqLayer.js');
+require('./luftdatenLayer.js')
 require('./osmLandfillMineQuarryLayer.js');
 require('./wisconsinLayer.js');
 require('./fracTrackerMobileLayer.js');
 
-},{"./aqicnLayer.js":8,"./openaqLayer.js":9,"./fracTrackerMobileLayer.js":10,"./fractracker.js":11,"./indigenousLandsLanguagesLayer.js":12,"./indigenousLandsTerritoriesLayer.js":13,"./indigenousLandsTreatiesLayer.js":14,"./mapKnitterLayer.js":16,"./odorReportLayer.js":17,"./openWeatherMapLayer.js":18,"./osmLandfillMineQuarryLayer.js":19,"./purpleAirMarkerLayer.js":20,"./purpleLayer.js":21,"./skyTruthLayer.js":22,"./toxicReleaseLayer.js":23,"./wisconsinLayer.js":27,"jquery":2,"leaflet":6,"leaflet-providers":5}],16:[function(require,module,exports){
+},{"./aqicnLayer.js":8,"./openaqLayer.js":9,"./luftdatenLayer.js":10,"./fracTrackerMobileLayer.js":11,"./fractracker.js":12,"./indigenousLandsLanguagesLayer.js":13,"./indigenousLandsTerritoriesLayer.js":14,"./indigenousLandsTreatiesLayer.js":15,"./mapKnitterLayer.js":17,"./odorReportLayer.js":18,"./openWeatherMapLayer.js":19,"./osmLandfillMineQuarryLayer.js":20,"./purpleAirMarkerLayer.js":21,"./purpleLayer.js":22,"./skyTruthLayer.js":23,"./toxicReleaseLayer.js":24,"./wisconsinLayer.js":28,"jquery":2,"leaflet":6,"leaflet-providers":5}],17:[function(require,module,exports){
  L.Icon.MapKnitterIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -26984,7 +27118,7 @@ L.layerGroup.mapKnitterLayer = function (options) {
     return new L.LayerGroup.MapKnitterLayer(options) ;
 };
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 L.Icon.OdorReportIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://www.clker.com/cliparts/T/3/6/T/S/8/ink-splash-md.png',
@@ -27117,7 +27251,7 @@ L.layerGroup.odorReportLayer = function (options) {
     return new L.LayerGroup.OdorReportLayer(options);
 };
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 L.OWM = L.TileLayer.extend({
 	options: {
 		appId: '4c6704566155a7d0d5d2f107c5156d6e', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
@@ -28693,7 +28827,7 @@ L.OWM.Utils = {
 
 
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
 
     {
@@ -28886,7 +29020,7 @@ L.layerGroup.osmLandfillMineQuarryLayer = function(options) {
     return new L.LayerGroup.OSMLandfillMineQuarryLayer(options);
 };
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 require('jquery') ;
 require('leaflet') ;
 
@@ -29002,7 +29136,7 @@ L.layerGroup.purpleAirMarkerLayer = function (options) {
     return new L.LayerGroup.PurpleAirMarkerLayer(options) ;
 };
 
-},{"jquery":2,"leaflet":6}],21:[function(require,module,exports){
+},{"jquery":2,"leaflet":6}],22:[function(require,module,exports){
 require('heatmap.js') ;
 require('leaflet-heatmap') ;
 
@@ -29132,7 +29266,7 @@ L.layerGroup.purpleLayer = function (options) {
     return new L.LayerGroup.PurpleLayer(options) ;
 };
 
-},{"heatmap.js":1,"leaflet-heatmap":4}],22:[function(require,module,exports){
+},{"heatmap.js":1,"leaflet-heatmap":4}],23:[function(require,module,exports){
 L.Icon.SkyTruthIcon = L.Icon.extend({
   options: {
     iconUrl: 'https://www.clker.com/cliparts/T/G/b/7/r/A/red-dot.svg',
@@ -29245,7 +29379,7 @@ L.layerGroup.skyTruthLayer = function (options) {
   return new L.LayerGroup.SkyTruthLayer(options);
 };
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 L.Icon.ToxicReleaseIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://www.clker.com/cliparts/r/M/L/o/R/i/green-dot.svg',
@@ -29385,7 +29519,7 @@ L.layerGroup.toxicReleaseLayer = function (options) {
     return new L.LayerGroup.ToxicReleaseLayer(options);
 };
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 L.Control.Layers.include({
   getActiveOverlayNames: function() {
     
@@ -29402,7 +29536,7 @@ L.Control.Layers.include({
     return layers;
   }
 });
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 L.SpreadsheetLayer = L.LayerGroup.extend({
     //options: {
         //Must be supplied:
@@ -29568,7 +29702,7 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
 L.spreadsheetLayer = function(options) {
     return new L.SpreadsheetLayer(options);
 };
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 L.Control.LegendControl = L.Control.extend({
   options: {
     position: 'bottomleft',
@@ -29627,7 +29761,7 @@ L.control.legendControl = function(options) {
   return new L.Control.LegendControl(options);
 }
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 wisconsinLayer = function (map) {
    var Wisconsin_NM  = L.esri.featureLayer({
      url: 'https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/Nonmetallic_and_Potential_frac_sand_mine_proposals_in_West_Central_Wisconsin/FeatureServer/0/',
@@ -29655,4 +29789,4 @@ wisconsinLayer = function (map) {
    return Wisconsin_NM ;
 };
 
-},{}]},{},[3,7,15,24,25,26]);
+},{}]},{},[3,7,16,25,26,27]);
