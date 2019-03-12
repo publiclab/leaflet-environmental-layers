@@ -73,6 +73,7 @@
   <!-- Body starts here-->
   <body>
     <div id="map"></div>
+    <!-- Adding base layers to the map.-->
     <script>
       var bounds = new L.LatLngBounds(
         new L.LatLng(84.67351257, -172.96875),
@@ -113,6 +114,7 @@
         }
       );
 
+      /*Layer group class to group various layers into one. See here - https://leafletjs.com/reference-1.4.0.html#layergroup*/
       var PurpleLayer = L.layerGroup.purpleLayer();
       var PurpleAirMarkerLayer = L.layerGroup.purpleAirMarkerLayer();
       var SkyTruth = L.layerGroup.skyTruthLayer();
@@ -121,6 +123,7 @@
       var MapKnitter = L.layerGroup.mapKnitterLayer();
       var ToxicRelease = L.layerGroup.toxicReleaseLayer();
 
+      //Adding more layers to the map using L.tilLayer.
       var OpenInfraMap_Power = L.tileLayer(
         "https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png",
         {
@@ -206,6 +209,8 @@
         Baselayer3: baselayer3,
         Baselayer4: baselayer4
       };
+
+      //Adding overlays (custom made layers) to the map.
       var overlayMaps = {
         "Wisconsin Non-Metal": Wisconsin_NM,
         FracTracker_mobile: FracTracker_mobile,
@@ -248,6 +253,7 @@
         "<span style='color: black'><strong>Air Quality Index</strong></span>": AQICNLayer,
         "<strong>OSM <span style='color: red'>Landfills</span>, <span style='color: blue'>Mines</span>, <span style='color: green'>Quarries</span></strong>": OSMLandfillMineQuarryLayer
       };
+      //All the layers in the map.
       var allMapLayers = {
         BL1: baselayer1,
         BL2: baselayer2,
@@ -295,6 +301,9 @@
         AQI: AQICNLayer,
         LSM: OSMLandfillMineQuarryLayer
       };
+
+      // Integration of URL hash to change URL when the state of map changes.
+      //Read here - http://mlevans.com/leaflet-hash/
       var hash = new L.Hash(map, allMapLayers);
       var leafletControl = new L.control.layers(baseMaps, overlayMaps);
       leafletControl.addTo(map);
