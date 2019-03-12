@@ -28,7 +28,7 @@
   
   <script src="https://unpkg.com/esri-leaflet@2.2.3/dist/esri-leaflet.js"></script>
   <script src="https://unpkg.com/esri-leaflet-renderers@2.0.6"></script>
-
+    
   <style>
 
   .leaflet-control-layers{
@@ -94,7 +94,8 @@
     var OdorReport = L.layerGroup.odorReportLayer() ;
     var MapKnitter = L.layerGroup.mapKnitterLayer() ;
     var ToxicRelease = L.layerGroup.toxicReleaseLayer() ;
-
+    var PFASTracker = L.layerGroup.pfasLayer() ;
+      
     var OpenInfraMap_Power = L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png',{
         maxZoom: 18,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
@@ -163,6 +164,7 @@
       "<img src='https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Location_dot_purple.svg/768px-Location_dot_purple.svg.png' height='10px' width='10px'>PurpleAirMarkerLayer": PurpleAirMarkerLayer,
       "<img src='https://www.clker.com/cliparts/T/G/b/7/r/A/red-dot.svg' height='15px' width='10px'>SkyTruth": SkyTruth,
       "<img src='http://www.clker.com/cliparts/2/3/f/a/11970909781608045989gramzon_Barrel.svg.med.png' height='10px' width='10px'> Fractracker": Fractracker,
+      "<span style='color: green''> PFASTracker": PFASTracker,
       "<img src='https://www.clker.com/cliparts/r/M/L/o/R/i/green-dot.svg' height='10px' width='10px'> ToxicRelease": ToxicRelease,
       "<img src='https://www.clker.com/cliparts/T/3/6/T/S/8/ink-splash-md.png' height='10px' width='10px'> OdorReport": OdorReport,
       "<img src='https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png' height='10px' width='10px'> MapKnitter": MapKnitter,
@@ -212,6 +214,7 @@
       "Purple": PurpleAirMarkerLayer,
       "STruth": SkyTruth,
       "FracTL": Fractracker,
+      "PFAS": PFASTracker,
       "ToxicR": ToxicRelease,
       "OdorR": OdorReport,
       "MapK": MapKnitter,
