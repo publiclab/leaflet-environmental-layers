@@ -45,25 +45,19 @@ L.LayerGroup.PurpleAirMarkerLayer = L.LayerGroup.extend(
         requestData: function () {
           if(this._map.getZoom() >= 7){
              var self = this;
-                  (function() {
-                      var script = document.createElement("SCRIPT");
-                      script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                      script.type = 'text/javascript';
-                      var zoom = self._map.getZoom(), northwest = self._map.getBounds().getNorthWest() , southeast = self._map.getBounds().getSouthEast() ;
-                      script.onload = function() {
-                          var $ = window.jQuery;
-                          var PurpleLayer_url = "https://www.purpleair.com/data.json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat="+(northwest.lat)+"&selat="+(southeast.lat)+"&nwlng="+(northwest.lng)+"&selng="+(southeast.lng) ;
-                          if(typeof self._map.spin === 'function'){
-                            self._map.spin(true) ;
-                          }
-                          $.getJSON(PurpleLayer_url , function(data){
-                          	 self.parseData(data) ;
-                             if(typeof self._map.spin === 'function'){
-                               self._map.spin(false) ;
-                             }
-              		    });
-                      };
-                      document.getElementsByTagName("head")[0].appendChild(script);
+                  (function() {                
+                    var zoom = self._map.getZoom(), northwest = self._map.getBounds().getNorthWest() , southeast = self._map.getBounds().getSouthEast() ;
+                    var $ = window.jQuery;
+                    var PurpleLayer_url = "https://www.purpleair.com/data.json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat="+(northwest.lat)+"&selat="+(southeast.lat)+"&nwlng="+(northwest.lng)+"&selng="+(southeast.lng) ;
+                    if(typeof self._map.spin === 'function'){
+                        self._map.spin(true) ;
+                    }
+                    $.getJSON(PurpleLayer_url , function(data){
+                        self.parseData(data) ;
+                        if(typeof self._map.spin === 'function'){
+                            self._map.spin(false) ;
+                        }
+                    });
                   })();
           }
         },

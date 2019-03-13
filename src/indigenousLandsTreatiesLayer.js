@@ -36,47 +36,41 @@ L.LayerGroup.IndigenousLandsTreatiesLayer = L.LayerGroup.extend(
         requestData: function () {
                 var self = this ;
                 (function() {
-                    var script = document.createElement("SCRIPT");
-                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                    script.type = 'text/javascript';
                     var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
-                    script.onload = function() {
-                        var $ = window.jQuery;
+                    var $ = window.jQuery;
 
-                        //Here is the URL that should be for loading 1 region at a time
-                        var ILTr_url = "https://native-land.ca/api/index.php?maps=treaties&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
-                        //this url loads all regions at once
-                        //var ILTr_url = "https://native-land.ca/api/index.php?maps=treaties";
-                        //Here is the getJSON method designed after the other layers
+                    //Here is the URL that should be for loading 1 region at a time
+                    var ILTr_url = "https://native-land.ca/api/index.php?maps=treaties&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
+                    //this url loads all regions at once
+                    //var ILTr_url = "https://native-land.ca/api/index.php?maps=treaties";
+                    //Here is the getJSON method designed after the other layers
+                    if(typeof self._map.spin === 'function'){
+                        self._map.spin(true) ;
+                    }
+                    $.getJSON(ILTr_url , function(data){
+                        self.parseData(data) ;
                         if(typeof self._map.spin === 'function'){
-                          self._map.spin(true) ;
+                        self._map.spin(false) ;
                         }
-                        $.getJSON(ILTr_url , function(data){
-                          self.parseData(data) ;
-                          if(typeof self._map.spin === 'function'){
-                            self._map.spin(false) ;
-                          }
-                        });
+                    });
 
-                        /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
-                        This does all that parseData does in a much simpler format.*/
+                    /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
+                    This does all that parseData does in a much simpler format.*/
 
-                        /*$.getJSON(ILTr_url , function(data){
-                          function onEachFeature(feature, layer) {
-                            layer.bindPopup("<strong>Name : </strong>" + feature.properties.Name + "<br><strong>Description: </strong> <a href=" + feature.properties.description + ">Native Lands - " + feature.properties.Name + "</a><br><i>From the  (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>");
-                          }
+                    /*$.getJSON(ILTr_url , function(data){
+                        function onEachFeature(feature, layer) {
+                        layer.bindPopup("<strong>Name : </strong>" + feature.properties.Name + "<br><strong>Description: </strong> <a href=" + feature.properties.description + ">Native Lands - " + feature.properties.Name + "</a><br><i>From the  (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>");
+                        }
 
-                          function getStyle(feature, layer) {
-                            return {
-                              "color": feature.properties.color;
-                            }
-                          }
+                        function getStyle(feature, layer) {
+                        return {
+                            "color": feature.properties.color;
+                        }
+                        }
 
-                          self.addLayer(L.geoJSON(data, {style: getStyle, onEachFeature: onEachFeature}));
-                        });*/
+                        self.addLayer(L.geoJSON(data, {style: getStyle, onEachFeature: onEachFeature}));
+                    });*/
 
-                    };
-                    document.getElementsByTagName("head")[0].appendChild(script);
                 })();
 
 
