@@ -44,24 +44,17 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
         requestData: function () {
            var self = this;
                 (function() {
-                    var script = document.createElement("SCRIPT");
-                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                    script.type = 'text/javascript';
-
-                    script.onload = function() {
-                        var $ = window.jQuery;
-                        var PurpleLayer_url = "https://www.purpleair.com/json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L";
+                    var $ = window.jQuery;
+                    var PurpleLayer_url = "https://www.purpleair.com/json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L";
+                    if(typeof self._map.spin === 'function'){
+                      self._map.spin(true) ;
+                    }
+                    $.getJSON(PurpleLayer_url , function(data){
+                        self.parseData(data) ;
                         if(typeof self._map.spin === 'function'){
-                          self._map.spin(true) ;
+                          self._map.spin(false) ;
                         }
-                        $.getJSON(PurpleLayer_url , function(data){
-                        	 self.parseData(data) ;
-                           if(typeof self._map.spin === 'function'){
-                             self._map.spin(false) ;
-                           }
-            		    });
-                    };
-                    document.getElementsByTagName("head")[0].appendChild(script);
+                    }); 
                 })();
 
 

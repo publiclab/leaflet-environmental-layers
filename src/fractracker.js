@@ -43,24 +43,17 @@ L.LayerGroup.FracTrackerLayer = L.LayerGroup.extend(
         requestData: function () {
            var self = this;
                 (function() {
-                    var script = document.createElement("SCRIPT");
-                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                    script.type = 'text/javascript';
-
-                    script.onload = function() {
-                        var $ = window.jQuery;
-                        var FracTracker_URL = "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json" ;
-                        if(typeof self._map.spin === 'function'){
-                          self._map.spin(true) ;
-                        }
-                        $.getJSON(FracTracker_URL , function(data){
-                        self.parseData(data.feed.entry);
-                        if(typeof self._map.spin === 'function'){
-                          self._map.spin(false) ;
-                        }
-            		    });
-                    };
-                    document.getElementsByTagName("head")[0].appendChild(script);
+                    var $ = window.jQuery;
+                    var FracTracker_URL = "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json" ;
+                    if(typeof self._map.spin === 'function'){
+                        self._map.spin(true) ;
+                    }
+                    $.getJSON(FracTracker_URL , function(data){
+                    self.parseData(data.feed.entry);
+                    if(typeof self._map.spin === 'function'){
+                        self._map.spin(false) ;
+                    }
+                    });
                 })();
 
 

@@ -25876,31 +25876,24 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
         },
 
         requestRegionData: function () {
-                var self = this ;
+						var self = this ;
 
-                (function() {
-                    var script = document.createElement("SCRIPT");
-                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                    script.type = 'text/javascript';
+						(function() {
 
-                    var zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
+								var zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
+								var $ = window.jQuery;
+								var AQI_url = "https://api.waqi.info/map/bounds/?latlng=" + southwest.lat + "," + southwest.lng + "," + northeast.lat + "," + northeast.lng + "&token=" + self.options.tokenID;
 
-                    script.onload = function() {
-                        var $ = window.jQuery;
-                        var AQI_url = "https://api.waqi.info/map/bounds/?latlng=" + southwest.lat + "," + southwest.lng + "," + northeast.lat + "," + northeast.lng + "&token=" + self.options.tokenID;
-
-                        if(typeof self._map.spin === 'function'){
-                         self._map.spin(true) ;
-                        }
-                         $.getJSON(AQI_url , function(regionalData){
-                             self.parseData(regionalData) ;
-                             if(typeof self._map.spin === 'function'){
-                               self._map.spin(false) ;
-                             }
-                         });
-                    };
-                    document.getElementsByTagName("head")[0].appendChild(script);
-                })();
+								if(typeof self._map.spin === 'function'){
+									self._map.spin(true) ;
+								}
+								$.getJSON(AQI_url , function(regionalData){
+										self.parseData(regionalData) ;
+										if(typeof self._map.spin === 'function'){
+											self._map.spin(false) ;
+										}
+								});                    
+						})();
         },
 
         getMarker: function(data) {
@@ -26085,26 +26078,18 @@ L.layerGroup.aqicnLayer = function(options) {
 									var self = this ;
 	
 									(function() {
-											var script = document.createElement("SCRIPT");
-											script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-											script.type = 'text/javascript';
-										
-											script.onload = function() {
-													var $ = window.jQuery;
-													var url = "https://api.openaq.org/v1/latest?limit=1000";
+											var $ = window.jQuery;
+											var url = "https://api.openaq.org/v1/latest?limit=1000";
 
+											if(typeof self._map.spin === 'function'){
+												self._map.spin(true) ;
+											}
+											$.getJSON(url , function(regionalData){
+													self.parseData(regionalData.results) ;
 													if(typeof self._map.spin === 'function'){
-													 self._map.spin(true) ;
+														self._map.spin(false) ;
 													}
-													 $.getJSON(url , function(regionalData){
-	
-															 self.parseData(regionalData.results) ;
-															 if(typeof self._map.spin === 'function'){
-																 self._map.spin(false) ;
-															 }
-													 });
-											};
-												document.getElementsByTagName("head")[0].appendChild(script);
+											});
 									})();
 					},
 	
@@ -26227,11 +26212,6 @@ L.layerGroup.aqicnLayer = function(options) {
 					var self = this;
 		
 					(function () {
-						var script = document.createElement("SCRIPT");
-						script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-						script.type = 'text/javascript';
-		
-						script.onload = function () {
 							var $ = window.jQuery;
 							var url = "https://maps.luftdaten.info/data/v2/data.dust.min.json";
 		
@@ -26244,8 +26224,6 @@ L.layerGroup.aqicnLayer = function(options) {
 									self._map.spin(false);
 								}
 							});
-						};
-						document.getElementsByTagName("head")[0].appendChild(script);
 					})();
 				},
 		
@@ -26522,29 +26500,20 @@ L.LayerGroup.FracTrackerLayer = L.LayerGroup.extend(
         },
 
         requestData: function () {
-           var self = this;
-                (function() {
-                    var script = document.createElement("SCRIPT");
-                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                    script.type = 'text/javascript';
-
-                    script.onload = function() {
-                        var $ = window.jQuery;
-                        var FracTracker_URL = "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json" ;
-                        if(typeof self._map.spin === 'function'){
-                          self._map.spin(true) ;
-                        }
-                        $.getJSON(FracTracker_URL , function(data){
-                        self.parseData(data.feed.entry);
-                        if(typeof self._map.spin === 'function'){
-                          self._map.spin(false) ;
-                        }
-            		    });
-                    };
-                    document.getElementsByTagName("head")[0].appendChild(script);
-                })();
-
-
+            var self = this;
+						(function() { 
+								var $ = window.jQuery;
+								var FracTracker_URL = "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json" ;
+								if(typeof self._map.spin === 'function'){
+										self._map.spin(true) ;
+								}
+								$.getJSON(FracTracker_URL , function(data){
+										self.parseData(data.feed.entry);
+										if(typeof self._map.spin === 'function'){
+											self._map.spin(false) ;
+										}
+								});
+						})();
         },
 
         getMarker: function(data) {
@@ -26651,47 +26620,41 @@ L.LayerGroup.IndigenousLandsLanguagesLayer = L.LayerGroup.extend(
         requestData: function () {
                 var self = this ;
                 (function() {
-                    var script = document.createElement("SCRIPT");
-                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                    script.type = 'text/javascript';
+                    
                     var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
-                    script.onload = function() {
-                        var $ = window.jQuery;
+										var $ = window.jQuery;
 
-                        //Here is the URL that should be for loading 1 region at a time
-                        var ILL_url = "https://native-land.ca/api/index.php?maps=languages&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
-                        //this url loads all regions at once
-                        //var ILL_url = "https://native-land.ca/api/index.php?maps=languages";
-                        //Here is the getJSON method designed after the other layers
-                        if(typeof self._map.spin === 'function'){
-                          self._map.spin(true) ;
-                        }
-                        $.getJSON(ILL_url , function(data){
-                          self.parseData(data) ;
-                          if(typeof self._map.spin === 'function'){
-                            self._map.spin(false) ;
-                          }
-                        });
+										//Here is the URL that should be for loading 1 region at a time
+										var ILL_url = "https://native-land.ca/api/index.php?maps=languages&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
+										//this url loads all regions at once
+										//var ILL_url = "https://native-land.ca/api/index.php?maps=languages";
+										//Here is the getJSON method designed after the other layers
+										if(typeof self._map.spin === 'function'){
+											self._map.spin(true) ;
+										}
+										$.getJSON(ILL_url , function(data){
+											self.parseData(data) ;
+											if(typeof self._map.spin === 'function'){
+												self._map.spin(false) ;
+											}
+										});
 
-                        /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
-                        This does all that parseData does in a much simpler format.*/
+										/*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
+										This does all that parseData does in a much simpler format.*/
 
-                        /*$.getJSON(ILL_url , function(data){
-                          function onEachFeature(feature, layer) {
-                            layer.bindPopup("<strong>Name : </strong>" + feature.properties.Name + "<br><strong>Description: </strong> <a href=" + feature.properties.description + ">Native Lands - " + feature.properties.Name + "</a><br><i>From the  (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>");
-                          }
+										/*$.getJSON(ILL_url , function(data){
+											function onEachFeature(feature, layer) {
+												layer.bindPopup("<strong>Name : </strong>" + feature.properties.Name + "<br><strong>Description: </strong> <a href=" + feature.properties.description + ">Native Lands - " + feature.properties.Name + "</a><br><i>From the  (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>");
+											}
 
-                          function getStyle(feature, layer) {
-                            return {
-                              "color": feature.properties.color;
-                            }
-                          }
+											function getStyle(feature, layer) {
+												return {
+													"color": feature.properties.color;
+												}
+											}
 
-                          self.addLayer(L.geoJSON(data, {style: getStyle, onEachFeature: onEachFeature}));
-                        });*/
-
-                    };
-                    document.getElementsByTagName("head")[0].appendChild(script);
+											self.addLayer(L.geoJSON(data, {style: getStyle, onEachFeature: onEachFeature}));
+										});*/         
                 })();
 
 
@@ -26812,47 +26775,41 @@ L.LayerGroup.IndigenousLandsTerritoriesLayer = L.LayerGroup.extend(
         requestData: function () {
                 var self = this ;
                 (function() {
-                    var script = document.createElement("SCRIPT");
-                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                    script.type = 'text/javascript';
+
                     var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
-                    script.onload = function() {
-                        var $ = window.jQuery;
+										var $ = window.jQuery;
 
-                        //Here is the URL that should be for loading 1 region at a time
-                        var ILT_url = "https://native-land.ca/api/index.php?maps=territories&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
-                        //this url loads all regions at once
-                        //var ILT_url = "https://native-land.ca/api/index.php?maps=territories";
-                        //Here is the getJSON method designed after the other layers
-                        if(typeof self._map.spin === 'function'){
-                          self._map.spin(true) ;
-                        }
-                        $.getJSON(ILT_url , function(data){
-                          self.parseData(data) ;
-                          if(typeof self._map.spin === 'function'){
-                            self._map.spin(false) ;
-                          }
-                        });
+										//Here is the URL that should be for loading 1 region at a time
+										var ILT_url = "https://native-land.ca/api/index.php?maps=territories&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
+										//this url loads all regions at once
+										//var ILT_url = "https://native-land.ca/api/index.php?maps=territories";
+										//Here is the getJSON method designed after the other layers
+										if(typeof self._map.spin === 'function'){
+											self._map.spin(true) ;
+										}
+										$.getJSON(ILT_url , function(data){
+											self.parseData(data) ;
+											if(typeof self._map.spin === 'function'){
+												self._map.spin(false) ;
+											}
+										});
 
-                        /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
-                        This does all that parseData does in a much simpler format.*/
+										/*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
+										This does all that parseData does in a much simpler format.*/
 
-                        /*$.getJSON(ILT_url , function(data){
-                          function onEachFeature(feature, layer) {
-                            layer.bindPopup("<strong>Name : </strong>" + feature.properties.Name + "<br><strong>Description: </strong> <a href=" + feature.properties.description + ">Native Lands - " + feature.properties.Name + "</a><br><i>From the <a href=https://github.com/publiclab/leaflet-environmental-layers/pull/77>Indigenous Territories Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>");
-                          }
+										/*$.getJSON(ILT_url , function(data){
+											function onEachFeature(feature, layer) {
+												layer.bindPopup("<strong>Name : </strong>" + feature.properties.Name + "<br><strong>Description: </strong> <a href=" + feature.properties.description + ">Native Lands - " + feature.properties.Name + "</a><br><i>From the <a href=https://github.com/publiclab/leaflet-environmental-layers/pull/77>Indigenous Territories Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>");
+											}
 
-                          function getStyle(feature, layer) {
-                            return {
-                              "color": feature.properties.color;
-                            }
-                          }
+											function getStyle(feature, layer) {
+												return {
+													"color": feature.properties.color;
+												}
+											}
 
-                          self.addLayer(L.geoJSON(data, {style: getStyle, onEachFeature: onEachFeature}));
-                        });*/
-
-                    };
-                    document.getElementsByTagName("head")[0].appendChild(script);
+											self.addLayer(L.geoJSON(data, {style: getStyle, onEachFeature: onEachFeature}));
+										});*/
                 })();
 
 
@@ -26973,47 +26930,40 @@ L.LayerGroup.IndigenousLandsTreatiesLayer = L.LayerGroup.extend(
         requestData: function () {
                 var self = this ;
                 (function() {
-                    var script = document.createElement("SCRIPT");
-                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                    script.type = 'text/javascript';
                     var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
-                    script.onload = function() {
-                        var $ = window.jQuery;
+										var $ = window.jQuery;
 
-                        //Here is the URL that should be for loading 1 region at a time
-                        var ILTr_url = "https://native-land.ca/api/index.php?maps=treaties&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
-                        //this url loads all regions at once
-                        //var ILTr_url = "https://native-land.ca/api/index.php?maps=treaties";
-                        //Here is the getJSON method designed after the other layers
-                        if(typeof self._map.spin === 'function'){
-                          self._map.spin(true) ;
-                        }
-                        $.getJSON(ILTr_url , function(data){
-                          self.parseData(data) ;
-                          if(typeof self._map.spin === 'function'){
-                            self._map.spin(false) ;
-                          }
-                        });
+										//Here is the URL that should be for loading 1 region at a time
+										var ILTr_url = "https://native-land.ca/api/index.php?maps=treaties&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
+										//this url loads all regions at once
+										//var ILTr_url = "https://native-land.ca/api/index.php?maps=treaties";
+										//Here is the getJSON method designed after the other layers
+										if(typeof self._map.spin === 'function'){
+											self._map.spin(true) ;
+										}
+										$.getJSON(ILTr_url , function(data){
+											self.parseData(data) ;
+											if(typeof self._map.spin === 'function'){
+												self._map.spin(false) ;
+											}
+										});
 
-                        /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
-                        This does all that parseData does in a much simpler format.*/
+										/*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
+										This does all that parseData does in a much simpler format.*/
 
-                        /*$.getJSON(ILTr_url , function(data){
-                          function onEachFeature(feature, layer) {
-                            layer.bindPopup("<strong>Name : </strong>" + feature.properties.Name + "<br><strong>Description: </strong> <a href=" + feature.properties.description + ">Native Lands - " + feature.properties.Name + "</a><br><i>From the  (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>");
-                          }
+										/*$.getJSON(ILTr_url , function(data){
+											function onEachFeature(feature, layer) {
+												layer.bindPopup("<strong>Name : </strong>" + feature.properties.Name + "<br><strong>Description: </strong> <a href=" + feature.properties.description + ">Native Lands - " + feature.properties.Name + "</a><br><i>From the  (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>");
+											}
 
-                          function getStyle(feature, layer) {
-                            return {
-                              "color": feature.properties.color;
-                            }
-                          }
+											function getStyle(feature, layer) {
+												return {
+													"color": feature.properties.color;
+												}
+											}
 
-                          self.addLayer(L.geoJSON(data, {style: getStyle, onEachFeature: onEachFeature}));
-                        });*/
-
-                    };
-                    document.getElementsByTagName("head")[0].appendChild(script);
+											self.addLayer(L.geoJSON(data, {style: getStyle, onEachFeature: onEachFeature}));
+										});*/
                 })();
 
 
@@ -27167,28 +27117,21 @@ L.LayerGroup.MapKnitterLayer = L.LayerGroup.extend(
         },
 
         requestData: function () {
-           var self = this;
-                (function() {
-                    var script = document.createElement("SCRIPT");
-                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                    script.type = 'text/javascript';
-                    var zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
-
-                    script.onload = function() {
-                        var $ = window.jQuery;
-                        var MapKnitter_url = "https://mapknitter.org/map/region/Gulf-Coast.json?minlon="+(southwest.lng)+"&minlat="+(southwest.lat)+"&maxlon="+(northeast.lng)+"&maxlat="+(northeast.lat);
-                        if(typeof self._map.spin === 'function'){
-                          self._map.spin(true) ;
-                        }
-                        $.getJSON(MapKnitter_url , function(data){
-                        	 self.parseData(data) ;
-                           if(typeof self._map.spin === 'function'){
-                             self._map.spin(false) ;
-                           }
-            		    });
-                    };
-                    document.getElementsByTagName("head")[0].appendChild(script);
-                })();
+          var self = this;
+					(function() {
+							var zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
+							var $ = window.jQuery;
+							var MapKnitter_url = "https://mapknitter.org/map/region/Gulf-Coast.json?minlon="+(southwest.lng)+"&minlat="+(southwest.lat)+"&maxlon="+(northeast.lng)+"&maxlat="+(northeast.lat);
+							if(typeof self._map.spin === 'function'){
+								self._map.spin(true) ;
+							}
+							$.getJSON(MapKnitter_url , function(data){
+									self.parseData(data) ;
+									if(typeof self._map.spin === 'function'){
+										self._map.spin(false) ;
+									}
+							});
+					})();
 
 
         },
@@ -27306,24 +27249,18 @@ L.LayerGroup.OdorReportLayer = L.LayerGroup.extend(
         requestData: function () {
            var self = this;
                 (function() {
-                    var script = document.createElement("SCRIPT");
-                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                    script.type = 'text/javascript';
                     var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
-                    script.onload = function() {
-                        var $ = window.jQuery;
-                        var OdorReport_url = "https://odorlog.api.ushahidi.io/api/v3/posts/" ;
-                        if(typeof self._map.spin === 'function'){
-                          self._map.spin(true) ;
-                        }
-                        $.getJSON(OdorReport_url , function(data){
-                             self.parseData(data) ;
-                             if(typeof self._map.spin === 'function'){
-                               self._map.spin(false) ;
-                             }
-                        });
-                    };
-                    document.getElementsByTagName("head")[0].appendChild(script);
+										var $ = window.jQuery;
+										var OdorReport_url = "https://odorlog.api.ushahidi.io/api/v3/posts/" ;
+										if(typeof self._map.spin === 'function'){
+											self._map.spin(true) ;
+										}
+										$.getJSON(OdorReport_url , function(data){
+												self.parseData(data) ;
+												if(typeof self._map.spin === 'function'){
+													self._map.spin(false) ;
+												}
+										});
                 })();
 
 
@@ -29208,24 +29145,18 @@ L.LayerGroup.PurpleAirMarkerLayer = L.LayerGroup.extend(
           if(this._map.getZoom() >= 7){
              var self = this;
                   (function() {
-                      var script = document.createElement("SCRIPT");
-                      script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                      script.type = 'text/javascript';
                       var zoom = self._map.getZoom(), northwest = self._map.getBounds().getNorthWest() , southeast = self._map.getBounds().getSouthEast() ;
-                      script.onload = function() {
-                          var $ = window.jQuery;
-                          var PurpleLayer_url = "https://www.purpleair.com/data.json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat="+(northwest.lat)+"&selat="+(southeast.lat)+"&nwlng="+(northwest.lng)+"&selng="+(southeast.lng) ;
-                          if(typeof self._map.spin === 'function'){
-                            self._map.spin(true) ;
-                          }
-                          $.getJSON(PurpleLayer_url , function(data){
-                          	 self.parseData(data) ;
-                             if(typeof self._map.spin === 'function'){
-                               self._map.spin(false) ;
-                             }
+											var $ = window.jQuery;
+											var PurpleLayer_url = "https://www.purpleair.com/data.json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat="+(northwest.lat)+"&selat="+(southeast.lat)+"&nwlng="+(northwest.lng)+"&selng="+(southeast.lng) ;
+											if(typeof self._map.spin === 'function'){
+												self._map.spin(true) ;
+											}
+											$.getJSON(PurpleLayer_url , function(data){
+													self.parseData(data) ;
+													if(typeof self._map.spin === 'function'){
+														self._map.spin(false) ;
+													}
               		    });
-                      };
-                      document.getElementsByTagName("head")[0].appendChild(script);
                   })();
           }
         },
@@ -29322,24 +29253,17 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
         requestData: function () {
            var self = this;
                 (function() {
-                    var script = document.createElement("SCRIPT");
-                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                    script.type = 'text/javascript';
-
-                    script.onload = function() {
-                        var $ = window.jQuery;
-                        var PurpleLayer_url = "https://www.purpleair.com/json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L";
-                        if(typeof self._map.spin === 'function'){
-                          self._map.spin(true) ;
-                        }
-                        $.getJSON(PurpleLayer_url , function(data){
-                        	 self.parseData(data) ;
-                           if(typeof self._map.spin === 'function'){
-                             self._map.spin(false) ;
-                           }
-            		    });
-                    };
-                    document.getElementsByTagName("head")[0].appendChild(script);
+								var $ = window.jQuery;
+								var PurpleLayer_url = "https://www.purpleair.com/json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L";
+								if(typeof self._map.spin === 'function'){
+									self._map.spin(true) ;
+								}
+								$.getJSON(PurpleLayer_url , function(data){
+										self.parseData(data) ;
+										if(typeof self._map.spin === 'function'){
+											self._map.spin(false) ;
+										}
+								});
                 })();
 
 
@@ -29447,11 +29371,7 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
     requestData: function () {
       var self = this;
       (function() {
-        var script = document.createElement("SCRIPT");
-        script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-        script.type = 'text/javascript';
         var zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
-        script.onload = function() {
         var $ = window.jQuery;
         var SkyTruth_url = "https://alerts1.skytruth.org/json?n=100&l="+(southwest.lat)+","+(southwest.lng)+","+(northeast.lat)+","+(northeast.lng) ;
         if(typeof self._map.spin === 'function'){
@@ -29463,8 +29383,6 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
             self._map.spin(false) ;
           }
         });
-        };
-      document.getElementsByTagName("head")[0].appendChild(script);
       })();
     },
     getMarker: function (data) {
@@ -29574,22 +29492,22 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
                     var script = document.createElement("SCRIPT");
                     script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
                     script.type = 'text/javascript';
-                    var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
+										var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
                     script.onload = function() {
                         var $ = window.jQuery;
-                        var TRI_url = "https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/"+parseInt(origin.lat)+"/PREF_LONGITUDE/BEGINNING/"+parseInt(-1*origin.lng)+"/rows/0:300/JSON" ;
+												var TRI_url = "https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/"+parseInt(origin.lat)+"/PREF_LONGITUDE/BEGINNING/"+parseInt(-1*origin.lng)+"/rows/0:300/JSON" ;
                         if(typeof self._map.spin === 'function'){
                           self._map.spin(true) ;
                         }
                         $.getJSON(TRI_url , function(data){
 
-                         self.parseData(data) ;
+												 self.parseData(data) ;
                          if(typeof self._map.spin === 'function'){
                            self._map.spin(false) ;
                          }
                         });
                     };
-                    document.getElementsByTagName("head")[0].appendChild(script);
+										document.getElementsByTagName("head")[0].appendChild(script);
                 })();
 
 
