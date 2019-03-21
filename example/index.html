@@ -96,19 +96,19 @@
     var MapKnitter = L.layerGroup.mapKnitterLayer() ;
     var ToxicRelease = L.layerGroup.toxicReleaseLayer() ;
 
-    var OpenInfraMap_Power = L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png',{
+    var OpenInfraMap_Power = L.tileLayer('https://openinframap.org/tiles/{z}/{x}/{y}.pbf',{
         maxZoom: 18,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
     });
-    var OpenInfraMap_Petroleum = L.tileLayer('https://tiles-{s}.openinframap.org/petroleum/{z}/{x}/{y}.png', {
+    var OpenInfraMap_Petroleum = L.tileLayer('https://openinframap.org/tiles/{z}/{x}/{y}.pbf', {
       maxZoom: 18,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
     });
-    var OpenInfraMap_Telecom = L.tileLayer('https://tiles-{s}.openinframap.org/telecoms/{z}/{x}/{y}.png', {
+    var OpenInfraMap_Telecom = L.tileLayer('https://openinframap.org/tiles/{z}/{x}/{y}.pbf', {
       maxZoom: 18,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
     });
-    var OpenInfraMap_Water = L.tileLayer('https://tiles-{s}.openinframap.org/water/{z}/{x}/{y}.png',{
+    var OpenInfraMap_Water = L.tileLayer('https://openinframap.org/tiles/{z}/{x}/{y}.pbf',{
       maxZoom: 18,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
     });
