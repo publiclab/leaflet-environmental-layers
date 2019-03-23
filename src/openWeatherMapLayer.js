@@ -840,733 +840,672 @@ L.OWM.Utils = {
 
 	i18n: {
 		en: {
-			owmlinktitle: 'Details at OpenWeatherMap'
-			, temperature: 'Temperature'
-			, temp_minmax: 'Temp. min/max'
-			, wind: 'Wind'
-			, gust: 'Gust'
-			, windforce: 'Wind Force'
-			, direction: 'Direction'
-			, rain_1h: 'Rain'
-			, humidity: 'Humidity'
-			, pressure: 'Pressure'
+			owmlinktitle: 'Details at OpenWeatherMap', 
+			temperature: 'Temperature', 
+			temp_minmax: 'Temp. min/max', 
+			wind: 'Wind', 
+			gust: 'Gust', 
+			windforce: 'Wind Force', 
+			direction: 'Direction', 
+			rain_1h: 'Rain', 
+			humidity: 'Humidity', 
+			pressure: 'Pressure',
 
-		// weather conditions, see https://openweathermap.org/weather-conditions
-			, id200: 'Thunderstorm with Light Rain'
-			, id201: 'Thunderstorm with Rain'
-			, id202: 'Thunderstorm with Heavy Rain'
-			, id210: 'Light Thunderstorm'
-			, id211: 'Thunderstorm'
-			, id212: 'Heavy Thunderstorm'
-			, id221: 'Ragged Thunderstorm'
-			, id230: 'Thunderstorm with Light Drizzle'
-			, id231: 'Thunderstorm with Drizzle'
-			, id232: 'Thunderstorm with Heavy Drizzle'
+			// weather conditions, see https://openweathermap.org/weather-conditions
+			id200: 'Thunderstorm with Light Rain',
+			id201: 'Thunderstorm with Rain',
+			id202: 'Thunderstorm with Heavy Rain', 
+			id210: 'Light Thunderstorm', 
+			id211: 'Thunderstorm', 
+			id212: 'Heavy Thunderstorm', 
+			id221: 'Ragged Thunderstorm', 
+			id230: 'Thunderstorm with Light Drizzle', 
+			id231: 'Thunderstorm with Drizzle', 
+			id232: 'Thunderstorm with Heavy Drizzle',
 
-			, id300: 'Light Intensity Drizzle'
-			, id301: 'Drizzle'
-			, id302: 'Heavy Intensity Drizzle'
-			, id310: 'Light Intensity Drizzle Rain'
-			, id311: 'Drizzle Rain'
-			, id312: 'Heavy Intensity Drizzle Rain'
-			, id321: 'Shower Drizzle'
+			id300: 'Light Intensity Drizzle', 
+			id301: 'Drizzle', 
+			id302: 'Heavy Intensity Drizzle', 
+			id310: 'Light Intensity Drizzle Rain', 
+			id311: 'Drizzle Rain', 
+			id312: 'Heavy Intensity Drizzle Rain', 
+			id321: 'Shower Drizzle',
 
-			, id500: 'Light Rain'
-			, id501: 'Moderate Rain'
-			, id502: 'Heavy Intensity Rain'
-			, id503: 'Very Heavy Rain'
-			, id504: 'Extreme Rain'
-			, id511: 'Freezing Rain'
-			, id520: 'Light Intensity Shower Rain'
-			, id521: 'Shower Rain'
-			, id522: 'Heavy Intensity Shower Rain'
+			id500: 'Light Rain', 
+			id501: 'Moderate Rain', 
+			id502: 'Heavy Intensity Rain', 
+			id503: 'Very Heavy Rain', 
+			id504: 'Extreme Rain', 
+			id511: 'Freezing Rain', 
+			id520: 'Light Intensity Shower Rain', 
+			id521: 'Shower Rain', 
+			id522: 'Heavy Intensity Shower Rain',
 
-			, id600: 'Light Snow'
-			, id601: 'Snow'
-			, id602: 'Heavy Snow'
-			, id611: 'Sleet'
-			, id621: 'Shower Snow'
-			, id622: 'Heavy Shower Snow'
+			id600: 'Light Snow', 
+			id601: 'Snow', 
+			id602: 'Heavy Snow', 
+			id611: 'Sleet', 
+			id621: 'Shower Snow', 
+			id622: 'Heavy Shower Snow',
 
-			, id701: 'Mist'
-			, id711: 'Smoke'
-			, id721: 'Haze'
-			, id731: 'Sand/Dust Whirls'
-			, id741: 'Fog'
-			, id751: 'Sand'
+			id701: 'Mist', 
+			id711: 'Smoke', 
+			id721: 'Haze', 
+			id731: 'Sand/Dust Whirls', 
+			id741: 'Fog', 
+			id751: 'Sand',
 
-			, id800: 'Sky is Clear'
-			, id801: 'Few Clouds'
-			, id802: 'Scattered Clouds'
-			, id803: 'Broken Clouds'
-			, id804: 'Overcast Clouds'
+			id800: 'Sky is Clear', 
+			id801: 'Few Clouds', 
+			id802: 'Scattered Clouds', 
+			id803: 'Broken Clouds', 
+			id804: 'Overcast Clouds',
 
-			, id900: 'Tornado'
-			, id901: 'Tropical Storm'
-			, id902: 'Hurricane'
-			, id903: 'Cold'
-			, id904: 'Hot'
-			, id905: 'Windy'
-			, id906: 'Hail'
+			id900: 'Tornado', 
+			id901: 'Tropical Storm', 
+			id902: 'Hurricane', 
+			id903: 'Cold', 
+			id904: 'Hot', 
+			id905: 'Windy', 
+			id906: 'Hail'
 		},
 		
 		it: {
-			owmlinktitle: 'Dettagli su OpenWeatherMap'
-			, temperature: 'Temperatura'
-			, temp_minmax: 'Temp. min / max '
-			, wind: 'Vento'
-			, gust: 'Raffica'
-			, windforce: 'Forza del vento'
-			, direction: 'Direzione'
-			, rain_1h: 'Pioggia'
-			, humidity: 'Umidità'
-			, pressure: 'Pressione'
-		
-			// condizioni meteorologiche, consultare https://openweathermap.org/weather-conditions
+			owmlinktitle: 'Dettagli su OpenWeatherMap', 
+			temperature: 'Temperatura',
+			temp_minmax: 'Temp. min / max ', 
+			wind: 'Vento', gust: 'Raffica', 
+			windforce: 'Forza del vento', 
+			direction: 'Direzione', 
+			rain_1h: 'Pioggia', 
+			humidity: 'Umidità', 
+			pressure: 'Pressione', 
+			
+			// condizioni meteorologiche, consultare https://openweathermap.org/weather-conditions 
 			// Temporale
-			, id200: 'Tempesta con pioggia debole'
-			, id201: 'Tempesta di pioggia'
-			, id202: 'Tempesta con forti piogge'
-			, id210: 'Tempesta debole'
-			, id211: 'Tempesta'
-			, id212: 'Tempesta forte'
-			, id221: 'Tempesta irregolare'
-			, id230: 'Tempesta con deboli acquerugi'
-			, id231: 'Tempesta con pioviggine'
-			, id232: 'Tempesta con forte pioviggine'
-
+			id200: 'Tempesta con pioggia debole', 
+			id201: 'Tempesta di pioggia', 
+			id202: 'Tempesta con forti piogge', 
+			id210: 'Tempesta debole', 
+			id211: 'Tempesta', 
+			id212: 'Tempesta forte', 
+			id221: 'Tempesta irregolare', 
+			id230: 'Tempesta con deboli acquerugi', 
+			id231: 'Tempesta con pioviggine', 
+			id232: 'Tempesta con forte pioviggine', 
+			
 			// Pioggerella
-			, id300: 'Debole pioviggine'
-			, id301: 'Pioggerella'
-			, id302: 'Forti acquerugi'
-			, id310: 'Pioggia / leggera pioggerellina'
-			, id311: 'Pioggia / pioviggine'
-			, id312: 'Pioggia / pioviggine forte'
-			, id321: 'Pioviggine intensa'
-	
+			id300: 'Debole pioviggine', 
+			id301: 'Pioggerella', 
+			id302: 'Forti acquerugi', 
+			id310: 'Pioggia / leggera pioggerellina', 
+			id311: 'Pioggia / pioviggine', 
+			id312: 'Pioggia / pioviggine forte', 
+			id321: 'Pioviggine intensa',
+			
 			// Pioggia
-			, id500: 'Debole pioggia'
-			, id501: 'Pioggia moderata'
-			, id502: 'Pioggia forte'
-			, id503: 'Pioggia molto forte'
-			, id504: 'Pioggia estrema'
-			, id511: 'Grandine'
-			, id520: 'Pioggia leggera'
-			, id521: 'Pioggia'
-			, id522: 'Pioggia forte'
-			, id531: 'pioggia irregolare'
-		
-			// neve
-			, id600: 'Neve Debole'
-			, id601: 'Neve'
-			, id602: 'Forte nevicata'
-			, id611: 'Nevischio'
-			, id612: 'Nevischio moderato'
-			, id615: 'Debole pioggia e neve'
-			, id616: 'Pioggia e neve'
-			, id620: 'Nevischio Leggero'
-			, id621: 'Neve moderata'
-			, id622: 'Forte nevicata'
-
+			id500: 'Debole pioggia', 
+			id501: 'Pioggia moderata', 
+			id502: 'Pioggia forte', 
+			id503: 'Pioggia molto forte', 
+			id504: 'Pioggia estrema', 
+			id511: 'Grandine', 
+			id520: 'Pioggia leggera', 
+			id521: 'Pioggia', 
+			id522: 'Pioggia forte', 
+			id531: 'pioggia irregolare', 
+			
+			// neve 
+			id600: 'Neve Debole', 
+			id601: 'Neve', 
+			id602: 'Forte nevicata', 
+			id611: 'Nevischio', 
+			id612: 'Nevischio moderato', 
+			id615: 'Debole pioggia e neve', 
+			id616: 'Pioggia e neve', 
+			id620: 'Nevischio Leggero', 
+			id621: 'Neve moderata', 
+			id622: 'Forte nevicata', 
+			
 			// atmosfera
-			, id701: 'Bruma'
-			, id711: 'Fumo'
-			, id721: 'Foschia'
-			, id731: 'Vortici di sabbia/polvere'
-			, id741: 'Nebbia'
-			, id751: 'Sabbia'
-			, id761: 'Polvere'
-			, id762: 'Cenere vulcanica'
-			, id771: 'Tempesta'
-			, id781: 'Tornado'
-
+			id701: 'Bruma', 
+			id711: 'Fumo', 
+			id721: 'Foschia', 
+			id731: 'Vortici di sabbia/polvere', 
+			id741: 'Nebbia', 
+			id751: 'Sabbia', 
+			id761: 'Polvere', 
+			id762: 'Cenere vulcanica', 
+			id771: 'Tempesta', 
+			id781: 'Tornado', 
+			
 			// Nuvole
-			, id800: 'Cielo sereno'
-			, id801: 'Alcune nuvole'
-			, id802: 'Nuvole sparse'
-			, id803: 'Tempo nuvoloso'
-			, id804: 'Nuvoloso'
-
+			id800: 'Cielo sereno', 
+			id801: 'Alcune nuvole', 
+			id802: 'Nuvole sparse', 
+			id803: 'Tempo nuvoloso', 
+			id804: 'Nuvoloso',
+			
 			// Estremo
-			, id900: 'Tornado'
-			, id901: 'Tempesta tropicale'
-			, id902: 'Uragano'
-			, id903: 'Molto freddo'
-			, id904: 'Molto caldo'
-			, id905: 'Ventoso'
-			, id906: 'Forte grandine'
-
+			id900: 'Tornado', 
+			id901: 'Tempesta tropicale', 
+			id902: 'Uragano', 
+			id903: 'Molto freddo', 
+			id904: 'Molto caldo', 
+			id905: 'Ventoso', 
+			id906: 'Forte grandine',
+			
 			// aggiuntivo
-			, id951: 'Calmo'
-			, id952: 'Brezza leggera'
-			, id953: 'Brezza sostenuta'
-			, id954: 'Brezza moderata'
-			, id955: 'Brezza fresca'
-			, id956: 'Brezza forte'
-			, id957: 'Vento forte, vicino a burrasca'
-			, id958: 'Burrasca'
-			, id959: 'Forte burrasca'
-			, id960: 'Tempesta'
-			, id961: 'Tempesta violenta'
-			, id962: 'Uragano'
+			id951: 'Calmo', 
+			id952: 'Brezza leggera', 
+			id953: 'Brezza sostenuta', 
+			id954: 'Brezza moderata', 
+			id955: 'Brezza fresca', 
+			id956: 'Brezza forte', 
+			id957: 'Vento forte, vicino a burrasca', 
+			id958: 'Burrasca',
+			id959: 'Forte burrasca', 
+			id960: 'Tempesta', 
+			id961: 'Tempesta violenta', 
+			id962: 'Uragano'
 		},
 		
 		de: {
-			owmlinktitle: 'Details bei OpenWeatherMap'
-			, temperature: 'Temperatur'
-			, temp_minmax: 'Temp. min/max'
-			, wind: 'Wind'
-			, gust: 'Windböen'
-			, windforce: 'Windstärke'
-			, direction: 'Windrichtung'
-			, rain_1h: 'Regen'
-			, humidity: 'Luftfeuchtigkeit'
-			, pressure: 'Luftdruck'
+			owmlinktitle: 'Details bei OpenWeatherMap', 
+			temperature: 'Temperatur', 
+			temp_minmax: 'Temp. min/max', 
+			wind: 'Wind', 
+			gust: 'Windböen', 
+			windforce: 'Windstärke', 
+			direction: 'Windrichtung', 
+			rain_1h: 'Regen', 
+			humidity: 'Luftfeuchtigkeit', 
+			pressure: 'Luftdruck',
 
-		// Wetterbedingungen, siehe https://openweathermap.org/weather-conditions
-			, id200: 'Gewitter mit leichtem Regen' // 'Thunderstorm with Light Rain'
-			, id201: 'Gewitter mit Regen' // 'Thunderstorm with Rain'
-			, id202: 'Gewitter mit Starkregen' // 'Thunderstorm with Heavy Rain'
-			, id210: 'Leichtes Gewitter' // 'Light Thunderstorm'
-			, id211: 'Mäßiges Gewitter' // 'Thunderstorm'
-			, id212: 'Starkes Gewitter' // 'Heavy Thunderstorm'
-		//	, id221: 'Ragged Thunderstorm'
-		//	, id230: 'Thunderstorm with Light Drizzle'
-		//	, id231: 'Thunderstorm with Drizzle'
-		//	, id232: 'Thunderstorm with Heavy Drizzle'
-
-			, id300: 'Leichter Nieselregen' // 'Light Intensity Drizzle'
-			, id301: 'Nieselregen' // 'Drizzle'
-			, id302: 'Starker Nieselregen' // 'Heavy Intensity Drizzle'
-		//	, id310: 'Light Intensity Drizzle Rain'
-		//	, id311: 'Drizzle Rain'
-		//	, id312: 'Heavy Intensity Drizzle Rain'
-		//	, id321: 'Shower Drizzle'
-
-			, id500: 'Leichter Regen' // 'Light Rain'
-			, id501: 'Mäßiger Regen' // 'Moderate Rain'
-			, id502: 'Starker Regen' // 'Heavy Intensity Rain'
-			, id503: 'Ergiebiger Regen' // 'Very Heavy Rain'
-			, id504: 'Starkregen' // 'Extreme Rain'
-			, id511: 'Gefrierender Regen' // 'Freezing Rain'
-			, id520: 'Leichte Regenschauer' // 'Light Intensity Shower Rain'
-			, id521: 'Mäßige Regenschauer' // 'Shower Rain'
-			, id522: 'Wolkenbruchartige Regenschauer' // 'Heavy Intensity Shower Rain'
-
-			, id600: 'Leichter Schneefall' // 'Light Snow'
-			, id601: 'Mäßiger Schneefall' // 'Snow'
-			, id602: 'Starker Schneefall' // 'Heavy Snow'
-			, id611: 'Schneeregen' // 'Sleet'
-			, id621: 'Schneeschauer' // 'Shower Snow'
-			, id622: 'Starke Schneeschauer' // 'Heavy Shower Snow'
-
-			, id701: 'Dunst' // 'Mist'
-			, id711: 'Rauch' // 'Smoke'
-			, id721: 'Eingetrübt' // 'Haze'
-			, id731: 'Sand-/Staubwirbel' // 'Sand/Dust Whirls'
-			, id741: 'Nebel' // 'Fog'
-			, id751: 'Sand' // 'Sand'
-
-			, id800: 'Wolkenlos' // 'Sky is Clear'
-			, id800d: 'Sonnig' // 'Sky is Clear' at day
-			, id800n: 'Klar' // 'Sky is Clear' at night
-			, id801: 'Leicht bewölkt' // 'Few Clouds'
-			, id802: 'Wolkig' // 'Scattered Clouds'
-			, id803: 'Stark bewölkt' // 'Broken Clouds'
-			, id804: 'Bedeckt' // 'Overcast Clouds'
-
-			, id900: 'Tornado' // 'Tornado'
-			, id901: 'Tropischer Sturm' // 'Tropical Storm'
-			, id902: 'Orkan' // 'Hurricane'
-			, id903: 'Kälte' // 'Cold'
-			, id904: 'Hitze' // 'Hot'
-			, id905: 'Windig' // 'Windy'
-			, id906: 'Hagel' // 'Hail'
+			// Wetterbedingungen, siehe https://openweathermap.org/weather-conditions, 
+			id200: 'Gewitter mit leichtem Regen', // 'Thunderstorm with Light Rain', 
+			id201: 'Gewitter mit Regen', //'Thunderstorm with Rain', 
+			id202: 'Gewitter mit Starkregen', //'Thunderstorm with Heavy Rain', 
+			id210: 'Leichtes Gewitter', //'Light Thunderstorm', 
+			id211: 'Mäßiges Gewitter', //'Thunderstorm', 
+			id212: 'Starkes Gewitter', //'Heavy Thunderstorm' 
+			//	, id221: 'Ragged Thunderstorm' 
+			//	, id230: 'Thunderstorm with Light Drizzle' 
+			//	, id231: 'Thunderstorm with Drizzle' 
+			//	, id232: 'Thunderstorm with Heavy Drizzle', 
+			id300: 'Leichter Nieselregen', //'Light Intensity Drizzle', 
+			id301: 'Nieselregen', //'Drizzle', 
+			id302: 'Starker Nieselregen', //'Heavy Intensity Drizzle' 
+			//	, id310: 'Light Intensity Drizzle Rain'
+			//	, id311: 'Drizzle Rain'
+			//	, id312: 'Heavy Intensity Drizzle Rain' 
+			//	, id321: 'Shower Drizzle', 
+			id500: 'Leichter Regen', //'Light Rain', 
+			id501: 'Mäßiger Regen', //'Moderate Rain', 
+			id502: 'Starker Regen', //'Heavy Intensity Rain', 
+			id503: 'Ergiebiger Regen', //'Very Heavy Rain', 
+			id504: 'Starkregen', //'Extreme Rain', 
+			id511: 'Gefrierender Regen', //'Freezing Rain', 
+			id520: 'Leichte Regenschauer', //'Light Intensity Shower Rain', 
+			id521: 'Mäßige Regenschauer', //'Shower Rain', 
+			id522: 'Wolkenbruchartige Regenschauer', //'Heavy Intensity Shower Rain', 
+			id600: 'Leichter Schneefall', //'Light Snow', 
+			id601: 'Mäßiger Schneefall', //'Snow', 
+			id602: 'Starker Schneefall', //'Heavy Snow', 
+			id611: 'Schneeregen', //'Sleet', 
+			id621: 'Schneeschauer', //'Shower Snow', 
+			id622: 'Starke Schneeschauer', //'Heavy Shower Snow', 
+			id701: 'Dunst', //'Mist', 
+			id711: 'Rauch', //'Smoke', 
+			id721: 'Eingetrübt', //'Haze', 
+			id731: 'Sand-/Staubwirbel', //'Sand/Dust Whirls', 
+			id741: 'Nebel', //'Fog', 
+			id751: 'Sand', //'Sand', 
+			id800: 'Wolkenlos', //'Sky is Clear', 
+			id800d: 'Sonnig', //'Sky is Clear' at day, 
+			id800n: 'Klar', //'Sky is Clear' at night, 
+			id801: 'Leicht bewölkt', //'Few Clouds', 
+			id802: 'Wolkig', //'Scattered Clouds', 
+			id803: 'Stark bewölkt', //'Broken Clouds', 
+			id804: 'Bedeckt', //'Overcast Clouds', 
+			id900: 'Tornado', //'Tornado', 
+			id901: 'Tropischer Sturm', //'Tropical Storm', 
+			id902: 'Orkan', //'Hurricane', 
+			id903: 'Kälte', //'Cold', 
+			id904: 'Hitze', //'Hot', 
+			id905: 'Windig', //'Windy', 
+			id906: 'Hagel', //'Hail'
 		},
 
 		ru: {
-			owmlinktitle: 'Информация в OpenWeatherMap'
-			, temperature: 'Температура'
-			, temp_minmax: 'Макс./Мин. темп'
-			, wind: 'Ветер'
-			, gust: 'Порывы'
-			, windforce: 'Сила'
-			, direction: 'Направление'
-			, rain_1h: 'Дождь'
-			, humidity: 'Влажность'
-			, pressure: 'Давление'
-
-		// weather conditions, see https://openweathermap.org/weather-conditions
-			, id200: 'Гроза с легким дождем' // 'Thunderstorm with Light Rain'
-			, id201: 'Гроза с дождем' // 'Thunderstorm with Rain'
-			, id202: 'Гроза с ливнем' // 'Thunderstorm with Heavy Rain'
-			, id210: 'Легкая гроза' // 'Light Thunderstorm'
-			, id211: 'Гроза' // 'Thunderstorm'
-			, id212: 'Сильная гроза' // 'Heavy Thunderstorm'
-			, id221: 'Прерывистая гроза' // 'Ragged Thunderstorm'
-			, id230: 'Гроза с мелкой моросью' // 'Thunderstorm with Light Drizzle'
-			, id231: 'Гроза с моросью' // 'Thunderstorm with Drizzle'
-			, id232: 'Гроза с сильной моросью' // 'Thunderstorm with Heavy Drizzle'
-
-			, id300: 'Морось слабой интенсивности' // 'Light Intensity Drizzle'
-			, id301: 'Морось' // 'Drizzle'
-			, id302: 'Морось сильной интенсивности' // 'Heavy Intensity Drizzle'
-			, id310: 'Малоинтенсивный моросящий дождь' // 'Light Intensity Drizzle Rain'
-			, id311: 'Моросящий дождь' // 'Drizzle Rain'
-			, id312: 'Сильноинтенсивный моросящий дождь' // 'Heavy Intensity Drizzle Rain'
-			, id321: 'Проливной дождь' // 'Shower Drizzle'
-
-			, id500: 'Небольшой дождь' //'Light Rain'
-			, id501: 'Дождь' // 'Moderate Rain'
-			, id502: 'Сильный дождь' //'Heavy Intensity Rain'
-			, id503: 'Очень сильный дождь' //'Very Heavy Rain'
-			, id504: 'Сильный ливень' // 'Extreme Rain'
-			, id511: 'Ледяной дождь' // 'Freezing Rain'
-			, id520: 'Кратковременный слабый дождь' //'Light Intensity Shower Rain'
-			, id521: 'Кратковременный дождь' //'Shower Rain'
-			, id522: 'Кратковременный сильный дождь' //'Heavy Intensity Shower Rain'
-
-			, id600: 'Слабый снег' // 'Light Snow'
-			, id601: 'Снег' // 'Snow'
-			, id602: 'Сильный снег' // 'Heavy Snow'
-			, id611: 'Снег с дождем' //'Sleet'
-			, id621: 'Кратковременный снег' // 'Shower Snow'
-			, id622: 'Кратковременный сильный снег' //'Heavy Shower Snow'
-
-			, id701: 'Мгла' // 'Mist'
-			, id711: 'Смог' //'Smoke'
-			, id721: 'Дымка' // 'Haze'
-			, id731: 'Песочные/пыльевые вихри' // 'Sand/Dust Whirls'
-			, id741: 'Туман' // 'Fog'
-			, id751: 'Песок' // 'Sand'
-
-			, id800: 'Ясно' // 'Sky is Clear'
-			, id801: 'Малооблачно' // 'Few Clouds'
-			, id802: 'Переменная облачность' // 'Scattered Clouds'
-			, id803: 'Облачно с прояснениями' // 'Broken Clouds'
-			, id804: 'Облачно' // 'Overcast Clouds'
-
-			, id900: 'Торнадо' // 'Tornado'
-			, id901: 'Тропический шторм' // 'Tropical Storm'
-			, id902: 'Ураган' // 'Hurricane'
-			, id903: 'Холод'//'Cold'
-			, id904: 'Жара'//'Hot'
-			, id905: 'Ветрено'//'Windy'
-			, id906: 'Γрад' // 'Hail'
+			owmlinktitle: 'Информация в OpenWeatherMap',
+			temperature: 'Температура',
+			temp_minmax: 'Макс./Мин. темп',
+			wind: 'Ветер',
+			gust: 'Порывы',
+			windforce: 'Сила',
+			direction: 'Направление',
+			rain_1h: 'Дождь',
+			humidity: 'Влажность',
+			pressure: 'Давление', 
+			// weather conditions, see https://openweathermap.org/weather-conditions,
+			id200: 'Гроза с легким дождем', // 'Thunderstorm with Light Rain',
+			id201: 'Гроза с дождем', // 'Thunderstorm with Rain',
+			id202: 'Гроза с ливнем', // 'Thunderstorm with Heavy Rain',
+			id210: 'Легкая гроза', // 'Light Thunderstorm',
+			id211: 'Гроза', // 'Thunderstorm',
+			id212: 'Сильная гроза', // 'Heavy Thunderstorm',
+			id221: 'Прерывистая гроза', // 'Ragged Thunderstorm',
+			id230: 'Гроза с мелкой моросью', // 'Thunderstorm with Light Drizzle',
+			id231: 'Гроза с моросью', // 'Thunderstorm with Drizzle',
+			id232: 'Гроза с сильной моросью', // 'Thunderstorm with Heavy Drizzle',
+			id300: 'Морось слабой интенсивности', // 'Light Intensity Drizzle',
+			id301: 'Морось', // 'Drizzle',
+			id302: 'Морось сильной интенсивности', // 'Heavy Intensity Drizzle',
+			id310: 'Малоинтенсивный моросящий дождь', // 'Light Intensity Drizzle Rain',
+			id311: 'Моросящий дождь', // 'Drizzle Rain',
+			id312: 'Сильноинтенсивный моросящий дождь', // 'Heavy Intensity Drizzle Rain',
+			id321: 'Проливной дождь', // 'Shower Drizzle',
+			id500: 'Небольшой дождь', //'Light Rain',
+			id501: 'Дождь', // 'Moderate Rain',
+			id502: 'Сильный дождь', //'Heavy Intensity Rain',
+			id503: 'Очень сильный дождь', //'Very Heavy Rain',
+			id504: 'Сильный ливень', // 'Extreme Rain',
+			id511: 'Ледяной дождь', // 'Freezing Rain',
+			id520: 'Кратковременный слабый дождь', //'Light Intensity Shower Rain',
+			id521: 'Кратковременный дождь', //'Shower Rain',
+			id522: 'Кратковременный сильный дождь', //'Heavy Intensity Shower Rain',
+			id600: 'Слабый снег', // 'Light Snow',
+			id601: 'Снег', // 'Snow',
+			id602: 'Сильный снег', // 'Heavy Snow',
+			id611: 'Снег с дождем', //'Sleet',
+			id621: 'Кратковременный снег', // 'Shower Snow',
+			id622: 'Кратковременный сильный снег', //'Heavy Shower Snow',
+			id701: 'Мгла', // 'Mist',
+			id711: 'Смог', //'Smoke',
+			id721: 'Дымка', // 'Haze',
+			id731: 'Песочные/пыльевые вихри', // 'Sand/Dust Whirls',
+			id741: 'Туман', // 'Fog',
+			id751: 'Песок', // 'Sand',
+			id800: 'Ясно', // 'Sky is Clear',
+			id801: 'Малооблачно', // 'Few Clouds',
+			id802: 'Переменная облачность', // 'Scattered Clouds',
+			id803: 'Облачно с прояснениями', // 'Broken Clouds',
+			id804: 'Облачно', // 'Overcast Clouds',
+			id900: 'Торнадо', // 'Tornado',
+			id901: 'Тропический шторм', // 'Tropical Storm',
+			id902: 'Ураган', // 'Hurricane',
+			id903: 'Холод',//'Cold',
+			id904: 'Жара',//'Hot',
+			id905: 'Ветрено',//'Windy',
+			id906: 'Γрад', // 'Hail'
 		},
 
 		fr: {
-			owmlinktitle: 'Détails à OpenWeatherMap'
-			, temperature: 'Température'
-			, temp_minmax: 'Temp. min/max'
-			, wind: 'Vent'
-			, gust: 'Rafales'
-			, windforce: 'Force du vent'
-			, direction: 'Direction'
-			, rain_1h: 'Pluie'
-			, humidity: 'Humidité'
-			, pressure: 'Pression'
-
-		// Les conditions météorologiques, voir https://openweathermap.org/weather-conditions
-			, id200: 'Orage avec pluie légère' // 'Thunderstorm with Light Rain'
-			, id201: 'Orage avec pluie' // 'Thunderstorm with Rain'
-			, id202: 'Orage avec fortes précipitations' // 'Thunderstorm with Heavy Rain'
-		//	, id210: 'Light Thunderstorm'
-			, id211: 'Orage'
-			, id212: 'Orage violent' // 'Heavy Thunderstorm'
-		//	, id221: 'Ragged Thunderstorm'
-			, id230: 'Orage avec bruine faible' // 'Thunderstorm with Light Drizzle'
-			, id231: 'Orage avec bruine' // 'Thunderstorm with Drizzle'
-		//	, id232: 'Thunderstorm with Heavy Drizzle'
-
-		//	, id300: 'Light Intensity Drizzle'
-			, id301: 'Bruine' // 'Drizzle'
-		//	, id302: 'Heavy Intensity Drizzle'
-		//	, id310: 'Light Intensity Drizzle Rain'
-		//	, id311: 'Drizzle Rain'
-		//	, id312: 'Heavy Intensity Drizzle Rain'
-		//	, id321: 'Shower Drizzle'
-
-			, id500: 'Pluie légère' // 'Light Rain'
-			, id501: 'Pluie modérée' // 'Moderate Rain'
-			, id502: 'Pluie battante' // 'Heavy Intensity Rain'
-		//	, id503: 'Very Heavy Rain'
-		//	, id504: 'Extreme Rain'
-			, id511: 'Pluie verglassante' // 'Freezing Rain'
-			, id520: 'Averses de pluie fine' // 'Light Intensity Shower Rain'
-		//	, id521: 'Shower Rain'
-		//	, id522: 'Heavy Intensity Shower Rain'
-
-			, id600: 'Légers flocons' // 'Light Snow'
-			, id601: 'Neige' // 'Snow'
-			, id602: 'Fortes chutes de neige' // 'Heavy Snow'
-			, id611: 'Neige fondue' // 'Sleet'
-			, id621: 'Averses de neige' // 'Shower Snow'
-			, id622: 'Fortes chutes de neige' // 'Heavy Shower Snow'
-
-			, id701: 'Brume' // 'Mist'
-			, id711: 'Fumée' // 'Smoke'
-			, id721: 'Brume' // 'Haze'
-			, id731: 'Tourbillons de sable/poussière' // 'Sand/Dust Whirls'
-			, id741: 'Brouillard' // 'Fog'
-		//	, id751: 'Sand'
-
-			, id800: 'Ciel dégagé' // 'Sky is Clear'
-			, id801: 'Ciel voilé'
-			, id802: 'Nuageux' // 'Scattered Clouds'
-			, id803: 'Nuageux' // 'Broken Clouds'
-			, id804: 'Ciel couvert' // 'Overcast Clouds'
-
-			, id900: 'Tornade' // 'Tornado'
-			, id901: 'Tempête tropicale'// 'Tropical Storm'
-			, id902: 'Ouragan' // 'Hurricane'
-			, id903: 'Froid' // 'Cold'
-			, id904: 'Chaleur' // 'Hot'
-			, id905: 'Venteux' // 'Windy'
-			, id906: 'Grêle' // 'Hail'
+			owmlinktitle: 'Détails à OpenWeatherMap',
+			temperature: 'Température',
+			temp_minmax: 'Temp. min/max',
+			wind: 'Vent',
+			gust: 'Rafales',
+			windforce: 'Force du vent',
+			direction: 'Direction',
+			rain_1h: 'Pluie',
+			humidity: 'Humidité',
+			pressure: 'Pression', 
+			// Les conditions météorologiques, voir https://openweathermap.org/weather-conditions,
+			id200: 'Orage avec pluie légère', // 'Thunderstorm with Light Rain',
+			id201: 'Orage avec pluie', // 'Thunderstorm with Rain',
+			id202: 'Orage avec fortes précipitations', // 'Thunderstorm with Heavy Rain'
+			//id210: 'Light Thunderstorm',
+			id211: 'Orage',
+			id212: 'Orage violent', // 'Heavy Thunderstorm' 
+			//id221: 'Ragged Thunderstorm',
+			id230: 'Orage avec bruine faible', // 'Thunderstorm with Light Drizzle',
+			id231: 'Orage avec bruine', // 'Thunderstorm with Drizzle' 
+			//	, id232: 'Thunderstorm with Heavy Drizzle'
+			//	, id300: 'Light Intensity Drizzle',
+			id301: 'Bruine', // 'Drizzle' 
+			//	, id302: 'Heavy Intensity Drizzle'
+			//	, id310: 'Light Intensity Drizzle Rain'
+			//	, id311: 'Drizzle Rain' 
+			//	, id312: 'Heavy Intensity Drizzle Rain' 
+			//	, id321: 'Shower Drizzle',
+			id500: 'Pluie légère', // 'Light Rain',
+			id501: 'Pluie modérée', // 'Moderate Rain',
+			id502: 'Pluie battante', // 'Heavy Intensity Rain' 
+			//	, id503: 'Very Heavy Rain' 
+			//	, id504: 'Extreme Rain',
+			id511: 'Pluie verglassante', // 'Freezing Rain',
+			id520: 'Averses de pluie fine', // 'Light Intensity Shower Rain' 
+			//	, id521: 'Shower Rain'
+			//	, id522: 'Heavy Intensity Shower Rain',
+			id600: 'Légers flocons', // 'Light Snow',
+			id601: 'Neige', // 'Snow',
+			id602: 'Fortes chutes de neige', // 'Heavy Snow',
+			id611: 'Neige fondue', // 'Sleet',
+			id621: 'Averses de neige', // 'Shower Snow',
+			id622: 'Fortes chutes de neige', // 'Heavy Shower Snow',
+			id701: 'Brume', // 'Mist',
+			id711: 'Fumée', // 'Smoke',
+			id721: 'Brume', // 'Haze',
+			id731: 'Tourbillons de sable/poussière', // 'Sand/Dust Whirls',
+			id741: 'Brouillard', // 'Fog', //	, id751: 'Sand',
+			id800: 'Ciel dégagé', // 'Sky is Clear',
+			id801: 'Ciel voilé',
+			id802: 'Nuageux', // 'Scattered Clouds',
+			id803: 'Nuageux', // 'Broken Clouds',
+			id804: 'Ciel couvert', // 'Overcast Clouds',
+			id900: 'Tornade', // 'Tornado',
+			id901: 'Tempête tropicale',// 'Tropical Storm',
+			id902: 'Ouragan', // 'Hurricane',
+			id903: 'Froid', // 'Cold',
+			id904: 'Chaleur', // 'Hot',
+			id905: 'Venteux', // 'Windy',
+			id906: 'Grêle', // 'Hail'
 		},
 
-		nl: { //dutch translation
-			owmlinktitle: 'Details op OpenWeatherMap'
-			, temperature: 'Temperatuur'
-			, temp_minmax: 'Temp. min/max'
-			, wind: 'Wind'
-			, gust: 'Windvlaag'
-			, windforce: 'Windkracht'
-			, direction: 'Richting'
-			, rain_1h: 'Regen'
-			, humidity: 'Luchtvochtigheid'
-			, pressure: 'Luchtdruk'
-
-		// weeercondities, see https://openweathermap.org/weather-conditions
-			, id200: 'Onweer met lichte regen'
-			, id201: 'Onweer met met regen'
-			, id202: 'Onweer met hevige regen'
-			, id210: 'Lichte onweersbui'
-			, id211: 'Onweersbui'
-			, id212: 'Hevig onweer'
-			, id221: 'Onregelmatige onweersbui'
-			, id230: 'Onweer met licht motregen'
-			, id231: 'Onweer met motregen'
-			, id232: 'Onweer met hevige motregen'
-
-			, id300: 'Lichte motregen'
-			, id301: 'Motregen'
-			, id302: 'Hevige motregen'
-			, id310: 'Lichte motregen / regen'
-			, id311: 'Motregen / regen'
-			, id312: 'Hevige motregen / regen'
-			, id321: 'Douche motregen'
-
-			, id500: 'Lichte regen'
-			, id501: 'Gematigde regen'
-			, id502: 'Hevige regen'
-			, id503: 'Erg hevige regen'
-			, id504: 'Extreme regen'
-			, id511: 'Hagel'
-			, id520: 'Lichte miezerregen'
-			, id521: 'Miezerregen'
-			, id522: 'Hevige miezerregen'
-
-			, id600: 'Lichte sneeuwval'
-			, id601: 'Sneeuw'
-			, id602: 'Hevige sneeuwval'
-			, id611: 'Ijzel'
-			, id621: 'Douche sneeuw'
-			, id622: 'Hevige douche sneeuw'
-
-			, id701: 'Mist'
-			, id711: 'Rook'
-			, id721: 'Nevel'
-			, id731: 'Zand/stof werveling'
-			, id741: 'Mist'
-			, id751: 'Zand'
-
-			, id800: 'Onbewolkt'
-			, id801: 'Licht bewolkt'
-			, id802: 'Half bewolkt'
-			, id803: 'Overwegend bewolkt'
-			, id804: 'Bewolkt'
-
-			, id900: 'Tornado'
-			, id901: 'Tropische Storm'
-			, id902: 'Orkaan'
-			, id903: 'Koud'
-			, id904: 'Heet'
-			, id905: 'Winderig'
-			, id906: 'Hagel'
+		nl: { 
+			//dutch translation
+			owmlinktitle: 'Details op OpenWeatherMap',
+			temperature: 'Temperatuur',
+			temp_minmax: 'Temp. min/max',
+			wind: 'Wind',
+			gust: 'Windvlaag',
+			windforce: 'Windkracht',
+			direction: 'Richting',
+			rain_1h: 'Regen',
+			humidity: 'Luchtvochtigheid',
+			pressure: 'Luchtdruk', 
+			
+			// weeercondities, see https://openweathermap.org/weather-conditions,
+			id200: 'Onweer met lichte regen',
+			id201: 'Onweer met met regen',
+			id202: 'Onweer met hevige regen',
+			id210: 'Lichte onweersbui',
+			id211: 'Onweersbui',
+			id212: 'Hevig onweer',
+			id221: 'Onregelmatige onweersbui',
+			id230: 'Onweer met licht motregen',
+			id231: 'Onweer met motregen',
+			id232: 'Onweer met hevige motregen',
+			id300: 'Lichte motregen',
+			id301: 'Motregen',
+			id302: 'Hevige motregen',
+			id310: 'Lichte motregen / regen',
+			id311: 'Motregen / regen',
+			id312: 'Hevige motregen / regen',
+			id321: 'Douche motregen',
+			id500: 'Lichte regen',
+			id501: 'Gematigde regen',
+			id502: 'Hevige regen',
+			id503: 'Erg hevige regen',
+			id504: 'Extreme regen',
+			id511: 'Hagel',
+			id520: 'Lichte miezerregen',
+			id521: 'Miezerregen',
+			id522: 'Hevige miezerregen',
+			id600: 'Lichte sneeuwval',
+			id601: 'Sneeuw',
+			id602: 'Hevige sneeuwval',
+			id611: 'Ijzel',
+			id621: 'Douche sneeuw',
+			id622: 'Hevige douche sneeuw',
+			id701: 'Mist',
+			id711: 'Rook',
+			id721: 'Nevel',
+			id731: 'Zand/stof werveling',
+			id741: 'Mist',
+			id751: 'Zand',
+			id800: 'Onbewolkt',
+			id801: 'Licht bewolkt',
+			id802: 'Half bewolkt',
+			id803: 'Overwegend bewolkt',
+			id804: 'Bewolkt',
+			id900: 'Tornado',
+			id901: 'Tropische Storm',
+			id902: 'Orkaan',
+			id903: 'Koud',
+			id904: 'Heet',
+			id905: 'Winderig',
+			id906: 'Hagel'
 		},
 
-		es: { //spanish translation
-			owmlinktitle: 'Detalles en OpenWeatherMap'
-			, temperature: 'Temperatura'
-			, temp_minmax: 'Temp. mín/máx'
-			, wind: 'Viento'
-			, gust: 'Ráfagas'
-			, windforce: 'Fuerza del viento'
-			, direction: 'Dirección'
-			, rain_1h: 'Lluvia'
-			, humidity: 'Humedad'
-			, pressure: 'Presión'
-
-		// weather conditions, see https://openweathermap.org/weather-conditions
-			// Thunderstorm
-			, id200: 'Tormenta con lluvia débil'
-			, id201: 'Tormenta con lluvia'
-			, id202: 'Tormenta con lluvia fuerte'
-			, id210: 'Tormenta débil'
-			, id211: 'Tormenta'
-			, id212: 'Tormenta fuerte'
-			, id221: 'Tormenta irregular'
-			, id230: 'Tormenta con llovizna débil'
-			, id231: 'Tormenta con llovizna'
-			, id232: 'Tormenta con llovizna fuerte'
-
-			// Drizzle
-			, id300: 'Llovizna débil'
-			, id301: 'Llovizna'
-			, id302: 'Llovizna fuerte'
-			, id310: 'Lluvia/llovizna débil'
-			, id311: 'Lluvia/llovizna'
-			, id312: 'Lluvia/llovizna fuerte'
-			, id321: 'Chubasco de llovizna'
-
-			// Rain
-			, id500: 'Lluvia débil'
-			, id501: 'Lluvia moderada'
-			, id502: 'Lluvia fuerte'
-			, id503: 'Lluvia muy fuerte'
-			, id504: 'Lluvia extrema'
-			, id511: 'Granizo'
-			, id520: 'Chubasco de lluvia débil'
-			, id521: 'Chubasco de lluvia'
-			, id522: 'Chubasco de lluvia fuerte'
-			, id531: 'Chubasco de lluvia irregular'
-
-			// Snow
-			, id600: 'Nieve débil'
-			, id601: 'Nieve'
-			, id602: 'Nieve fuerte'
-			, id611: 'Aguanieve'
-			, id612: 'Chubasco de aguanieve'
-			, id615: 'Lluvia y nieve débiles'
-			, id616: 'Lluvia y nieve'
-			, id620: 'Chubasco de nieve débil'
-			, id621: 'Chubasco de nieve'
-			, id622: 'Chubasco de nieve fuerte'
-
-			// Atmosphere
-			, id701: 'Bruma'
-			, id711: 'Humo'
-			, id721: 'Neblina'
-			, id731: 'Torbellinos de arena/polvo'
-			, id741: 'Niebla'
-			, id751: 'Arena'
-			, id761: 'Polvo'
-			, id762: 'Ceniza volcánica'
-			, id771: 'Tempestad'
-			, id781: 'Tornado'
-
-			// Clouds
-			, id800: 'Cielo despejado'
-			, id801: 'Algunas nubes'
-			, id802: 'Nubes dispersas'
-			, id803: 'Intérvalos nubosos'
-			, id804: 'Nublado'
-
-			// Extreme
-			, id900: 'Tornado'
-			, id901: 'Tormenta tropical'
-			, id902: 'Huracán'
-			, id903: 'Bajas temperaturas'
-			, id904: 'Altas temperaturas'
-			, id905: 'Ventoso'
-			, id906: 'Granizo'
-
-			// Additional
-			, id951: 'Calma'
-			, id952: 'Brisa ligera'
-			, id953: 'Brisa suave'
-			, id954: 'Brisa moderada'
-			, id955: 'Brisa fresca'
-			, id956: 'Brisa fuerte'
-			, id957: 'Viento fuerte, próximo a vendaval'
-			, id958: 'Vendaval'
-			, id959: 'Vendaval fuerte'
-			, id960: 'Tempestad'
-			, id961: 'Tempestad violenta'
-			, id962: 'Huracán'
+		es: { 
+			//spanish translation
+			owmlinktitle: 'Detalles en OpenWeatherMap',
+			temperature: 'Temperatura',
+			temp_minmax: 'Temp. mín/máx',
+			wind: 'Viento',
+			gust: 'Ráfagas',
+			windforce: 'Fuerza del viento',
+			direction: 'Dirección',
+			rain_1h: 'Lluvia',
+			humidity: 'Humedad',
+			pressure: 'Presión', 
+			// weather conditions, see https://openweathermap.org/weather-conditions 
+			// Thunderstorm,
+			id200: 'Tormenta con lluvia débil',
+			id201: 'Tormenta con lluvia',
+			id202: 'Tormenta con lluvia fuerte',
+			id210: 'Tormenta débil',
+			id211: 'Tormenta',
+			id212: 'Tormenta fuerte',
+			id221: 'Tormenta irregular',
+			id230: 'Tormenta con llovizna débil',
+			id231: 'Tormenta con llovizna',
+			id232: 'Tormenta con llovizna fuerte', // Drizzle,
+			id300: 'Llovizna débil',
+			id301: 'Llovizna',
+			id302: 'Llovizna fuerte',
+			id310: 'Lluvia/llovizna débil',
+			id311: 'Lluvia/llovizna',
+			id312: 'Lluvia/llovizna fuerte',
+			id321: 'Chubasco de llovizna', // Rain,
+			id500: 'Lluvia débil',
+			id501: 'Lluvia moderada',
+			id502: 'Lluvia fuerte',
+			id503: 'Lluvia muy fuerte',
+			id504: 'Lluvia extrema',
+			id511: 'Granizo',
+			id520: 'Chubasco de lluvia débil',
+			id521: 'Chubasco de lluvia',
+			id522: 'Chubasco de lluvia fuerte',
+			id531: 'Chubasco de lluvia irregular', // Snow,
+			id600: 'Nieve débil',
+			id601: 'Nieve',
+			id602: 'Nieve fuerte',
+			id611: 'Aguanieve',
+			id612: 'Chubasco de aguanieve',
+			id615: 'Lluvia y nieve débiles',
+			id616: 'Lluvia y nieve',
+			id620: 'Chubasco de nieve débil',
+			id621: 'Chubasco de nieve',
+			id622: 'Chubasco de nieve fuerte', // Atmosphere,
+			id701: 'Bruma',
+			id711: 'Humo',
+			id721: 'Neblina',
+			id731: 'Torbellinos de arena/polvo',
+			id741: 'Niebla',
+			id751: 'Arena',
+			id761: 'Polvo',
+			id762: 'Ceniza volcánica',
+			id771: 'Tempestad',
+			id781: 'Tornado', // Clouds,
+			id800: 'Cielo despejado',
+			id801: 'Algunas nubes',
+			id802: 'Nubes dispersas',
+			id803: 'Intérvalos nubosos',
+			id804: 'Nublado', // Extreme,
+			id900: 'Tornado',
+			id901: 'Tormenta tropical',
+			id902: 'Huracán',
+			id903: 'Bajas temperaturas',
+			id904: 'Altas temperaturas',
+			id905: 'Ventoso',
+			id906: 'Granizo', // Additional,
+			id951: 'Calma',
+			id952: 'Brisa ligera',
+			id953: 'Brisa suave',
+			id954: 'Brisa moderada',
+			id955: 'Brisa fresca',
+			id956: 'Brisa fuerte',
+			id957: 'Viento fuerte, próximo a vendaval',
+			id958: 'Vendaval',
+			id959: 'Vendaval fuerte',
+			id960: 'Tempestad',
+			id961: 'Tempestad violenta',
+			id962: 'Huracán'
 		},
 
-		ca: { //catalan translation
-			owmlinktitle: 'Detalls en OpenWeatherMap'
-			, temperature: 'Temperatura'
-			, temp_minmax: 'Temp. mín/màx'
-			, wind: 'Vent'
-			, gust: 'Ràfegues'
-			, windforce: 'Força del vent'
-			, direction: 'Direcció'
-			, rain_1h: 'Pluja'
-			, humidity: 'Humitat'
-			, pressure: 'Pressió'
-
-		// weather conditions, see https://openweathermap.org/weather-conditions
-			// Thunderstorm
-			, id200: 'Tempesta amb pluja feble'
-			, id201: 'Tempesta amb pluja'
-			, id202: 'Tempesta amb pluja forta'
-			, id210: 'Tempesta feble'
-			, id211: 'Tempesta'
-			, id212: 'Tempesta forta'
-			, id221: 'Tempesta irregular'
-			, id230: 'Tempesta amb plugim feble'
-			, id231: 'Tempesta amb plugim'
-			, id232: 'Tempesta amb plugim fort'
-
-			// Drizzle
-			, id300: 'Plugim feble'
-			, id301: 'Plugim'
-			, id302: 'Plugim fort'
-			, id310: 'Pluja/plugim feble'
-			, id311: 'Pluja/plugim'
-			, id312: 'Pluja/plugim fort'
-			, id321: 'Ruixat de plugim'
-
-			// Rain
-			, id500: 'Pluja feble'
-			, id501: 'Pluja moderada'
-			, id502: 'Pluja forta'
-			, id503: 'Pluja molt forta'
-			, id504: 'Pluja extrema'
-			, id511: 'Calabruix'
-			, id520: 'Ruixat de pluja feble'
-			, id521: 'Ruixat de pluja'
-			, id522: 'Ruixat de pluja fort'
-			, id531: 'Ruixat de pluja irregular'
-
-			// Snow
-			, id600: 'Neu feble'
-			, id601: 'Neu'
-			, id602: 'Neu forta'
-			, id611: 'Aiguaneu'
-			, id612: 'Ruixat de aguanieve'
-			, id615: 'Pluja i neu febles'
-			, id616: 'Pluja i neu'
-			, id620: 'Ruixat de neu feble'
-			, id621: 'Ruixat de neu'
-			, id622: 'Ruixat de neu fort'
-
-			// Atmosphere
-			, id701: 'Bruma'
-			, id711: 'Fum'
-			, id721: 'Boirina'
-			, id731: 'Torbellinos de arena/polvo'
-			, id741: 'Boira'
-			, id751: 'Sorra'
-			, id761: 'Pols'
-			, id762: 'Cendra volcànica'
-			, id771: 'Tempestat'
-			, id781: 'Tornado'
-
-			// Clouds
-			, id800: 'Cel clar'
-			, id801: 'Alguns núvols'
-			, id802: 'Núvols dispersos'
-			, id803: 'Intervals nuvolosos'
-			, id804: 'Ennuvolat'
-
-			// Extreme
-			, id900: 'Tornado'
-			, id901: 'Tempesta tropical'
-			, id902: 'Huracà'
-			, id903: 'Temperatures baixes'
-			, id904: 'Temperatures altes'
-			, id905: 'Ventós'
-			, id906: 'Calabruix'
-
-			// Additional
-			, id951: 'Calma'
-			, id952: 'Brisa lleugera'
-			, id953: 'Brisa suau'
-			, id954: 'Brisa moderada'
-			, id955: 'Brisa fresca'
-			, id956: 'Brisa forta'
-			, id957: 'Vent fort, pròxim a vendaval'
-			, id958: 'Ventada'
-			, id959: 'Ventada forta'
-			, id960: 'Tempesta'
-			, id961: 'Tempesta violenta'
-			, id962: 'Huracà'
+		ca: { 
+			//catalan translation
+			owmlinktitle: 'Detalls en OpenWeatherMap',
+			temperature: 'Temperatura',
+			temp_minmax: 'Temp. mín/màx',
+			wind: 'Vent',
+			gust: 'Ràfegues',
+			windforce: 'Força del vent',
+			direction: 'Direcció',
+			rain_1h: 'Pluja',
+			humidity: 'Humitat',
+			pressure: 'Pressió', 
+			// weather conditions, see https://openweathermap.org/weather-conditions 
+			// Thunderstorm,
+			id200: 'Tempesta amb pluja feble',
+			id201: 'Tempesta amb pluja',
+			id202: 'Tempesta amb pluja forta',
+			id210: 'Tempesta feble',
+			id211: 'Tempesta',
+			id212: 'Tempesta forta',
+			id221: 'Tempesta irregular',
+			id230: 'Tempesta amb plugim feble',
+			id231: 'Tempesta amb plugim',
+			id232: 'Tempesta amb plugim fort', // Drizzle,
+			id300: 'Plugim feble',
+			id301: 'Plugim',
+			id302: 'Plugim fort',
+			id310: 'Pluja/plugim feble',
+			id311: 'Pluja/plugim',
+			id312: 'Pluja/plugim fort',
+			id321: 'Ruixat de plugim', // Rain,
+			id500: 'Pluja feble',
+			id501: 'Pluja moderada',
+			id502: 'Pluja forta',
+			id503: 'Pluja molt forta',
+			id504: 'Pluja extrema',
+			id511: 'Calabruix',
+			id520: 'Ruixat de pluja feble',
+			id521: 'Ruixat de pluja',
+			id522: 'Ruixat de pluja fort',
+			id531: 'Ruixat de pluja irregular', // Snow,
+			id600: 'Neu feble',
+			id601: 'Neu',
+			id602: 'Neu forta',
+			id611: 'Aiguaneu',
+			id612: 'Ruixat de aguanieve',
+			id615: 'Pluja i neu febles',
+			id616: 'Pluja i neu',
+			id620: 'Ruixat de neu feble',
+			id621: 'Ruixat de neu',
+			id622: 'Ruixat de neu fort', // Atmosphere,
+			id701: 'Bruma',
+			id711: 'Fum',
+			id721: 'Boirina',
+			id731: 'Torbellinos de arena/polvo',
+			id741: 'Boira',
+			id751: 'Sorra',
+			id761: 'Pols',
+			id762: 'Cendra volcànica',
+			id771: 'Tempestat',
+			id781: 'Tornado', // Clouds,
+			id800: 'Cel clar',
+			id801: 'Alguns núvols',
+			id802: 'Núvols dispersos',
+			id803: 'Intervals nuvolosos',
+			id804: 'Ennuvolat', // Extreme,
+			id900: 'Tornado',
+			id901: 'Tempesta tropical',
+			id902: 'Huracà',
+			id903: 'Temperatures baixes',
+			id904: 'Temperatures altes',
+			id905: 'Ventós',
+			id906: 'Calabruix', // Additional,
+			id951: 'Calma',
+			id952: 'Brisa lleugera',
+			id953: 'Brisa suau',
+			id954: 'Brisa moderada',
+			id955: 'Brisa fresca',
+			id956: 'Brisa forta',
+			id957: 'Vent fort, pròxim a vendaval',
+			id958: 'Ventada',
+			id959: 'Ventada forta',
+			id960: 'Tempesta',
+			id961: 'Tempesta violenta',
+			id962: 'Huracà'
 		},
-		pt_br: { //brazillian translation
-			owmlinktitle: 'Detalhes em OpenWeatherMap'
-			, temperature: 'Temperatura'
-			, temp_minmax: 'Temp. min/max'
-			, wind: 'Vento'
-			, gust: 'Rajadas'
-			, windforce: 'Força do Vento'
-			, direction: 'Direção'
-			, rain_1h: 'Chuva'
-			, humidity: 'Umidade'
-			, pressure: 'Pressão'
-
-		// weather conditions, see https://openweathermap.org/weather-conditions
-			, id200: 'Trovoadas com chuva fraca'
-			, id201: 'Trovoadas com chuva'
-			, id202: 'Trovoadas com chuva forte'
-			, id210: 'Trovoadas leves'
-			, id211: 'Trovoadas'
-			, id212: 'Trovoadas fortes'
-			, id221: 'Trovoadas irregulares'
-			, id230: 'Trovoadas com garoa fraca'
-			, id231: 'Trovoadas com garoa'
-			, id232: 'Trovoadas com garoa forte'
-
-			, id300: 'Garoa de fraca intensidade'
-			, id301: 'Garoa'
-			, id302: 'Garoa de forte intensidade'
-			, id310: 'Chuva com garoa de fraca intensidade'
-			, id311: 'Chuva com garoa'
-			, id312: 'Chuva com garoa de forte intensidade'
-			, id321: 'Garoa persistente'
-
-			, id500: 'Chuva fraca'
-			, id501: 'Chuva'
-			, id502: 'Chuva forte'
-			, id503: 'Chuva muito forte'
-			, id504: 'Chuva extrema'
-			, id511: 'Chuva de granizo'
-			, id520: 'Aguaceiro de chuva fraco'
-			, id521: 'Aguaceiro de chuva'
-			, id522: 'Aguaceiro de chuva forte'
-
-			, id600: 'Neve fraca'
-			, id601: 'Neve'
-			, id602: 'Neve forte'
-			, id611: 'Chuva com neve'
-			, id621: 'Aguaceiro de neve'
-			, id622: 'Aguaceiro de neve forte'
-
-			, id701: 'Névoa'
-			, id711: 'Fumaça'
-			, id721: 'Bruma'
-			, id731: 'Redemoinhos de Areia/Poeira'
-			, id741: 'Neblina'
-			, id751: 'Areia'
-
-			, id800: 'Ceu está limpo'
-			, id801: 'Poucas nuvens'
-			, id802: 'Nuvens dispersas'
-			, id803: 'Cirros'
-			, id804: 'Nublado'
-
-			, id900: 'Tornado'
-			, id901: 'Tempestade tropical'
-			, id902: 'Furacão'
-			, id903: 'Frio'
-			, id904: 'Calor'
-			, id905: 'Ventania'
-			, id906: 'Granizo'
+		pt_br: { 
+			//brazillian translation
+			owmlinktitle: 'Detalhes em OpenWeatherMap',
+			temperature: 'Temperatura',
+			temp_minmax: 'Temp. min/max',
+			wind: 'Vento',
+			gust: 'Rajadas',
+			windforce: 'Força do Vento',
+			direction: 'Direção',
+			rain_1h: 'Chuva',
+			humidity: 'Umidade',
+			pressure: 'Pressão',
+			// weather conditions, see https://openweathermap.org/weather-conditions,
+			id200: 'Trovoadas com chuva fraca',
+			id201: 'Trovoadas com chuva',
+			id202: 'Trovoadas com chuva forte',
+			id210: 'Trovoadas leves',
+			id211: 'Trovoadas',
+			id212: 'Trovoadas fortes',
+			id221: 'Trovoadas irregulares',
+			id230: 'Trovoadas com garoa fraca',
+			id231: 'Trovoadas com garoa',
+			id232: 'Trovoadas com garoa forte',
+			id300: 'Garoa de fraca intensidade',
+			id301: 'Garoa',
+			id302: 'Garoa de forte intensidade',
+			id310: 'Chuva com garoa de fraca intensidade',
+			id311: 'Chuva com garoa',
+			id312: 'Chuva com garoa de forte intensidade',
+			id321: 'Garoa persistente',
+			id500: 'Chuva fraca',
+			id501: 'Chuva',
+			id502: 'Chuva forte',
+			id503: 'Chuva muito forte',
+			id504: 'Chuva extrema',
+			id511: 'Chuva de granizo',
+			id520: 'Aguaceiro de chuva fraco',
+			id521: 'Aguaceiro de chuva',
+			id522: 'Aguaceiro de chuva forte',
+			id600: 'Neve fraca',
+			id601: 'Neve',
+			id602: 'Neve forte',
+			id611: 'Chuva com neve',
+			id621: 'Aguaceiro de neve',
+			id622: 'Aguaceiro de neve forte',
+			id701: 'Névoa',
+			id711: 'Fumaça',
+			id721: 'Bruma',
+			id731: 'Redemoinhos de Areia/Poeira',
+			id741: 'Neblina',
+			id751: 'Areia',
+			id800: 'Ceu está limpo',
+			id801: 'Poucas nuvens',
+			id802: 'Nuvens dispersas',
+			id803: 'Cirros',
+			id804: 'Nublado',
+			id900: 'Tornado',
+			id901: 'Tempestade tropical',
+			id902: 'Furacão',
+			id903: 'Frio',
+			id904: 'Calor',
+			id905: 'Ventania',
+			id906: 'Granizo'
 		}
 	}
 };
