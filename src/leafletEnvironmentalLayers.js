@@ -19,4 +19,4 @@ require('./osmLandfillMineQuarryLayer.js');
 require('./wisconsinLayer.js');
 require('./fracTrackerMobileLayer.js');
 require('./pfasLayer.js');
-//require('./mapboxplugin.js');
+require('./googleSpreadsheetLayer.js');
