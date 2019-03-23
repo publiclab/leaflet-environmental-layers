@@ -69,7 +69,7 @@ L.LayerGroup.LuftdatenLayer = L.LayerGroup.extend(
         popupContent += "<h3>Country: " + country + "</h3>";
       }
       if(sensorID){
-        popupContent += "<h4><b>Sensor ID: </b>" + sensorID + "</h4>"
+        popupContent += "<h4><b>Sensor ID: </b>" + sensorID + "</h4>";
       }
       if(data.sensordatavalues.length > 0){
         for(let i in data.sensordatavalues){
@@ -120,4 +120,4 @@ L.LayerGroup.LuftdatenLayer = L.LayerGroup.extend(
 
 L.layerGroup.luftdatenLayer = function (options) {
   return new L.LayerGroup.LuftdatenLayer(options);
-}
+};

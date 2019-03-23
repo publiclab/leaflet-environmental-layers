@@ -39,12 +39,12 @@ L.LayerGroup.OpenSenseLayer = L.LayerGroup.extend({
       var $ = window.jQuery;
       var url = "https://api.opensensemap.org/boxes/" + e.target.options.boxId;
       $.getJSON(url, function (data) {
-        var popUpContent = ""
+        var popUpContent = "";
         if (data.name && data.grouptag) {
-          popUpContent += "<h3>" + data.name + "," + data.grouptag + "</h3>"
+          popUpContent += "<h3>" + data.name + "," + data.grouptag + "</h3>";
         }
         else if (data.name) {
-          popUpContent += "<h3>" + data.name + "</h3>"
+          popUpContent += "<h3>" + data.name + "</h3>";
         }
         for (var i in data.sensors) {
           if (data.sensors[i].lastMeasurement) {
@@ -56,7 +56,7 @@ L.LayerGroup.OpenSenseLayer = L.LayerGroup.extend({
         if (data.lastMeasurementAt) {
           popUpContent += "<br><small>Measured at <i>" + data.lastMeasurementAt + "</i>";
         }
-        popup.setContent(popUpContent)
+        popup.setContent(popUpContent);
       });
     }
   },
@@ -132,4 +132,4 @@ L.LayerGroup.OpenSenseLayer = L.LayerGroup.extend({
 
 L.layerGroup.openSenseLayer = function (options) {
   return new L.LayerGroup.OpenSenseLayer(options);
-}
+};

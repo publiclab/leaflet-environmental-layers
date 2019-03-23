@@ -13,7 +13,7 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
              latField: 'lat',
              lngField: 'lng',
              valueField: 'count' ,
-             blur: .75
+             blur: 0.75
         },
 
         initialize: function (options) {
@@ -61,14 +61,14 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
         },
 
         getMarker: function (data) {
-              var lat = data.Lat ;
+              var lat = data.Lat;
               var lng = data.Lon;
-              var value = parseFloat(data.PM2_5Value) ;  //PM2.5 VALUE in microgram per metre cube
+              var value = parseFloat(data.PM2_5Value);  //PM2.5 VALUE in microgram per metre cube
 
-              var purpleLayer_object = new Object() ;
-              purpleLayer_object.lat = lat ;
-              purpleLayer_object.lng = lng ;
-              purpleLayer_object.count = value ;
+              var purpleLayer_object = {};
+              purpleLayer_object.lat = lat;
+              purpleLayer_object.lng = lng;
+              purpleLayer_object.count = value;
               /*
               var aqi ;
               if(value>=0 && value<=12.0)

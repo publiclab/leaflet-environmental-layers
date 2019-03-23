@@ -160,7 +160,7 @@ L.OWM.LegendControl = L.Control.extend({
 		this._container = L.DomUtil.create('div', 'owm-legend-container');
 		this._container.style.display = 'none';
 		this._legendCounter = 0;
-		this._legendContainer = new Array();
+		this._legendContainer = [];
 	},
 
 	onAdd: function(map) {
@@ -261,7 +261,7 @@ L.OWM.Current = L.Layer.extend({
 		this._layer = L.layerGroup();
 		this._timeoutId = null;
 		this._requests = {};
-		this._markers = new Array();
+		this._markers = [];
 		this._markedMarker = null;
 		this._map = null;
 		this._urlTemplate = 'https://api.openweathermap.org/data/2.5/box/{type}?{appId}cnt=300&format=json&units=metric&bbox={minlon},{minlat},{maxlon},{maxlat},10';
@@ -276,14 +276,14 @@ L.OWM.Current = L.Layer.extend({
 			} else {
 				bgIcon = this.options.imageUrlCity.replace('{icon}', '10d');
 				if (this.options.type != 'city') {
-					var bgIcon = this.options.imageUrlStation;
+					bgIcon = this.options.imageUrlStation;
 				}
 			}
 			this._progressCtrl = L.OWM.progressControl({
-					type: this.options.type
-					, bgImage: bgIcon
-					, imageLoadingUrl: this.options.imageLoadingUrl
-					, owmInstance: this
+					type: this.options.type,
+					bgImage: bgIcon,
+					imageLoadingUrl: this.options.imageLoadingUrl,
+					owmInstance: this
 			});
 		}
 		this._cache = L.OWM.currentCache({ maxAge: this.options.cacheMaxAge });
@@ -319,8 +319,8 @@ L.OWM.Current = L.Layer.extend({
 	},
 
 	getAttribution: function() {
-		return 'Weather from <a href="https://openweathermap.org/" '
-			+ 'alt="World Map and worldwide Weather Forecast online">OpenWeatherMap</a>';
+		return 'Weather from <a href="https://openweathermap.org/" ' +
+		'alt="World Map and worldwide Weather Forecast online">OpenWeatherMap</a>';
 	},
 
 	update: function() {
@@ -379,12 +379,12 @@ L.OWM.Current = L.Layer.extend({
 				if (_this.options.caching) {
 					_this._cache.set(data, _this._map.getBounds());
 				}
-				_this._processRequestedData(_this, typeof data.list == 'undefined' ? new Array() : data.list);
+				_this._processRequestedData(_this, typeof data.list == 'undefined' ? [[]] : data.list);
 				_this.fire('owmloadingend', {type: _this.options.type});
 			});
 		}
 		if (this.options.interval && this.options.interval > 0) {
-			this._timeoutId = window.setTimeout(function() {_this.update()}, 60000*this.options.interval);
+			this._timeoutId = window.setTimeout(function() {_this.update();}, 60000*this.options.interval);
 		}
 	},
 
@@ -416,7 +416,7 @@ L.OWM.Current = L.Layer.extend({
 		_this._layer.clearLayers();
 
 		// add the cities as markers to the LayerGroup
-		_this._markers = new Array();
+		_this._markers = [];
 		for (var key in stations) {
 			var marker;
 			if (_this.options.markerFunction != null && typeof _this.options.markerFunction == 'function') {
@@ -434,9 +434,9 @@ L.OWM.Current = L.Layer.extend({
 					marker.bindPopup(_this._createPopup(stations[key]));
 				}
 			}
-			if (markerWithPopup != null
-					&& typeof markerWithPopup.options.owmId != 'undefined'
-					&& markerWithPopup.options.owmId == marker.options.owmId) {
+			if (markerWithPopup != null && 
+				typeof markerWithPopup.options.owmId != 'undefined'&& 
+				markerWithPopup.options.owmId == marker.options.owmId) {
 				markerWithPopup = marker;
 			}
 		}
@@ -469,8 +469,8 @@ L.OWM.Current = L.Layer.extend({
 			if (typeof station.weather != 'undefined') {
 				typ = 'city';
 			}
-			txt += '<a href="https://openweathermap.org/' + typ + '/' + station.id + '" target="_blank" title="'
-				+ this.i18n('owmlinktitle', 'Details at OpenWeatherMap') + '">';
+			txt += '<a href="https://openweathermap.org/' + typ + '/' + station.id + '" target="_blank" title="' + 
+			this.i18n('owmlinktitle', 'Details at OpenWeatherMap') + '">';
 		}
 		txt += station.name;
 		if (showLink) {
@@ -479,78 +479,78 @@ L.OWM.Current = L.Layer.extend({
 		txt += '</div>';
 		if (typeof station.weather != 'undefined' && typeof station.weather[0] != 'undefined') {
 			if (typeof station.weather[0].description != 'undefined' && typeof station.weather[0].id != 'undefined') {
-				txt += '<div class="owm-popup-description">'
-					+ this.i18n('id'+station.weather[0].id, station.weather[0].description + ' (' + station.weather[0].id + ')')
-					+ '</div>';
+				txt += '<div class="owm-popup-description">' + 
+				this.i18n('id'+station.weather[0].id, station.weather[0].description + 
+				' (' + station.weather[0].id + ')') + '</div>';
 			}
 		}
 		var imgData = this._getImageData(station);
-		txt += '<div class="owm-popup-main"><img src="' + imgData.url + '" width="' + imgData.width
-				+ '" height="' + imgData.height + '" border="0" />';
+		txt += '<div class="owm-popup-main"><img src="' + imgData.url + '" width="' + imgData.width + 
+		'" height="' + imgData.height + '" border="0" />';
 		if (typeof station.main != 'undefined' && typeof station.main.temp != 'undefined') {
-			txt += '<span class="owm-popup-temp">' + this._temperatureConvert(station.main.temp)
-				+ '&nbsp;' + this._displayTemperatureUnit() + '</span>';
+			txt += '<span class="owm-popup-temp">' + this._temperatureConvert(station.main.temp) + 
+			'&nbsp;' + this._displayTemperatureUnit() + '</span>';
 		}
 		txt += '</div>';
 		txt += '<div class="owm-popup-details">';
 		if (typeof station.main != 'undefined') {
 			if (typeof station.main.humidity != 'undefined') {
-				txt += '<div class="owm-popup-detail">'
-					+ this.i18n('humidity', 'Humidity')
-					+ ': ' + station.main.humidity + '&nbsp;%</div>';
+				txt += '<div class="owm-popup-detail">' + 
+				this.i18n('humidity', 'Humidity') + ': ' + 
+				station.main.humidity + '&nbsp;%</div>';
 			}
 			if (typeof station.main.pressure != 'undefined') {
-				txt += '<div class="owm-popup-detail">'
-					+ this.i18n('pressure', 'Pressure')
-					+ ': ' + station.main.pressure + '&nbsp;hPa</div>';
+				txt += '<div class="owm-popup-detail">' + 
+				this.i18n('pressure', 'Pressure')+ 
+				': ' + station.main.pressure + '&nbsp;hPa</div>';
 			}
 			if (this.options.showTempMinMax) {
 				if (typeof station.main.temp_max != 'undefined' && typeof station.main.temp_min != 'undefined') {
-					txt += '<div class="owm-popup-detail">'
-						+ this.i18n('temp_minmax', 'Temp. min/max')
-						+ ': '
-							+ this._temperatureConvert(station.main.temp_min)
-						+ '&nbsp;/&nbsp;'
-						+ this._temperatureConvert(station.main.temp_max)
-						+ '&nbsp;' + this._displayTemperatureUnit() + '</div>';
+					txt += '<div class="owm-popup-detail">' + 
+					this.i18n('temp_minmax', 'Temp. min/max') + 
+					': ' + 
+					this._temperatureConvert(station.main.temp_min) + 
+					'&nbsp;/&nbsp;' + 
+					this._temperatureConvert(station.main.temp_max) + 
+					'&nbsp;' + this._displayTemperatureUnit() + '</div>';
 				}
 			}
 		}
 		if (station.rain != null && typeof station.rain != 'undefined' && typeof station.rain['1h'] != 'undefined') {
-			txt += '<div class="owm-popup-detail">'
-				+ this.i18n('rain_1h', 'Rain (1h)')
-				+ ': ' + station.rain['1h'] + '&nbsp;ml</div>';
+			txt += '<div class="owm-popup-detail">' + 
+			this.i18n('rain_1h', 'Rain (1h)') +
+			 ': ' + station.rain['1h'] + '&nbsp;ml</div>';
 		}
 		if (typeof station.wind != 'undefined') {
 			if (typeof station.wind.speed != 'undefined') {
 				txt += '<div class="owm-popup-detail">';
 				if (this.options.showWindSpeed == 'beaufort' || this.options.showWindSpeed == 'both') {
-					txt += this.i18n('windforce', 'Wind Force')
-						+ ': ' + this._windMsToBft(station.wind.speed);
+					txt += this.i18n('windforce', 'Wind Force') + 
+					': ' + this._windMsToBft(station.wind.speed);
 					if (this.options.showWindSpeed == 'both') {
-						txt += '&nbsp;(' + this._convertSpeed(station.wind.speed) + '&nbsp;'
-							+ this._displaySpeedUnit() + ')';
+						txt += '&nbsp;(' + this._convertSpeed(station.wind.speed) + '&nbsp;' + 
+						this._displaySpeedUnit() + ')';
 					}
 				} else {
-					txt += this.i18n('wind', 'Wind') + ': '
-						+ this._convertSpeed(station.wind.speed) + '&nbsp;'
-						+ this._displaySpeedUnit();
+					txt += this.i18n('wind', 'Wind') + ': ' + 
+					this._convertSpeed(station.wind.speed) + '&nbsp;' + 
+					this._displaySpeedUnit();
 				}
 				txt += '</div>';
 			}
 			if (typeof station.wind.gust != 'undefined') {
 				txt += '<div class="owm-popup-detail">';
 				if (this.options.showWindSpeed == 'beaufort' || this.options.showWindSpeed == 'both') {
-					txt += this.i18n('gust', 'Gust')
-						+ ': ' + this._windMsToBft(station.wind.gust);
+					txt += this.i18n('gust', 'Gust') + 
+					': ' + this._windMsToBft(station.wind.gust);
 					if (this.options.showWindSpeed == 'both') {
-						txt += '&nbsp;(' + this._convertSpeed(station.wind.gust) + '&nbsp;'
-							+ this._displaySpeedUnit() + ')';
+						txt += '&nbsp;(' + this._convertSpeed(station.wind.gust) + '&nbsp;' + 
+						this._displaySpeedUnit() + ')';
 					}
 				} else {
-					txt += this.i18n('gust', 'Gust') + ': '
-						+ this._convertSpeed(station.wind.gust) + '&nbsp;'
-						+ this._displaySpeedUnit();
+					txt += this.i18n('gust', 'Gust') + ': ' + 
+					this._convertSpeed(station.wind.gust) + '&nbsp;' + 
+					this._displaySpeedUnit();
 				}
 				txt += '</div>';
 			}
@@ -599,10 +599,10 @@ L.OWM.Current = L.Layer.extend({
 	_createMarker: function(station) {
 		var imageData = this._getImageData(station);
 		var icon = L.divIcon({
-						className: ''
-						, iconAnchor: new L.Point(25, imageData.height/2)
-						, popupAnchor: new L.Point(0, -10)
-						, html: this._icondivtext(station, imageData.url, imageData.width, imageData.height)
+						className: '',
+						iconAnchor: new L.Point(25, imageData.height/2),
+						popupAnchor: new L.Point(0, -10),
+						html: this._icondivtext(station, imageData.url, imageData.width, imageData.height)
 					});
 		var marker = L.marker([station.coord.Lat, station.coord.Lon], {icon: icon});
 		return marker;
@@ -610,11 +610,11 @@ L.OWM.Current = L.Layer.extend({
 
 	_icondivtext: function(station, imageurl, width, height) {
 		var txt = '';
-		txt += '<div class="owm-icondiv">'
-			+ '<img src="' + imageurl + '" border="0" width="' + width + '" height="' + height + '" />';
+		txt += '<div class="owm-icondiv">' + 
+		'<img src="' + imageurl + '" border="0" width="' + width + '" height="' + height + '" />';
 		if (typeof station.main != 'undefined' && typeof station.main.temp != 'undefined') {
-			txt += '<div class="owm-icondiv-temp">' + this._temperatureConvert(station.main.temp)
-				+ '&nbsp;' + this._displayTemperatureUnit() + '</div>';
+			txt += '<div class="owm-icondiv-temp">' + this._temperatureConvert(station.main.temp) + 
+			'&nbsp;' + this._displayTemperatureUnit() + '</div>';
 		}
 		txt += '</div>';
 		return txt;
@@ -658,10 +658,10 @@ L.OWM.Current = L.Layer.extend({
 		var unit = 'm/s';
 		switch (this.options.speedUnit) {
 			case 'kmh':
-				unit = 'km/h'
+				unit = 'km/h';
 				break;
 			case 'mph':
-				unit = 'mph'
+				unit = 'mph';
 				break;
 		}
 		return unit;
@@ -690,10 +690,10 @@ L.OWM.Current = L.Layer.extend({
 
 	i18n: function(key, fallback) {
 		var lang = this.options.lang;
-		if (typeof L.OWM.Utils.i18n != 'undefined'
-				&& typeof L.OWM.Utils.i18n[lang] != 'undefined'
-				&& typeof L.OWM.Utils.i18n[lang][key] != 'undefined') {
-			return  L.OWM.Utils.i18n[lang][key]
+		if (typeof L.OWM.Utils.i18n != 'undefined' && 
+		typeof L.OWM.Utils.i18n[lang] != 'undefined' && 
+		typeof L.OWM.Utils.i18n[lang][key] != 'undefined') {
+			return  L.OWM.Utils.i18n[lang][key];
 		}
 		return fallback;
 	}
@@ -785,7 +785,7 @@ L.OWM.CurrentCache = L.Class.extend({
 		}
 
 		// clip cached data to bounds
-		var clippedStations = new Array();
+		var clippedStations = [];
 		var cnt = 0;
 		for (var k in this._cachedData.list) {
 			var station = this._cachedData.list[k];
