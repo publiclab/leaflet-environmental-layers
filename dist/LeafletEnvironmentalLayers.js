@@ -29066,7 +29066,7 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
 
     {
         options: {
-            url: 'https://spreadsheets.google.com/feeds/list/1P9bkJDLNH5mANJiXtXvNfmKOl6f36uiPahgxjpJKMkY/1/public/values?alt=json',
+            url: 'https://spreadsheets.google.com/feeds/list/1cjQ3H_DX-0dhVL5kMEesFEKaoJKLfC2wWAhokMnJxV4/1/public/values?alt=json',
         },
 
         initialize: function (options) {
@@ -29097,7 +29097,7 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
 
                     script.onload = function() {
                         var $ = window.jQuery;
-                        var PFAS_URL = "https://spreadsheets.google.com/feeds/list/1P9bkJDLNH5mANJiXtXvNfmKOl6f36uiPahgxjpJKMkY/1/public/values?alt=json" ;
+                        var PFAS_URL = "https://spreadsheets.google.com/feeds/list/1cjQ3H_DX-0dhVL5kMEesFEKaoJKLfC2wWAhokMnJxV4/1/public/values?alt=json" ;
                         if(typeof self._map.spin === 'function'){
                           self._map.spin(true) ;
                         }
