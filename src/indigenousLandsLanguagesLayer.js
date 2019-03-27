@@ -36,27 +36,23 @@ L.LayerGroup.IndigenousLandsLanguagesLayer = L.LayerGroup.extend(
         requestData: function () {
                 var self = this ;
                 (function() {
-                    var script = document.createElement("SCRIPT");
-                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                    script.type = 'text/javascript';
                     var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
-                    script.onload = function() {
-                        var $ = window.jQuery;
+                    var $ = window.jQuery;
 
-                        //Here is the URL that should be for loading 1 region at a time
-                        var ILL_url = "https://native-land.ca/api/index.php?maps=languages&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
-                        //this url loads all regions at once
-                        //var ILL_url = "https://native-land.ca/api/index.php?maps=languages";
-                        //Here is the getJSON method designed after the other layers
+                    //Here is the URL that should be for loading 1 region at a time
+                    var ILL_url = "https://native-land.ca/api/index.php?maps=languages&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
+                    //this url loads all regions at once
+                    //var ILL_url = "https://native-land.ca/api/index.php?maps=languages";
+                    //Here is the getJSON method designed after the other layers
+                    if(typeof self._map.spin === 'function'){
+                        self._map.spin(true) ;
+                    }
+                    $.getJSON(ILL_url , function(data){
+                        self.parseData(data) ;
                         if(typeof self._map.spin === 'function'){
-                          self._map.spin(true) ;
+                        self._map.spin(false) ;
                         }
-                        $.getJSON(ILL_url , function(data){
-                          self.parseData(data) ;
-                          if(typeof self._map.spin === 'function'){
-                            self._map.spin(false) ;
-                          }
-                        });
+                    });
 
                         /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
                         This does all that parseData does in a much simpler format.*/
@@ -74,9 +70,6 @@ L.LayerGroup.IndigenousLandsLanguagesLayer = L.LayerGroup.extend(
 
                           self.addLayer(L.geoJSON(data, {style: getStyle, onEachFeature: onEachFeature}));
                         });*/
-
-                    };
-                    document.getElementsByTagName("head")[0].appendChild(script);
                 })();
 
 

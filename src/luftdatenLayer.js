@@ -41,11 +41,6 @@ L.LayerGroup.LuftdatenLayer = L.LayerGroup.extend(
       var self = this;
 
       (function () {
-        var script = document.createElement("SCRIPT");
-        script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-        script.type = 'text/javascript';
-
-        script.onload = function () {
           var $ = window.jQuery;
           var url = "https://maps.luftdaten.info/data/v2/data.dust.min.json";
 
@@ -58,8 +53,6 @@ L.LayerGroup.LuftdatenLayer = L.LayerGroup.extend(
               self._map.spin(false);
             }
           });
-        };
-        document.getElementsByTagName("head")[0].appendChild(script);
       })();
     },
 
