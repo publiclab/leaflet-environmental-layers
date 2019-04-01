@@ -34,10 +34,10 @@ The library consists of multiple layers. It needs to add several other layers. T
 3. Here's a codepen example that consists of a base layer and [Luftdaten Layer](https://github.com/publiclab/leaflet-environmental-layers/issues/88) as an overlay. You can check its full implementation [here](https://github.com/publiclab/leaflet-environmental-layers/pull/137).
 
 ### Some sample PRs to be referred for adding new layers:
-* Osm landfill mine quarry : [#94](https://github.com/publiclab/leaflet-environmental-layers/pull/94)
+* OSM landfill mine quarry : [#94](https://github.com/publiclab/leaflet-environmental-layers/pull/94)
 * Indigenous Lands Treaties Layer : [#78](https://github.com/publiclab/leaflet-environmental-layers/pull/78)
 
 
 ## Bug reports
 
-If you are submitting a bug/issue , please go to https://github.com/publiclab/leaflet-environmental-layers/issues/new
+If you want to submit a bug/issue , please go to https://github.com/publiclab/leaflet-environmental-layers/issues/new
