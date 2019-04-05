@@ -67,9 +67,9 @@ function myWindroseDrawCanvas(data, owm) {
 			ctx.fill();
 		}
 	} else {
-		canvas.innerHTML = '<div>'
-				+ (typeof data.wind != 'undefined' && typeof data.wind.deg != 'undefined' ? data.wind.deg + '°' : '')
-				+ '</div>';
+		canvas.innerHTML = '<div>' + 
+		(typeof data.wind != 'undefined' && typeof data.wind.deg != 'undefined' ? data.wind.deg + '°' : '') + 
+		'</div>';
 	}
 }
 

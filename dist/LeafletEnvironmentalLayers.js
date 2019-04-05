@@ -25876,24 +25876,25 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
         },
 
         requestRegionData: function () {
-						var self = this ;
+                var self = this ;
 
-						(function() {
+                (function() {
 
-								var zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
-								var $ = window.jQuery;
-								var AQI_url = "https://api.waqi.info/map/bounds/?latlng=" + southwest.lat + "," + southwest.lng + "," + northeast.lat + "," + northeast.lng + "&token=" + self.options.tokenID;
+                    var zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
+                    var $ = window.jQuery;
+                    var AQI_url = "https://api.waqi.info/map/bounds/?latlng=" + southwest.lat + "," + southwest.lng + "," + northeast.lat + "," + northeast.lng + "&token=" + self.options.tokenID;
 
-								if(typeof self._map.spin === 'function'){
-									self._map.spin(true) ;
-								}
-								$.getJSON(AQI_url , function(regionalData){
-										self.parseData(regionalData) ;
-										if(typeof self._map.spin === 'function'){
-											self._map.spin(false) ;
-										}
-								});                    
-						})();
+                    if(typeof self._map.spin === 'function'){
+                        self._map.spin(true) ;
+                    }
+                        $.getJSON(AQI_url , function(regionalData){
+
+                            self.parseData(regionalData) ;
+                            if(typeof self._map.spin === 'function'){
+                            self._map.spin(false) ;
+                            }
+                        });
+                })();
         },
 
         getMarker: function(data) {
@@ -25938,17 +25939,19 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
             var marker = this.getMarker(data);
             var key = data.uid;
             //Code provided by widget API
+            /* jshint ignore:start */
             (function(w,d,t,f){  w[f]=w[f]||function(c,k,n){s=w[f],k=s['k']=(s['k']||(k?('&k='+k):''));s['c']=
             c=(c  instanceof  Array)?c:[c];s['n']=n=n||0;Apa=d.createElement(t),e=d.getElementsByTagName(t)[0];
             Apa.async=1;Apa.src='http://feed.aqicn.org/feed/'+(c[n].city)+'/'+(c[n].lang||'')+'/feed.v1.js?n='+n+k;
             e.parentNode.insertBefore(Apa,e);  };  })(  window,document,'script','_aqiFeed'  );
+            /* jshint ignore:end */
 
             marker.bindPopup( function() { //Fetch popup content only when clicked; else the quota will be reached
                 var el = document.createElement('div');
                 el.classList.add("city-container");
                 el.id = "city-aqi-container";
 
-                var stationURL = "https://api.waqi.info/feed/@" + data.uid + "/?token=" + self.options.tokenID
+                var stationURL = "https://api.waqi.info/feed/@" + data.uid + "/?token=" + self.options.tokenID;
 
                 $.getJSON(stationURL, function(stationData) {
                     var labels = {
@@ -25964,7 +25967,7 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
 			             h: "Relative Humidity",
 			             d: "Dew",
 			             p: "Atmostpheric Pressure"
-		            }
+		            };
 
                     var strContent = "";
                     var name = "<h2>" + stationData.data.city.name + "</h2><br> "; //Set the default content first
@@ -26031,407 +26034,9 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
 
 L.layerGroup.aqicnLayer = function(options) {
     return new L.LayerGroup.AQICNLayer(options);
-}
+};
 
 },{}],9:[function(require,module,exports){
-		L.Icon.OpenAqIcon = L.Icon.extend({
-			options: {
-				iconUrl: 'https://i.stack.imgur.com/6cDGi.png',
-				shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-				iconSize: [20, 20],
-				iconAnchor: [6, 21],
-				popupAnchor: [1, -34],
-				shadowSize: [20, 20]
-			}
-	});
-
-	L.icon.openaqIcon = function () {
-			return new L.Icon.OpenAqIcon();
-	};
-	L.LayerGroup.OpenAqLayer = L.LayerGroup.extend(
-	
-			{
-					options: {
-							popupOnMouseover: true,
-							clearOutsideBounds: true
-					},
-	
-					initialize: function (options) {
-							options = options || {};
-							L.Util.setOptions(this, options);
-							this._layers = {};
-					},
-	
-					onAdd: function (map) {
-							map.on('moveend', this.requestRegionData, this);
-							this._map = map;
-							this.requestRegionData();
-					},
-	
-					onRemove: function (map) {
-							map.off('moveend', this.requestRegionData, this);
-							this.clearLayers();
-							this._layers = {};
-					},
-	
-					requestRegionData: function () {
-									var self = this ;
-	
-									(function() {
-											var $ = window.jQuery;
-											var url = "https://api.openaq.org/v1/latest?limit=1000";
-
-											if(typeof self._map.spin === 'function'){
-												self._map.spin(true) ;
-											}
-											$.getJSON(url , function(regionalData){
-													self.parseData(regionalData.results) ;
-													if(typeof self._map.spin === 'function'){
-														self._map.spin(false) ;
-													}
-											});
-									})();
-					},
-	
-					getMarker: function(data) {
-							var redDotIcon = new L.icon.openaqIcon()
-							var distance = data.distance;
-							var lat = data.coordinates.latitude;
-							var lon = data.coordinates.longitude;
-  						var  contentData = "";
-  						var labels = {
-  								pm25: "PM<sub>2.5</sub>",
-  								pm10: "PM<sub>10</sub>",
-  								o3: "Ozone (o3)",
-  								no2: "Nitrogen Dioxide (no2)",
-  								so2: "Sulphur Dioxide (so2)",
-  								co: "Carbon Monoxide (co)",
-  						}
-  						for(var i = 0; i < data.measurements.length; i++) {
-  							contentData+="<strong>"+labels[data.measurements[i].parameter]+" : </strong>"+data.measurements[i].value+" "+data.measurements[i].unit+"<br>"
-  						}
-  							return L.marker([lat, lon], {icon: redDotIcon}).bindPopup(
-  								"<h3>"+data.location+", "+data.country+"</h3><br>"+
-  								"<strong>distance: "+"</strong>"+data.distance+"<br>"+contentData
-  							);
-	
-					},
-	
-					addMarker: function(data,i) {
-							var self = this;
-							var marker = this.getMarker(data);
-							var key = i;	
-							if (!this._layers[key]) {
-									this._layers[key] = marker;
-									this.addLayer(marker);
-							}
-	
-					},
-	
-					parseData: function(regionalData) {
-							if(!!regionalData) {
-									for(var i = 0; i < regionalData.length; i++) {
-
-											if(!!regionalData[i].coordinates){
-												this.addMarker(regionalData[i],i);
-											}
-									}
-	
-									if(this.options.clearOutsideBounds) {
-											this.clearOutsideBounds();
-									}
-							}
-	
-					},
-	
-					clearOutsideBounds: function () {
-							var bounds = this._map.getBounds(),
-									latLng,
-									key;
-	
-							for (key in this._layers) {	
-									if (this._layers.hasOwnProperty(key)) {
-											latLng = this._layers[key].getLatLng();
-	
-											if (!bounds.contains(latLng)) {
-													this.removeLayer(this._layers[key]);
-													delete this._layers[key];
-											}
-									}
-							}
-					}
-			}
-	);
-	
-	L.layerGroup.openaqLayer = function(options) {
-			return new L.LayerGroup.OpenAqLayer(options);
-	}
-	
-	},{}],10:[function(require,module,exports){
-
-		L.Icon.LuftdatenIcon = L.Icon.extend({
-			options: {
-				iconUrl: 'http://www.myiconfinder.com/uploads/iconsets/256-256-82a679a558f2fe4c3964c4123343f844.png',
-				iconSize: [15, 30],
-				iconAnchor: [6, 21],
-				popupAnchor: [1, -34]
-			}
-		});
-		
-		L.icon.luftdatenIcon = function () {
-			return new L.Icon.LuftdatenIcon();
-		};
-	
-		L.LayerGroup.LuftdatenLayer = L.LayerGroup.extend(
-	
-			{
-				options: {
-					popupOnMouseover: true,
-					clearOutsideBounds: true
-				},
-		
-				initialize: function (options) {
-					options = options || {};
-					L.Util.setOptions(this, options);
-					this._layers = {};
-				},
-		
-				onAdd: function (map) {
-					map.on('moveend', this.requestRegionData, this);
-					this._map = map;
-					this.requestRegionData();
-				},
-		
-				onRemove: function (map) {
-					map.off('moveend', this.requestRegionData, this);
-					this.clearLayers();
-					this._layers = {};
-				},
-		
-				requestRegionData: function () {
-					var self = this;
-		
-					(function () {
-							var $ = window.jQuery;
-							var url = "https://maps.luftdaten.info/data/v2/data.dust.min.json";
-		
-							if (typeof self._map.spin === 'function') {
-								self._map.spin(true);
-							}
-							$.getJSON(url, function (records) {
-								self.parseData(records);
-								if (typeof self._map.spin === 'function') {
-									self._map.spin(false);
-								}
-							});
-					})();
-				},
-		
-				getMarker: function (data) {
-		
-					var greenIcon = new L.icon.luftdatenIcon();
-					var country = data.location.country;
-					var lng = data.location.longitude;
-					var lat = data.location.latitude;
-					var sensorID = data.sensor.id;
-					var popupContent = "";
-
-					if(country){
-						popupContent += "<h3>Country: " + country + "</h3>";
-					}
-					if(sensorID){
-						popupContent += "<h4><b>Sensor ID: </b>" + sensorID + "</h4>"
-					}
-					if(data.sensordatavalues.length > 0){
-						for(let i in data.sensordatavalues){
-							popupContent += "<b>" + data.sensordatavalues[i].value_type + "</b>: " + data.sensordatavalues[i].value + "<br/>";
-						}
-					}
-
-					return L.marker([lat,lng], { icon: greenIcon }).bindPopup(popupContent);	
-		
-				},
-		
-				addMarker: function(data,i) {
-					var self = this;
-					var marker = this.getMarker(data);
-					var key = i;	
-					if (!this._layers[key]) {
-							this._layers[key] = marker;
-							this.addLayer(marker);
-					}
-				},
-		
-				parseData: function (data) {
-					for (var i = 0; i < data.length; i++) {
-						this.addMarker(data[i],i);
-					}
-				},
-		
-				clearOutsideBounds: function () {
-					var bounds = this._map.getBounds(),
-						latLng,
-						key;
-		
-					for (key in this._layers) {
-						if (this._layers.hasOwnProperty(key)) {
-							latLng = this._layers[key].getLatLng();
-		
-							if (!bounds.contains(latLng)) {
-								this.removeLayer(this._layers[key]);
-								delete this._layers[key];
-							}
-						}
-					}
-		
-				}
-		
-			}
-		);
-	
-		L.layerGroup.luftdatenLayer = function (options) {
-			return new L.LayerGroup.LuftdatenLayer(options);
-		}
-	
-	},{}],11:[function(require,module,exports){
-
-		L.Icon.OpenSenseIcon = L.Icon.extend({
-			options: {
-				iconUrl: 'https://banner2.kisspng.com/20180409/qcw/kisspng-computer-icons-font-awesome-computer-software-user-cubes-5acb63cb589078.9265215315232787953628.jpg',
-				iconSize: [10,10],
-				popupAnchor: [1, -34]
-			}
-		});
-		
-		L.icon.openSenseIcon = function () {
-			return new L.Icon.OpenSenseIcon();
-		};
-	
-		L.LayerGroup.OpenSenseLayer = L.LayerGroup.extend({
-
-			options: {
-				popupOnMouseover: true,
-				clearOutsideBounds: true
-			},
-		
-			initialize: function (options) {
-				options = options || {};
-				L.Util.setOptions(this, options);
-				this._layers = {};
-			},
-		
-			onAdd: function (map) {
-				this._map = map;
-				this.requestRegionData();
-			},
-		
-			onRemove: function (map) {
-				this.clearLayers();
-				this._layers = {};
-			},
-
-			populatePopUp: function(e){
-				if(e){
-					var popup = e.target.getPopup();
-					var $ = window.jQuery;
-					var url = "https://api.opensensemap.org/boxes/" + e.target.options.boxId ;
-					$.getJSON(url, function (data) {
-						var popUpContent = ""
-						if(data.name && data.grouptag){
-							popUpContent += "<h3>" + data.name + "," + data.grouptag + "</h3>"
-						}
-						else if(data.name){
-							popUpContent += "<h3>" + data.name + "</h3>"
-						}
-						for(var i in data.sensors){
-							if(data.sensors[i].lastMeasurement){
-								popUpContent += "<span><b>" + data.sensors[i].title + ": </b>" + 
-																data.sensors[i].lastMeasurement.value + 
-																data.sensors[i].unit + "</span><br>";
-							}
-						}
-						if(data.lastMeasurementAt){
-							popUpContent += "<br><small>Measured at <i>" + data.lastMeasurementAt + "</i>";
-						}
-						popup.setContent(popUpContent)
-					});
-				}
-			},
-		
-			requestRegionData: function () {
-				var self = this;
-	
-				(function () {
-						var $ = window.jQuery;
-						var url = "https://api.opensensemap.org/boxes";
-	
-						if (typeof self._map.spin === 'function') {
-							self._map.spin(true);
-						}
-						$.getJSON(url, function (records) {
-							self.parseData(records);
-							if (typeof self._map.spin === 'function') {
-								self._map.spin(false);
-							}
-						});
-
-				})();
-			},
-		
-			getMarker: function (data) {
-	
-				var blackCube = new L.icon.openSenseIcon();
-
-				var lat = data.currentLocation.coordinates[1];
-				var lng = data.currentLocation.coordinates[0];
-
-				var loadingText = "Loading ...";
-
-				return L.marker([lat,lng], { icon: blackCube , boxId : data._id }).bindPopup(loadingText);	
-	
-			},
-		
-			addMarker: function(data,i) {
-				var marker = this.getMarker(data);
-				var key = i;	
-				if (!this._layers[key]) {
-						this._layers[key] = marker;
-						marker.on('click',this.populatePopUp);
-						this.addLayer(marker);
-				}
-			},
-		
-			parseData: function (data) {
-				for (var i = 0; i < data.length; i++) {
-					this.addMarker(data[i],i);
-				}
-			},
-		
-			clearOutsideBounds: function () {
-				var bounds = this._map.getBounds(),
-					latLng,
-					key;
-	
-				for (key in this._layers) {
-					if (this._layers.hasOwnProperty(key)) {
-						latLng = this._layers[key].getLatLng();
-	
-						if (!bounds.contains(latLng)) {
-							this.removeLayer(this._layers[key]);
-							delete this._layers[key];
-						}
-					}
-				}
-	
-			}
-		
-		});
-	
-		L.layerGroup.openSenseLayer = function (options) {
-			return new L.LayerGroup.OpenSenseLayer(options);
-		}
-	
-	},{}],12:[function(require,module,exports){
 fracTrackerMobileLayer = function(map) {
   var FracTracker_mobile  = L.esri.featureLayer({
     url: 'https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/FracTrackerMobileAppNPCAMesaVerdeNationalPark_051416/FeatureServer/0/',
@@ -26454,9 +26059,9 @@ fracTrackerMobileLayer = function(map) {
   });
 
   return FracTracker_mobile ;
-}
+};
 
-},{}],13:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 L.Icon.FracTrackerIcon = L.Icon.extend({
    options: {
     iconUrl: 'https://www.clker.com/cliparts/2/3/f/a/11970909781608045989gramzon_Barrel.svg.med.png',
@@ -26500,20 +26105,22 @@ L.LayerGroup.FracTrackerLayer = L.LayerGroup.extend(
         },
 
         requestData: function () {
-            var self = this;
-						(function() { 
-								var $ = window.jQuery;
-								var FracTracker_URL = "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json" ;
-								if(typeof self._map.spin === 'function'){
-										self._map.spin(true) ;
-								}
-								$.getJSON(FracTracker_URL , function(data){
-										self.parseData(data.feed.entry);
-										if(typeof self._map.spin === 'function'){
-											self._map.spin(false) ;
-										}
-								});
-						})();
+           var self = this;
+                (function() {
+                    var $ = window.jQuery;
+                    var FracTracker_URL = "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json" ;
+                    if(typeof self._map.spin === 'function'){
+                        self._map.spin(true) ;
+                    }
+                    $.getJSON(FracTracker_URL , function(data){
+                    self.parseData(data.feed.entry);
+                    if(typeof self._map.spin === 'function'){
+                        self._map.spin(false) ;
+                    }
+                    });
+                })();
+
+
         },
 
         getMarker: function(data) {
@@ -26581,7 +26188,7 @@ L.layerGroup.fracTrackerLayer = function (options) {
     return new L.LayerGroup.FracTrackerLayer(options) ;
 };
 
-},{}],14:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 L.LayerGroup.IndigenousLandsLanguagesLayer = L.LayerGroup.extend(
 
     {
@@ -26620,41 +26227,40 @@ L.LayerGroup.IndigenousLandsLanguagesLayer = L.LayerGroup.extend(
         requestData: function () {
                 var self = this ;
                 (function() {
-                    
                     var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
-										var $ = window.jQuery;
+                    var $ = window.jQuery;
 
-										//Here is the URL that should be for loading 1 region at a time
-										var ILL_url = "https://native-land.ca/api/index.php?maps=languages&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
-										//this url loads all regions at once
-										//var ILL_url = "https://native-land.ca/api/index.php?maps=languages";
-										//Here is the getJSON method designed after the other layers
-										if(typeof self._map.spin === 'function'){
-											self._map.spin(true) ;
-										}
-										$.getJSON(ILL_url , function(data){
-											self.parseData(data) ;
-											if(typeof self._map.spin === 'function'){
-												self._map.spin(false) ;
-											}
-										});
+                    //Here is the URL that should be for loading 1 region at a time
+                    var ILL_url = "https://native-land.ca/api/index.php?maps=languages&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
+                    //this url loads all regions at once
+                    //var ILL_url = "https://native-land.ca/api/index.php?maps=languages";
+                    //Here is the getJSON method designed after the other layers
+                    if(typeof self._map.spin === 'function'){
+                        self._map.spin(true) ;
+                    }
+                    $.getJSON(ILL_url , function(data){
+                        self.parseData(data) ;
+                        if(typeof self._map.spin === 'function'){
+                        self._map.spin(false) ;
+                        }
+                    });
 
-										/*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
-										This does all that parseData does in a much simpler format.*/
+                        /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
+                        This does all that parseData does in a much simpler format.*/
 
-										/*$.getJSON(ILL_url , function(data){
-											function onEachFeature(feature, layer) {
-												layer.bindPopup("<strong>Name : </strong>" + feature.properties.Name + "<br><strong>Description: </strong> <a href=" + feature.properties.description + ">Native Lands - " + feature.properties.Name + "</a><br><i>From the  (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>");
-											}
+                        /*$.getJSON(ILL_url , function(data){
+                          function onEachFeature(feature, layer) {
+                            layer.bindPopup("<strong>Name : </strong>" + feature.properties.Name + "<br><strong>Description: </strong> <a href=" + feature.properties.description + ">Native Lands - " + feature.properties.Name + "</a><br><i>From the  (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>");
+                          }
 
-											function getStyle(feature, layer) {
-												return {
-													"color": feature.properties.color;
-												}
-											}
+                          function getStyle(feature, layer) {
+                            return {
+                              "color": feature.properties.color;
+                            }
+                          }
 
-											self.addLayer(L.geoJSON(data, {style: getStyle, onEachFeature: onEachFeature}));
-										});*/         
+                          self.addLayer(L.geoJSON(data, {style: getStyle, onEachFeature: onEachFeature}));
+                        });*/
                 })();
 
 
@@ -26736,7 +26342,7 @@ L.layerGroup.indigenousLandsLanguagesLayer = function (options) {
     return new L.LayerGroup.IndigenousLandsLanguagesLayer(options);
 };
 
-},{}],15:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 L.LayerGroup.IndigenousLandsTerritoriesLayer = L.LayerGroup.extend(
 
     {
@@ -26775,41 +26381,41 @@ L.LayerGroup.IndigenousLandsTerritoriesLayer = L.LayerGroup.extend(
         requestData: function () {
                 var self = this ;
                 (function() {
-
                     var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
-										var $ = window.jQuery;
+                    var $ = window.jQuery;
 
-										//Here is the URL that should be for loading 1 region at a time
-										var ILT_url = "https://native-land.ca/api/index.php?maps=territories&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
-										//this url loads all regions at once
-										//var ILT_url = "https://native-land.ca/api/index.php?maps=territories";
-										//Here is the getJSON method designed after the other layers
-										if(typeof self._map.spin === 'function'){
-											self._map.spin(true) ;
-										}
-										$.getJSON(ILT_url , function(data){
-											self.parseData(data) ;
-											if(typeof self._map.spin === 'function'){
-												self._map.spin(false) ;
-											}
-										});
+                    //Here is the URL that should be for loading 1 region at a time
+                    var ILT_url = "https://native-land.ca/api/index.php?maps=territories&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
+                    //this url loads all regions at once
+                    //var ILT_url = "https://native-land.ca/api/index.php?maps=territories";
+                    //Here is the getJSON method designed after the other layers
+                    if(typeof self._map.spin === 'function'){
+                        self._map.spin(true) ;
+                    }
+                    $.getJSON(ILT_url , function(data){
+                        self.parseData(data) ;
+                        if(typeof self._map.spin === 'function'){
+                        self._map.spin(false) ;
+                        }
+                    });
 
-										/*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
-										This does all that parseData does in a much simpler format.*/
+                    /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
+                    This does all that parseData does in a much simpler format.*/
 
-										/*$.getJSON(ILT_url , function(data){
-											function onEachFeature(feature, layer) {
-												layer.bindPopup("<strong>Name : </strong>" + feature.properties.Name + "<br><strong>Description: </strong> <a href=" + feature.properties.description + ">Native Lands - " + feature.properties.Name + "</a><br><i>From the <a href=https://github.com/publiclab/leaflet-environmental-layers/pull/77>Indigenous Territories Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>");
-											}
+                    /*$.getJSON(ILT_url , function(data){
+                        function onEachFeature(feature, layer) {
+                        layer.bindPopup("<strong>Name : </strong>" + feature.properties.Name + "<br><strong>Description: </strong> <a href=" + feature.properties.description + ">Native Lands - " + feature.properties.Name + "</a><br><i>From the <a href=https://github.com/publiclab/leaflet-environmental-layers/pull/77>Indigenous Territories Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>");
+                        }
 
-											function getStyle(feature, layer) {
-												return {
-													"color": feature.properties.color;
-												}
-											}
+                        function getStyle(feature, layer) {
+                        return {
+                            "color": feature.properties.color;
+                        }
+                        }
 
-											self.addLayer(L.geoJSON(data, {style: getStyle, onEachFeature: onEachFeature}));
-										});*/
+                        self.addLayer(L.geoJSON(data, {style: getStyle, onEachFeature: onEachFeature}));
+                    });*/
+
                 })();
 
 
@@ -26891,7 +26497,7 @@ L.layerGroup.indigenousLandsTerritoriesLayer = function (options) {
     return new L.LayerGroup.IndigenousLandsTerritoriesLayer(options);
 };
 
-},{}],16:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 L.LayerGroup.IndigenousLandsTreatiesLayer = L.LayerGroup.extend(
 
     {
@@ -26931,39 +26537,40 @@ L.LayerGroup.IndigenousLandsTreatiesLayer = L.LayerGroup.extend(
                 var self = this ;
                 (function() {
                     var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
-										var $ = window.jQuery;
+                    var $ = window.jQuery;
 
-										//Here is the URL that should be for loading 1 region at a time
-										var ILTr_url = "https://native-land.ca/api/index.php?maps=treaties&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
-										//this url loads all regions at once
-										//var ILTr_url = "https://native-land.ca/api/index.php?maps=treaties";
-										//Here is the getJSON method designed after the other layers
-										if(typeof self._map.spin === 'function'){
-											self._map.spin(true) ;
-										}
-										$.getJSON(ILTr_url , function(data){
-											self.parseData(data) ;
-											if(typeof self._map.spin === 'function'){
-												self._map.spin(false) ;
-											}
-										});
+                    //Here is the URL that should be for loading 1 region at a time
+                    var ILTr_url = "https://native-land.ca/api/index.php?maps=treaties&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
+                    //this url loads all regions at once
+                    //var ILTr_url = "https://native-land.ca/api/index.php?maps=treaties";
+                    //Here is the getJSON method designed after the other layers
+                    if(typeof self._map.spin === 'function'){
+                        self._map.spin(true) ;
+                    }
+                    $.getJSON(ILTr_url , function(data){
+                        self.parseData(data) ;
+                        if(typeof self._map.spin === 'function'){
+                        self._map.spin(false) ;
+                        }
+                    });
 
-										/*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
-										This does all that parseData does in a much simpler format.*/
+                    /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
+                    This does all that parseData does in a much simpler format.*/
 
-										/*$.getJSON(ILTr_url , function(data){
-											function onEachFeature(feature, layer) {
-												layer.bindPopup("<strong>Name : </strong>" + feature.properties.Name + "<br><strong>Description: </strong> <a href=" + feature.properties.description + ">Native Lands - " + feature.properties.Name + "</a><br><i>From the  (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>");
-											}
+                    /*$.getJSON(ILTr_url , function(data){
+                        function onEachFeature(feature, layer) {
+                        layer.bindPopup("<strong>Name : </strong>" + feature.properties.Name + "<br><strong>Description: </strong> <a href=" + feature.properties.description + ">Native Lands - " + feature.properties.Name + "</a><br><i>From the  (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>");
+                        }
 
-											function getStyle(feature, layer) {
-												return {
-													"color": feature.properties.color;
-												}
-											}
+                        function getStyle(feature, layer) {
+                        return {
+                            "color": feature.properties.color;
+                        }
+                        }
 
-											self.addLayer(L.geoJSON(data, {style: getStyle, onEachFeature: onEachFeature}));
-										});*/
+                        self.addLayer(L.geoJSON(data, {style: getStyle, onEachFeature: onEachFeature}));
+                    });*/
+
                 })();
 
 
@@ -27044,7 +26651,7 @@ L.layerGroup.indigenousLandsTreatiesLayer = function (options) {
     return new L.LayerGroup.IndigenousLandsTreatiesLayer(options);
 };
 
-},{}],17:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 require('jquery') ;
 require('leaflet') ;
 
@@ -27062,13 +26669,136 @@ require('./indigenousLandsLanguagesLayer.js');
 require('./indigenousLandsTreatiesLayer.js') ;
 require('./aqicnLayer.js');
 require('./openaqLayer.js');
-require('./luftdatenLayer.js')
-require('./openSenseLayer.js');
 require('./osmLandfillMineQuarryLayer.js');
 require('./wisconsinLayer.js');
 require('./fracTrackerMobileLayer.js');
+require('./luftdatenLayer.js');
+require('./openSenseLayer.js');
+},{"./aqicnLayer.js":8,"./fracTrackerMobileLayer.js":9,"./fractracker.js":10,"./indigenousLandsLanguagesLayer.js":11,"./indigenousLandsTerritoriesLayer.js":12,"./indigenousLandsTreatiesLayer.js":13,"./luftdatenLayer.js":15,"./mapKnitterLayer.js":16,"./odorReportLayer.js":17,"./openSenseLayer.js":18,"./openWeatherMapLayer.js":19,"./openaqLayer.js":20,"./osmLandfillMineQuarryLayer.js":21,"./purpleAirMarkerLayer.js":22,"./purpleLayer.js":23,"./skyTruthLayer.js":24,"./toxicReleaseLayer.js":25,"./wisconsinLayer.js":29,"jquery":2,"leaflet":6,"leaflet-providers":5}],15:[function(require,module,exports){
+L.Icon.LuftdatenIcon = L.Icon.extend({
+  options: {
+    iconUrl: 'http://www.myiconfinder.com/uploads/iconsets/256-256-82a679a558f2fe4c3964c4123343f844.png',
+    iconSize: [15, 30],
+    iconAnchor: [6, 21],
+    popupAnchor: [1, -34]
+  }
+});
 
-},{"./aqicnLayer.js":8,"./openaqLayer.js":9,"./luftdatenLayer.js":10,"./openSenseLayer.js":11,"./fracTrackerMobileLayer.js":12,"./fractracker.js":13,"./indigenousLandsLanguagesLayer.js":14,"./indigenousLandsTerritoriesLayer.js":15,"./indigenousLandsTreatiesLayer.js":16,"./mapKnitterLayer.js":18,"./odorReportLayer.js":19,"./openWeatherMapLayer.js":20,"./osmLandfillMineQuarryLayer.js":21,"./purpleAirMarkerLayer.js":22,"./purpleLayer.js":23,"./skyTruthLayer.js":24,"./toxicReleaseLayer.js":25,"./wisconsinLayer.js":29,"jquery":2,"leaflet":6,"leaflet-providers":5}],18:[function(require,module,exports){
+L.icon.luftdatenIcon = function () {
+  return new L.Icon.LuftdatenIcon();
+};
+
+L.LayerGroup.LuftdatenLayer = L.LayerGroup.extend(
+	
+  {
+    options: {
+      popupOnMouseover: true,
+      clearOutsideBounds: true
+    },
+
+    initialize: function (options) {
+      options = options || {};
+      L.Util.setOptions(this, options);
+      this._layers = {};
+    },
+
+    onAdd: function (map) {
+      map.on('moveend', this.requestRegionData, this);
+      this._map = map;
+      this.requestRegionData();
+    },
+
+    onRemove: function (map) {
+      map.off('moveend', this.requestRegionData, this);
+      this.clearLayers();
+      this._layers = {};
+    },
+
+    requestRegionData: function () {
+      var self = this;
+
+      (function () {
+          var $ = window.jQuery;
+          var url = "https://maps.luftdaten.info/data/v2/data.dust.min.json";
+
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(true);
+          }
+          $.getJSON(url, function (records) {
+            self.parseData(records);
+            if (typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            }
+          });
+      })();
+    },
+
+    getMarker: function (data) {
+
+      var greenIcon = new L.icon.luftdatenIcon();
+      var country = data.location.country;
+      var lng = data.location.longitude;
+      var lat = data.location.latitude;
+      var sensorID = data.sensor.id;
+      var popupContent = "";
+
+      if(country){
+        popupContent += "<h3>Country: " + country + "</h3>";
+      }
+      if(sensorID){
+        popupContent += "<h4><b>Sensor ID: </b>" + sensorID + "</h4>";
+      }
+      if(data.sensordatavalues.length > 0){
+        for(let i in data.sensordatavalues){
+          popupContent += "<b>" + data.sensordatavalues[i].value_type + "</b>: " + data.sensordatavalues[i].value + "<br/>";
+        }
+      }
+
+      return L.marker([lat,lng], { icon: greenIcon }).bindPopup(popupContent);	
+
+    },
+
+    addMarker: function(data,i) {
+      var self = this;
+      var marker = this.getMarker(data);
+      var key = i;	
+      if (!this._layers[key]) {
+          this._layers[key] = marker;
+          this.addLayer(marker);
+      }
+    },
+
+    parseData: function (data) {
+      for (var i = 0; i < data.length; i++) {
+        this.addMarker(data[i],i);
+      }
+    },
+
+    clearOutsideBounds: function () {
+      var bounds = this._map.getBounds(),
+        latLng,
+        key;
+
+      for (key in this._layers) {
+        if (this._layers.hasOwnProperty(key)) {
+          latLng = this._layers[key].getLatLng();
+
+          if (!bounds.contains(latLng)) {
+            this.removeLayer(this._layers[key]);
+            delete this._layers[key];
+          }
+        }
+      }
+
+    }
+
+  }
+);
+
+L.layerGroup.luftdatenLayer = function (options) {
+  return new L.LayerGroup.LuftdatenLayer(options);
+};
+},{}],16:[function(require,module,exports){
  L.Icon.MapKnitterIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -27117,21 +26847,21 @@ L.LayerGroup.MapKnitterLayer = L.LayerGroup.extend(
         },
 
         requestData: function () {
-          var self = this;
-					(function() {
-							var zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
-							var $ = window.jQuery;
-							var MapKnitter_url = "https://mapknitter.org/map/region/Gulf-Coast.json?minlon="+(southwest.lng)+"&minlat="+(southwest.lat)+"&maxlon="+(northeast.lng)+"&maxlat="+(northeast.lat);
-							if(typeof self._map.spin === 'function'){
-								self._map.spin(true) ;
-							}
-							$.getJSON(MapKnitter_url , function(data){
-									self.parseData(data) ;
-									if(typeof self._map.spin === 'function'){
-										self._map.spin(false) ;
-									}
-							});
-					})();
+           var self = this;
+                (function() {
+                    var zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
+                    var $ = window.jQuery;
+                    var MapKnitter_url = "https://mapknitter.org/map/region/Gulf-Coast.json?minlon="+(southwest.lng)+"&minlat="+(southwest.lat)+"&maxlon="+(northeast.lng)+"&maxlat="+(northeast.lat);
+                    if(typeof self._map.spin === 'function'){
+                        self._map.spin(true) ;
+                    }
+                    $.getJSON(MapKnitter_url , function(data){
+                            self.parseData(data) ;
+                        if(typeof self._map.spin === 'function'){
+                            self._map.spin(false) ;
+                        }
+                    });
+                })();
 
 
         },
@@ -27148,7 +26878,7 @@ L.LayerGroup.MapKnitterLayer = L.LayerGroup.extend(
               var map_page = "https://mapknitter.org/maps/"+ title ;
               var mapknitter ;
               if (!isNaN(lat) && !isNaN(lng) ){
-                mapknitter = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup("<strong>Title : </strong>"+ "<a href=" + map_page + ">" + title + "</a>" + "<br><strong>Author :</strong> " + "<a href="+url+">"  +  author +"</a>" + "<br><strong>Location : </strong>" + location  + "<br><strong> Lat : </strong>" + lat + "  ,  <strong> Lon : </strong>" + lng +"<br><i>For more info on <a href='https://github.com/publiclab/leaflet-environmental-layers/issues/10'>MapKnitter Layer</a>, visit <a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>here<a></i>" ) ;
+                mapknitter = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup("<strong>Title : </strong>"+ "<a href=" + map_page + ">" + title + "</a>" + "<br><strong>Author :</strong> " + "<a href="+url+">"  +  author +"</a>" + "<br><strong>Location : </strong>" + location  + "<br><strong> Lat : </strong>" + lat + "  ,  <strong> Lon : </strong>" + lng +"<br><i>For more info on <a href='https://github.com/publiclab/leaflet-environmental-layers/issues/10'>MapKnitter Layer</a>, visit <a href='https://mapknitter.org/'>here<a></i>" ) ;
               }
             return mapknitter ;
         },
@@ -27200,7 +26930,7 @@ L.layerGroup.mapKnitterLayer = function (options) {
     return new L.LayerGroup.MapKnitterLayer(options) ;
 };
 
-},{}],19:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 L.Icon.OdorReportIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://www.clker.com/cliparts/T/3/6/T/S/8/ink-splash-md.png',
@@ -27250,17 +26980,17 @@ L.LayerGroup.OdorReportLayer = L.LayerGroup.extend(
            var self = this;
                 (function() {
                     var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
-										var $ = window.jQuery;
-										var OdorReport_url = "https://odorlog.api.ushahidi.io/api/v3/posts/" ;
-										if(typeof self._map.spin === 'function'){
-											self._map.spin(true) ;
-										}
-										$.getJSON(OdorReport_url , function(data){
-												self.parseData(data) ;
-												if(typeof self._map.spin === 'function'){
-													self._map.spin(false) ;
-												}
-										});
+                    var $ = window.jQuery;
+                    var OdorReport_url = "https://odorlog.api.ushahidi.io/api/v3/posts/" ;
+                    if(typeof self._map.spin === 'function'){
+                        self._map.spin(true) ;
+                    }
+                    $.getJSON(OdorReport_url , function(data){
+                        self.parseData(data) ;
+                        if(typeof self._map.spin === 'function'){
+                            self._map.spin(false) ;
+                        }
+                    });
                 })();
 
 
@@ -27327,7 +27057,143 @@ L.layerGroup.odorReportLayer = function (options) {
     return new L.LayerGroup.OdorReportLayer(options);
 };
 
-},{}],20:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
+L.Icon.OpenSenseIcon = L.Icon.extend({
+  options: {
+    iconUrl: 'https://banner2.kisspng.com/20180409/qcw/kisspng-computer-icons-font-awesome-computer-software-user-cubes-5acb63cb589078.9265215315232787953628.jpg',
+    iconSize: [10, 10],
+    popupAnchor: [1, -34]
+  }
+});
+
+L.icon.openSenseIcon = function () {
+  return new L.Icon.OpenSenseIcon();
+};
+
+L.LayerGroup.OpenSenseLayer = L.LayerGroup.extend({
+
+  options: {
+    popupOnMouseover: true,
+    clearOutsideBounds: true
+  },
+
+  initialize: function (options) {
+    options = options || {};
+    L.Util.setOptions(this, options);
+    this._layers = {};
+  },
+
+  onAdd: function (map) {
+    this._map = map;
+    this.requestRegionData();
+  },
+
+  onRemove: function (map) {
+    this.clearLayers();
+    this._layers = {};
+  },
+
+  populatePopUp: function (e) {
+    if (e) {
+      var popup = e.target.getPopup();
+      var $ = window.jQuery;
+      var url = "https://api.opensensemap.org/boxes/" + e.target.options.boxId;
+      $.getJSON(url, function (data) {
+        var popUpContent = "";
+        if (data.name && data.grouptag) {
+          popUpContent += "<h3>" + data.name + "," + data.grouptag + "</h3>";
+        }
+        else if (data.name) {
+          popUpContent += "<h3>" + data.name + "</h3>";
+        }
+        for (var i in data.sensors) {
+          if (data.sensors[i].lastMeasurement) {
+            popUpContent += "<span><b>" + data.sensors[i].title + ": </b>" +
+              data.sensors[i].lastMeasurement.value +
+              data.sensors[i].unit + "</span><br>";
+          }
+        }
+        if (data.lastMeasurementAt) {
+          popUpContent += "<br><small>Measured at <i>" + data.lastMeasurementAt + "</i>";
+        }
+        popup.setContent(popUpContent);
+      });
+    }
+  },
+
+  requestRegionData: function () {
+    var self = this;
+
+    (function () {
+      var $ = window.jQuery;
+      var url = "https://api.opensensemap.org/boxes";
+
+      if (typeof self._map.spin === 'function') {
+        self._map.spin(true);
+      }
+      $.getJSON(url, function (records) {
+        self.parseData(records);
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(false);
+        }
+      });
+
+    })();
+  },
+
+  getMarker: function (data) {
+
+    var blackCube = new L.icon.openSenseIcon();
+
+    var lat = data.currentLocation.coordinates[1];
+    var lng = data.currentLocation.coordinates[0];
+
+    var loadingText = "Loading ...";
+
+    return L.marker([lat, lng], { icon: blackCube, boxId: data._id }).bindPopup(loadingText);
+
+  },
+
+  addMarker: function (data, i) {
+    var marker = this.getMarker(data);
+    var key = i;
+    if (!this._layers[key]) {
+      this._layers[key] = marker;
+      marker.on('click', this.populatePopUp);
+      this.addLayer(marker);
+    }
+  },
+
+  parseData: function (data) {
+    for (var i = 0; i < data.length; i++) {
+      this.addMarker(data[i], i);
+    }
+  },
+
+  clearOutsideBounds: function () {
+    var bounds = this._map.getBounds(),
+      latLng,
+      key;
+
+    for (key in this._layers) {
+      if (this._layers.hasOwnProperty(key)) {
+        latLng = this._layers[key].getLatLng();
+
+        if (!bounds.contains(latLng)) {
+          this.removeLayer(this._layers[key]);
+          delete this._layers[key];
+        }
+      }
+    }
+
+  }
+
+});
+
+L.layerGroup.openSenseLayer = function (options) {
+  return new L.LayerGroup.OpenSenseLayer(options);
+};
+},{}],19:[function(require,module,exports){
 L.OWM = L.TileLayer.extend({
 	options: {
 		appId: '4c6704566155a7d0d5d2f107c5156d6e', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
@@ -27490,7 +27356,7 @@ L.OWM.LegendControl = L.Control.extend({
 		this._container = L.DomUtil.create('div', 'owm-legend-container');
 		this._container.style.display = 'none';
 		this._legendCounter = 0;
-		this._legendContainer = new Array();
+		this._legendContainer = [];
 	},
 
 	onAdd: function(map) {
@@ -27591,7 +27457,7 @@ L.OWM.Current = L.Layer.extend({
 		this._layer = L.layerGroup();
 		this._timeoutId = null;
 		this._requests = {};
-		this._markers = new Array();
+		this._markers = [];
 		this._markedMarker = null;
 		this._map = null;
 		this._urlTemplate = 'https://api.openweathermap.org/data/2.5/box/{type}?{appId}cnt=300&format=json&units=metric&bbox={minlon},{minlat},{maxlon},{maxlat},10';
@@ -27606,14 +27472,14 @@ L.OWM.Current = L.Layer.extend({
 			} else {
 				bgIcon = this.options.imageUrlCity.replace('{icon}', '10d');
 				if (this.options.type != 'city') {
-					var bgIcon = this.options.imageUrlStation;
+					bgIcon = this.options.imageUrlStation;
 				}
 			}
 			this._progressCtrl = L.OWM.progressControl({
-					type: this.options.type
-					, bgImage: bgIcon
-					, imageLoadingUrl: this.options.imageLoadingUrl
-					, owmInstance: this
+					type: this.options.type,
+					bgImage: bgIcon,
+					imageLoadingUrl: this.options.imageLoadingUrl,
+					owmInstance: this
 			});
 		}
 		this._cache = L.OWM.currentCache({ maxAge: this.options.cacheMaxAge });
@@ -27649,8 +27515,8 @@ L.OWM.Current = L.Layer.extend({
 	},
 
 	getAttribution: function() {
-		return 'Weather from <a href="https://openweathermap.org/" '
-			+ 'alt="World Map and worldwide Weather Forecast online">OpenWeatherMap</a>';
+		return 'Weather from <a href="https://openweathermap.org/" ' +
+		'alt="World Map and worldwide Weather Forecast online">OpenWeatherMap</a>';
 	},
 
 	update: function() {
@@ -27709,12 +27575,12 @@ L.OWM.Current = L.Layer.extend({
 				if (_this.options.caching) {
 					_this._cache.set(data, _this._map.getBounds());
 				}
-				_this._processRequestedData(_this, typeof data.list == 'undefined' ? new Array() : data.list);
+				_this._processRequestedData(_this, typeof data.list == 'undefined' ? [[]] : data.list);
 				_this.fire('owmloadingend', {type: _this.options.type});
 			});
 		}
 		if (this.options.interval && this.options.interval > 0) {
-			this._timeoutId = window.setTimeout(function() {_this.update()}, 60000*this.options.interval);
+			this._timeoutId = window.setTimeout(function() {_this.update();}, 60000*this.options.interval);
 		}
 	},
 
@@ -27746,7 +27612,7 @@ L.OWM.Current = L.Layer.extend({
 		_this._layer.clearLayers();
 
 		// add the cities as markers to the LayerGroup
-		_this._markers = new Array();
+		_this._markers = [];
 		for (var key in stations) {
 			var marker;
 			if (_this.options.markerFunction != null && typeof _this.options.markerFunction == 'function') {
@@ -27764,9 +27630,9 @@ L.OWM.Current = L.Layer.extend({
 					marker.bindPopup(_this._createPopup(stations[key]));
 				}
 			}
-			if (markerWithPopup != null
-					&& typeof markerWithPopup.options.owmId != 'undefined'
-					&& markerWithPopup.options.owmId == marker.options.owmId) {
+			if (markerWithPopup != null && 
+				typeof markerWithPopup.options.owmId != 'undefined'&& 
+				markerWithPopup.options.owmId == marker.options.owmId) {
 				markerWithPopup = marker;
 			}
 		}
@@ -27799,8 +27665,8 @@ L.OWM.Current = L.Layer.extend({
 			if (typeof station.weather != 'undefined') {
 				typ = 'city';
 			}
-			txt += '<a href="https://openweathermap.org/' + typ + '/' + station.id + '" target="_blank" title="'
-				+ this.i18n('owmlinktitle', 'Details at OpenWeatherMap') + '">';
+			txt += '<a href="https://openweathermap.org/' + typ + '/' + station.id + '" target="_blank" title="' + 
+			this.i18n('owmlinktitle', 'Details at OpenWeatherMap') + '">';
 		}
 		txt += station.name;
 		if (showLink) {
@@ -27809,78 +27675,78 @@ L.OWM.Current = L.Layer.extend({
 		txt += '</div>';
 		if (typeof station.weather != 'undefined' && typeof station.weather[0] != 'undefined') {
 			if (typeof station.weather[0].description != 'undefined' && typeof station.weather[0].id != 'undefined') {
-				txt += '<div class="owm-popup-description">'
-					+ this.i18n('id'+station.weather[0].id, station.weather[0].description + ' (' + station.weather[0].id + ')')
-					+ '</div>';
+				txt += '<div class="owm-popup-description">' + 
+				this.i18n('id'+station.weather[0].id, station.weather[0].description + 
+				' (' + station.weather[0].id + ')') + '</div>';
 			}
 		}
 		var imgData = this._getImageData(station);
-		txt += '<div class="owm-popup-main"><img src="' + imgData.url + '" width="' + imgData.width
-				+ '" height="' + imgData.height + '" border="0" />';
+		txt += '<div class="owm-popup-main"><img src="' + imgData.url + '" width="' + imgData.width + 
+		'" height="' + imgData.height + '" border="0" />';
 		if (typeof station.main != 'undefined' && typeof station.main.temp != 'undefined') {
-			txt += '<span class="owm-popup-temp">' + this._temperatureConvert(station.main.temp)
-				+ '&nbsp;' + this._displayTemperatureUnit() + '</span>';
+			txt += '<span class="owm-popup-temp">' + this._temperatureConvert(station.main.temp) + 
+			'&nbsp;' + this._displayTemperatureUnit() + '</span>';
 		}
 		txt += '</div>';
 		txt += '<div class="owm-popup-details">';
 		if (typeof station.main != 'undefined') {
 			if (typeof station.main.humidity != 'undefined') {
-				txt += '<div class="owm-popup-detail">'
-					+ this.i18n('humidity', 'Humidity')
-					+ ': ' + station.main.humidity + '&nbsp;%</div>';
+				txt += '<div class="owm-popup-detail">' + 
+				this.i18n('humidity', 'Humidity') + ': ' + 
+				station.main.humidity + '&nbsp;%</div>';
 			}
 			if (typeof station.main.pressure != 'undefined') {
-				txt += '<div class="owm-popup-detail">'
-					+ this.i18n('pressure', 'Pressure')
-					+ ': ' + station.main.pressure + '&nbsp;hPa</div>';
+				txt += '<div class="owm-popup-detail">' + 
+				this.i18n('pressure', 'Pressure')+ 
+				': ' + station.main.pressure + '&nbsp;hPa</div>';
 			}
 			if (this.options.showTempMinMax) {
 				if (typeof station.main.temp_max != 'undefined' && typeof station.main.temp_min != 'undefined') {
-					txt += '<div class="owm-popup-detail">'
-						+ this.i18n('temp_minmax', 'Temp. min/max')
-						+ ': '
-							+ this._temperatureConvert(station.main.temp_min)
-						+ '&nbsp;/&nbsp;'
-						+ this._temperatureConvert(station.main.temp_max)
-						+ '&nbsp;' + this._displayTemperatureUnit() + '</div>';
+					txt += '<div class="owm-popup-detail">' + 
+					this.i18n('temp_minmax', 'Temp. min/max') + 
+					': ' + 
+					this._temperatureConvert(station.main.temp_min) + 
+					'&nbsp;/&nbsp;' + 
+					this._temperatureConvert(station.main.temp_max) + 
+					'&nbsp;' + this._displayTemperatureUnit() + '</div>';
 				}
 			}
 		}
 		if (station.rain != null && typeof station.rain != 'undefined' && typeof station.rain['1h'] != 'undefined') {
-			txt += '<div class="owm-popup-detail">'
-				+ this.i18n('rain_1h', 'Rain (1h)')
-				+ ': ' + station.rain['1h'] + '&nbsp;ml</div>';
+			txt += '<div class="owm-popup-detail">' + 
+			this.i18n('rain_1h', 'Rain (1h)') +
+			 ': ' + station.rain['1h'] + '&nbsp;ml</div>';
 		}
 		if (typeof station.wind != 'undefined') {
 			if (typeof station.wind.speed != 'undefined') {
 				txt += '<div class="owm-popup-detail">';
 				if (this.options.showWindSpeed == 'beaufort' || this.options.showWindSpeed == 'both') {
-					txt += this.i18n('windforce', 'Wind Force')
-						+ ': ' + this._windMsToBft(station.wind.speed);
+					txt += this.i18n('windforce', 'Wind Force') + 
+					': ' + this._windMsToBft(station.wind.speed);
 					if (this.options.showWindSpeed == 'both') {
-						txt += '&nbsp;(' + this._convertSpeed(station.wind.speed) + '&nbsp;'
-							+ this._displaySpeedUnit() + ')';
+						txt += '&nbsp;(' + this._convertSpeed(station.wind.speed) + '&nbsp;' + 
+						this._displaySpeedUnit() + ')';
 					}
 				} else {
-					txt += this.i18n('wind', 'Wind') + ': '
-						+ this._convertSpeed(station.wind.speed) + '&nbsp;'
-						+ this._displaySpeedUnit();
+					txt += this.i18n('wind', 'Wind') + ': ' + 
+					this._convertSpeed(station.wind.speed) + '&nbsp;' + 
+					this._displaySpeedUnit();
 				}
 				txt += '</div>';
 			}
 			if (typeof station.wind.gust != 'undefined') {
 				txt += '<div class="owm-popup-detail">';
 				if (this.options.showWindSpeed == 'beaufort' || this.options.showWindSpeed == 'both') {
-					txt += this.i18n('gust', 'Gust')
-						+ ': ' + this._windMsToBft(station.wind.gust);
+					txt += this.i18n('gust', 'Gust') + 
+					': ' + this._windMsToBft(station.wind.gust);
 					if (this.options.showWindSpeed == 'both') {
-						txt += '&nbsp;(' + this._convertSpeed(station.wind.gust) + '&nbsp;'
-							+ this._displaySpeedUnit() + ')';
+						txt += '&nbsp;(' + this._convertSpeed(station.wind.gust) + '&nbsp;' + 
+						this._displaySpeedUnit() + ')';
 					}
 				} else {
-					txt += this.i18n('gust', 'Gust') + ': '
-						+ this._convertSpeed(station.wind.gust) + '&nbsp;'
-						+ this._displaySpeedUnit();
+					txt += this.i18n('gust', 'Gust') + ': ' + 
+					this._convertSpeed(station.wind.gust) + '&nbsp;' + 
+					this._displaySpeedUnit();
 				}
 				txt += '</div>';
 			}
@@ -27929,10 +27795,10 @@ L.OWM.Current = L.Layer.extend({
 	_createMarker: function(station) {
 		var imageData = this._getImageData(station);
 		var icon = L.divIcon({
-						className: ''
-						, iconAnchor: new L.Point(25, imageData.height/2)
-						, popupAnchor: new L.Point(0, -10)
-						, html: this._icondivtext(station, imageData.url, imageData.width, imageData.height)
+						className: '',
+						iconAnchor: new L.Point(25, imageData.height/2),
+						popupAnchor: new L.Point(0, -10),
+						html: this._icondivtext(station, imageData.url, imageData.width, imageData.height)
 					});
 		var marker = L.marker([station.coord.Lat, station.coord.Lon], {icon: icon});
 		return marker;
@@ -27940,11 +27806,11 @@ L.OWM.Current = L.Layer.extend({
 
 	_icondivtext: function(station, imageurl, width, height) {
 		var txt = '';
-		txt += '<div class="owm-icondiv">'
-			+ '<img src="' + imageurl + '" border="0" width="' + width + '" height="' + height + '" />';
+		txt += '<div class="owm-icondiv">' + 
+		'<img src="' + imageurl + '" border="0" width="' + width + '" height="' + height + '" />';
 		if (typeof station.main != 'undefined' && typeof station.main.temp != 'undefined') {
-			txt += '<div class="owm-icondiv-temp">' + this._temperatureConvert(station.main.temp)
-				+ '&nbsp;' + this._displayTemperatureUnit() + '</div>';
+			txt += '<div class="owm-icondiv-temp">' + this._temperatureConvert(station.main.temp) + 
+			'&nbsp;' + this._displayTemperatureUnit() + '</div>';
 		}
 		txt += '</div>';
 		return txt;
@@ -27988,10 +27854,10 @@ L.OWM.Current = L.Layer.extend({
 		var unit = 'm/s';
 		switch (this.options.speedUnit) {
 			case 'kmh':
-				unit = 'km/h'
+				unit = 'km/h';
 				break;
 			case 'mph':
-				unit = 'mph'
+				unit = 'mph';
 				break;
 		}
 		return unit;
@@ -28020,10 +27886,10 @@ L.OWM.Current = L.Layer.extend({
 
 	i18n: function(key, fallback) {
 		var lang = this.options.lang;
-		if (typeof L.OWM.Utils.i18n != 'undefined'
-				&& typeof L.OWM.Utils.i18n[lang] != 'undefined'
-				&& typeof L.OWM.Utils.i18n[lang][key] != 'undefined') {
-			return  L.OWM.Utils.i18n[lang][key]
+		if (typeof L.OWM.Utils.i18n != 'undefined' && 
+		typeof L.OWM.Utils.i18n[lang] != 'undefined' && 
+		typeof L.OWM.Utils.i18n[lang][key] != 'undefined') {
+			return  L.OWM.Utils.i18n[lang][key];
 		}
 		return fallback;
 	}
@@ -28115,7 +27981,7 @@ L.OWM.CurrentCache = L.Class.extend({
 		}
 
 		// clip cached data to bounds
-		var clippedStations = new Array();
+		var clippedStations = [];
 		var cnt = 0;
 		for (var k in this._cachedData.list) {
 			var station = this._cachedData.list[k];
@@ -28170,739 +28036,813 @@ L.OWM.Utils = {
 
 	i18n: {
 		en: {
-			owmlinktitle: 'Details at OpenWeatherMap'
-			, temperature: 'Temperature'
-			, temp_minmax: 'Temp. min/max'
-			, wind: 'Wind'
-			, gust: 'Gust'
-			, windforce: 'Wind Force'
-			, direction: 'Direction'
-			, rain_1h: 'Rain'
-			, humidity: 'Humidity'
-			, pressure: 'Pressure'
+			owmlinktitle: 'Details at OpenWeatherMap', 
+			temperature: 'Temperature', 
+			temp_minmax: 'Temp. min/max', 
+			wind: 'Wind', 
+			gust: 'Gust', 
+			windforce: 'Wind Force', 
+			direction: 'Direction', 
+			rain_1h: 'Rain', 
+			humidity: 'Humidity', 
+			pressure: 'Pressure',
 
-		// weather conditions, see https://openweathermap.org/weather-conditions
-			, id200: 'Thunderstorm with Light Rain'
-			, id201: 'Thunderstorm with Rain'
-			, id202: 'Thunderstorm with Heavy Rain'
-			, id210: 'Light Thunderstorm'
-			, id211: 'Thunderstorm'
-			, id212: 'Heavy Thunderstorm'
-			, id221: 'Ragged Thunderstorm'
-			, id230: 'Thunderstorm with Light Drizzle'
-			, id231: 'Thunderstorm with Drizzle'
-			, id232: 'Thunderstorm with Heavy Drizzle'
+			// weather conditions, see https://openweathermap.org/weather-conditions
+			id200: 'Thunderstorm with Light Rain',
+			id201: 'Thunderstorm with Rain',
+			id202: 'Thunderstorm with Heavy Rain', 
+			id210: 'Light Thunderstorm', 
+			id211: 'Thunderstorm', 
+			id212: 'Heavy Thunderstorm', 
+			id221: 'Ragged Thunderstorm', 
+			id230: 'Thunderstorm with Light Drizzle', 
+			id231: 'Thunderstorm with Drizzle', 
+			id232: 'Thunderstorm with Heavy Drizzle',
 
-			, id300: 'Light Intensity Drizzle'
-			, id301: 'Drizzle'
-			, id302: 'Heavy Intensity Drizzle'
-			, id310: 'Light Intensity Drizzle Rain'
-			, id311: 'Drizzle Rain'
-			, id312: 'Heavy Intensity Drizzle Rain'
-			, id321: 'Shower Drizzle'
+			id300: 'Light Intensity Drizzle', 
+			id301: 'Drizzle', 
+			id302: 'Heavy Intensity Drizzle', 
+			id310: 'Light Intensity Drizzle Rain', 
+			id311: 'Drizzle Rain', 
+			id312: 'Heavy Intensity Drizzle Rain', 
+			id321: 'Shower Drizzle',
 
-			, id500: 'Light Rain'
-			, id501: 'Moderate Rain'
-			, id502: 'Heavy Intensity Rain'
-			, id503: 'Very Heavy Rain'
-			, id504: 'Extreme Rain'
-			, id511: 'Freezing Rain'
-			, id520: 'Light Intensity Shower Rain'
-			, id521: 'Shower Rain'
-			, id522: 'Heavy Intensity Shower Rain'
+			id500: 'Light Rain', 
+			id501: 'Moderate Rain', 
+			id502: 'Heavy Intensity Rain', 
+			id503: 'Very Heavy Rain', 
+			id504: 'Extreme Rain', 
+			id511: 'Freezing Rain', 
+			id520: 'Light Intensity Shower Rain', 
+			id521: 'Shower Rain', 
+			id522: 'Heavy Intensity Shower Rain',
 
-			, id600: 'Light Snow'
-			, id601: 'Snow'
-			, id602: 'Heavy Snow'
-			, id611: 'Sleet'
-			, id621: 'Shower Snow'
-			, id622: 'Heavy Shower Snow'
+			id600: 'Light Snow', 
+			id601: 'Snow', 
+			id602: 'Heavy Snow', 
+			id611: 'Sleet', 
+			id621: 'Shower Snow', 
+			id622: 'Heavy Shower Snow',
 
-			, id701: 'Mist'
-			, id711: 'Smoke'
-			, id721: 'Haze'
-			, id731: 'Sand/Dust Whirls'
-			, id741: 'Fog'
-			, id751: 'Sand'
+			id701: 'Mist', 
+			id711: 'Smoke', 
+			id721: 'Haze', 
+			id731: 'Sand/Dust Whirls', 
+			id741: 'Fog', 
+			id751: 'Sand',
 
-			, id800: 'Sky is Clear'
-			, id801: 'Few Clouds'
-			, id802: 'Scattered Clouds'
-			, id803: 'Broken Clouds'
-			, id804: 'Overcast Clouds'
+			id800: 'Sky is Clear', 
+			id801: 'Few Clouds', 
+			id802: 'Scattered Clouds', 
+			id803: 'Broken Clouds', 
+			id804: 'Overcast Clouds',
 
-			, id900: 'Tornado'
-			, id901: 'Tropical Storm'
-			, id902: 'Hurricane'
-			, id903: 'Cold'
-			, id904: 'Hot'
-			, id905: 'Windy'
-			, id906: 'Hail'
+			id900: 'Tornado', 
+			id901: 'Tropical Storm', 
+			id902: 'Hurricane', 
+			id903: 'Cold', 
+			id904: 'Hot', 
+			id905: 'Windy', 
+			id906: 'Hail'
 		},
 		
 		it: {
-			owmlinktitle: 'Dettagli su OpenWeatherMap'
-			, temperature: 'Temperatura'
-			, temp_minmax: 'Temp. min / max '
-			, wind: 'Vento'
-			, gust: 'Raffica'
-			, windforce: 'Forza del vento'
-			, direction: 'Direzione'
-			, rain_1h: 'Pioggia'
-			, humidity: 'Umidità'
-			, pressure: 'Pressione'
-		
-			// condizioni meteorologiche, consultare https://openweathermap.org/weather-conditions
+			owmlinktitle: 'Dettagli su OpenWeatherMap', 
+			temperature: 'Temperatura',
+			temp_minmax: 'Temp. min / max ', 
+			wind: 'Vento', gust: 'Raffica', 
+			windforce: 'Forza del vento', 
+			direction: 'Direzione', 
+			rain_1h: 'Pioggia', 
+			humidity: 'Umidità', 
+			pressure: 'Pressione', 
+			
+			// condizioni meteorologiche, consultare https://openweathermap.org/weather-conditions 
 			// Temporale
-			, id200: 'Tempesta con pioggia debole'
-			, id201: 'Tempesta di pioggia'
-			, id202: 'Tempesta con forti piogge'
-			, id210: 'Tempesta debole'
-			, id211: 'Tempesta'
-			, id212: 'Tempesta forte'
-			, id221: 'Tempesta irregolare'
-			, id230: 'Tempesta con deboli acquerugi'
-			, id231: 'Tempesta con pioviggine'
-			, id232: 'Tempesta con forte pioviggine'
-
+			id200: 'Tempesta con pioggia debole', 
+			id201: 'Tempesta di pioggia', 
+			id202: 'Tempesta con forti piogge', 
+			id210: 'Tempesta debole', 
+			id211: 'Tempesta', 
+			id212: 'Tempesta forte', 
+			id221: 'Tempesta irregolare', 
+			id230: 'Tempesta con deboli acquerugi', 
+			id231: 'Tempesta con pioviggine', 
+			id232: 'Tempesta con forte pioviggine', 
+			
 			// Pioggerella
-			, id300: 'Debole pioviggine'
-			, id301: 'Pioggerella'
-			, id302: 'Forti acquerugi'
-			, id310: 'Pioggia / leggera pioggerellina'
-			, id311: 'Pioggia / pioviggine'
-			, id312: 'Pioggia / pioviggine forte'
-			, id321: 'Pioviggine intensa'
-	
+			id300: 'Debole pioviggine', 
+			id301: 'Pioggerella', 
+			id302: 'Forti acquerugi', 
+			id310: 'Pioggia / leggera pioggerellina', 
+			id311: 'Pioggia / pioviggine', 
+			id312: 'Pioggia / pioviggine forte', 
+			id321: 'Pioviggine intensa',
+			
 			// Pioggia
-			, id500: 'Debole pioggia'
-			, id501: 'Pioggia moderata'
-			, id502: 'Pioggia forte'
-			, id503: 'Pioggia molto forte'
-			, id504: 'Pioggia estrema'
-			, id511: 'Grandine'
-			, id520: 'Pioggia leggera'
-			, id521: 'Pioggia'
-			, id522: 'Pioggia forte'
-			, id531: 'pioggia irregolare'
-		
-			// neve
-			, id600: 'Neve Debole'
-			, id601: 'Neve'
-			, id602: 'Forte nevicata'
-			, id611: 'Nevischio'
-			, id612: 'Nevischio moderato'
-			, id615: 'Debole pioggia e neve'
-			, id616: 'Pioggia e neve'
-			, id620: 'Nevischio Leggero'
-			, id621: 'Neve moderata'
-			, id622: 'Forte nevicata'
-
+			id500: 'Debole pioggia', 
+			id501: 'Pioggia moderata', 
+			id502: 'Pioggia forte', 
+			id503: 'Pioggia molto forte', 
+			id504: 'Pioggia estrema', 
+			id511: 'Grandine', 
+			id520: 'Pioggia leggera', 
+			id521: 'Pioggia', 
+			id522: 'Pioggia forte', 
+			id531: 'pioggia irregolare', 
+			
+			// neve 
+			id600: 'Neve Debole', 
+			id601: 'Neve', 
+			id602: 'Forte nevicata', 
+			id611: 'Nevischio', 
+			id612: 'Nevischio moderato', 
+			id615: 'Debole pioggia e neve', 
+			id616: 'Pioggia e neve', 
+			id620: 'Nevischio Leggero', 
+			id621: 'Neve moderata', 
+			id622: 'Forte nevicata', 
+			
 			// atmosfera
-			, id701: 'Bruma'
-			, id711: 'Fumo'
-			, id721: 'Foschia'
-			, id731: 'Vortici di sabbia/polvere'
-			, id741: 'Nebbia'
-			, id751: 'Sabbia'
-			, id761: 'Polvere'
-			, id762: 'Cenere vulcanica'
-			, id771: 'Tempesta'
-			, id781: 'Tornado'
-
+			id701: 'Bruma', 
+			id711: 'Fumo', 
+			id721: 'Foschia', 
+			id731: 'Vortici di sabbia/polvere', 
+			id741: 'Nebbia', 
+			id751: 'Sabbia', 
+			id761: 'Polvere', 
+			id762: 'Cenere vulcanica', 
+			id771: 'Tempesta', 
+			id781: 'Tornado', 
+			
 			// Nuvole
-			, id800: 'Cielo sereno'
-			, id801: 'Alcune nuvole'
-			, id802: 'Nuvole sparse'
-			, id803: 'Tempo nuvoloso'
-			, id804: 'Nuvoloso'
-
+			id800: 'Cielo sereno', 
+			id801: 'Alcune nuvole', 
+			id802: 'Nuvole sparse', 
+			id803: 'Tempo nuvoloso', 
+			id804: 'Nuvoloso',
+			
 			// Estremo
-			, id900: 'Tornado'
-			, id901: 'Tempesta tropicale'
-			, id902: 'Uragano'
-			, id903: 'Molto freddo'
-			, id904: 'Molto caldo'
-			, id905: 'Ventoso'
-			, id906: 'Forte grandine'
-
+			id900: 'Tornado', 
+			id901: 'Tempesta tropicale', 
+			id902: 'Uragano', 
+			id903: 'Molto freddo', 
+			id904: 'Molto caldo', 
+			id905: 'Ventoso', 
+			id906: 'Forte grandine',
+			
 			// aggiuntivo
-			, id951: 'Calmo'
-			, id952: 'Brezza leggera'
-			, id953: 'Brezza sostenuta'
-			, id954: 'Brezza moderata'
-			, id955: 'Brezza fresca'
-			, id956: 'Brezza forte'
-			, id957: 'Vento forte, vicino a burrasca'
-			, id958: 'Burrasca'
-			, id959: 'Forte burrasca'
-			, id960: 'Tempesta'
-			, id961: 'Tempesta violenta'
-			, id962: 'Uragano'
+			id951: 'Calmo', 
+			id952: 'Brezza leggera', 
+			id953: 'Brezza sostenuta', 
+			id954: 'Brezza moderata', 
+			id955: 'Brezza fresca', 
+			id956: 'Brezza forte', 
+			id957: 'Vento forte, vicino a burrasca', 
+			id958: 'Burrasca',
+			id959: 'Forte burrasca', 
+			id960: 'Tempesta', 
+			id961: 'Tempesta violenta', 
+			id962: 'Uragano'
 		},
 		
 		de: {
-			owmlinktitle: 'Details bei OpenWeatherMap'
-			, temperature: 'Temperatur'
-			, temp_minmax: 'Temp. min/max'
-			, wind: 'Wind'
-			, gust: 'Windböen'
-			, windforce: 'Windstärke'
-			, direction: 'Windrichtung'
-			, rain_1h: 'Regen'
-			, humidity: 'Luftfeuchtigkeit'
-			, pressure: 'Luftdruck'
+			owmlinktitle: 'Details bei OpenWeatherMap', 
+			temperature: 'Temperatur', 
+			temp_minmax: 'Temp. min/max', 
+			wind: 'Wind', 
+			gust: 'Windböen', 
+			windforce: 'Windstärke', 
+			direction: 'Windrichtung', 
+			rain_1h: 'Regen', 
+			humidity: 'Luftfeuchtigkeit', 
+			pressure: 'Luftdruck',
 
-		// Wetterbedingungen, siehe https://openweathermap.org/weather-conditions
-			, id200: 'Gewitter mit leichtem Regen' // 'Thunderstorm with Light Rain'
-			, id201: 'Gewitter mit Regen' // 'Thunderstorm with Rain'
-			, id202: 'Gewitter mit Starkregen' // 'Thunderstorm with Heavy Rain'
-			, id210: 'Leichtes Gewitter' // 'Light Thunderstorm'
-			, id211: 'Mäßiges Gewitter' // 'Thunderstorm'
-			, id212: 'Starkes Gewitter' // 'Heavy Thunderstorm'
-		//	, id221: 'Ragged Thunderstorm'
-		//	, id230: 'Thunderstorm with Light Drizzle'
-		//	, id231: 'Thunderstorm with Drizzle'
-		//	, id232: 'Thunderstorm with Heavy Drizzle'
-
-			, id300: 'Leichter Nieselregen' // 'Light Intensity Drizzle'
-			, id301: 'Nieselregen' // 'Drizzle'
-			, id302: 'Starker Nieselregen' // 'Heavy Intensity Drizzle'
-		//	, id310: 'Light Intensity Drizzle Rain'
-		//	, id311: 'Drizzle Rain'
-		//	, id312: 'Heavy Intensity Drizzle Rain'
-		//	, id321: 'Shower Drizzle'
-
-			, id500: 'Leichter Regen' // 'Light Rain'
-			, id501: 'Mäßiger Regen' // 'Moderate Rain'
-			, id502: 'Starker Regen' // 'Heavy Intensity Rain'
-			, id503: 'Ergiebiger Regen' // 'Very Heavy Rain'
-			, id504: 'Starkregen' // 'Extreme Rain'
-			, id511: 'Gefrierender Regen' // 'Freezing Rain'
-			, id520: 'Leichte Regenschauer' // 'Light Intensity Shower Rain'
-			, id521: 'Mäßige Regenschauer' // 'Shower Rain'
-			, id522: 'Wolkenbruchartige Regenschauer' // 'Heavy Intensity Shower Rain'
-
-			, id600: 'Leichter Schneefall' // 'Light Snow'
-			, id601: 'Mäßiger Schneefall' // 'Snow'
-			, id602: 'Starker Schneefall' // 'Heavy Snow'
-			, id611: 'Schneeregen' // 'Sleet'
-			, id621: 'Schneeschauer' // 'Shower Snow'
-			, id622: 'Starke Schneeschauer' // 'Heavy Shower Snow'
-
-			, id701: 'Dunst' // 'Mist'
-			, id711: 'Rauch' // 'Smoke'
-			, id721: 'Eingetrübt' // 'Haze'
-			, id731: 'Sand-/Staubwirbel' // 'Sand/Dust Whirls'
-			, id741: 'Nebel' // 'Fog'
-			, id751: 'Sand' // 'Sand'
-
-			, id800: 'Wolkenlos' // 'Sky is Clear'
-			, id800d: 'Sonnig' // 'Sky is Clear' at day
-			, id800n: 'Klar' // 'Sky is Clear' at night
-			, id801: 'Leicht bewölkt' // 'Few Clouds'
-			, id802: 'Wolkig' // 'Scattered Clouds'
-			, id803: 'Stark bewölkt' // 'Broken Clouds'
-			, id804: 'Bedeckt' // 'Overcast Clouds'
-
-			, id900: 'Tornado' // 'Tornado'
-			, id901: 'Tropischer Sturm' // 'Tropical Storm'
-			, id902: 'Orkan' // 'Hurricane'
-			, id903: 'Kälte' // 'Cold'
-			, id904: 'Hitze' // 'Hot'
-			, id905: 'Windig' // 'Windy'
-			, id906: 'Hagel' // 'Hail'
+			// Wetterbedingungen, siehe https://openweathermap.org/weather-conditions, 
+			id200: 'Gewitter mit leichtem Regen', // 'Thunderstorm with Light Rain', 
+			id201: 'Gewitter mit Regen', //'Thunderstorm with Rain', 
+			id202: 'Gewitter mit Starkregen', //'Thunderstorm with Heavy Rain', 
+			id210: 'Leichtes Gewitter', //'Light Thunderstorm', 
+			id211: 'Mäßiges Gewitter', //'Thunderstorm', 
+			id212: 'Starkes Gewitter', //'Heavy Thunderstorm' 
+			//	, id221: 'Ragged Thunderstorm' 
+			//	, id230: 'Thunderstorm with Light Drizzle' 
+			//	, id231: 'Thunderstorm with Drizzle' 
+			//	, id232: 'Thunderstorm with Heavy Drizzle', 
+			id300: 'Leichter Nieselregen', //'Light Intensity Drizzle', 
+			id301: 'Nieselregen', //'Drizzle', 
+			id302: 'Starker Nieselregen', //'Heavy Intensity Drizzle' 
+			//	, id310: 'Light Intensity Drizzle Rain'
+			//	, id311: 'Drizzle Rain'
+			//	, id312: 'Heavy Intensity Drizzle Rain' 
+			//	, id321: 'Shower Drizzle', 
+			id500: 'Leichter Regen', //'Light Rain', 
+			id501: 'Mäßiger Regen', //'Moderate Rain', 
+			id502: 'Starker Regen', //'Heavy Intensity Rain', 
+			id503: 'Ergiebiger Regen', //'Very Heavy Rain', 
+			id504: 'Starkregen', //'Extreme Rain', 
+			id511: 'Gefrierender Regen', //'Freezing Rain', 
+			id520: 'Leichte Regenschauer', //'Light Intensity Shower Rain', 
+			id521: 'Mäßige Regenschauer', //'Shower Rain', 
+			id522: 'Wolkenbruchartige Regenschauer', //'Heavy Intensity Shower Rain', 
+			id600: 'Leichter Schneefall', //'Light Snow', 
+			id601: 'Mäßiger Schneefall', //'Snow', 
+			id602: 'Starker Schneefall', //'Heavy Snow', 
+			id611: 'Schneeregen', //'Sleet', 
+			id621: 'Schneeschauer', //'Shower Snow', 
+			id622: 'Starke Schneeschauer', //'Heavy Shower Snow', 
+			id701: 'Dunst', //'Mist', 
+			id711: 'Rauch', //'Smoke', 
+			id721: 'Eingetrübt', //'Haze', 
+			id731: 'Sand-/Staubwirbel', //'Sand/Dust Whirls', 
+			id741: 'Nebel', //'Fog', 
+			id751: 'Sand', //'Sand', 
+			id800: 'Wolkenlos', //'Sky is Clear', 
+			id800d: 'Sonnig', //'Sky is Clear' at day, 
+			id800n: 'Klar', //'Sky is Clear' at night, 
+			id801: 'Leicht bewölkt', //'Few Clouds', 
+			id802: 'Wolkig', //'Scattered Clouds', 
+			id803: 'Stark bewölkt', //'Broken Clouds', 
+			id804: 'Bedeckt', //'Overcast Clouds', 
+			id900: 'Tornado', //'Tornado', 
+			id901: 'Tropischer Sturm', //'Tropical Storm', 
+			id902: 'Orkan', //'Hurricane', 
+			id903: 'Kälte', //'Cold', 
+			id904: 'Hitze', //'Hot', 
+			id905: 'Windig', //'Windy', 
+			id906: 'Hagel', //'Hail'
 		},
 
 		ru: {
-			owmlinktitle: 'Информация в OpenWeatherMap'
-			, temperature: 'Температура'
-			, temp_minmax: 'Макс./Мин. темп'
-			, wind: 'Ветер'
-			, gust: 'Порывы'
-			, windforce: 'Сила'
-			, direction: 'Направление'
-			, rain_1h: 'Дождь'
-			, humidity: 'Влажность'
-			, pressure: 'Давление'
-
-		// weather conditions, see https://openweathermap.org/weather-conditions
-			, id200: 'Гроза с легким дождем' // 'Thunderstorm with Light Rain'
-			, id201: 'Гроза с дождем' // 'Thunderstorm with Rain'
-			, id202: 'Гроза с ливнем' // 'Thunderstorm with Heavy Rain'
-			, id210: 'Легкая гроза' // 'Light Thunderstorm'
-			, id211: 'Гроза' // 'Thunderstorm'
-			, id212: 'Сильная гроза' // 'Heavy Thunderstorm'
-			, id221: 'Прерывистая гроза' // 'Ragged Thunderstorm'
-			, id230: 'Гроза с мелкой моросью' // 'Thunderstorm with Light Drizzle'
-			, id231: 'Гроза с моросью' // 'Thunderstorm with Drizzle'
-			, id232: 'Гроза с сильной моросью' // 'Thunderstorm with Heavy Drizzle'
-
-			, id300: 'Морось слабой интенсивности' // 'Light Intensity Drizzle'
-			, id301: 'Морось' // 'Drizzle'
-			, id302: 'Морось сильной интенсивности' // 'Heavy Intensity Drizzle'
-			, id310: 'Малоинтенсивный моросящий дождь' // 'Light Intensity Drizzle Rain'
-			, id311: 'Моросящий дождь' // 'Drizzle Rain'
-			, id312: 'Сильноинтенсивный моросящий дождь' // 'Heavy Intensity Drizzle Rain'
-			, id321: 'Проливной дождь' // 'Shower Drizzle'
-
-			, id500: 'Небольшой дождь' //'Light Rain'
-			, id501: 'Дождь' // 'Moderate Rain'
-			, id502: 'Сильный дождь' //'Heavy Intensity Rain'
-			, id503: 'Очень сильный дождь' //'Very Heavy Rain'
-			, id504: 'Сильный ливень' // 'Extreme Rain'
-			, id511: 'Ледяной дождь' // 'Freezing Rain'
-			, id520: 'Кратковременный слабый дождь' //'Light Intensity Shower Rain'
-			, id521: 'Кратковременный дождь' //'Shower Rain'
-			, id522: 'Кратковременный сильный дождь' //'Heavy Intensity Shower Rain'
-
-			, id600: 'Слабый снег' // 'Light Snow'
-			, id601: 'Снег' // 'Snow'
-			, id602: 'Сильный снег' // 'Heavy Snow'
-			, id611: 'Снег с дождем' //'Sleet'
-			, id621: 'Кратковременный снег' // 'Shower Snow'
-			, id622: 'Кратковременный сильный снег' //'Heavy Shower Snow'
-
-			, id701: 'Мгла' // 'Mist'
-			, id711: 'Смог' //'Smoke'
-			, id721: 'Дымка' // 'Haze'
-			, id731: 'Песочные/пыльевые вихри' // 'Sand/Dust Whirls'
-			, id741: 'Туман' // 'Fog'
-			, id751: 'Песок' // 'Sand'
-
-			, id800: 'Ясно' // 'Sky is Clear'
-			, id801: 'Малооблачно' // 'Few Clouds'
-			, id802: 'Переменная облачность' // 'Scattered Clouds'
-			, id803: 'Облачно с прояснениями' // 'Broken Clouds'
-			, id804: 'Облачно' // 'Overcast Clouds'
-
-			, id900: 'Торнадо' // 'Tornado'
-			, id901: 'Тропический шторм' // 'Tropical Storm'
-			, id902: 'Ураган' // 'Hurricane'
-			, id903: 'Холод'//'Cold'
-			, id904: 'Жара'//'Hot'
-			, id905: 'Ветрено'//'Windy'
-			, id906: 'Γрад' // 'Hail'
+			owmlinktitle: 'Информация в OpenWeatherMap',
+			temperature: 'Температура',
+			temp_minmax: 'Макс./Мин. темп',
+			wind: 'Ветер',
+			gust: 'Порывы',
+			windforce: 'Сила',
+			direction: 'Направление',
+			rain_1h: 'Дождь',
+			humidity: 'Влажность',
+			pressure: 'Давление', 
+			// weather conditions, see https://openweathermap.org/weather-conditions,
+			id200: 'Гроза с легким дождем', // 'Thunderstorm with Light Rain',
+			id201: 'Гроза с дождем', // 'Thunderstorm with Rain',
+			id202: 'Гроза с ливнем', // 'Thunderstorm with Heavy Rain',
+			id210: 'Легкая гроза', // 'Light Thunderstorm',
+			id211: 'Гроза', // 'Thunderstorm',
+			id212: 'Сильная гроза', // 'Heavy Thunderstorm',
+			id221: 'Прерывистая гроза', // 'Ragged Thunderstorm',
+			id230: 'Гроза с мелкой моросью', // 'Thunderstorm with Light Drizzle',
+			id231: 'Гроза с моросью', // 'Thunderstorm with Drizzle',
+			id232: 'Гроза с сильной моросью', // 'Thunderstorm with Heavy Drizzle',
+			id300: 'Морось слабой интенсивности', // 'Light Intensity Drizzle',
+			id301: 'Морось', // 'Drizzle',
+			id302: 'Морось сильной интенсивности', // 'Heavy Intensity Drizzle',
+			id310: 'Малоинтенсивный моросящий дождь', // 'Light Intensity Drizzle Rain',
+			id311: 'Моросящий дождь', // 'Drizzle Rain',
+			id312: 'Сильноинтенсивный моросящий дождь', // 'Heavy Intensity Drizzle Rain',
+			id321: 'Проливной дождь', // 'Shower Drizzle',
+			id500: 'Небольшой дождь', //'Light Rain',
+			id501: 'Дождь', // 'Moderate Rain',
+			id502: 'Сильный дождь', //'Heavy Intensity Rain',
+			id503: 'Очень сильный дождь', //'Very Heavy Rain',
+			id504: 'Сильный ливень', // 'Extreme Rain',
+			id511: 'Ледяной дождь', // 'Freezing Rain',
+			id520: 'Кратковременный слабый дождь', //'Light Intensity Shower Rain',
+			id521: 'Кратковременный дождь', //'Shower Rain',
+			id522: 'Кратковременный сильный дождь', //'Heavy Intensity Shower Rain',
+			id600: 'Слабый снег', // 'Light Snow',
+			id601: 'Снег', // 'Snow',
+			id602: 'Сильный снег', // 'Heavy Snow',
+			id611: 'Снег с дождем', //'Sleet',
+			id621: 'Кратковременный снег', // 'Shower Snow',
+			id622: 'Кратковременный сильный снег', //'Heavy Shower Snow',
+			id701: 'Мгла', // 'Mist',
+			id711: 'Смог', //'Smoke',
+			id721: 'Дымка', // 'Haze',
+			id731: 'Песочные/пыльевые вихри', // 'Sand/Dust Whirls',
+			id741: 'Туман', // 'Fog',
+			id751: 'Песок', // 'Sand',
+			id800: 'Ясно', // 'Sky is Clear',
+			id801: 'Малооблачно', // 'Few Clouds',
+			id802: 'Переменная облачность', // 'Scattered Clouds',
+			id803: 'Облачно с прояснениями', // 'Broken Clouds',
+			id804: 'Облачно', // 'Overcast Clouds',
+			id900: 'Торнадо', // 'Tornado',
+			id901: 'Тропический шторм', // 'Tropical Storm',
+			id902: 'Ураган', // 'Hurricane',
+			id903: 'Холод',//'Cold',
+			id904: 'Жара',//'Hot',
+			id905: 'Ветрено',//'Windy',
+			id906: 'Γрад', // 'Hail'
 		},
 
 		fr: {
-			owmlinktitle: 'Détails à OpenWeatherMap'
-			, temperature: 'Température'
-			, temp_minmax: 'Temp. min/max'
-			, wind: 'Vent'
-			, gust: 'Rafales'
-			, windforce: 'Force du vent'
-			, direction: 'Direction'
-			, rain_1h: 'Pluie'
-			, humidity: 'Humidité'
-			, pressure: 'Pression'
-
-		// Les conditions météorologiques, voir https://openweathermap.org/weather-conditions
-			, id200: 'Orage avec pluie légère' // 'Thunderstorm with Light Rain'
-			, id201: 'Orage avec pluie' // 'Thunderstorm with Rain'
-			, id202: 'Orage avec fortes précipitations' // 'Thunderstorm with Heavy Rain'
-		//	, id210: 'Light Thunderstorm'
-			, id211: 'Orage'
-			, id212: 'Orage violent' // 'Heavy Thunderstorm'
-		//	, id221: 'Ragged Thunderstorm'
-			, id230: 'Orage avec bruine faible' // 'Thunderstorm with Light Drizzle'
-			, id231: 'Orage avec bruine' // 'Thunderstorm with Drizzle'
-		//	, id232: 'Thunderstorm with Heavy Drizzle'
-
-		//	, id300: 'Light Intensity Drizzle'
-			, id301: 'Bruine' // 'Drizzle'
-		//	, id302: 'Heavy Intensity Drizzle'
-		//	, id310: 'Light Intensity Drizzle Rain'
-		//	, id311: 'Drizzle Rain'
-		//	, id312: 'Heavy Intensity Drizzle Rain'
-		//	, id321: 'Shower Drizzle'
-
-			, id500: 'Pluie légère' // 'Light Rain'
-			, id501: 'Pluie modérée' // 'Moderate Rain'
-			, id502: 'Pluie battante' // 'Heavy Intensity Rain'
-		//	, id503: 'Very Heavy Rain'
-		//	, id504: 'Extreme Rain'
-			, id511: 'Pluie verglassante' // 'Freezing Rain'
-			, id520: 'Averses de pluie fine' // 'Light Intensity Shower Rain'
-		//	, id521: 'Shower Rain'
-		//	, id522: 'Heavy Intensity Shower Rain'
-
-			, id600: 'Légers flocons' // 'Light Snow'
-			, id601: 'Neige' // 'Snow'
-			, id602: 'Fortes chutes de neige' // 'Heavy Snow'
-			, id611: 'Neige fondue' // 'Sleet'
-			, id621: 'Averses de neige' // 'Shower Snow'
-			, id622: 'Fortes chutes de neige' // 'Heavy Shower Snow'
-
-			, id701: 'Brume' // 'Mist'
-			, id711: 'Fumée' // 'Smoke'
-			, id721: 'Brume' // 'Haze'
-			, id731: 'Tourbillons de sable/poussière' // 'Sand/Dust Whirls'
-			, id741: 'Brouillard' // 'Fog'
-		//	, id751: 'Sand'
-
-			, id800: 'Ciel dégagé' // 'Sky is Clear'
-			, id801: 'Ciel voilé'
-			, id802: 'Nuageux' // 'Scattered Clouds'
-			, id803: 'Nuageux' // 'Broken Clouds'
-			, id804: 'Ciel couvert' // 'Overcast Clouds'
-
-			, id900: 'Tornade' // 'Tornado'
-			, id901: 'Tempête tropicale'// 'Tropical Storm'
-			, id902: 'Ouragan' // 'Hurricane'
-			, id903: 'Froid' // 'Cold'
-			, id904: 'Chaleur' // 'Hot'
-			, id905: 'Venteux' // 'Windy'
-			, id906: 'Grêle' // 'Hail'
+			owmlinktitle: 'Détails à OpenWeatherMap',
+			temperature: 'Température',
+			temp_minmax: 'Temp. min/max',
+			wind: 'Vent',
+			gust: 'Rafales',
+			windforce: 'Force du vent',
+			direction: 'Direction',
+			rain_1h: 'Pluie',
+			humidity: 'Humidité',
+			pressure: 'Pression', 
+			// Les conditions météorologiques, voir https://openweathermap.org/weather-conditions,
+			id200: 'Orage avec pluie légère', // 'Thunderstorm with Light Rain',
+			id201: 'Orage avec pluie', // 'Thunderstorm with Rain',
+			id202: 'Orage avec fortes précipitations', // 'Thunderstorm with Heavy Rain'
+			//id210: 'Light Thunderstorm',
+			id211: 'Orage',
+			id212: 'Orage violent', // 'Heavy Thunderstorm' 
+			//id221: 'Ragged Thunderstorm',
+			id230: 'Orage avec bruine faible', // 'Thunderstorm with Light Drizzle',
+			id231: 'Orage avec bruine', // 'Thunderstorm with Drizzle' 
+			//	, id232: 'Thunderstorm with Heavy Drizzle'
+			//	, id300: 'Light Intensity Drizzle',
+			id301: 'Bruine', // 'Drizzle' 
+			//	, id302: 'Heavy Intensity Drizzle'
+			//	, id310: 'Light Intensity Drizzle Rain'
+			//	, id311: 'Drizzle Rain' 
+			//	, id312: 'Heavy Intensity Drizzle Rain' 
+			//	, id321: 'Shower Drizzle',
+			id500: 'Pluie légère', // 'Light Rain',
+			id501: 'Pluie modérée', // 'Moderate Rain',
+			id502: 'Pluie battante', // 'Heavy Intensity Rain' 
+			//	, id503: 'Very Heavy Rain' 
+			//	, id504: 'Extreme Rain',
+			id511: 'Pluie verglassante', // 'Freezing Rain',
+			id520: 'Averses de pluie fine', // 'Light Intensity Shower Rain' 
+			//	, id521: 'Shower Rain'
+			//	, id522: 'Heavy Intensity Shower Rain',
+			id600: 'Légers flocons', // 'Light Snow',
+			id601: 'Neige', // 'Snow',
+			id602: 'Fortes chutes de neige', // 'Heavy Snow',
+			id611: 'Neige fondue', // 'Sleet',
+			id621: 'Averses de neige', // 'Shower Snow',
+			id622: 'Fortes chutes de neige', // 'Heavy Shower Snow',
+			id701: 'Brume', // 'Mist',
+			id711: 'Fumée', // 'Smoke',
+			id721: 'Brume', // 'Haze',
+			id731: 'Tourbillons de sable/poussière', // 'Sand/Dust Whirls',
+			id741: 'Brouillard', // 'Fog', //	, id751: 'Sand',
+			id800: 'Ciel dégagé', // 'Sky is Clear',
+			id801: 'Ciel voilé',
+			id802: 'Nuageux', // 'Scattered Clouds',
+			id803: 'Nuageux', // 'Broken Clouds',
+			id804: 'Ciel couvert', // 'Overcast Clouds',
+			id900: 'Tornade', // 'Tornado',
+			id901: 'Tempête tropicale',// 'Tropical Storm',
+			id902: 'Ouragan', // 'Hurricane',
+			id903: 'Froid', // 'Cold',
+			id904: 'Chaleur', // 'Hot',
+			id905: 'Venteux', // 'Windy',
+			id906: 'Grêle', // 'Hail'
 		},
 
-		nl: { //dutch translation
-			owmlinktitle: 'Details op OpenWeatherMap'
-			, temperature: 'Temperatuur'
-			, temp_minmax: 'Temp. min/max'
-			, wind: 'Wind'
-			, gust: 'Windvlaag'
-			, windforce: 'Windkracht'
-			, direction: 'Richting'
-			, rain_1h: 'Regen'
-			, humidity: 'Luchtvochtigheid'
-			, pressure: 'Luchtdruk'
-
-		// weeercondities, see https://openweathermap.org/weather-conditions
-			, id200: 'Onweer met lichte regen'
-			, id201: 'Onweer met met regen'
-			, id202: 'Onweer met hevige regen'
-			, id210: 'Lichte onweersbui'
-			, id211: 'Onweersbui'
-			, id212: 'Hevig onweer'
-			, id221: 'Onregelmatige onweersbui'
-			, id230: 'Onweer met licht motregen'
-			, id231: 'Onweer met motregen'
-			, id232: 'Onweer met hevige motregen'
-
-			, id300: 'Lichte motregen'
-			, id301: 'Motregen'
-			, id302: 'Hevige motregen'
-			, id310: 'Lichte motregen / regen'
-			, id311: 'Motregen / regen'
-			, id312: 'Hevige motregen / regen'
-			, id321: 'Douche motregen'
-
-			, id500: 'Lichte regen'
-			, id501: 'Gematigde regen'
-			, id502: 'Hevige regen'
-			, id503: 'Erg hevige regen'
-			, id504: 'Extreme regen'
-			, id511: 'Hagel'
-			, id520: 'Lichte miezerregen'
-			, id521: 'Miezerregen'
-			, id522: 'Hevige miezerregen'
-
-			, id600: 'Lichte sneeuwval'
-			, id601: 'Sneeuw'
-			, id602: 'Hevige sneeuwval'
-			, id611: 'Ijzel'
-			, id621: 'Douche sneeuw'
-			, id622: 'Hevige douche sneeuw'
-
-			, id701: 'Mist'
-			, id711: 'Rook'
-			, id721: 'Nevel'
-			, id731: 'Zand/stof werveling'
-			, id741: 'Mist'
-			, id751: 'Zand'
-
-			, id800: 'Onbewolkt'
-			, id801: 'Licht bewolkt'
-			, id802: 'Half bewolkt'
-			, id803: 'Overwegend bewolkt'
-			, id804: 'Bewolkt'
-
-			, id900: 'Tornado'
-			, id901: 'Tropische Storm'
-			, id902: 'Orkaan'
-			, id903: 'Koud'
-			, id904: 'Heet'
-			, id905: 'Winderig'
-			, id906: 'Hagel'
+		nl: { 
+			//dutch translation
+			owmlinktitle: 'Details op OpenWeatherMap',
+			temperature: 'Temperatuur',
+			temp_minmax: 'Temp. min/max',
+			wind: 'Wind',
+			gust: 'Windvlaag',
+			windforce: 'Windkracht',
+			direction: 'Richting',
+			rain_1h: 'Regen',
+			humidity: 'Luchtvochtigheid',
+			pressure: 'Luchtdruk', 
+			
+			// weeercondities, see https://openweathermap.org/weather-conditions,
+			id200: 'Onweer met lichte regen',
+			id201: 'Onweer met met regen',
+			id202: 'Onweer met hevige regen',
+			id210: 'Lichte onweersbui',
+			id211: 'Onweersbui',
+			id212: 'Hevig onweer',
+			id221: 'Onregelmatige onweersbui',
+			id230: 'Onweer met licht motregen',
+			id231: 'Onweer met motregen',
+			id232: 'Onweer met hevige motregen',
+			id300: 'Lichte motregen',
+			id301: 'Motregen',
+			id302: 'Hevige motregen',
+			id310: 'Lichte motregen / regen',
+			id311: 'Motregen / regen',
+			id312: 'Hevige motregen / regen',
+			id321: 'Douche motregen',
+			id500: 'Lichte regen',
+			id501: 'Gematigde regen',
+			id502: 'Hevige regen',
+			id503: 'Erg hevige regen',
+			id504: 'Extreme regen',
+			id511: 'Hagel',
+			id520: 'Lichte miezerregen',
+			id521: 'Miezerregen',
+			id522: 'Hevige miezerregen',
+			id600: 'Lichte sneeuwval',
+			id601: 'Sneeuw',
+			id602: 'Hevige sneeuwval',
+			id611: 'Ijzel',
+			id621: 'Douche sneeuw',
+			id622: 'Hevige douche sneeuw',
+			id701: 'Mist',
+			id711: 'Rook',
+			id721: 'Nevel',
+			id731: 'Zand/stof werveling',
+			id741: 'Mist',
+			id751: 'Zand',
+			id800: 'Onbewolkt',
+			id801: 'Licht bewolkt',
+			id802: 'Half bewolkt',
+			id803: 'Overwegend bewolkt',
+			id804: 'Bewolkt',
+			id900: 'Tornado',
+			id901: 'Tropische Storm',
+			id902: 'Orkaan',
+			id903: 'Koud',
+			id904: 'Heet',
+			id905: 'Winderig',
+			id906: 'Hagel'
 		},
 
-		es: { //spanish translation
-			owmlinktitle: 'Detalles en OpenWeatherMap'
-			, temperature: 'Temperatura'
-			, temp_minmax: 'Temp. mín/máx'
-			, wind: 'Viento'
-			, gust: 'Ráfagas'
-			, windforce: 'Fuerza del viento'
-			, direction: 'Dirección'
-			, rain_1h: 'Lluvia'
-			, humidity: 'Humedad'
-			, pressure: 'Presión'
-
-		// weather conditions, see https://openweathermap.org/weather-conditions
-			// Thunderstorm
-			, id200: 'Tormenta con lluvia débil'
-			, id201: 'Tormenta con lluvia'
-			, id202: 'Tormenta con lluvia fuerte'
-			, id210: 'Tormenta débil'
-			, id211: 'Tormenta'
-			, id212: 'Tormenta fuerte'
-			, id221: 'Tormenta irregular'
-			, id230: 'Tormenta con llovizna débil'
-			, id231: 'Tormenta con llovizna'
-			, id232: 'Tormenta con llovizna fuerte'
-
-			// Drizzle
-			, id300: 'Llovizna débil'
-			, id301: 'Llovizna'
-			, id302: 'Llovizna fuerte'
-			, id310: 'Lluvia/llovizna débil'
-			, id311: 'Lluvia/llovizna'
-			, id312: 'Lluvia/llovizna fuerte'
-			, id321: 'Chubasco de llovizna'
-
-			// Rain
-			, id500: 'Lluvia débil'
-			, id501: 'Lluvia moderada'
-			, id502: 'Lluvia fuerte'
-			, id503: 'Lluvia muy fuerte'
-			, id504: 'Lluvia extrema'
-			, id511: 'Granizo'
-			, id520: 'Chubasco de lluvia débil'
-			, id521: 'Chubasco de lluvia'
-			, id522: 'Chubasco de lluvia fuerte'
-			, id531: 'Chubasco de lluvia irregular'
-
-			// Snow
-			, id600: 'Nieve débil'
-			, id601: 'Nieve'
-			, id602: 'Nieve fuerte'
-			, id611: 'Aguanieve'
-			, id612: 'Chubasco de aguanieve'
-			, id615: 'Lluvia y nieve débiles'
-			, id616: 'Lluvia y nieve'
-			, id620: 'Chubasco de nieve débil'
-			, id621: 'Chubasco de nieve'
-			, id622: 'Chubasco de nieve fuerte'
-
-			// Atmosphere
-			, id701: 'Bruma'
-			, id711: 'Humo'
-			, id721: 'Neblina'
-			, id731: 'Torbellinos de arena/polvo'
-			, id741: 'Niebla'
-			, id751: 'Arena'
-			, id761: 'Polvo'
-			, id762: 'Ceniza volcánica'
-			, id771: 'Tempestad'
-			, id781: 'Tornado'
-
-			// Clouds
-			, id800: 'Cielo despejado'
-			, id801: 'Algunas nubes'
-			, id802: 'Nubes dispersas'
-			, id803: 'Intérvalos nubosos'
-			, id804: 'Nublado'
-
-			// Extreme
-			, id900: 'Tornado'
-			, id901: 'Tormenta tropical'
-			, id902: 'Huracán'
-			, id903: 'Bajas temperaturas'
-			, id904: 'Altas temperaturas'
-			, id905: 'Ventoso'
-			, id906: 'Granizo'
-
-			// Additional
-			, id951: 'Calma'
-			, id952: 'Brisa ligera'
-			, id953: 'Brisa suave'
-			, id954: 'Brisa moderada'
-			, id955: 'Brisa fresca'
-			, id956: 'Brisa fuerte'
-			, id957: 'Viento fuerte, próximo a vendaval'
-			, id958: 'Vendaval'
-			, id959: 'Vendaval fuerte'
-			, id960: 'Tempestad'
-			, id961: 'Tempestad violenta'
-			, id962: 'Huracán'
+		es: { 
+			//spanish translation
+			owmlinktitle: 'Detalles en OpenWeatherMap',
+			temperature: 'Temperatura',
+			temp_minmax: 'Temp. mín/máx',
+			wind: 'Viento',
+			gust: 'Ráfagas',
+			windforce: 'Fuerza del viento',
+			direction: 'Dirección',
+			rain_1h: 'Lluvia',
+			humidity: 'Humedad',
+			pressure: 'Presión', 
+			// weather conditions, see https://openweathermap.org/weather-conditions 
+			// Thunderstorm,
+			id200: 'Tormenta con lluvia débil',
+			id201: 'Tormenta con lluvia',
+			id202: 'Tormenta con lluvia fuerte',
+			id210: 'Tormenta débil',
+			id211: 'Tormenta',
+			id212: 'Tormenta fuerte',
+			id221: 'Tormenta irregular',
+			id230: 'Tormenta con llovizna débil',
+			id231: 'Tormenta con llovizna',
+			id232: 'Tormenta con llovizna fuerte', // Drizzle,
+			id300: 'Llovizna débil',
+			id301: 'Llovizna',
+			id302: 'Llovizna fuerte',
+			id310: 'Lluvia/llovizna débil',
+			id311: 'Lluvia/llovizna',
+			id312: 'Lluvia/llovizna fuerte',
+			id321: 'Chubasco de llovizna', // Rain,
+			id500: 'Lluvia débil',
+			id501: 'Lluvia moderada',
+			id502: 'Lluvia fuerte',
+			id503: 'Lluvia muy fuerte',
+			id504: 'Lluvia extrema',
+			id511: 'Granizo',
+			id520: 'Chubasco de lluvia débil',
+			id521: 'Chubasco de lluvia',
+			id522: 'Chubasco de lluvia fuerte',
+			id531: 'Chubasco de lluvia irregular', // Snow,
+			id600: 'Nieve débil',
+			id601: 'Nieve',
+			id602: 'Nieve fuerte',
+			id611: 'Aguanieve',
+			id612: 'Chubasco de aguanieve',
+			id615: 'Lluvia y nieve débiles',
+			id616: 'Lluvia y nieve',
+			id620: 'Chubasco de nieve débil',
+			id621: 'Chubasco de nieve',
+			id622: 'Chubasco de nieve fuerte', // Atmosphere,
+			id701: 'Bruma',
+			id711: 'Humo',
+			id721: 'Neblina',
+			id731: 'Torbellinos de arena/polvo',
+			id741: 'Niebla',
+			id751: 'Arena',
+			id761: 'Polvo',
+			id762: 'Ceniza volcánica',
+			id771: 'Tempestad',
+			id781: 'Tornado', // Clouds,
+			id800: 'Cielo despejado',
+			id801: 'Algunas nubes',
+			id802: 'Nubes dispersas',
+			id803: 'Intérvalos nubosos',
+			id804: 'Nublado', // Extreme,
+			id900: 'Tornado',
+			id901: 'Tormenta tropical',
+			id902: 'Huracán',
+			id903: 'Bajas temperaturas',
+			id904: 'Altas temperaturas',
+			id905: 'Ventoso',
+			id906: 'Granizo', // Additional,
+			id951: 'Calma',
+			id952: 'Brisa ligera',
+			id953: 'Brisa suave',
+			id954: 'Brisa moderada',
+			id955: 'Brisa fresca',
+			id956: 'Brisa fuerte',
+			id957: 'Viento fuerte, próximo a vendaval',
+			id958: 'Vendaval',
+			id959: 'Vendaval fuerte',
+			id960: 'Tempestad',
+			id961: 'Tempestad violenta',
+			id962: 'Huracán'
 		},
 
-		ca: { //catalan translation
-			owmlinktitle: 'Detalls en OpenWeatherMap'
-			, temperature: 'Temperatura'
-			, temp_minmax: 'Temp. mín/màx'
-			, wind: 'Vent'
-			, gust: 'Ràfegues'
-			, windforce: 'Força del vent'
-			, direction: 'Direcció'
-			, rain_1h: 'Pluja'
-			, humidity: 'Humitat'
-			, pressure: 'Pressió'
-
-		// weather conditions, see https://openweathermap.org/weather-conditions
-			// Thunderstorm
-			, id200: 'Tempesta amb pluja feble'
-			, id201: 'Tempesta amb pluja'
-			, id202: 'Tempesta amb pluja forta'
-			, id210: 'Tempesta feble'
-			, id211: 'Tempesta'
-			, id212: 'Tempesta forta'
-			, id221: 'Tempesta irregular'
-			, id230: 'Tempesta amb plugim feble'
-			, id231: 'Tempesta amb plugim'
-			, id232: 'Tempesta amb plugim fort'
-
-			// Drizzle
-			, id300: 'Plugim feble'
-			, id301: 'Plugim'
-			, id302: 'Plugim fort'
-			, id310: 'Pluja/plugim feble'
-			, id311: 'Pluja/plugim'
-			, id312: 'Pluja/plugim fort'
-			, id321: 'Ruixat de plugim'
-
-			// Rain
-			, id500: 'Pluja feble'
-			, id501: 'Pluja moderada'
-			, id502: 'Pluja forta'
-			, id503: 'Pluja molt forta'
-			, id504: 'Pluja extrema'
-			, id511: 'Calabruix'
-			, id520: 'Ruixat de pluja feble'
-			, id521: 'Ruixat de pluja'
-			, id522: 'Ruixat de pluja fort'
-			, id531: 'Ruixat de pluja irregular'
-
-			// Snow
-			, id600: 'Neu feble'
-			, id601: 'Neu'
-			, id602: 'Neu forta'
-			, id611: 'Aiguaneu'
-			, id612: 'Ruixat de aguanieve'
-			, id615: 'Pluja i neu febles'
-			, id616: 'Pluja i neu'
-			, id620: 'Ruixat de neu feble'
-			, id621: 'Ruixat de neu'
-			, id622: 'Ruixat de neu fort'
-
-			// Atmosphere
-			, id701: 'Bruma'
-			, id711: 'Fum'
-			, id721: 'Boirina'
-			, id731: 'Torbellinos de arena/polvo'
-			, id741: 'Boira'
-			, id751: 'Sorra'
-			, id761: 'Pols'
-			, id762: 'Cendra volcànica'
-			, id771: 'Tempestat'
-			, id781: 'Tornado'
-
-			// Clouds
-			, id800: 'Cel clar'
-			, id801: 'Alguns núvols'
-			, id802: 'Núvols dispersos'
-			, id803: 'Intervals nuvolosos'
-			, id804: 'Ennuvolat'
-
-			// Extreme
-			, id900: 'Tornado'
-			, id901: 'Tempesta tropical'
-			, id902: 'Huracà'
-			, id903: 'Temperatures baixes'
-			, id904: 'Temperatures altes'
-			, id905: 'Ventós'
-			, id906: 'Calabruix'
-
-			// Additional
-			, id951: 'Calma'
-			, id952: 'Brisa lleugera'
-			, id953: 'Brisa suau'
-			, id954: 'Brisa moderada'
-			, id955: 'Brisa fresca'
-			, id956: 'Brisa forta'
-			, id957: 'Vent fort, pròxim a vendaval'
-			, id958: 'Ventada'
-			, id959: 'Ventada forta'
-			, id960: 'Tempesta'
-			, id961: 'Tempesta violenta'
-			, id962: 'Huracà'
+		ca: { 
+			//catalan translation
+			owmlinktitle: 'Detalls en OpenWeatherMap',
+			temperature: 'Temperatura',
+			temp_minmax: 'Temp. mín/màx',
+			wind: 'Vent',
+			gust: 'Ràfegues',
+			windforce: 'Força del vent',
+			direction: 'Direcció',
+			rain_1h: 'Pluja',
+			humidity: 'Humitat',
+			pressure: 'Pressió', 
+			// weather conditions, see https://openweathermap.org/weather-conditions 
+			// Thunderstorm,
+			id200: 'Tempesta amb pluja feble',
+			id201: 'Tempesta amb pluja',
+			id202: 'Tempesta amb pluja forta',
+			id210: 'Tempesta feble',
+			id211: 'Tempesta',
+			id212: 'Tempesta forta',
+			id221: 'Tempesta irregular',
+			id230: 'Tempesta amb plugim feble',
+			id231: 'Tempesta amb plugim',
+			id232: 'Tempesta amb plugim fort', // Drizzle,
+			id300: 'Plugim feble',
+			id301: 'Plugim',
+			id302: 'Plugim fort',
+			id310: 'Pluja/plugim feble',
+			id311: 'Pluja/plugim',
+			id312: 'Pluja/plugim fort',
+			id321: 'Ruixat de plugim', // Rain,
+			id500: 'Pluja feble',
+			id501: 'Pluja moderada',
+			id502: 'Pluja forta',
+			id503: 'Pluja molt forta',
+			id504: 'Pluja extrema',
+			id511: 'Calabruix',
+			id520: 'Ruixat de pluja feble',
+			id521: 'Ruixat de pluja',
+			id522: 'Ruixat de pluja fort',
+			id531: 'Ruixat de pluja irregular', // Snow,
+			id600: 'Neu feble',
+			id601: 'Neu',
+			id602: 'Neu forta',
+			id611: 'Aiguaneu',
+			id612: 'Ruixat de aguanieve',
+			id615: 'Pluja i neu febles',
+			id616: 'Pluja i neu',
+			id620: 'Ruixat de neu feble',
+			id621: 'Ruixat de neu',
+			id622: 'Ruixat de neu fort', // Atmosphere,
+			id701: 'Bruma',
+			id711: 'Fum',
+			id721: 'Boirina',
+			id731: 'Torbellinos de arena/polvo',
+			id741: 'Boira',
+			id751: 'Sorra',
+			id761: 'Pols',
+			id762: 'Cendra volcànica',
+			id771: 'Tempestat',
+			id781: 'Tornado', // Clouds,
+			id800: 'Cel clar',
+			id801: 'Alguns núvols',
+			id802: 'Núvols dispersos',
+			id803: 'Intervals nuvolosos',
+			id804: 'Ennuvolat', // Extreme,
+			id900: 'Tornado',
+			id901: 'Tempesta tropical',
+			id902: 'Huracà',
+			id903: 'Temperatures baixes',
+			id904: 'Temperatures altes',
+			id905: 'Ventós',
+			id906: 'Calabruix', // Additional,
+			id951: 'Calma',
+			id952: 'Brisa lleugera',
+			id953: 'Brisa suau',
+			id954: 'Brisa moderada',
+			id955: 'Brisa fresca',
+			id956: 'Brisa forta',
+			id957: 'Vent fort, pròxim a vendaval',
+			id958: 'Ventada',
+			id959: 'Ventada forta',
+			id960: 'Tempesta',
+			id961: 'Tempesta violenta',
+			id962: 'Huracà'
 		},
-		pt_br: { //brazillian translation
-			owmlinktitle: 'Detalhes em OpenWeatherMap'
-			, temperature: 'Temperatura'
-			, temp_minmax: 'Temp. min/max'
-			, wind: 'Vento'
-			, gust: 'Rajadas'
-			, windforce: 'Força do Vento'
-			, direction: 'Direção'
-			, rain_1h: 'Chuva'
-			, humidity: 'Umidade'
-			, pressure: 'Pressão'
-
-		// weather conditions, see https://openweathermap.org/weather-conditions
-			, id200: 'Trovoadas com chuva fraca'
-			, id201: 'Trovoadas com chuva'
-			, id202: 'Trovoadas com chuva forte'
-			, id210: 'Trovoadas leves'
-			, id211: 'Trovoadas'
-			, id212: 'Trovoadas fortes'
-			, id221: 'Trovoadas irregulares'
-			, id230: 'Trovoadas com garoa fraca'
-			, id231: 'Trovoadas com garoa'
-			, id232: 'Trovoadas com garoa forte'
-
-			, id300: 'Garoa de fraca intensidade'
-			, id301: 'Garoa'
-			, id302: 'Garoa de forte intensidade'
-			, id310: 'Chuva com garoa de fraca intensidade'
-			, id311: 'Chuva com garoa'
-			, id312: 'Chuva com garoa de forte intensidade'
-			, id321: 'Garoa persistente'
-
-			, id500: 'Chuva fraca'
-			, id501: 'Chuva'
-			, id502: 'Chuva forte'
-			, id503: 'Chuva muito forte'
-			, id504: 'Chuva extrema'
-			, id511: 'Chuva de granizo'
-			, id520: 'Aguaceiro de chuva fraco'
-			, id521: 'Aguaceiro de chuva'
-			, id522: 'Aguaceiro de chuva forte'
-
-			, id600: 'Neve fraca'
-			, id601: 'Neve'
-			, id602: 'Neve forte'
-			, id611: 'Chuva com neve'
-			, id621: 'Aguaceiro de neve'
-			, id622: 'Aguaceiro de neve forte'
-
-			, id701: 'Névoa'
-			, id711: 'Fumaça'
-			, id721: 'Bruma'
-			, id731: 'Redemoinhos de Areia/Poeira'
-			, id741: 'Neblina'
-			, id751: 'Areia'
-
-			, id800: 'Ceu está limpo'
-			, id801: 'Poucas nuvens'
-			, id802: 'Nuvens dispersas'
-			, id803: 'Cirros'
-			, id804: 'Nublado'
-
-			, id900: 'Tornado'
-			, id901: 'Tempestade tropical'
-			, id902: 'Furacão'
-			, id903: 'Frio'
-			, id904: 'Calor'
-			, id905: 'Ventania'
-			, id906: 'Granizo'
+		pt_br: { 
+			//brazillian translation
+			owmlinktitle: 'Detalhes em OpenWeatherMap',
+			temperature: 'Temperatura',
+			temp_minmax: 'Temp. min/max',
+			wind: 'Vento',
+			gust: 'Rajadas',
+			windforce: 'Força do Vento',
+			direction: 'Direção',
+			rain_1h: 'Chuva',
+			humidity: 'Umidade',
+			pressure: 'Pressão',
+			// weather conditions, see https://openweathermap.org/weather-conditions,
+			id200: 'Trovoadas com chuva fraca',
+			id201: 'Trovoadas com chuva',
+			id202: 'Trovoadas com chuva forte',
+			id210: 'Trovoadas leves',
+			id211: 'Trovoadas',
+			id212: 'Trovoadas fortes',
+			id221: 'Trovoadas irregulares',
+			id230: 'Trovoadas com garoa fraca',
+			id231: 'Trovoadas com garoa',
+			id232: 'Trovoadas com garoa forte',
+			id300: 'Garoa de fraca intensidade',
+			id301: 'Garoa',
+			id302: 'Garoa de forte intensidade',
+			id310: 'Chuva com garoa de fraca intensidade',
+			id311: 'Chuva com garoa',
+			id312: 'Chuva com garoa de forte intensidade',
+			id321: 'Garoa persistente',
+			id500: 'Chuva fraca',
+			id501: 'Chuva',
+			id502: 'Chuva forte',
+			id503: 'Chuva muito forte',
+			id504: 'Chuva extrema',
+			id511: 'Chuva de granizo',
+			id520: 'Aguaceiro de chuva fraco',
+			id521: 'Aguaceiro de chuva',
+			id522: 'Aguaceiro de chuva forte',
+			id600: 'Neve fraca',
+			id601: 'Neve',
+			id602: 'Neve forte',
+			id611: 'Chuva com neve',
+			id621: 'Aguaceiro de neve',
+			id622: 'Aguaceiro de neve forte',
+			id701: 'Névoa',
+			id711: 'Fumaça',
+			id721: 'Bruma',
+			id731: 'Redemoinhos de Areia/Poeira',
+			id741: 'Neblina',
+			id751: 'Areia',
+			id800: 'Ceu está limpo',
+			id801: 'Poucas nuvens',
+			id802: 'Nuvens dispersas',
+			id803: 'Cirros',
+			id804: 'Nublado',
+			id900: 'Tornado',
+			id901: 'Tempestade tropical',
+			id902: 'Furacão',
+			id903: 'Frio',
+			id904: 'Calor',
+			id905: 'Ventania',
+			id906: 'Granizo'
 		}
 	}
 };
 
 
 
+},{}],20:[function(require,module,exports){
+L.Icon.OpenAqIcon = L.Icon.extend({
+            options: {
+                iconUrl: 'https://i.stack.imgur.com/6cDGi.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [12, 21],
+                iconAnchor: [6, 21],
+                popupAnchor: [1, -34],
+                shadowSize: [20, 20]
+            }
+    });
+
+    L.icon.openaqIcon = function () {
+            return new L.Icon.OpenAqIcon();
+    };
+    L.LayerGroup.OpenAqLayer = L.LayerGroup.extend(
+    
+            {
+                    options: {
+                            popupOnMouseover: true,
+                            clearOutsideBounds: true
+                    },
+    
+                    initialize: function (options) {
+                            options = options || {};
+                            L.Util.setOptions(this, options);
+                            this._layers = {};
+                    },
+    
+                    onAdd: function (map) {
+                            map.on('moveend', this.requestRegionData, this);
+                            this._map = map;
+                            this.requestRegionData();
+                    },
+    
+                    onRemove: function (map) {
+                            map.off('moveend', this.requestRegionData, this);
+                            this.clearLayers();
+                            this._layers = {};
+                    },
+    
+                    requestRegionData: function () {
+                        var self = this ;
+
+                        (function() {
+                        var $ = window.jQuery;
+                        var url = "https://api.openaq.org/v1/latest?limit=5000";
+
+                        if(typeof self._map.spin === 'function'){
+                        self._map.spin(true) ;
+                        }
+                        $.getJSON(url , function(regionalData){
+
+                                self.parseData(regionalData.results) ;
+                                if(typeof self._map.spin === 'function'){
+                                        self._map.spin(false) ;
+                                }
+                        });
+                        })();
+                    },
+    
+                    getMarker: function(data) {
+                            var redDotIcon = new L.icon.openaqIcon();
+                            var distance = data.distance;
+                            var lat = data.coordinates.latitude;
+                            var lon = data.coordinates.longitude;
+                        var  contentData = "";
+                        var labels = {
+                                pm25: "PM<sub>2.5</sub>",
+                                pm10: "PM<sub>10</sub>",
+                                o3: "Ozone",
+                                no2: "Nitrogen Dioxide",
+                                so2: "Sulphur Dioxide",
+                                co: "Carbon Monoxide",
+                        };
+                        for(var i = 0; i < data.measurements.length; i++) {
+                            contentData+="<strong>"+labels[data.measurements[i].parameter]+" : </strong>"+data.measurements[i].value+" "+data.measurements[i].unit+"<br>";
+                        }
+                            return L.marker([lat, lon], {icon: redDotIcon}).bindPopup(
+                                "<h3>"+data.location+", "+data.country+"</h3><br>"+
+                                "<strong>distance: "+"</strong>"+data.distance+"<br>"+contentData
+                            );
+    
+                    },
+    
+                    addMarker: function(data,i) {
+                            var self = this;
+                            var marker = this.getMarker(data);
+                            var key = i;    
+                            if (!this._layers[key]) {
+                                    this._layers[key] = marker;
+                                    this.addLayer(marker);
+                            }
+    
+                    },
+    
+                    parseData: function(regionalData) {
+                            if(!!regionalData) {
+                                    for(var i = 0; i < regionalData.length; i++) {
+
+                                            if(!!regionalData[i].coordinates){
+                                                this.addMarker(regionalData[i],i);
+                                            }
+                                    }
+    
+                                    if(this.options.clearOutsideBounds) {
+                                            this.clearOutsideBounds();
+                                    }
+                            }
+    
+                    },
+    
+                    clearOutsideBounds: function () {
+                            var bounds = this._map.getBounds(),
+                                    latLng,
+                                    key;
+    
+                            for (key in this._layers) { 
+                                    if (this._layers.hasOwnProperty(key)) {
+                                            latLng = this._layers[key].getLatLng();
+    
+                                            if (!bounds.contains(latLng)) {
+                                                    this.removeLayer(this._layers[key]);
+                                                    delete this._layers[key];
+                                            }
+                                    }
+                            }
+                    }
+            }
+    );
+    
+    L.layerGroup.openaqLayer = function(options) {
+            return new L.LayerGroup.OpenAqLayer(options);
+    };
+    
 },{}],21:[function(require,module,exports){
 L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
 
@@ -29012,25 +28952,25 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
         },
 
         getPopupContent: function(selector) {
-					var content = '';
-					//Add each key value pair found
-					$(selector).find('tag').each(function() {
-							var key = $(this).attr('k');
-							var val = $(this).attr('v');
-							if (key === 'landuse') val = val.charAt(0).toUpperCase() + val.slice(1); //Capitalize first letter of the landuse
-							key = key.charAt(0).toUpperCase() + key.slice(1); //Capitalize first letter
-							//Check if the value is a link
-							if (/^((http|https|ftp):\/\/)/.test(val)) {
-								content += "<strong>" + key + ": </strong><a href='" + val + "' target='_blank'>" + val + "</a><br>";
-							}
-							else {
-								content += "<strong>" + key + ": </strong>" + val + "<br>";
-							}
-					});
-					content += "<hr>The data included in this layer is from www.openstreetmap.org. The data is made available under ODbL.<br>";
-					content += "From the <a href=https://github.com/publiclab/leaflet-environmental-layers/pull/94>OSM LMQ Inventory</a> (<a href = https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515>info</a>).";
-					return content;
-			},
+            var content = '';
+            //Add each key value pair found
+            $(selector).find('tag').each(function() {
+                var key = $(this).attr('k');
+                var val = $(this).attr('v');
+                if (key === 'landuse') val = val.charAt(0).toUpperCase() + val.slice(1); //Capitalize first letter of the landuse
+                key = key.charAt(0).toUpperCase() + key.slice(1); //Capitalize first letter
+                //Check if the value is a link
+                if (/^((http|https|ftp):\/\/)/.test(val)) {
+                    content += "<strong>" + key + ": </strong><a href='" + val + "' target='_blank'>" + val + "</a><br>";
+                }
+                else {
+                    content += "<strong>" + key + ": </strong>" + val + "<br>";
+                }
+            });
+            content += "<hr>The data included in this layer is from www.openstreetmap.org. The data is made available under ODbL.<br>";
+            content += "From the <a href=https://github.com/publiclab/leaflet-environmental-layers/pull/94>OSM LMQ Inventory</a> (<a href = https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515>info</a>).";
+            return content;
+        },
 
         addPolygon: function(selector) {
             var key = $(selector).attr('id'); //Use the id for the way as the key
@@ -29144,19 +29084,19 @@ L.LayerGroup.PurpleAirMarkerLayer = L.LayerGroup.extend(
         requestData: function () {
           if(this._map.getZoom() >= 7){
              var self = this;
-                  (function() {
-                      var zoom = self._map.getZoom(), northwest = self._map.getBounds().getNorthWest() , southeast = self._map.getBounds().getSouthEast() ;
-											var $ = window.jQuery;
-											var PurpleLayer_url = "https://www.purpleair.com/data.json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat="+(northwest.lat)+"&selat="+(southeast.lat)+"&nwlng="+(northwest.lng)+"&selng="+(southeast.lng) ;
-											if(typeof self._map.spin === 'function'){
-												self._map.spin(true) ;
-											}
-											$.getJSON(PurpleLayer_url , function(data){
-													self.parseData(data) ;
-													if(typeof self._map.spin === 'function'){
-														self._map.spin(false) ;
-													}
-              		    });
+                  (function() {                
+                    var zoom = self._map.getZoom(), northwest = self._map.getBounds().getNorthWest() , southeast = self._map.getBounds().getSouthEast() ;
+                    var $ = window.jQuery;
+                    var PurpleLayer_url = "https://www.purpleair.com/data.json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat="+(northwest.lat)+"&selat="+(southeast.lat)+"&nwlng="+(northwest.lng)+"&selng="+(southeast.lng) ;
+                    if(typeof self._map.spin === 'function'){
+                        self._map.spin(true) ;
+                    }
+                    $.getJSON(PurpleLayer_url , function(data){
+                        self.parseData(data) ;
+                        if(typeof self._map.spin === 'function'){
+                            self._map.spin(false) ;
+                        }
+                    });
                   })();
           }
         },
@@ -29222,7 +29162,7 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
              latField: 'lat',
              lngField: 'lng',
              valueField: 'count' ,
-             blur: .75
+             blur: 0.75
         },
 
         initialize: function (options) {
@@ -29253,31 +29193,31 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
         requestData: function () {
            var self = this;
                 (function() {
-								var $ = window.jQuery;
-								var PurpleLayer_url = "https://www.purpleair.com/json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L";
-								if(typeof self._map.spin === 'function'){
-									self._map.spin(true) ;
-								}
-								$.getJSON(PurpleLayer_url , function(data){
-										self.parseData(data) ;
-										if(typeof self._map.spin === 'function'){
-											self._map.spin(false) ;
-										}
-								});
+                    var $ = window.jQuery;
+                    var PurpleLayer_url = "https://www.purpleair.com/json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L";
+                    if(typeof self._map.spin === 'function'){
+                      self._map.spin(true) ;
+                    }
+                    $.getJSON(PurpleLayer_url , function(data){
+                        self.parseData(data) ;
+                        if(typeof self._map.spin === 'function'){
+                          self._map.spin(false) ;
+                        }
+                    }); 
                 })();
 
 
         },
 
         getMarker: function (data) {
-              var lat = data.Lat ;
+              var lat = data.Lat;
               var lng = data.Lon;
-              var value = parseFloat(data.PM2_5Value) ;  //PM2.5 VALUE in microgram per metre cube
+              var value = parseFloat(data.PM2_5Value);  //PM2.5 VALUE in microgram per metre cube
 
-              var purpleLayer_object = new Object() ;
-              purpleLayer_object.lat = lat ;
-              purpleLayer_object.lng = lng ;
-              purpleLayer_object.count = value ;
+              var purpleLayer_object = {};
+              purpleLayer_object.lat = lat;
+              purpleLayer_object.lng = lng;
+              purpleLayer_object.count = value;
               /*
               var aqi ;
               if(value>=0 && value<=12.0)
@@ -29317,7 +29257,7 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
             for (i = 0 ; i < data.results.length ; i++) {
              this.addMarker(data.results[i]) ;
             }
-
+            //console.log(this._purpleLayerArray) ;
             this.heatmapLayer.setData({data: this._purpleLayerArray}) ;
             this._map.addLayer(this.heatmapLayer) ;
         }
@@ -29492,22 +29432,22 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
                     var script = document.createElement("SCRIPT");
                     script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
                     script.type = 'text/javascript';
-										var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
+                    var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
                     script.onload = function() {
                         var $ = window.jQuery;
-												var TRI_url = "https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/"+parseInt(origin.lat)+"/PREF_LONGITUDE/BEGINNING/"+parseInt(-1*origin.lng)+"/rows/0:300/JSON" ;
+                        var TRI_url = "https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/"+parseInt(origin.lat)+"/PREF_LONGITUDE/BEGINNING/"+parseInt(-1*origin.lng)+"/rows/0:300/JSON" ;
                         if(typeof self._map.spin === 'function'){
                           self._map.spin(true) ;
                         }
                         $.getJSON(TRI_url , function(data){
-
-												 self.parseData(data) ;
+                         // console.log(parseInt(origin.lat) +" and "+parseInt(origin.lng)) ;
+                         self.parseData(data) ;
                          if(typeof self._map.spin === 'function'){
                            self._map.spin(false) ;
                          }
                         });
                     };
-										document.getElementsByTagName("head")[0].appendChild(script);
+                    document.getElementsByTagName("head")[0].appendChild(script);
                 })();
 
 
@@ -29518,6 +29458,7 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
             var greenDotIcon =new L.icon.toxicReleaseIcon();
               var lat = data.PREF_LATITUDE ;
               var lng = -1*data.PREF_LONGITUDE;
+             // console.log(lat +"  "+lng) ;
               var fac_name = data.FACILITY_NAME ;
               var city = data.CITY_NAME ;
               var mail_street_addr = data.MAIL_STREET_ADDRESS ;
@@ -29804,7 +29745,7 @@ L.Control.LegendControl = L.Control.extend({
     this._legendElement.innerHTML = '';
     var self = this;
     for(var i = 0; i < this._legendURLs.length; i++) {
-      var item = L.DomUtil.create('div', 'legend-item', this._legendElement)
+      var item = L.DomUtil.create('div', 'legend-item', this._legendElement);
       item.innerHTML = '<img src="' + this._legendURLs[i] + '" style="height: 200px;"/>';
       item.style.cssFloat = 'left';
       item.style.margin = '5px';
@@ -29816,7 +29757,7 @@ L.Control.LegendControl = L.Control.extend({
 
 L.control.legendControl = function(options) { 
   return new L.Control.LegendControl(options);
-}
+};
 
 },{}],29:[function(require,module,exports){
 wisconsinLayer = function (map) {
@@ -29846,4 +29787,4 @@ wisconsinLayer = function (map) {
    return Wisconsin_NM ;
 };
 
-},{}]},{},[3,7,17,26,27,28]);
+},{}]},{},[3,7,14,26,27,28]);

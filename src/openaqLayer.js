@@ -59,7 +59,7 @@ L.Icon.OpenAqIcon = L.Icon.extend({
                     },
     
                     getMarker: function(data) {
-                            var redDotIcon = new L.icon.openaqIcon()
+                            var redDotIcon = new L.icon.openaqIcon();
                             var distance = data.distance;
                             var lat = data.coordinates.latitude;
                             var lon = data.coordinates.longitude;
@@ -71,9 +71,9 @@ L.Icon.OpenAqIcon = L.Icon.extend({
                                 no2: "Nitrogen Dioxide",
                                 so2: "Sulphur Dioxide",
                                 co: "Carbon Monoxide",
-                        }
+                        };
                         for(var i = 0; i < data.measurements.length; i++) {
-                            contentData+="<strong>"+labels[data.measurements[i].parameter]+" : </strong>"+data.measurements[i].value+" "+data.measurements[i].unit+"<br>"
+                            contentData+="<strong>"+labels[data.measurements[i].parameter]+" : </strong>"+data.measurements[i].value+" "+data.measurements[i].unit+"<br>";
                         }
                             return L.marker([lat, lon], {icon: redDotIcon}).bindPopup(
                                 "<h3>"+data.location+", "+data.country+"</h3><br>"+
@@ -130,5 +130,5 @@ L.Icon.OpenAqIcon = L.Icon.extend({
     
     L.layerGroup.openaqLayer = function(options) {
             return new L.LayerGroup.OpenAqLayer(options);
-    }
+    };
     

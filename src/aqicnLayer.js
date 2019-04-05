@@ -89,17 +89,19 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
             var marker = this.getMarker(data);
             var key = data.uid;
             //Code provided by widget API
+            /* jshint ignore:start */
             (function(w,d,t,f){  w[f]=w[f]||function(c,k,n){s=w[f],k=s['k']=(s['k']||(k?('&k='+k):''));s['c']=
             c=(c  instanceof  Array)?c:[c];s['n']=n=n||0;Apa=d.createElement(t),e=d.getElementsByTagName(t)[0];
             Apa.async=1;Apa.src='http://feed.aqicn.org/feed/'+(c[n].city)+'/'+(c[n].lang||'')+'/feed.v1.js?n='+n+k;
             e.parentNode.insertBefore(Apa,e);  };  })(  window,document,'script','_aqiFeed'  );
+            /* jshint ignore:end */
 
             marker.bindPopup( function() { //Fetch popup content only when clicked; else the quota will be reached
                 var el = document.createElement('div');
                 el.classList.add("city-container");
                 el.id = "city-aqi-container";
 
-                var stationURL = "https://api.waqi.info/feed/@" + data.uid + "/?token=" + self.options.tokenID
+                var stationURL = "https://api.waqi.info/feed/@" + data.uid + "/?token=" + self.options.tokenID;
 
                 $.getJSON(stationURL, function(stationData) {
                     var labels = {
@@ -115,7 +117,7 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
 			             h: "Relative Humidity",
 			             d: "Dew",
 			             p: "Atmostpheric Pressure"
-		            }
+		            };
 
                     var strContent = "";
                     var name = "<h2>" + stationData.data.city.name + "</h2><br> "; //Set the default content first
@@ -182,4 +184,4 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
 
 L.layerGroup.aqicnLayer = function(options) {
     return new L.LayerGroup.AQICNLayer(options);
-}
+};
