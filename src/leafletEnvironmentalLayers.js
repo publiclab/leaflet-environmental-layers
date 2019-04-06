@@ -19,4 +19,6 @@ require('./osmLandfillMineQuarryLayer.js');
 require('./wisconsinLayer.js');
 require('./fracTrackerMobileLayer.js');
 require('./pfasLayer.js');
-require('./googleSpreadsheetLayer.js');
+require('./luftdatenLayer.js');
+require('./openSenseLayer.js');
+

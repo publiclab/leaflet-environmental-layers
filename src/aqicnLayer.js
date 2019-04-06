@@ -29,28 +29,21 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
                 var self = this ;
 
                 (function() {
-                    var script = document.createElement("SCRIPT");
-                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                    script.type = 'text/javascript';
 
                     var zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
+                    var $ = window.jQuery;
+                    var AQI_url = "https://api.waqi.info/map/bounds/?latlng=" + southwest.lat + "," + southwest.lng + "," + northeast.lat + "," + northeast.lng + "&token=" + self.options.tokenID;
 
-                    script.onload = function() {
-                        var $ = window.jQuery;
-                        var AQI_url = "https://api.waqi.info/map/bounds/?latlng=" + southwest.lat + "," + southwest.lng + "," + northeast.lat + "," + northeast.lng + "&token=" + self.options.tokenID;
+                    if(typeof self._map.spin === 'function'){
+                        self._map.spin(true) ;
+                    }
+                        $.getJSON(AQI_url , function(regionalData){
 
-                        if(typeof self._map.spin === 'function'){
-                         self._map.spin(true) ;
-                        }
-                         $.getJSON(AQI_url , function(regionalData){
-
-                             self.parseData(regionalData) ;
-                             if(typeof self._map.spin === 'function'){
-                               self._map.spin(false) ;
-                             }
-                         });
-                    };
-                    document.getElementsByTagName("head")[0].appendChild(script);
+                            self.parseData(regionalData) ;
+                            if(typeof self._map.spin === 'function'){
+                            self._map.spin(false) ;
+                            }
+                        });
                 })();
         },
 
@@ -96,17 +89,19 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
             var marker = this.getMarker(data);
             var key = data.uid;
             //Code provided by widget API
+            /* jshint ignore:start */
             (function(w,d,t,f){  w[f]=w[f]||function(c,k,n){s=w[f],k=s['k']=(s['k']||(k?('&k='+k):''));s['c']=
             c=(c  instanceof  Array)?c:[c];s['n']=n=n||0;Apa=d.createElement(t),e=d.getElementsByTagName(t)[0];
             Apa.async=1;Apa.src='http://feed.aqicn.org/feed/'+(c[n].city)+'/'+(c[n].lang||'')+'/feed.v1.js?n='+n+k;
             e.parentNode.insertBefore(Apa,e);  };  })(  window,document,'script','_aqiFeed'  );
+            /* jshint ignore:end */
 
             marker.bindPopup( function() { //Fetch popup content only when clicked; else the quota will be reached
                 var el = document.createElement('div');
                 el.classList.add("city-container");
                 el.id = "city-aqi-container";
 
-                var stationURL = "https://api.waqi.info/feed/@" + data.uid + "/?token=" + self.options.tokenID
+                var stationURL = "https://api.waqi.info/feed/@" + data.uid + "/?token=" + self.options.tokenID;
 
                 $.getJSON(stationURL, function(stationData) {
                     var labels = {
@@ -122,7 +117,7 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
 			             h: "Relative Humidity",
 			             d: "Dew",
 			             p: "Atmostpheric Pressure"
-		            }
+		            };
 
                     var strContent = "";
                     var name = "<h2>" + stationData.data.city.name + "</h2><br> "; //Set the default content first
@@ -189,4 +184,4 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
 
 L.layerGroup.aqicnLayer = function(options) {
     return new L.LayerGroup.AQICNLayer(options);
-}
+};

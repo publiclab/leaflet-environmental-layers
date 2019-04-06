@@ -31,7 +31,7 @@ $(window).one('load', function() {
   
   //Add whenever new layers are added
   map.on('overlayadd', function(eventLayer) {
-    var layerName = eventLayer.name
+    var layerName = eventLayer.name;
     if(legendPairs[layerName]) legendControl.addLegend(legendPairs[layerName]);
   });
   

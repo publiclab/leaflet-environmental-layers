@@ -19123,6 +19123,7 @@ var IconDefault = Icon.extend({
 			IconDefault.imagePath = this._detectIconPath();
 		}
 
+
 		// @option imagePath: String
 		// `Icon.Default` will try to auto-detect the location of the
 		// blue icon images. If you are placing these images in a non-standard
@@ -19148,6 +19149,1222 @@ var IconDefault = Icon.extend({
 });
 
 /*
+ * L.Handler.MarkerDrag is used internally by L.Marker to make the markers draggable.
+ */
+
+
+/* @namespace Marker
+ * @section Interaction handlers
+ *
+ * Interaction handlers are properties of a marker instance that allow you to control interaction behavior in runtime, enabling or disabling certain features such as dragging (see `Handler` methods). Example:
+ *
+ * ```js
+ * marker.dragging.disable();
+ * ```
+ *
+ * @property dragging: Handler
+ * Marker dragging handler (by both mouse and touch). Only valid when the marker is on the map (Otherwise set [`marker.options.draggable`](#marker-draggable)).
+ */
+
+var MarkerDrag = Handler.extend({
+	initialize: function (marker) {
+		this._marker = marker;
+	},
+
+	addHooks: function () {
+		var icon = this._marker._icon;
+
+		if (!this._draggable) {
+			this._draggable = new Draggable(icon, icon, true);
+		}
+
+		this._draggable.on({
+			dragstart: this._onDragStart,
+			predrag: this._onPreDrag,
+			drag: this._onDrag,
+			dragend: this._onDragEnd
+		}, this).enable();
+
+		addClass(icon, 'leaflet-marker-draggable');
+	},
+
+	removeHooks: function () {
+		this._draggable.off({
+			dragstart: this._onDragStart,
+			predrag: this._onPreDrag,
+			drag: this._onDrag,
+			dragend: this._onDragEnd
+		}, this).disable();
+
+		if (this._marker._icon) {
+			removeClass(this._marker._icon, 'leaflet-marker-draggable');
+		}
+	},
+
+	moved: function () {
+		return this._draggable && this._draggable._moved;
+	},
+
+	_adjustPan: function (e) {
+		var marker = this._marker,
+		    map = marker._map,
+		    speed = this._marker.options.autoPanSpeed,
+		    padding = this._marker.options.autoPanPadding,
+		    iconPos = L.DomUtil.getPosition(marker._icon),
+		    bounds = map.getPixelBounds(),
+		    origin = map.getPixelOrigin();
+
+		var panBounds = toBounds(
+			bounds.min._subtract(origin).add(padding),
+			bounds.max._subtract(origin).subtract(padding)
+		);
+
+		if (!panBounds.contains(iconPos)) {
+			// Compute incremental movement
+			var movement = toPoint(
+				(Math.max(panBounds.max.x, iconPos.x) - panBounds.max.x) / (bounds.max.x - panBounds.max.x) -
+				(Math.min(panBounds.min.x, iconPos.x) - panBounds.min.x) / (bounds.min.x - panBounds.min.x),
+
+				(Math.max(panBounds.max.y, iconPos.y) - panBounds.max.y) / (bounds.max.y - panBounds.max.y) -
+				(Math.min(panBounds.min.y, iconPos.y) - panBounds.min.y) / (bounds.min.y - panBounds.min.y)
+			).multiplyBy(speed);
+
+			map.panBy(movement, {animate: false});
+
+			this._draggable._newPos._add(movement);
+			this._draggable._startPos._add(movement);
+
+			L.DomUtil.setPosition(marker._icon, this._draggable._newPos);
+			this._onDrag(e);
+
+			this._panRequest = requestAnimFrame(this._adjustPan.bind(this, e));
+		}
+	},
+
+	_onDragStart: function () {
+		// @section Dragging events
+		// @event dragstart: Event
+		// Fired when the user starts dragging the marker.
+
+		// @event movestart: Event
+		// Fired when the marker starts moving (because of dragging).
+
+		this._oldLatLng = this._marker.getLatLng();
+		this._marker
+		    .closePopup()
+		    .fire('movestart')
+		    .fire('dragstart');
+	},
+
+	_onPreDrag: function (e) {
+		if (this._marker.options.autoPan) {
+			cancelAnimFrame(this._panRequest);
+			this._panRequest = requestAnimFrame(this._adjustPan.bind(this, e));
+		}
+	},
+
+	_onDrag: function (e) {
+		var marker = this._marker,
+		    shadow = marker._shadow,
+		iconPos = getPosition(marker._icon),
+		    latlng = marker._map.layerPointToLatLng(iconPos);
+
+		// update shadow position
+		if (shadow) {
+			setPosition(shadow, iconPos);
+		}
+
+		marker._latlng = latlng;
+		e.latlng = latlng;
+		e.oldLatLng = this._oldLatLng;
+
+		// @event drag: Event
+		// Fired repeatedly while the user drags the marker.
+		marker
+		    .fire('move', e)
+		    .fire('drag', e);
+	},
+
+	_onDragEnd: function (e) {
+		// @event dragend: DragEndEvent
+		// Fired when the user stops dragging the marker.
+
+		 cancelAnimFrame(this._panRequest);
+
+		// @event moveend: Event
+		// Fired when the marker stops moving (because of dragging).
+		delete this._oldLatLng;
+		this._marker
+		    .fire('moveend')
+		    .fire('dragend', e);
+	}
+});
+
+/*
+ * @class Marker
+ * @inherits Interactive layer
+ * @aka L.Marker
+ * L.Marker is used to display clickable/draggable icons on the map. Extends `Layer`.
+ *
+ * @example
+ *
+ * ```js
+ * L.marker([50.5, 30.5]).addTo(map);
+ * ```
+ */
+
+var Marker = Layer.extend({
+
+	// @section
+	// @aka Marker options
+	options: {
+		// @option icon: Icon = *
+		// Icon instance to use for rendering the marker.
+		// See [Icon documentation](#L.Icon) for details on how to customize the marker icon.
+		// If not specified, a common instance of `L.Icon.Default` is used.
+		icon: new IconDefault(),
+
+		// Option inherited from "Interactive layer" abstract class
+		interactive: true,
+
+		// @option draggable: Boolean = false
+		// Whether the marker is draggable with mouse/touch or not.
+		draggable: false,
+
+		// @option autoPan: Boolean = false
+		// Set it to `true` if you want the map to do panning animation when marker hits the edges.
+		autoPan: false,
+
+		// @option autoPanPadding: Point = Point(50, 50)
+		// Equivalent of setting both top left and bottom right autopan padding to the same value.
+		autoPanPadding: [50, 50],
+
+		// @option autoPanSpeed: Number = 10
+		// Number of pixels the map should move by.
+		autoPanSpeed: 10,
+
+		// @option keyboard: Boolean = true
+		// Whether the marker can be tabbed to with a keyboard and clicked by pressing enter.
+		keyboard: true,
+
+		// @option title: String = ''
+		// Text for the browser tooltip that appear on marker hover (no tooltip by default).
+		title: '',
+
+		// @option alt: String = ''
+		// Text for the `alt` attribute of the icon image (useful for accessibility).
+		alt: '',
+
+		// @option zIndexOffset: Number = 0
+		// By default, marker images zIndex is set automatically based on its latitude. Use this option if you want to put the marker on top of all others (or below), specifying a high value like `1000` (or high negative value, respectively).
+		zIndexOffset: 0,
+
+		// @option opacity: Number = 1.0
+		// The opacity of the marker.
+		opacity: 1,
+
+		// @option riseOnHover: Boolean = false
+		// If `true`, the marker will get on top of others when you hover the mouse over it.
+		riseOnHover: false,
+
+		// @option riseOffset: Number = 250
+		// The z-index offset used for the `riseOnHover` feature.
+		riseOffset: 250,
+
+		// @option pane: String = 'markerPane'
+		// `Map pane` where the markers icon will be added.
+		pane: 'markerPane',
+
+		// @option bubblingMouseEvents: Boolean = false
+		// When `true`, a mouse event on this marker will trigger the same event on the map
+		// (unless [`L.DomEvent.stopPropagation`](#domevent-stoppropagation) is used).
+		bubblingMouseEvents: false
+	},
+
+	/* @section
+	 *
+	 * In addition to [shared layer methods](#Layer) like `addTo()` and `remove()` and [popup methods](#Popup) like bindPopup() you can also use the following methods:
+	 */
+
+	initialize: function (latlng, options) {
+		setOptions(this, options);
+		this._latlng = toLatLng(latlng);
+	},
+
+	onAdd: function (map) {
+		this._zoomAnimated = this._zoomAnimated && map.options.markerZoomAnimation;
+
+		if (this._zoomAnimated) {
+			map.on('zoomanim', this._animateZoom, this);
+		}
+
+		this._initIcon();
+		this.update();
+	},
+
+	onRemove: function (map) {
+		if (this.dragging && this.dragging.enabled()) {
+			this.options.draggable = true;
+			this.dragging.removeHooks();
+		}
+		delete this.dragging;
+
+		if (this._zoomAnimated) {
+			map.off('zoomanim', this._animateZoom, this);
+		}
+
+		this._removeIcon();
+		this._removeShadow();
+	},
+
+	getEvents: function () {
+		return {
+			zoom: this.update,
+			viewreset: this.update
+		};
+	},
+
+	// @method getLatLng: LatLng
+	// Returns the current geographical position of the marker.
+	getLatLng: function () {
+		return this._latlng;
+	},
+
+	// @method setLatLng(latlng: LatLng): this
+	// Changes the marker position to the given point.
+	setLatLng: function (latlng) {
+		var oldLatLng = this._latlng;
+		this._latlng = toLatLng(latlng);
+		this.update();
+
+		// @event move: Event
+		// Fired when the marker is moved via [`setLatLng`](#marker-setlatlng) or by [dragging](#marker-dragging). Old and new coordinates are included in event arguments as `oldLatLng`, `latlng`.
+		return this.fire('move', {oldLatLng: oldLatLng, latlng: this._latlng});
+	},
+
+	// @method setZIndexOffset(offset: Number): this
+	// Changes the [zIndex offset](#marker-zindexoffset) of the marker.
+	setZIndexOffset: function (offset) {
+		this.options.zIndexOffset = offset;
+		return this.update();
+	},
+
+	// @method setIcon(icon: Icon): this
+	// Changes the marker icon.
+	setIcon: function (icon) {
+
+		this.options.icon = icon;
+
+		if (this._map) {
+			this._initIcon();
+			this.update();
+		}
+
+		if (this._popup) {
+			this.bindPopup(this._popup, this._popup.options);
+		}
+
+		return this;
+	},
+
+	getElement: function () {
+		return this._icon;
+	},
+
+	update: function () {
+
+		if (this._icon && this._map) {
+			var pos = this._map.latLngToLayerPoint(this._latlng).round();
+			this._setPos(pos);
+		}
+
+		return this;
+	},
+
+	_initIcon: function () {
+		var options = this.options,
+		    classToAdd = 'leaflet-zoom-' + (this._zoomAnimated ? 'animated' : 'hide');
+
+		var icon = options.icon.createIcon(this._icon),
+		    addIcon = false;
+
+		// if we're not reusing the icon, remove the old one and init new one
+		if (icon !== this._icon) {
+			if (this._icon) {
+				this._removeIcon();
+			}
+			addIcon = true;
+
+			if (options.title) {
+				icon.title = options.title;
+			}
+
+			if (icon.tagName === 'IMG') {
+				icon.alt = options.alt || '';
+			}
+		}
+
+		addClass(icon, classToAdd);
+
+		if (options.keyboard) {
+			icon.tabIndex = '0';
+		}
+
+		this._icon = icon;
+
+		if (options.riseOnHover) {
+			this.on({
+				mouseover: this._bringToFront,
+				mouseout: this._resetZIndex
+			});
+		}
+
+		var newShadow = options.icon.createShadow(this._shadow),
+		    addShadow = false;
+
+		if (newShadow !== this._shadow) {
+			this._removeShadow();
+			addShadow = true;
+		}
+
+		if (newShadow) {
+			addClass(newShadow, classToAdd);
+			newShadow.alt = '';
+		}
+		this._shadow = newShadow;
+
+
+		if (options.opacity < 1) {
+			this._updateOpacity();
+		}
+
+
+		if (addIcon) {
+			this.getPane().appendChild(this._icon);
+		}
+		this._initInteraction();
+		if (newShadow && addShadow) {
+			this.getPane('shadowPane').appendChild(this._shadow);
+		}
+	},
+
+	_removeIcon: function () {
+		if (this.options.riseOnHover) {
+			this.off({
+				mouseover: this._bringToFront,
+				mouseout: this._resetZIndex
+			});
+		}
+
+		remove(this._icon);
+		this.removeInteractiveTarget(this._icon);
+
+		this._icon = null;
+	},
+
+	_removeShadow: function () {
+		if (this._shadow) {
+			remove(this._shadow);
+		}
+		this._shadow = null;
+	},
+
+	_setPos: function (pos) {
+		setPosition(this._icon, pos);
+
+		if (this._shadow) {
+			setPosition(this._shadow, pos);
+		}
+
+		this._zIndex = pos.y + this.options.zIndexOffset;
+
+		this._resetZIndex();
+	},
+
+	_updateZIndex: function (offset) {
+		this._icon.style.zIndex = this._zIndex + offset;
+	},
+
+	_animateZoom: function (opt) {
+		var pos = this._map._latLngToNewLayerPoint(this._latlng, opt.zoom, opt.center).round();
+
+		this._setPos(pos);
+	},
+
+	_initInteraction: function () {
+
+		if (!this.options.interactive) { return; }
+
+		addClass(this._icon, 'leaflet-interactive');
+
+		this.addInteractiveTarget(this._icon);
+
+		if (MarkerDrag) {
+			var draggable = this.options.draggable;
+			if (this.dragging) {
+				draggable = this.dragging.enabled();
+				this.dragging.disable();
+			}
+
+			this.dragging = new MarkerDrag(this);
+
+			if (draggable) {
+				this.dragging.enable();
+			}
+		}
+	},
+
+	// @method setOpacity(opacity: Number): this
+	// Changes the opacity of the marker.
+	setOpacity: function (opacity) {
+		this.options.opacity = opacity;
+		if (this._map) {
+			this._updateOpacity();
+		}
+
+		return this;
+	},
+
+	_updateOpacity: function () {
+		var opacity = this.options.opacity;
+
+		setOpacity(this._icon, opacity);
+
+		if (this._shadow) {
+			setOpacity(this._shadow, opacity);
+		}
+	},
+
+	_bringToFront: function () {
+		this._updateZIndex(this.options.riseOffset);
+	},
+
+	_resetZIndex: function () {
+		this._updateZIndex(0);
+	},
+
+	_getPopupAnchor: function () {
+		return this.options.icon.options.popupAnchor;
+	},
+
+	_getTooltipAnchor: function () {
+		return this.options.icon.options.tooltipAnchor;
+	}
+});
+
+
+// factory L.marker(latlng: LatLng, options? : Marker options)
+
+// @factory L.marker(latlng: LatLng, options? : Marker options)
+// Instantiates a Marker object given a geographical point and optionally an options object.
+function marker(latlng, options) {
+	return new Marker(latlng, options);
+}
+
+/*
+ * @class Path
+ * @aka L.Path
+ * @inherits Interactive layer
+ *
+ * An abstract class that contains options and constants shared between vector
+ * overlays (Polygon, Polyline, Circle). Do not use it directly. Extends `Layer`.
+ */
+
+var Path = Layer.extend({
+
+	// @section
+	// @aka Path options
+	options: {
+		// @option stroke: Boolean = true
+		// Whether to draw stroke along the path. Set it to `false` to disable borders on polygons or circles.
+		stroke: true,
+
+		// @option color: String = '#3388ff'
+		// Stroke color
+		color: '#3388ff',
+
+		// @option weight: Number = 3
+		// Stroke width in pixels
+		weight: 3,
+
+		// @option opacity: Number = 1.0
+		// Stroke opacity
+		opacity: 1,
+
+		// @option lineCap: String= 'round'
+		// A string that defines [shape to be used at the end](https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-linecap) of the stroke.
+		lineCap: 'round',
+
+		// @option lineJoin: String = 'round'
+		// A string that defines [shape to be used at the corners](https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-linejoin) of the stroke.
+		lineJoin: 'round',
+
+		// @option dashArray: String = null
+		// A string that defines the stroke [dash pattern](https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-dasharray). Doesn't work on `Canvas`-powered layers in [some old browsers](https://developer.mozilla.org/docs/Web/API/CanvasRenderingContext2D/setLineDash#Browser_compatibility).
+		dashArray: null,
+
+		// @option dashOffset: String = null
+		// A string that defines the [distance into the dash pattern to start the dash](https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-dashoffset). Doesn't work on `Canvas`-powered layers in [some old browsers](https://developer.mozilla.org/docs/Web/API/CanvasRenderingContext2D/setLineDash#Browser_compatibility).
+		dashOffset: null,
+
+		// @option fill: Boolean = depends
+		// Whether to fill the path with color. Set it to `false` to disable filling on polygons or circles.
+		fill: false,
+
+		// @option fillColor: String = *
+		// Fill color. Defaults to the value of the [`color`](#path-color) option
+		fillColor: null,
+
+		// @option fillOpacity: Number = 0.2
+		// Fill opacity.
+		fillOpacity: 0.2,
+
+		// @option fillRule: String = 'evenodd'
+		// A string that defines [how the inside of a shape](https://developer.mozilla.org/docs/Web/SVG/Attribute/fill-rule) is determined.
+		fillRule: 'evenodd',
+
+		// className: '',
+
+		// Option inherited from "Interactive layer" abstract class
+		interactive: true,
+
+		// @option bubblingMouseEvents: Boolean = true
+		// When `true`, a mouse event on this path will trigger the same event on the map
+		// (unless [`L.DomEvent.stopPropagation`](#domevent-stoppropagation) is used).
+		bubblingMouseEvents: true
+	},
+
+	beforeAdd: function (map) {
+		// Renderer is set here because we need to call renderer.getEvents
+		// before this.getEvents.
+		this._renderer = map.getRenderer(this);
+	},
+
+	onAdd: function () {
+		this._renderer._initPath(this);
+		this._reset();
+		this._renderer._addPath(this);
+	},
+
+	onRemove: function () {
+		this._renderer._removePath(this);
+	},
+
+	// @method redraw(): this
+	// Redraws the layer. Sometimes useful after you changed the coordinates that the path uses.
+	redraw: function () {
+		if (this._map) {
+			this._renderer._updatePath(this);
+		}
+		return this;
+	},
+
+	// @method setStyle(style: Path options): this
+	// Changes the appearance of a Path based on the options in the `Path options` object.
+	setStyle: function (style) {
+		setOptions(this, style);
+		if (this._renderer) {
+			this._renderer._updateStyle(this);
+		}
+		return this;
+	},
+
+	// @method bringToFront(): this
+	// Brings the layer to the top of all path layers.
+	bringToFront: function () {
+		if (this._renderer) {
+			this._renderer._bringToFront(this);
+		}
+		return this;
+	},
+
+	// @method bringToBack(): this
+	// Brings the layer to the bottom of all path layers.
+	bringToBack: function () {
+		if (this._renderer) {
+			this._renderer._bringToBack(this);
+		}
+		return this;
+	},
+
+	getElement: function () {
+		return this._path;
+	},
+
+	_reset: function () {
+		// defined in child classes
+		this._project();
+		this._update();
+	},
+
+	_clickTolerance: function () {
+		// used when doing hit detection for Canvas layers
+		return (this.options.stroke ? this.options.weight / 2 : 0) + this._renderer.options.tolerance;
+
+
+		// @option imagePath: String
+		// `Icon.Default` will try to auto-detect the location of the
+		// blue icon images. If you are placing these images in a non-standard
+		// way, set this option to point to the right path.
+		return (this.options.imagePath || IconDefault.imagePath) + Icon.prototype._getIconUrl.call(this, name);
+	},
+
+	_detectIconPath: function () {
+		var el = create$1('div',  'leaflet-default-icon-path', document.body);
+		var path = getStyle(el, 'background-image') ||
+		           getStyle(el, 'backgroundImage');	// IE8
+
+		document.body.removeChild(el);
+
+		if (path === null || path.indexOf('url') !== 0) {
+			path = '';
+		} else {
+			path = path.replace(/^url\(["']?/, '').replace(/marker-icon\.png["']?\)$/, '');
+		}
+
+		return path;
+
+	}
+});
+
+/*
+
+ * @class CircleMarker
+ * @aka L.CircleMarker
+ * @inherits Path
+ *
+ * A circle of a fixed size with radius specified in pixels. Extends `Path`.
+ */
+
+var CircleMarker = Path.extend({
+
+	// @section
+	// @aka CircleMarker options
+	options: {
+		fill: true,
+
+		// @option radius: Number = 10
+		// Radius of the circle marker, in pixels
+		radius: 10
+	},
+
+	initialize: function (latlng, options) {
+		setOptions(this, options);
+		this._latlng = toLatLng(latlng);
+		this._radius = this.options.radius;
+	},
+
+	// @method setLatLng(latLng: LatLng): this
+	// Sets the position of a circle marker to a new location.
+	setLatLng: function (latlng) {
+		this._latlng = toLatLng(latlng);
+		this.redraw();
+		return this.fire('move', {latlng: this._latlng});
+	},
+
+	// @method getLatLng(): LatLng
+	// Returns the current geographical position of the circle marker
+	getLatLng: function () {
+		return this._latlng;
+	},
+
+	// @method setRadius(radius: Number): this
+	// Sets the radius of a circle marker. Units are in pixels.
+	setRadius: function (radius) {
+		this.options.radius = this._radius = radius;
+		return this.redraw();
+	},
+
+	// @method getRadius(): Number
+	// Returns the current radius of the circle
+	getRadius: function () {
+		return this._radius;
+	},
+
+	setStyle : function (options) {
+		var radius = options && options.radius || this._radius;
+		Path.prototype.setStyle.call(this, options);
+		this.setRadius(radius);
+		return this;
+	},
+
+	_project: function () {
+		this._point = this._map.latLngToLayerPoint(this._latlng);
+		this._updateBounds();
+	},
+
+	_updateBounds: function () {
+		var r = this._radius,
+		    r2 = this._radiusY || r,
+		    w = this._clickTolerance(),
+		    p = [r + w, r2 + w];
+		this._pxBounds = new Bounds(this._point.subtract(p), this._point.add(p));
+	},
+
+	_update: function () {
+		if (this._map) {
+			this._updatePath();
+		}
+	},
+
+	_updatePath: function () {
+		this._renderer._updateCircle(this);
+	},
+
+	_empty: function () {
+		return this._radius && !this._renderer._bounds.intersects(this._pxBounds);
+	},
+
+	// Needed by the `Canvas` renderer for interactivity
+	_containsPoint: function (p) {
+		return p.distanceTo(this._point) <= this._radius + this._clickTolerance();
+	}
+});
+
+
+// @factory L.circleMarker(latlng: LatLng, options?: CircleMarker options)
+// Instantiates a circle marker object given a geographical point, and an optional options object.
+function circleMarker(latlng, options) {
+	return new CircleMarker(latlng, options);
+}
+
+/*
+ * @class Circle
+ * @aka L.Circle
+ * @inherits CircleMarker
+ *
+ * A class for drawing circle overlays on a map. Extends `CircleMarker`.
+ *
+ * It's an approximation and starts to diverge from a real circle closer to poles (due to projection distortion).
+ *
+ * @example
+ *
+ * ```js
+ * L.circle([50.5, 30.5], {radius: 200}).addTo(map);
+ * ```
+ */
+
+var Circle = CircleMarker.extend({
+
+	initialize: function (latlng, options, legacyOptions) {
+		if (typeof options === 'number') {
+			// Backwards compatibility with 0.7.x factory (latlng, radius, options?)
+			options = extend({}, legacyOptions, {radius: options});
+		}
+		setOptions(this, options);
+		this._latlng = toLatLng(latlng);
+
+		if (isNaN(this.options.radius)) { throw new Error('Circle radius cannot be NaN'); }
+
+		// @section
+		// @aka Circle options
+		// @option radius: Number; Radius of the circle, in meters.
+		this._mRadius = this.options.radius;
+	},
+
+	// @method setRadius(radius: Number): this
+	// Sets the radius of a circle. Units are in meters.
+	setRadius: function (radius) {
+		this._mRadius = radius;
+		return this.redraw();
+	},
+
+	// @method getRadius(): Number
+	// Returns the current radius of a circle. Units are in meters.
+	getRadius: function () {
+		return this._mRadius;
+	},
+
+	// @method getBounds(): LatLngBounds
+	// Returns the `LatLngBounds` of the path.
+	getBounds: function () {
+		var half = [this._radius, this._radiusY || this._radius];
+
+		return new LatLngBounds(
+			this._map.layerPointToLatLng(this._point.subtract(half)),
+			this._map.layerPointToLatLng(this._point.add(half)));
+	},
+
+	setStyle: Path.prototype.setStyle,
+
+	_project: function () {
+
+		var lng = this._latlng.lng,
+		    lat = this._latlng.lat,
+		    map = this._map,
+		    crs = map.options.crs;
+
+		if (crs.distance === Earth.distance) {
+			var d = Math.PI / 180,
+			    latR = (this._mRadius / Earth.R) / d,
+			    top = map.project([lat + latR, lng]),
+			    bottom = map.project([lat - latR, lng]),
+			    p = top.add(bottom).divideBy(2),
+			    lat2 = map.unproject(p).lat,
+			    lngR = Math.acos((Math.cos(latR * d) - Math.sin(lat * d) * Math.sin(lat2 * d)) /
+			            (Math.cos(lat * d) * Math.cos(lat2 * d))) / d;
+
+			if (isNaN(lngR) || lngR === 0) {
+				lngR = latR / Math.cos(Math.PI / 180 * lat); // Fallback for edge case, #2425
+			}
+
+			this._point = p.subtract(map.getPixelOrigin());
+			this._radius = isNaN(lngR) ? 0 : p.x - map.project([lat2, lng - lngR]).x;
+			this._radiusY = p.y - top.y;
+
+		} else {
+			var latlng2 = crs.unproject(crs.project(this._latlng).subtract([this._mRadius, 0]));
+
+			this._point = map.latLngToLayerPoint(this._latlng);
+			this._radius = this._point.x - map.latLngToLayerPoint(latlng2).x;
+		}
+
+		this._updateBounds();
+	}
+});
+
+// @factory L.circle(latlng: LatLng, options?: Circle options)
+// Instantiates a circle object given a geographical point, and an options object
+// which contains the circle radius.
+// @alternative
+// @factory L.circle(latlng: LatLng, radius: Number, options?: Circle options)
+// Obsolete way of instantiating a circle, for compatibility with 0.7.x code.
+// Do not use in new applications or plugins.
+function circle(latlng, options, legacyOptions) {
+	return new Circle(latlng, options, legacyOptions);
+}
+
+/*
+ * @class Polyline
+ * @aka L.Polyline
+ * @inherits Path
+ *
+ * A class for drawing polyline overlays on a map. Extends `Path`.
+ *
+ * @example
+ *
+ * ```js
+ * // create a red polyline from an array of LatLng points
+ * var latlngs = [
+ * 	[45.51, -122.68],
+ * 	[37.77, -122.43],
+ * 	[34.04, -118.2]
+ * ];
+ *
+ * var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+ *
+ * // zoom the map to the polyline
+ * map.fitBounds(polyline.getBounds());
+ * ```
+ *
+ * You can also pass a multi-dimensional array to represent a `MultiPolyline` shape:
+ *
+ * ```js
+ * // create a red polyline from an array of arrays of LatLng points
+ * var latlngs = [
+ * 	[[45.51, -122.68],
+ * 	 [37.77, -122.43],
+ * 	 [34.04, -118.2]],
+ * 	[[40.78, -73.91],
+ * 	 [41.83, -87.62],
+ * 	 [32.76, -96.72]]
+ * ];
+ * ```
+ */
+
+
+var Polyline = Path.extend({
+
+	// @section
+	// @aka Polyline options
+	options: {
+		// @option smoothFactor: Number = 1.0
+		// How much to simplify the polyline on each zoom level. More means
+		// better performance and smoother look, and less means more accurate representation.
+		smoothFactor: 1.0,
+
+		// @option noClip: Boolean = false
+		// Disable polyline clipping.
+		noClip: false
+	},
+
+	initialize: function (latlngs, options) {
+		setOptions(this, options);
+		this._setLatLngs(latlngs);
+	},
+
+	// @method getLatLngs(): LatLng[]
+	// Returns an array of the points in the path, or nested arrays of points in case of multi-polyline.
+	getLatLngs: function () {
+		return this._latlngs;
+	},
+
+	// @method setLatLngs(latlngs: LatLng[]): this
+	// Replaces all the points in the polyline with the given array of geographical points.
+	setLatLngs: function (latlngs) {
+		this._setLatLngs(latlngs);
+		return this.redraw();
+	},
+
+	// @method isEmpty(): Boolean
+	// Returns `true` if the Polyline has no LatLngs.
+	isEmpty: function () {
+		return !this._latlngs.length;
+	},
+
+	// @method closestLayerPoint: Point
+	// Returns the point closest to `p` on the Polyline.
+	closestLayerPoint: function (p) {
+		var minDistance = Infinity,
+		    minPoint = null,
+		    closest = _sqClosestPointOnSegment,
+		    p1, p2;
+
+		for (var j = 0, jLen = this._parts.length; j < jLen; j++) {
+			var points = this._parts[j];
+
+			for (var i = 1, len = points.length; i < len; i++) {
+				p1 = points[i - 1];
+				p2 = points[i];
+
+				var sqDist = closest(p, p1, p2, true);
+
+				if (sqDist < minDistance) {
+					minDistance = sqDist;
+					minPoint = closest(p, p1, p2);
+				}
+			}
+		}
+		if (minPoint) {
+			minPoint.distance = Math.sqrt(minDistance);
+		}
+		return minPoint;
+	},
+
+	// @method getCenter(): LatLng
+	// Returns the center ([centroid](http://en.wikipedia.org/wiki/Centroid)) of the polyline.
+	getCenter: function () {
+		// throws error when not yet added to map as this center calculation requires projected coordinates
+		if (!this._map) {
+			throw new Error('Must add layer to map before using getCenter()');
+		}
+
+		var i, halfDist, segDist, dist, p1, p2, ratio,
+		    points = this._rings[0],
+		    len = points.length;
+
+		if (!len) { return null; }
+
+		// polyline centroid algorithm; only uses the first ring if there are multiple
+
+		for (i = 0, halfDist = 0; i < len - 1; i++) {
+			halfDist += points[i].distanceTo(points[i + 1]) / 2;
+		}
+
+		// The line is so small in the current view that all points are on the same pixel.
+		if (halfDist === 0) {
+			return this._map.layerPointToLatLng(points[0]);
+		}
+
+		for (i = 0, dist = 0; i < len - 1; i++) {
+			p1 = points[i];
+			p2 = points[i + 1];
+			segDist = p1.distanceTo(p2);
+			dist += segDist;
+
+			if (dist > halfDist) {
+				ratio = (dist - halfDist) / segDist;
+				return this._map.layerPointToLatLng([
+					p2.x - ratio * (p2.x - p1.x),
+					p2.y - ratio * (p2.y - p1.y)
+				]);
+			}
+		}
+	},
+
+	// @method getBounds(): LatLngBounds
+	// Returns the `LatLngBounds` of the path.
+	getBounds: function () {
+		return this._bounds;
+	},
+
+	// @method addLatLng(latlng: LatLng, latlngs? LatLng[]): this
+	// Adds a given point to the polyline. By default, adds to the first ring of
+	// the polyline in case of a multi-polyline, but can be overridden by passing
+	// a specific ring as a LatLng array (that you can earlier access with [`getLatLngs`](#polyline-getlatlngs)).
+	addLatLng: function (latlng, latlngs) {
+		latlngs = latlngs || this._defaultShape();
+		latlng = toLatLng(latlng);
+		latlngs.push(latlng);
+		this._bounds.extend(latlng);
+		return this.redraw();
+	},
+
+	_setLatLngs: function (latlngs) {
+		this._bounds = new LatLngBounds();
+		this._latlngs = this._convertLatLngs(latlngs);
+	},
+
+	_defaultShape: function () {
+		return isFlat(this._latlngs) ? this._latlngs : this._latlngs[0];
+	},
+
+	// recursively convert latlngs input into actual LatLng instances; calculate bounds along the way
+	_convertLatLngs: function (latlngs) {
+		var result = [],
+		    flat = isFlat(latlngs);
+
+		for (var i = 0, len = latlngs.length; i < len; i++) {
+			if (flat) {
+				result[i] = toLatLng(latlngs[i]);
+				this._bounds.extend(result[i]);
+			} else {
+				result[i] = this._convertLatLngs(latlngs[i]);
+			}
+		}
+
+		return result;
+	},
+
+	_project: function () {
+		var pxBounds = new Bounds();
+		this._rings = [];
+		this._projectLatlngs(this._latlngs, this._rings, pxBounds);
+
+		var w = this._clickTolerance(),
+		    p = new Point(w, w);
+
+		if (this._bounds.isValid() && pxBounds.isValid()) {
+			pxBounds.min._subtract(p);
+			pxBounds.max._add(p);
+			this._pxBounds = pxBounds;
+		}
+	},
+
+	// recursively turns latlngs into a set of rings with projected coordinates
+	_projectLatlngs: function (latlngs, result, projectedBounds) {
+		var flat = latlngs[0] instanceof LatLng,
+		    len = latlngs.length,
+		    i, ring;
+
+		if (flat) {
+			ring = [];
+			for (i = 0; i < len; i++) {
+				ring[i] = this._map.latLngToLayerPoint(latlngs[i]);
+				projectedBounds.extend(ring[i]);
+			}
+			result.push(ring);
+		} else {
+			for (i = 0; i < len; i++) {
+				this._projectLatlngs(latlngs[i], result, projectedBounds);
+			}
+		}
+	},
+
+	// clip polyline by renderer bounds so that we have less to render for performance
+	_clipPoints: function () {
+		var bounds = this._renderer._bounds;
+
+		this._parts = [];
+		if (!this._pxBounds || !this._pxBounds.intersects(bounds)) {
+			return;
+		}
+
+		if (this.options.noClip) {
+			this._parts = this._rings;
+			return;
+		}
+
+		var parts = this._parts,
+		    i, j, k, len, len2, segment, points;
+
+		for (i = 0, k = 0, len = this._rings.length; i < len; i++) {
+			points = this._rings[i];
+
+			for (j = 0, len2 = points.length; j < len2 - 1; j++) {
+				segment = clipSegment(points[j], points[j + 1], bounds, j, true);
+
+				if (!segment) { continue; }
+
+				parts[k] = parts[k] || [];
+				parts[k].push(segment[0]);
+
+				// if segment goes out of screen, or it's the last one, it's the end of the line part
+				if ((segment[1] !== points[j + 1]) || (j === len2 - 2)) {
+					parts[k].push(segment[1]);
+					k++;
+				}
+			}
+		}
+	},
+
+	// simplify each clipped part of the polyline for performance
+	_simplifyPoints: function () {
+		var parts = this._parts,
+		    tolerance = this.options.smoothFactor;
+
+		for (var i = 0, len = parts.length; i < len; i++) {
+			parts[i] = simplify(parts[i], tolerance);
+		}
+	},
+
+	_update: function () {
+		if (!this._map) { return; }
+
+		this._clipPoints();
+		this._simplifyPoints();
+		this._updatePath();
+	},
+
+	_updatePath: function () {
+		this._renderer._updatePoly(this);
+	},
+
+	// Needed by the `Canvas` renderer for interactivity
+	_containsPoint: function (p, closed) {
+		var i, j, k, len, len2, part,
+		    w = this._clickTolerance();
+
+		if (!this._pxBounds || !this._pxBounds.contains(p)) { return false; }
+
+		// hit detection for polylines
+		for (i = 0, len = this._parts.length; i < len; i++) {
+			part = this._parts[i];
+
+			for (j = 0, len2 = part.length, k = len2 - 1; j < len2; k = j++) {
+				if (!closed && (j === 0)) { continue; }
+
+				if (pointToSegmentDistance(p, part[k], part[j]) <= w) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+});
+
+// @factory L.polyline(latlngs: LatLng[], options?: Polyline options)
+// Instantiates a polyline object given an array of geographical points and
+// optionally an options object. You can create a `Polyline` object with
+// multiple separate lines (`MultiPolyline`) by passing an array of arrays
+// of geographic points.
+function polyline(latlngs, options) {
+	return new Polyline(latlngs, options);
+}
+
+// Retrocompat. Allow plugins to support Leaflet versions before and after 1.1.
+Polyline._flat = _flat;
+
+/*
+ * @class Polygon
+ * @aka L.Polygon
+ * @inherits Polyline
+ *
+ * A class for drawing polygon overlays on a map. Extends `Polyline`.
+ *
+ * Note that points you pass when creating a polygon shouldn't have an additional last point equal to the first one — it's better to filter out such points.
+ *
+
  * L.Handler.MarkerDrag is used internally by L.Marker to make the markers draggable.
  */
 
@@ -20015,6 +21232,38 @@ function circle(latlng, options, legacyOptions) {
  *
  * A class for drawing polyline overlays on a map. Extends `Path`.
  *
+
+ * ```js
+ * // create a red polygon from an array of LatLng points
+ * var latlngs = [[37, -109.05],[41, -109.03],[41, -102.05],[37, -102.04]];
+ *
+ * var polygon = L.polygon(latlngs, {color: 'red'}).addTo(map);
+ *
+ * // zoom the map to the polygon
+ * map.fitBounds(polygon.getBounds());
+ * ```
+ *
+ * You can also pass an array of arrays of latlngs, with the first array representing the outer shape and the other arrays representing holes in the outer shape:
+ *
+ * ```js
+ * var latlngs = [
+ *   [[37, -109.05],[41, -109.03],[41, -102.05],[37, -102.04]], // outer ring
+ *   [[37.29, -108.58],[40.71, -108.58],[40.71, -102.50],[37.29, -102.50]] // hole
+ * ];
+ * ```
+ *
+ * Additionally, you can pass a multi-dimensional array to represent a MultiPolygon shape.
+ *
+ * ```js
+ * var latlngs = [
+ *   [ // first polygon
+ *     [[37, -109.05],[41, -109.03],[41, -102.05],[37, -102.04]], // outer ring
+ *     [[37.29, -108.58],[40.71, -108.58],[40.71, -102.50],[37.29, -102.50]] // hole
+ *   ],
+ *   [ // second polygon
+ *     [[41, -111.03],[45, -111.04],[45, -104.05],[41, -104.05]]
+ *   ]
+
  * @example
  *
  * ```js
@@ -20045,6 +21294,17 @@ function circle(latlng, options, legacyOptions) {
  * ];
  * ```
  */
+
+var Polygon = Polyline.extend({
+
+
+	options: {
+		fill: true
+	},
+
+	isEmpty: function () {
+		return !this._latlngs.length || !this._latlngs[0].length;
+	},
 
 
 var Polyline = Path.extend({
@@ -20122,6 +21382,44 @@ var Polyline = Path.extend({
 		if (!this._map) {
 			throw new Error('Must add layer to map before using getCenter()');
 		}
+
+
+		var i, j, p1, p2, f, area, x, y, center,
+		    points = this._rings[0],
+		    len = points.length;
+
+		if (!len) { return null; }
+
+		// polygon centroid algorithm; only uses the first ring if there are multiple
+
+		area = x = y = 0;
+
+		for (i = 0, j = len - 1; i < len; j = i++) {
+			p1 = points[i];
+			p2 = points[j];
+
+			f = p1.y * p2.x - p2.y * p1.x;
+			x += (p1.x + p2.x) * f;
+			y += (p1.y + p2.y) * f;
+			area += f * 3;
+		}
+
+		if (area === 0) {
+			// Polygon is so small that all points are on same pixel.
+			center = points[0];
+		} else {
+			center = [x / area, y / area];
+		}
+		return this._map.layerPointToLatLng(center);
+	},
+
+	_convertLatLngs: function (latlngs) {
+		var result = Polyline.prototype._convertLatLngs.call(this, latlngs),
+		    len = result.length;
+
+		// remove last point if it equals first one
+		if (len >= 2 && result[0] instanceof LatLng && result[0].equals(result[len - 1])) {
+			result.pop();
 
 		var i, halfDist, segDist, dist, p1, p2, ratio,
 		    points = this._rings[0],
@@ -20242,6 +21540,73 @@ var Polyline = Path.extend({
 		this._parts = [];
 		if (!this._pxBounds || !this._pxBounds.intersects(bounds)) {
 			return;
+		}
+		return result;
+	},
+
+
+	_setLatLngs: function (latlngs) {
+		Polyline.prototype._setLatLngs.call(this, latlngs);
+		if (isFlat(this._latlngs)) {
+			this._latlngs = [this._latlngs];
+		}
+	},
+
+	_defaultShape: function () {
+		return isFlat(this._latlngs[0]) ? this._latlngs[0] : this._latlngs[0][0];
+	},
+
+	_clipPoints: function () {
+		// polygons need a different clipping algorithm so we redefine that
+
+		var bounds = this._renderer._bounds,
+		    w = this.options.weight,
+		    p = new Point(w, w);
+
+		// increase clip padding by stroke width to avoid stroke on clip edges
+		bounds = new Bounds(bounds.min.subtract(p), bounds.max.add(p));
+
+		this._parts = [];
+		if (!this._pxBounds || !this._pxBounds.intersects(bounds)) {
+			return;
+		}
+
+		if (this.options.noClip) {
+			this._parts = this._rings;
+			return;
+		}
+
+		for (var i = 0, len = this._rings.length, clipped; i < len; i++) {
+			clipped = clipPolygon(this._rings[i], bounds, true);
+			if (clipped.length) {
+				this._parts.push(clipped);
+			}
+		}
+	},
+
+	_updatePath: function () {
+		this._renderer._updatePoly(this, true);
+	},
+
+	// Needed by the `Canvas` renderer for interactivity
+	_containsPoint: function (p) {
+		var inside = false,
+		    part, p1, p2, i, j, k, len, len2;
+
+		if (!this._pxBounds.contains(p)) { return false; }
+
+		// ray casting algorithm for detecting if point is in polygon
+		for (i = 0, len = this._parts.length; i < len; i++) {
+			part = this._parts[i];
+
+			for (j = 0, len2 = part.length, k = len2 - 1; j < len2; k = j++) {
+				p1 = part[j];
+				p2 = part[k];
+
+				if (((p1.y > p.y) !== (p2.y > p.y)) && (p.x < (p2.x - p1.x) * (p.y - p1.y) / (p2.y - p1.y) + p1.x)) {
+					inside = !inside;
+				}
+			}
 		}
 
 		if (this.options.noClip) {
@@ -25869,15 +27234,16 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
                 var self = this ;
 
                 (function() {
-                    var script = document.createElement("SCRIPT");
-                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                    script.type = 'text/javascript';
 
                     var zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
+                    var $ = window.jQuery;
+                    var AQI_url = "https://api.waqi.info/map/bounds/?latlng=" + southwest.lat + "," + southwest.lng + "," + northeast.lat + "," + northeast.lng + "&token=" + self.options.tokenID;
 
-                    script.onload = function() {
-                        var $ = window.jQuery;
-                        var AQI_url = "https://api.waqi.info/map/bounds/?latlng=" + southwest.lat + "," + southwest.lng + "," + northeast.lat + "," + northeast.lng + "&token=" + self.options.tokenID;
+                    if(typeof self._map.spin === 'function'){
+                        self._map.spin(true) ;
+                    }
+                        $.getJSON(AQI_url , function(regionalData){
+
 
                         if(typeof self._map.spin === 'function'){
                          self._map.spin(true) ;
@@ -25891,6 +27257,12 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
                          });
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);
+
+                            self.parseData(regionalData) ;
+                            if(typeof self._map.spin === 'function'){
+                            self._map.spin(false) ;
+                            }
+                        });
                 })();
         },
 
@@ -25936,17 +27308,19 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
             var marker = this.getMarker(data);
             var key = data.uid;
             //Code provided by widget API
+            /* jshint ignore:start */
             (function(w,d,t,f){  w[f]=w[f]||function(c,k,n){s=w[f],k=s['k']=(s['k']||(k?('&k='+k):''));s['c']=
             c=(c  instanceof  Array)?c:[c];s['n']=n=n||0;Apa=d.createElement(t),e=d.getElementsByTagName(t)[0];
             Apa.async=1;Apa.src='http://feed.aqicn.org/feed/'+(c[n].city)+'/'+(c[n].lang||'')+'/feed.v1.js?n='+n+k;
             e.parentNode.insertBefore(Apa,e);  };  })(  window,document,'script','_aqiFeed'  );
+            /* jshint ignore:end */
 
             marker.bindPopup( function() { //Fetch popup content only when clicked; else the quota will be reached
                 var el = document.createElement('div');
                 el.classList.add("city-container");
                 el.id = "city-aqi-container";
 
-                var stationURL = "https://api.waqi.info/feed/@" + data.uid + "/?token=" + self.options.tokenID
+                var stationURL = "https://api.waqi.info/feed/@" + data.uid + "/?token=" + self.options.tokenID;
 
                 $.getJSON(stationURL, function(stationData) {
                     var labels = {
@@ -25962,7 +27336,7 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
 			             h: "Relative Humidity",
 			             d: "Dew",
 			             p: "Atmostpheric Pressure"
-		            }
+		            };
 
                     var strContent = "";
                     var name = "<h2>" + stationData.data.city.name + "</h2><br> "; //Set the default content first
@@ -26029,9 +27403,12 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
 
 L.layerGroup.aqicnLayer = function(options) {
     return new L.LayerGroup.AQICNLayer(options);
-}
+};
+
 
 },{}],7:[function(require,module,exports){
+
+},{}],9:[function(require,module,exports){
 fracTrackerMobileLayer = function(map) {
   var FracTracker_mobile  = L.esri.featureLayer({
     url: 'https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/FracTrackerMobileAppNPCAMesaVerdeNationalPark_051416/FeatureServer/0/',
@@ -26054,9 +27431,12 @@ fracTrackerMobileLayer = function(map) {
   });
 
   return FracTracker_mobile ;
-}
+};
+
 
 },{}],8:[function(require,module,exports){
+
+},{}],10:[function(require,module,exports){
 L.Icon.FracTrackerIcon = L.Icon.extend({
    options: {
     iconUrl: 'https://www.clker.com/cliparts/2/3/f/a/11970909781608045989gramzon_Barrel.svg.med.png',
@@ -26102,24 +27482,17 @@ L.LayerGroup.FracTrackerLayer = L.LayerGroup.extend(
         requestData: function () {
            var self = this;
                 (function() {
-                    var script = document.createElement("SCRIPT");
-                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                    script.type = 'text/javascript';
-
-                    script.onload = function() {
-                        var $ = window.jQuery;
-                        var FracTracker_URL = "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json" ;
-                        if(typeof self._map.spin === 'function'){
-                          self._map.spin(true) ;
-                        }
-                        $.getJSON(FracTracker_URL , function(data){
-                        self.parseData(data.feed.entry);
-                        if(typeof self._map.spin === 'function'){
-                          self._map.spin(false) ;
-                        }
-            		    });
-                    };
-                    document.getElementsByTagName("head")[0].appendChild(script);
+                    var $ = window.jQuery;
+                    var FracTracker_URL = "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json" ;
+                    if(typeof self._map.spin === 'function'){
+                        self._map.spin(true) ;
+                    }
+                    $.getJSON(FracTracker_URL , function(data){
+                    self.parseData(data.feed.entry);
+                    if(typeof self._map.spin === 'function'){
+                        self._map.spin(false) ;
+                    }
+                    });
                 })();
 
 
@@ -26360,6 +27733,9 @@ L.layerGroup.googleSpreadsheetLayer = function(options) {
     return new L.LayerGroup.GoogleSpreadsheetLayer(options);
 };
 },{}],10:[function(require,module,exports){
+
+
+},{}],11:[function(require,module,exports){
 L.LayerGroup.IndigenousLandsLanguagesLayer = L.LayerGroup.extend(
 
     {
@@ -26398,27 +27774,23 @@ L.LayerGroup.IndigenousLandsLanguagesLayer = L.LayerGroup.extend(
         requestData: function () {
                 var self = this ;
                 (function() {
-                    var script = document.createElement("SCRIPT");
-                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                    script.type = 'text/javascript';
                     var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
-                    script.onload = function() {
-                        var $ = window.jQuery;
+                    var $ = window.jQuery;
 
-                        //Here is the URL that should be for loading 1 region at a time
-                        var ILL_url = "https://native-land.ca/api/index.php?maps=languages&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
-                        //this url loads all regions at once
-                        //var ILL_url = "https://native-land.ca/api/index.php?maps=languages";
-                        //Here is the getJSON method designed after the other layers
+                    //Here is the URL that should be for loading 1 region at a time
+                    var ILL_url = "https://native-land.ca/api/index.php?maps=languages&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
+                    //this url loads all regions at once
+                    //var ILL_url = "https://native-land.ca/api/index.php?maps=languages";
+                    //Here is the getJSON method designed after the other layers
+                    if(typeof self._map.spin === 'function'){
+                        self._map.spin(true) ;
+                    }
+                    $.getJSON(ILL_url , function(data){
+                        self.parseData(data) ;
                         if(typeof self._map.spin === 'function'){
-                          self._map.spin(true) ;
+                        self._map.spin(false) ;
                         }
-                        $.getJSON(ILL_url , function(data){
-                          self.parseData(data) ;
-                          if(typeof self._map.spin === 'function'){
-                            self._map.spin(false) ;
-                          }
-                        });
+                    });
 
                         /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
                         This does all that parseData does in a much simpler format.*/
@@ -26436,9 +27808,6 @@ L.LayerGroup.IndigenousLandsLanguagesLayer = L.LayerGroup.extend(
 
                           self.addLayer(L.geoJSON(data, {style: getStyle, onEachFeature: onEachFeature}));
                         });*/
-
-                    };
-                    document.getElementsByTagName("head")[0].appendChild(script);
                 })();
 
 
@@ -26521,6 +27890,8 @@ L.layerGroup.indigenousLandsLanguagesLayer = function (options) {
 };
 
 },{}],11:[function(require,module,exports){
+
+},{}],12:[function(require,module,exports){
 L.LayerGroup.IndigenousLandsTerritoriesLayer = L.LayerGroup.extend(
 
     {
@@ -26559,47 +27930,41 @@ L.LayerGroup.IndigenousLandsTerritoriesLayer = L.LayerGroup.extend(
         requestData: function () {
                 var self = this ;
                 (function() {
-                    var script = document.createElement("SCRIPT");
-                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                    script.type = 'text/javascript';
                     var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
-                    script.onload = function() {
-                        var $ = window.jQuery;
+                    var $ = window.jQuery;
 
-                        //Here is the URL that should be for loading 1 region at a time
-                        var ILT_url = "https://native-land.ca/api/index.php?maps=territories&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
-                        //this url loads all regions at once
-                        //var ILT_url = "https://native-land.ca/api/index.php?maps=territories";
-                        //Here is the getJSON method designed after the other layers
+                    //Here is the URL that should be for loading 1 region at a time
+                    var ILT_url = "https://native-land.ca/api/index.php?maps=territories&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
+                    //this url loads all regions at once
+                    //var ILT_url = "https://native-land.ca/api/index.php?maps=territories";
+                    //Here is the getJSON method designed after the other layers
+                    if(typeof self._map.spin === 'function'){
+                        self._map.spin(true) ;
+                    }
+                    $.getJSON(ILT_url , function(data){
+                        self.parseData(data) ;
                         if(typeof self._map.spin === 'function'){
-                          self._map.spin(true) ;
+                        self._map.spin(false) ;
                         }
-                        $.getJSON(ILT_url , function(data){
-                          self.parseData(data) ;
-                          if(typeof self._map.spin === 'function'){
-                            self._map.spin(false) ;
-                          }
-                        });
+                    });
 
-                        /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
-                        This does all that parseData does in a much simpler format.*/
+                    /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
+                    This does all that parseData does in a much simpler format.*/
 
-                        /*$.getJSON(ILT_url , function(data){
-                          function onEachFeature(feature, layer) {
-                            layer.bindPopup("<strong>Name : </strong>" + feature.properties.Name + "<br><strong>Description: </strong> <a href=" + feature.properties.description + ">Native Lands - " + feature.properties.Name + "</a><br><i>From the <a href=https://github.com/publiclab/leaflet-environmental-layers/pull/77>Indigenous Territories Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>");
-                          }
+                    /*$.getJSON(ILT_url , function(data){
+                        function onEachFeature(feature, layer) {
+                        layer.bindPopup("<strong>Name : </strong>" + feature.properties.Name + "<br><strong>Description: </strong> <a href=" + feature.properties.description + ">Native Lands - " + feature.properties.Name + "</a><br><i>From the <a href=https://github.com/publiclab/leaflet-environmental-layers/pull/77>Indigenous Territories Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>");
+                        }
 
-                          function getStyle(feature, layer) {
-                            return {
-                              "color": feature.properties.color;
-                            }
-                          }
+                        function getStyle(feature, layer) {
+                        return {
+                            "color": feature.properties.color;
+                        }
+                        }
 
-                          self.addLayer(L.geoJSON(data, {style: getStyle, onEachFeature: onEachFeature}));
-                        });*/
+                        self.addLayer(L.geoJSON(data, {style: getStyle, onEachFeature: onEachFeature}));
+                    });*/
 
-                    };
-                    document.getElementsByTagName("head")[0].appendChild(script);
                 })();
 
 
@@ -26681,7 +28046,10 @@ L.layerGroup.indigenousLandsTerritoriesLayer = function (options) {
     return new L.LayerGroup.IndigenousLandsTerritoriesLayer(options);
 };
 
+
 },{}],12:[function(require,module,exports){
+
+},{}],13:[function(require,module,exports){
 L.LayerGroup.IndigenousLandsTreatiesLayer = L.LayerGroup.extend(
 
     {
@@ -26720,47 +28088,41 @@ L.LayerGroup.IndigenousLandsTreatiesLayer = L.LayerGroup.extend(
         requestData: function () {
                 var self = this ;
                 (function() {
-                    var script = document.createElement("SCRIPT");
-                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                    script.type = 'text/javascript';
                     var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
-                    script.onload = function() {
-                        var $ = window.jQuery;
+                    var $ = window.jQuery;
 
-                        //Here is the URL that should be for loading 1 region at a time
-                        var ILTr_url = "https://native-land.ca/api/index.php?maps=treaties&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
-                        //this url loads all regions at once
-                        //var ILTr_url = "https://native-land.ca/api/index.php?maps=treaties";
-                        //Here is the getJSON method designed after the other layers
+                    //Here is the URL that should be for loading 1 region at a time
+                    var ILTr_url = "https://native-land.ca/api/index.php?maps=treaties&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
+                    //this url loads all regions at once
+                    //var ILTr_url = "https://native-land.ca/api/index.php?maps=treaties";
+                    //Here is the getJSON method designed after the other layers
+                    if(typeof self._map.spin === 'function'){
+                        self._map.spin(true) ;
+                    }
+                    $.getJSON(ILTr_url , function(data){
+                        self.parseData(data) ;
                         if(typeof self._map.spin === 'function'){
-                          self._map.spin(true) ;
+                        self._map.spin(false) ;
                         }
-                        $.getJSON(ILTr_url , function(data){
-                          self.parseData(data) ;
-                          if(typeof self._map.spin === 'function'){
-                            self._map.spin(false) ;
-                          }
-                        });
+                    });
 
-                        /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
-                        This does all that parseData does in a much simpler format.*/
+                    /*Here is a much simpler way to add the layer using geoJSON, because the data is already in geoJSON format
+                    This does all that parseData does in a much simpler format.*/
 
-                        /*$.getJSON(ILTr_url , function(data){
-                          function onEachFeature(feature, layer) {
-                            layer.bindPopup("<strong>Name : </strong>" + feature.properties.Name + "<br><strong>Description: </strong> <a href=" + feature.properties.description + ">Native Lands - " + feature.properties.Name + "</a><br><i>From the  (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>");
-                          }
+                    /*$.getJSON(ILTr_url , function(data){
+                        function onEachFeature(feature, layer) {
+                        layer.bindPopup("<strong>Name : </strong>" + feature.properties.Name + "<br><strong>Description: </strong> <a href=" + feature.properties.description + ">Native Lands - " + feature.properties.Name + "</a><br><i>From the  (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>");
+                        }
 
-                          function getStyle(feature, layer) {
-                            return {
-                              "color": feature.properties.color;
-                            }
-                          }
+                        function getStyle(feature, layer) {
+                        return {
+                            "color": feature.properties.color;
+                        }
+                        }
 
-                          self.addLayer(L.geoJSON(data, {style: getStyle, onEachFeature: onEachFeature}));
-                        });*/
+                        self.addLayer(L.geoJSON(data, {style: getStyle, onEachFeature: onEachFeature}));
+                    });*/
 
-                    };
-                    document.getElementsByTagName("head")[0].appendChild(script);
                 })();
 
 
@@ -26842,6 +28204,8 @@ L.layerGroup.indigenousLandsTreatiesLayer = function (options) {
 };
 
 },{}],13:[function(require,module,exports){
+
+},{}],14:[function(require,module,exports){
 require('jquery') ;
 require('leaflet') ;
 
@@ -26862,10 +28226,139 @@ require('./openaqLayer.js');
 require('./osmLandfillMineQuarryLayer.js');
 require('./wisconsinLayer.js');
 require('./fracTrackerMobileLayer.js');
+
 require('./pfasLayer.js');
 require('./googleSpreadsheetLayer.js');
 
 },{"./aqicnLayer.js":6,"./fracTrackerMobileLayer.js":7,"./fractracker.js":8,"./googleSpreadsheetLayer.js":9,"./indigenousLandsLanguagesLayer.js":10,"./indigenousLandsTerritoriesLayer.js":11,"./indigenousLandsTreatiesLayer.js":12,"./mapKnitterLayer.js":14,"./odorReportLayer.js":15,"./openWeatherMapLayer.js":16,"./openaqLayer.js":17,"./osmLandfillMineQuarryLayer.js":18,"./pfasLayer.js":19,"./purpleAirMarkerLayer.js":20,"./purpleLayer.js":21,"./skyTruthLayer.js":22,"./toxicReleaseLayer.js":23,"./wisconsinLayer.js":24,"jquery":2,"leaflet":5,"leaflet-providers":4}],14:[function(require,module,exports){
+
+require('./luftdatenLayer.js');
+require('./openSenseLayer.js');
+},{"./aqicnLayer.js":8,"./fracTrackerMobileLayer.js":9,"./fractracker.js":10,"./indigenousLandsLanguagesLayer.js":11,"./indigenousLandsTerritoriesLayer.js":12,"./indigenousLandsTreatiesLayer.js":13,"./luftdatenLayer.js":15,"./mapKnitterLayer.js":16,"./odorReportLayer.js":17,"./openSenseLayer.js":18,"./openWeatherMapLayer.js":19,"./openaqLayer.js":20,"./osmLandfillMineQuarryLayer.js":21,"./purpleAirMarkerLayer.js":22,"./purpleLayer.js":23,"./skyTruthLayer.js":24,"./toxicReleaseLayer.js":25,"./wisconsinLayer.js":29,"jquery":2,"leaflet":6,"leaflet-providers":5}],15:[function(require,module,exports){
+L.Icon.LuftdatenIcon = L.Icon.extend({
+  options: {
+    iconUrl: 'http://www.myiconfinder.com/uploads/iconsets/256-256-82a679a558f2fe4c3964c4123343f844.png',
+    iconSize: [15, 30],
+    iconAnchor: [6, 21],
+    popupAnchor: [1, -34]
+  }
+});
+
+L.icon.luftdatenIcon = function () {
+  return new L.Icon.LuftdatenIcon();
+};
+
+L.LayerGroup.LuftdatenLayer = L.LayerGroup.extend(
+	
+  {
+    options: {
+      popupOnMouseover: true,
+      clearOutsideBounds: true
+    },
+
+    initialize: function (options) {
+      options = options || {};
+      L.Util.setOptions(this, options);
+      this._layers = {};
+    },
+
+    onAdd: function (map) {
+      map.on('moveend', this.requestRegionData, this);
+      this._map = map;
+      this.requestRegionData();
+    },
+
+    onRemove: function (map) {
+      map.off('moveend', this.requestRegionData, this);
+      this.clearLayers();
+      this._layers = {};
+    },
+
+    requestRegionData: function () {
+      var self = this;
+
+      (function () {
+          var $ = window.jQuery;
+          var url = "https://maps.luftdaten.info/data/v2/data.dust.min.json";
+
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(true);
+          }
+          $.getJSON(url, function (records) {
+            self.parseData(records);
+            if (typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            }
+          });
+      })();
+    },
+
+    getMarker: function (data) {
+
+      var greenIcon = new L.icon.luftdatenIcon();
+      var country = data.location.country;
+      var lng = data.location.longitude;
+      var lat = data.location.latitude;
+      var sensorID = data.sensor.id;
+      var popupContent = "";
+
+      if(country){
+        popupContent += "<h3>Country: " + country + "</h3>";
+      }
+      if(sensorID){
+        popupContent += "<h4><b>Sensor ID: </b>" + sensorID + "</h4>";
+      }
+      if(data.sensordatavalues.length > 0){
+        for(let i in data.sensordatavalues){
+          popupContent += "<b>" + data.sensordatavalues[i].value_type + "</b>: " + data.sensordatavalues[i].value + "<br/>";
+        }
+      }
+
+      return L.marker([lat,lng], { icon: greenIcon }).bindPopup(popupContent);	
+
+    },
+
+    addMarker: function(data,i) {
+      var self = this;
+      var marker = this.getMarker(data);
+      var key = i;	
+      if (!this._layers[key]) {
+          this._layers[key] = marker;
+          this.addLayer(marker);
+      }
+    },
+
+    parseData: function (data) {
+      for (var i = 0; i < data.length; i++) {
+        this.addMarker(data[i],i);
+      }
+    },
+
+    clearOutsideBounds: function () {
+      var bounds = this._map.getBounds(),
+        latLng,
+        key;
+
+      for (key in this._layers) {
+        if (this._layers.hasOwnProperty(key)) {
+          latLng = this._layers[key].getLatLng();
+
+          if (!bounds.contains(latLng)) {
+            this.removeLayer(this._layers[key]);
+            delete this._layers[key];
+          }
+        }
+      }
+
+    }
+
+  }
+);
+
+L.layerGroup.luftdatenLayer = function (options) {
+  return new L.LayerGroup.LuftdatenLayer(options);
+};
+},{}],16:[function(require,module,exports){
  L.Icon.MapKnitterIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -26916,25 +28409,18 @@ L.LayerGroup.MapKnitterLayer = L.LayerGroup.extend(
         requestData: function () {
            var self = this;
                 (function() {
-                    var script = document.createElement("SCRIPT");
-                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                    script.type = 'text/javascript';
                     var zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
-
-                    script.onload = function() {
-                        var $ = window.jQuery;
-                        var MapKnitter_url = "https://mapknitter.org/map/region/Gulf-Coast.json?minlon="+(southwest.lng)+"&minlat="+(southwest.lat)+"&maxlon="+(northeast.lng)+"&maxlat="+(northeast.lat);
+                    var $ = window.jQuery;
+                    var MapKnitter_url = "https://mapknitter.org/map/region/Gulf-Coast.json?minlon="+(southwest.lng)+"&minlat="+(southwest.lat)+"&maxlon="+(northeast.lng)+"&maxlat="+(northeast.lat);
+                    if(typeof self._map.spin === 'function'){
+                        self._map.spin(true) ;
+                    }
+                    $.getJSON(MapKnitter_url , function(data){
+                            self.parseData(data) ;
                         if(typeof self._map.spin === 'function'){
-                          self._map.spin(true) ;
+                            self._map.spin(false) ;
                         }
-                        $.getJSON(MapKnitter_url , function(data){
-                        	 self.parseData(data) ;
-                           if(typeof self._map.spin === 'function'){
-                             self._map.spin(false) ;
-                           }
-            		    });
-                    };
-                    document.getElementsByTagName("head")[0].appendChild(script);
+                    });
                 })();
 
 
@@ -26952,7 +28438,7 @@ L.LayerGroup.MapKnitterLayer = L.LayerGroup.extend(
               var map_page = "https://mapknitter.org/maps/"+ title ;
               var mapknitter ;
               if (!isNaN(lat) && !isNaN(lng) ){
-                mapknitter = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup("<strong>Title : </strong>"+ "<a href=" + map_page + ">" + title + "</a>" + "<br><strong>Author :</strong> " + "<a href="+url+">"  +  author +"</a>" + "<br><strong>Location : </strong>" + location  + "<br><strong> Lat : </strong>" + lat + "  ,  <strong> Lon : </strong>" + lng +"<br><i>For more info on <a href='https://github.com/publiclab/leaflet-environmental-layers/issues/10'>MapKnitter Layer</a>, visit <a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>here<a></i>" ) ;
+                mapknitter = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup("<strong>Title : </strong>"+ "<a href=" + map_page + ">" + title + "</a>" + "<br><strong>Author :</strong> " + "<a href="+url+">"  +  author +"</a>" + "<br><strong>Location : </strong>" + location  + "<br><strong> Lat : </strong>" + lat + "  ,  <strong> Lon : </strong>" + lng +"<br><i>For more info on <a href='https://github.com/publiclab/leaflet-environmental-layers/issues/10'>MapKnitter Layer</a>, visit <a href='https://mapknitter.org/'>here<a></i>" ) ;
               }
             return mapknitter ;
         },
@@ -27053,24 +28539,18 @@ L.LayerGroup.OdorReportLayer = L.LayerGroup.extend(
         requestData: function () {
            var self = this;
                 (function() {
-                    var script = document.createElement("SCRIPT");
-                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                    script.type = 'text/javascript';
                     var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
-                    script.onload = function() {
-                        var $ = window.jQuery;
-                        var OdorReport_url = "https://odorlog.api.ushahidi.io/api/v3/posts/" ;
+                    var $ = window.jQuery;
+                    var OdorReport_url = "https://odorlog.api.ushahidi.io/api/v3/posts/" ;
+                    if(typeof self._map.spin === 'function'){
+                        self._map.spin(true) ;
+                    }
+                    $.getJSON(OdorReport_url , function(data){
+                        self.parseData(data) ;
                         if(typeof self._map.spin === 'function'){
-                          self._map.spin(true) ;
+                            self._map.spin(false) ;
                         }
-                        $.getJSON(OdorReport_url , function(data){
-                             self.parseData(data) ;
-                             if(typeof self._map.spin === 'function'){
-                               self._map.spin(false) ;
-                             }
-                        });
-                    };
-                    document.getElementsByTagName("head")[0].appendChild(script);
+                    });
                 })();
 
 
@@ -27137,7 +28617,146 @@ L.layerGroup.odorReportLayer = function (options) {
     return new L.LayerGroup.OdorReportLayer(options);
 };
 
+
 },{}],16:[function(require,module,exports){
+
+},{}],18:[function(require,module,exports){
+L.Icon.OpenSenseIcon = L.Icon.extend({
+  options: {
+    iconUrl: 'https://banner2.kisspng.com/20180409/qcw/kisspng-computer-icons-font-awesome-computer-software-user-cubes-5acb63cb589078.9265215315232787953628.jpg',
+    iconSize: [10, 10],
+    popupAnchor: [1, -34]
+  }
+});
+
+L.icon.openSenseIcon = function () {
+  return new L.Icon.OpenSenseIcon();
+};
+
+L.LayerGroup.OpenSenseLayer = L.LayerGroup.extend({
+
+  options: {
+    popupOnMouseover: true,
+    clearOutsideBounds: true
+  },
+
+  initialize: function (options) {
+    options = options || {};
+    L.Util.setOptions(this, options);
+    this._layers = {};
+  },
+
+  onAdd: function (map) {
+    this._map = map;
+    this.requestRegionData();
+  },
+
+  onRemove: function (map) {
+    this.clearLayers();
+    this._layers = {};
+  },
+
+  populatePopUp: function (e) {
+    if (e) {
+      var popup = e.target.getPopup();
+      var $ = window.jQuery;
+      var url = "https://api.opensensemap.org/boxes/" + e.target.options.boxId;
+      $.getJSON(url, function (data) {
+        var popUpContent = "";
+        if (data.name && data.grouptag) {
+          popUpContent += "<h3>" + data.name + "," + data.grouptag + "</h3>";
+        }
+        else if (data.name) {
+          popUpContent += "<h3>" + data.name + "</h3>";
+        }
+        for (var i in data.sensors) {
+          if (data.sensors[i].lastMeasurement) {
+            popUpContent += "<span><b>" + data.sensors[i].title + ": </b>" +
+              data.sensors[i].lastMeasurement.value +
+              data.sensors[i].unit + "</span><br>";
+          }
+        }
+        if (data.lastMeasurementAt) {
+          popUpContent += "<br><small>Measured at <i>" + data.lastMeasurementAt + "</i>";
+        }
+        popup.setContent(popUpContent);
+      });
+    }
+  },
+
+  requestRegionData: function () {
+    var self = this;
+
+    (function () {
+      var $ = window.jQuery;
+      var url = "https://api.opensensemap.org/boxes";
+
+      if (typeof self._map.spin === 'function') {
+        self._map.spin(true);
+      }
+      $.getJSON(url, function (records) {
+        self.parseData(records);
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(false);
+        }
+      });
+
+    })();
+  },
+
+  getMarker: function (data) {
+
+    var blackCube = new L.icon.openSenseIcon();
+
+    var lat = data.currentLocation.coordinates[1];
+    var lng = data.currentLocation.coordinates[0];
+
+    var loadingText = "Loading ...";
+
+    return L.marker([lat, lng], { icon: blackCube, boxId: data._id }).bindPopup(loadingText);
+
+  },
+
+  addMarker: function (data, i) {
+    var marker = this.getMarker(data);
+    var key = i;
+    if (!this._layers[key]) {
+      this._layers[key] = marker;
+      marker.on('click', this.populatePopUp);
+      this.addLayer(marker);
+    }
+  },
+
+  parseData: function (data) {
+    for (var i = 0; i < data.length; i++) {
+      this.addMarker(data[i], i);
+    }
+  },
+
+  clearOutsideBounds: function () {
+    var bounds = this._map.getBounds(),
+      latLng,
+      key;
+
+    for (key in this._layers) {
+      if (this._layers.hasOwnProperty(key)) {
+        latLng = this._layers[key].getLatLng();
+
+        if (!bounds.contains(latLng)) {
+          this.removeLayer(this._layers[key]);
+          delete this._layers[key];
+        }
+      }
+    }
+
+  }
+
+});
+
+L.layerGroup.openSenseLayer = function (options) {
+  return new L.LayerGroup.OpenSenseLayer(options);
+};
+},{}],19:[function(require,module,exports){
 L.OWM = L.TileLayer.extend({
 	options: {
 		appId: '4c6704566155a7d0d5d2f107c5156d6e', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
@@ -27300,7 +28919,7 @@ L.OWM.LegendControl = L.Control.extend({
 		this._container = L.DomUtil.create('div', 'owm-legend-container');
 		this._container.style.display = 'none';
 		this._legendCounter = 0;
-		this._legendContainer = new Array();
+		this._legendContainer = [];
 	},
 
 	onAdd: function(map) {
@@ -27401,7 +29020,7 @@ L.OWM.Current = L.Layer.extend({
 		this._layer = L.layerGroup();
 		this._timeoutId = null;
 		this._requests = {};
-		this._markers = new Array();
+		this._markers = [];
 		this._markedMarker = null;
 		this._map = null;
 		this._urlTemplate = 'https://api.openweathermap.org/data/2.5/box/{type}?{appId}cnt=300&format=json&units=metric&bbox={minlon},{minlat},{maxlon},{maxlat},10';
@@ -27416,14 +29035,14 @@ L.OWM.Current = L.Layer.extend({
 			} else {
 				bgIcon = this.options.imageUrlCity.replace('{icon}', '10d');
 				if (this.options.type != 'city') {
-					var bgIcon = this.options.imageUrlStation;
+					bgIcon = this.options.imageUrlStation;
 				}
 			}
 			this._progressCtrl = L.OWM.progressControl({
-					type: this.options.type
-					, bgImage: bgIcon
-					, imageLoadingUrl: this.options.imageLoadingUrl
-					, owmInstance: this
+					type: this.options.type,
+					bgImage: bgIcon,
+					imageLoadingUrl: this.options.imageLoadingUrl,
+					owmInstance: this
 			});
 		}
 		this._cache = L.OWM.currentCache({ maxAge: this.options.cacheMaxAge });
@@ -27459,8 +29078,8 @@ L.OWM.Current = L.Layer.extend({
 	},
 
 	getAttribution: function() {
-		return 'Weather from <a href="https://openweathermap.org/" '
-			+ 'alt="World Map and worldwide Weather Forecast online">OpenWeatherMap</a>';
+		return 'Weather from <a href="https://openweathermap.org/" ' +
+		'alt="World Map and worldwide Weather Forecast online">OpenWeatherMap</a>';
 	},
 
 	update: function() {
@@ -27519,12 +29138,12 @@ L.OWM.Current = L.Layer.extend({
 				if (_this.options.caching) {
 					_this._cache.set(data, _this._map.getBounds());
 				}
-				_this._processRequestedData(_this, typeof data.list == 'undefined' ? new Array() : data.list);
+				_this._processRequestedData(_this, typeof data.list == 'undefined' ? [[]] : data.list);
 				_this.fire('owmloadingend', {type: _this.options.type});
 			});
 		}
 		if (this.options.interval && this.options.interval > 0) {
-			this._timeoutId = window.setTimeout(function() {_this.update()}, 60000*this.options.interval);
+			this._timeoutId = window.setTimeout(function() {_this.update();}, 60000*this.options.interval);
 		}
 	},
 
@@ -27556,7 +29175,7 @@ L.OWM.Current = L.Layer.extend({
 		_this._layer.clearLayers();
 
 		// add the cities as markers to the LayerGroup
-		_this._markers = new Array();
+		_this._markers = [];
 		for (var key in stations) {
 			var marker;
 			if (_this.options.markerFunction != null && typeof _this.options.markerFunction == 'function') {
@@ -27574,9 +29193,9 @@ L.OWM.Current = L.Layer.extend({
 					marker.bindPopup(_this._createPopup(stations[key]));
 				}
 			}
-			if (markerWithPopup != null
-					&& typeof markerWithPopup.options.owmId != 'undefined'
-					&& markerWithPopup.options.owmId == marker.options.owmId) {
+			if (markerWithPopup != null && 
+				typeof markerWithPopup.options.owmId != 'undefined'&& 
+				markerWithPopup.options.owmId == marker.options.owmId) {
 				markerWithPopup = marker;
 			}
 		}
@@ -27609,8 +29228,8 @@ L.OWM.Current = L.Layer.extend({
 			if (typeof station.weather != 'undefined') {
 				typ = 'city';
 			}
-			txt += '<a href="https://openweathermap.org/' + typ + '/' + station.id + '" target="_blank" title="'
-				+ this.i18n('owmlinktitle', 'Details at OpenWeatherMap') + '">';
+			txt += '<a href="https://openweathermap.org/' + typ + '/' + station.id + '" target="_blank" title="' + 
+			this.i18n('owmlinktitle', 'Details at OpenWeatherMap') + '">';
 		}
 		txt += station.name;
 		if (showLink) {
@@ -27619,78 +29238,78 @@ L.OWM.Current = L.Layer.extend({
 		txt += '</div>';
 		if (typeof station.weather != 'undefined' && typeof station.weather[0] != 'undefined') {
 			if (typeof station.weather[0].description != 'undefined' && typeof station.weather[0].id != 'undefined') {
-				txt += '<div class="owm-popup-description">'
-					+ this.i18n('id'+station.weather[0].id, station.weather[0].description + ' (' + station.weather[0].id + ')')
-					+ '</div>';
+				txt += '<div class="owm-popup-description">' + 
+				this.i18n('id'+station.weather[0].id, station.weather[0].description + 
+				' (' + station.weather[0].id + ')') + '</div>';
 			}
 		}
 		var imgData = this._getImageData(station);
-		txt += '<div class="owm-popup-main"><img src="' + imgData.url + '" width="' + imgData.width
-				+ '" height="' + imgData.height + '" border="0" />';
+		txt += '<div class="owm-popup-main"><img src="' + imgData.url + '" width="' + imgData.width + 
+		'" height="' + imgData.height + '" border="0" />';
 		if (typeof station.main != 'undefined' && typeof station.main.temp != 'undefined') {
-			txt += '<span class="owm-popup-temp">' + this._temperatureConvert(station.main.temp)
-				+ '&nbsp;' + this._displayTemperatureUnit() + '</span>';
+			txt += '<span class="owm-popup-temp">' + this._temperatureConvert(station.main.temp) + 
+			'&nbsp;' + this._displayTemperatureUnit() + '</span>';
 		}
 		txt += '</div>';
 		txt += '<div class="owm-popup-details">';
 		if (typeof station.main != 'undefined') {
 			if (typeof station.main.humidity != 'undefined') {
-				txt += '<div class="owm-popup-detail">'
-					+ this.i18n('humidity', 'Humidity')
-					+ ': ' + station.main.humidity + '&nbsp;%</div>';
+				txt += '<div class="owm-popup-detail">' + 
+				this.i18n('humidity', 'Humidity') + ': ' + 
+				station.main.humidity + '&nbsp;%</div>';
 			}
 			if (typeof station.main.pressure != 'undefined') {
-				txt += '<div class="owm-popup-detail">'
-					+ this.i18n('pressure', 'Pressure')
-					+ ': ' + station.main.pressure + '&nbsp;hPa</div>';
+				txt += '<div class="owm-popup-detail">' + 
+				this.i18n('pressure', 'Pressure')+ 
+				': ' + station.main.pressure + '&nbsp;hPa</div>';
 			}
 			if (this.options.showTempMinMax) {
 				if (typeof station.main.temp_max != 'undefined' && typeof station.main.temp_min != 'undefined') {
-					txt += '<div class="owm-popup-detail">'
-						+ this.i18n('temp_minmax', 'Temp. min/max')
-						+ ': '
-							+ this._temperatureConvert(station.main.temp_min)
-						+ '&nbsp;/&nbsp;'
-						+ this._temperatureConvert(station.main.temp_max)
-						+ '&nbsp;' + this._displayTemperatureUnit() + '</div>';
+					txt += '<div class="owm-popup-detail">' + 
+					this.i18n('temp_minmax', 'Temp. min/max') + 
+					': ' + 
+					this._temperatureConvert(station.main.temp_min) + 
+					'&nbsp;/&nbsp;' + 
+					this._temperatureConvert(station.main.temp_max) + 
+					'&nbsp;' + this._displayTemperatureUnit() + '</div>';
 				}
 			}
 		}
 		if (station.rain != null && typeof station.rain != 'undefined' && typeof station.rain['1h'] != 'undefined') {
-			txt += '<div class="owm-popup-detail">'
-				+ this.i18n('rain_1h', 'Rain (1h)')
-				+ ': ' + station.rain['1h'] + '&nbsp;ml</div>';
+			txt += '<div class="owm-popup-detail">' + 
+			this.i18n('rain_1h', 'Rain (1h)') +
+			 ': ' + station.rain['1h'] + '&nbsp;ml</div>';
 		}
 		if (typeof station.wind != 'undefined') {
 			if (typeof station.wind.speed != 'undefined') {
 				txt += '<div class="owm-popup-detail">';
 				if (this.options.showWindSpeed == 'beaufort' || this.options.showWindSpeed == 'both') {
-					txt += this.i18n('windforce', 'Wind Force')
-						+ ': ' + this._windMsToBft(station.wind.speed);
+					txt += this.i18n('windforce', 'Wind Force') + 
+					': ' + this._windMsToBft(station.wind.speed);
 					if (this.options.showWindSpeed == 'both') {
-						txt += '&nbsp;(' + this._convertSpeed(station.wind.speed) + '&nbsp;'
-							+ this._displaySpeedUnit() + ')';
+						txt += '&nbsp;(' + this._convertSpeed(station.wind.speed) + '&nbsp;' + 
+						this._displaySpeedUnit() + ')';
 					}
 				} else {
-					txt += this.i18n('wind', 'Wind') + ': '
-						+ this._convertSpeed(station.wind.speed) + '&nbsp;'
-						+ this._displaySpeedUnit();
+					txt += this.i18n('wind', 'Wind') + ': ' + 
+					this._convertSpeed(station.wind.speed) + '&nbsp;' + 
+					this._displaySpeedUnit();
 				}
 				txt += '</div>';
 			}
 			if (typeof station.wind.gust != 'undefined') {
 				txt += '<div class="owm-popup-detail">';
 				if (this.options.showWindSpeed == 'beaufort' || this.options.showWindSpeed == 'both') {
-					txt += this.i18n('gust', 'Gust')
-						+ ': ' + this._windMsToBft(station.wind.gust);
+					txt += this.i18n('gust', 'Gust') + 
+					': ' + this._windMsToBft(station.wind.gust);
 					if (this.options.showWindSpeed == 'both') {
-						txt += '&nbsp;(' + this._convertSpeed(station.wind.gust) + '&nbsp;'
-							+ this._displaySpeedUnit() + ')';
+						txt += '&nbsp;(' + this._convertSpeed(station.wind.gust) + '&nbsp;' + 
+						this._displaySpeedUnit() + ')';
 					}
 				} else {
-					txt += this.i18n('gust', 'Gust') + ': '
-						+ this._convertSpeed(station.wind.gust) + '&nbsp;'
-						+ this._displaySpeedUnit();
+					txt += this.i18n('gust', 'Gust') + ': ' + 
+					this._convertSpeed(station.wind.gust) + '&nbsp;' + 
+					this._displaySpeedUnit();
 				}
 				txt += '</div>';
 			}
@@ -27739,10 +29358,10 @@ L.OWM.Current = L.Layer.extend({
 	_createMarker: function(station) {
 		var imageData = this._getImageData(station);
 		var icon = L.divIcon({
-						className: ''
-						, iconAnchor: new L.Point(25, imageData.height/2)
-						, popupAnchor: new L.Point(0, -10)
-						, html: this._icondivtext(station, imageData.url, imageData.width, imageData.height)
+						className: '',
+						iconAnchor: new L.Point(25, imageData.height/2),
+						popupAnchor: new L.Point(0, -10),
+						html: this._icondivtext(station, imageData.url, imageData.width, imageData.height)
 					});
 		var marker = L.marker([station.coord.Lat, station.coord.Lon], {icon: icon});
 		return marker;
@@ -27750,11 +29369,11 @@ L.OWM.Current = L.Layer.extend({
 
 	_icondivtext: function(station, imageurl, width, height) {
 		var txt = '';
-		txt += '<div class="owm-icondiv">'
-			+ '<img src="' + imageurl + '" border="0" width="' + width + '" height="' + height + '" />';
+		txt += '<div class="owm-icondiv">' + 
+		'<img src="' + imageurl + '" border="0" width="' + width + '" height="' + height + '" />';
 		if (typeof station.main != 'undefined' && typeof station.main.temp != 'undefined') {
-			txt += '<div class="owm-icondiv-temp">' + this._temperatureConvert(station.main.temp)
-				+ '&nbsp;' + this._displayTemperatureUnit() + '</div>';
+			txt += '<div class="owm-icondiv-temp">' + this._temperatureConvert(station.main.temp) + 
+			'&nbsp;' + this._displayTemperatureUnit() + '</div>';
 		}
 		txt += '</div>';
 		return txt;
@@ -27798,10 +29417,10 @@ L.OWM.Current = L.Layer.extend({
 		var unit = 'm/s';
 		switch (this.options.speedUnit) {
 			case 'kmh':
-				unit = 'km/h'
+				unit = 'km/h';
 				break;
 			case 'mph':
-				unit = 'mph'
+				unit = 'mph';
 				break;
 		}
 		return unit;
@@ -27830,10 +29449,10 @@ L.OWM.Current = L.Layer.extend({
 
 	i18n: function(key, fallback) {
 		var lang = this.options.lang;
-		if (typeof L.OWM.Utils.i18n != 'undefined'
-				&& typeof L.OWM.Utils.i18n[lang] != 'undefined'
-				&& typeof L.OWM.Utils.i18n[lang][key] != 'undefined') {
-			return  L.OWM.Utils.i18n[lang][key]
+		if (typeof L.OWM.Utils.i18n != 'undefined' && 
+		typeof L.OWM.Utils.i18n[lang] != 'undefined' && 
+		typeof L.OWM.Utils.i18n[lang][key] != 'undefined') {
+			return  L.OWM.Utils.i18n[lang][key];
 		}
 		return fallback;
 	}
@@ -27925,7 +29544,7 @@ L.OWM.CurrentCache = L.Class.extend({
 		}
 
 		// clip cached data to bounds
-		var clippedStations = new Array();
+		var clippedStations = [];
 		var cnt = 0;
 		for (var k in this._cachedData.list) {
 			var station = this._cachedData.list[k];
@@ -27980,740 +29599,682 @@ L.OWM.Utils = {
 
 	i18n: {
 		en: {
-			owmlinktitle: 'Details at OpenWeatherMap'
-			, temperature: 'Temperature'
-			, temp_minmax: 'Temp. min/max'
-			, wind: 'Wind'
-			, gust: 'Gust'
-			, windforce: 'Wind Force'
-			, direction: 'Direction'
-			, rain_1h: 'Rain'
-			, humidity: 'Humidity'
-			, pressure: 'Pressure'
+			owmlinktitle: 'Details at OpenWeatherMap', 
+			temperature: 'Temperature', 
+			temp_minmax: 'Temp. min/max', 
+			wind: 'Wind', 
+			gust: 'Gust', 
+			windforce: 'Wind Force', 
+			direction: 'Direction', 
+			rain_1h: 'Rain', 
+			humidity: 'Humidity', 
+			pressure: 'Pressure',
 
-		// weather conditions, see https://openweathermap.org/weather-conditions
-			, id200: 'Thunderstorm with Light Rain'
-			, id201: 'Thunderstorm with Rain'
-			, id202: 'Thunderstorm with Heavy Rain'
-			, id210: 'Light Thunderstorm'
-			, id211: 'Thunderstorm'
-			, id212: 'Heavy Thunderstorm'
-			, id221: 'Ragged Thunderstorm'
-			, id230: 'Thunderstorm with Light Drizzle'
-			, id231: 'Thunderstorm with Drizzle'
-			, id232: 'Thunderstorm with Heavy Drizzle'
+			// weather conditions, see https://openweathermap.org/weather-conditions
+			id200: 'Thunderstorm with Light Rain',
+			id201: 'Thunderstorm with Rain',
+			id202: 'Thunderstorm with Heavy Rain', 
+			id210: 'Light Thunderstorm', 
+			id211: 'Thunderstorm', 
+			id212: 'Heavy Thunderstorm', 
+			id221: 'Ragged Thunderstorm', 
+			id230: 'Thunderstorm with Light Drizzle', 
+			id231: 'Thunderstorm with Drizzle', 
+			id232: 'Thunderstorm with Heavy Drizzle',
 
-			, id300: 'Light Intensity Drizzle'
-			, id301: 'Drizzle'
-			, id302: 'Heavy Intensity Drizzle'
-			, id310: 'Light Intensity Drizzle Rain'
-			, id311: 'Drizzle Rain'
-			, id312: 'Heavy Intensity Drizzle Rain'
-			, id321: 'Shower Drizzle'
+			id300: 'Light Intensity Drizzle', 
+			id301: 'Drizzle', 
+			id302: 'Heavy Intensity Drizzle', 
+			id310: 'Light Intensity Drizzle Rain', 
+			id311: 'Drizzle Rain', 
+			id312: 'Heavy Intensity Drizzle Rain', 
+			id321: 'Shower Drizzle',
 
-			, id500: 'Light Rain'
-			, id501: 'Moderate Rain'
-			, id502: 'Heavy Intensity Rain'
-			, id503: 'Very Heavy Rain'
-			, id504: 'Extreme Rain'
-			, id511: 'Freezing Rain'
-			, id520: 'Light Intensity Shower Rain'
-			, id521: 'Shower Rain'
-			, id522: 'Heavy Intensity Shower Rain'
+			id500: 'Light Rain', 
+			id501: 'Moderate Rain', 
+			id502: 'Heavy Intensity Rain', 
+			id503: 'Very Heavy Rain', 
+			id504: 'Extreme Rain', 
+			id511: 'Freezing Rain', 
+			id520: 'Light Intensity Shower Rain', 
+			id521: 'Shower Rain', 
+			id522: 'Heavy Intensity Shower Rain',
 
-			, id600: 'Light Snow'
-			, id601: 'Snow'
-			, id602: 'Heavy Snow'
-			, id611: 'Sleet'
-			, id621: 'Shower Snow'
-			, id622: 'Heavy Shower Snow'
+			id600: 'Light Snow', 
+			id601: 'Snow', 
+			id602: 'Heavy Snow', 
+			id611: 'Sleet', 
+			id621: 'Shower Snow', 
+			id622: 'Heavy Shower Snow',
 
-			, id701: 'Mist'
-			, id711: 'Smoke'
-			, id721: 'Haze'
-			, id731: 'Sand/Dust Whirls'
-			, id741: 'Fog'
-			, id751: 'Sand'
+			id701: 'Mist', 
+			id711: 'Smoke', 
+			id721: 'Haze', 
+			id731: 'Sand/Dust Whirls', 
+			id741: 'Fog', 
+			id751: 'Sand',
 
-			, id800: 'Sky is Clear'
-			, id801: 'Few Clouds'
-			, id802: 'Scattered Clouds'
-			, id803: 'Broken Clouds'
-			, id804: 'Overcast Clouds'
+			id800: 'Sky is Clear', 
+			id801: 'Few Clouds', 
+			id802: 'Scattered Clouds', 
+			id803: 'Broken Clouds', 
+			id804: 'Overcast Clouds',
 
-			, id900: 'Tornado'
-			, id901: 'Tropical Storm'
-			, id902: 'Hurricane'
-			, id903: 'Cold'
-			, id904: 'Hot'
-			, id905: 'Windy'
-			, id906: 'Hail'
+			id900: 'Tornado', 
+			id901: 'Tropical Storm', 
+			id902: 'Hurricane', 
+			id903: 'Cold', 
+			id904: 'Hot', 
+			id905: 'Windy', 
+			id906: 'Hail'
 		},
 		
 		it: {
-			owmlinktitle: 'Dettagli su OpenWeatherMap'
-			, temperature: 'Temperatura'
-			, temp_minmax: 'Temp. min / max '
-			, wind: 'Vento'
-			, gust: 'Raffica'
-			, windforce: 'Forza del vento'
-			, direction: 'Direzione'
-			, rain_1h: 'Pioggia'
-			, humidity: 'Umidità'
-			, pressure: 'Pressione'
-		
-			// condizioni meteorologiche, consultare https://openweathermap.org/weather-conditions
+			owmlinktitle: 'Dettagli su OpenWeatherMap', 
+			temperature: 'Temperatura',
+			temp_minmax: 'Temp. min / max ', 
+			wind: 'Vento', gust: 'Raffica', 
+			windforce: 'Forza del vento', 
+			direction: 'Direzione', 
+			rain_1h: 'Pioggia', 
+			humidity: 'Umidità', 
+			pressure: 'Pressione', 
+			
+			// condizioni meteorologiche, consultare https://openweathermap.org/weather-conditions 
 			// Temporale
-			, id200: 'Tempesta con pioggia debole'
-			, id201: 'Tempesta di pioggia'
-			, id202: 'Tempesta con forti piogge'
-			, id210: 'Tempesta debole'
-			, id211: 'Tempesta'
-			, id212: 'Tempesta forte'
-			, id221: 'Tempesta irregolare'
-			, id230: 'Tempesta con deboli acquerugi'
-			, id231: 'Tempesta con pioviggine'
-			, id232: 'Tempesta con forte pioviggine'
-
+			id200: 'Tempesta con pioggia debole', 
+			id201: 'Tempesta di pioggia', 
+			id202: 'Tempesta con forti piogge', 
+			id210: 'Tempesta debole', 
+			id211: 'Tempesta', 
+			id212: 'Tempesta forte', 
+			id221: 'Tempesta irregolare', 
+			id230: 'Tempesta con deboli acquerugi', 
+			id231: 'Tempesta con pioviggine', 
+			id232: 'Tempesta con forte pioviggine', 
+			
 			// Pioggerella
-			, id300: 'Debole pioviggine'
-			, id301: 'Pioggerella'
-			, id302: 'Forti acquerugi'
-			, id310: 'Pioggia / leggera pioggerellina'
-			, id311: 'Pioggia / pioviggine'
-			, id312: 'Pioggia / pioviggine forte'
-			, id321: 'Pioviggine intensa'
-	
+			id300: 'Debole pioviggine', 
+			id301: 'Pioggerella', 
+			id302: 'Forti acquerugi', 
+			id310: 'Pioggia / leggera pioggerellina', 
+			id311: 'Pioggia / pioviggine', 
+			id312: 'Pioggia / pioviggine forte', 
+			id321: 'Pioviggine intensa',
+			
 			// Pioggia
-			, id500: 'Debole pioggia'
-			, id501: 'Pioggia moderata'
-			, id502: 'Pioggia forte'
-			, id503: 'Pioggia molto forte'
-			, id504: 'Pioggia estrema'
-			, id511: 'Grandine'
-			, id520: 'Pioggia leggera'
-			, id521: 'Pioggia'
-			, id522: 'Pioggia forte'
-			, id531: 'pioggia irregolare'
-		
-			// neve
-			, id600: 'Neve Debole'
-			, id601: 'Neve'
-			, id602: 'Forte nevicata'
-			, id611: 'Nevischio'
-			, id612: 'Nevischio moderato'
-			, id615: 'Debole pioggia e neve'
-			, id616: 'Pioggia e neve'
-			, id620: 'Nevischio Leggero'
-			, id621: 'Neve moderata'
-			, id622: 'Forte nevicata'
-
+			id500: 'Debole pioggia', 
+			id501: 'Pioggia moderata', 
+			id502: 'Pioggia forte', 
+			id503: 'Pioggia molto forte', 
+			id504: 'Pioggia estrema', 
+			id511: 'Grandine', 
+			id520: 'Pioggia leggera', 
+			id521: 'Pioggia', 
+			id522: 'Pioggia forte', 
+			id531: 'pioggia irregolare', 
+			
+			// neve 
+			id600: 'Neve Debole', 
+			id601: 'Neve', 
+			id602: 'Forte nevicata', 
+			id611: 'Nevischio', 
+			id612: 'Nevischio moderato', 
+			id615: 'Debole pioggia e neve', 
+			id616: 'Pioggia e neve', 
+			id620: 'Nevischio Leggero', 
+			id621: 'Neve moderata', 
+			id622: 'Forte nevicata', 
+			
 			// atmosfera
-			, id701: 'Bruma'
-			, id711: 'Fumo'
-			, id721: 'Foschia'
-			, id731: 'Vortici di sabbia/polvere'
-			, id741: 'Nebbia'
-			, id751: 'Sabbia'
-			, id761: 'Polvere'
-			, id762: 'Cenere vulcanica'
-			, id771: 'Tempesta'
-			, id781: 'Tornado'
-
+			id701: 'Bruma', 
+			id711: 'Fumo', 
+			id721: 'Foschia', 
+			id731: 'Vortici di sabbia/polvere', 
+			id741: 'Nebbia', 
+			id751: 'Sabbia', 
+			id761: 'Polvere', 
+			id762: 'Cenere vulcanica', 
+			id771: 'Tempesta', 
+			id781: 'Tornado', 
+			
 			// Nuvole
-			, id800: 'Cielo sereno'
-			, id801: 'Alcune nuvole'
-			, id802: 'Nuvole sparse'
-			, id803: 'Tempo nuvoloso'
-			, id804: 'Nuvoloso'
-
+			id800: 'Cielo sereno', 
+			id801: 'Alcune nuvole', 
+			id802: 'Nuvole sparse', 
+			id803: 'Tempo nuvoloso', 
+			id804: 'Nuvoloso',
+			
 			// Estremo
-			, id900: 'Tornado'
-			, id901: 'Tempesta tropicale'
-			, id902: 'Uragano'
-			, id903: 'Molto freddo'
-			, id904: 'Molto caldo'
-			, id905: 'Ventoso'
-			, id906: 'Forte grandine'
-
+			id900: 'Tornado', 
+			id901: 'Tempesta tropicale', 
+			id902: 'Uragano', 
+			id903: 'Molto freddo', 
+			id904: 'Molto caldo', 
+			id905: 'Ventoso', 
+			id906: 'Forte grandine',
+			
 			// aggiuntivo
-			, id951: 'Calmo'
-			, id952: 'Brezza leggera'
-			, id953: 'Brezza sostenuta'
-			, id954: 'Brezza moderata'
-			, id955: 'Brezza fresca'
-			, id956: 'Brezza forte'
-			, id957: 'Vento forte, vicino a burrasca'
-			, id958: 'Burrasca'
-			, id959: 'Forte burrasca'
-			, id960: 'Tempesta'
-			, id961: 'Tempesta violenta'
-			, id962: 'Uragano'
+			id951: 'Calmo', 
+			id952: 'Brezza leggera', 
+			id953: 'Brezza sostenuta', 
+			id954: 'Brezza moderata', 
+			id955: 'Brezza fresca', 
+			id956: 'Brezza forte', 
+			id957: 'Vento forte, vicino a burrasca', 
+			id958: 'Burrasca',
+			id959: 'Forte burrasca', 
+			id960: 'Tempesta', 
+			id961: 'Tempesta violenta', 
+			id962: 'Uragano'
 		},
 		
 		de: {
-			owmlinktitle: 'Details bei OpenWeatherMap'
-			, temperature: 'Temperatur'
-			, temp_minmax: 'Temp. min/max'
-			, wind: 'Wind'
-			, gust: 'Windböen'
-			, windforce: 'Windstärke'
-			, direction: 'Windrichtung'
-			, rain_1h: 'Regen'
-			, humidity: 'Luftfeuchtigkeit'
-			, pressure: 'Luftdruck'
+			owmlinktitle: 'Details bei OpenWeatherMap', 
+			temperature: 'Temperatur', 
+			temp_minmax: 'Temp. min/max', 
+			wind: 'Wind', 
+			gust: 'Windböen', 
+			windforce: 'Windstärke', 
+			direction: 'Windrichtung', 
+			rain_1h: 'Regen', 
+			humidity: 'Luftfeuchtigkeit', 
+			pressure: 'Luftdruck',
 
-		// Wetterbedingungen, siehe https://openweathermap.org/weather-conditions
-			, id200: 'Gewitter mit leichtem Regen' // 'Thunderstorm with Light Rain'
-			, id201: 'Gewitter mit Regen' // 'Thunderstorm with Rain'
-			, id202: 'Gewitter mit Starkregen' // 'Thunderstorm with Heavy Rain'
-			, id210: 'Leichtes Gewitter' // 'Light Thunderstorm'
-			, id211: 'Mäßiges Gewitter' // 'Thunderstorm'
-			, id212: 'Starkes Gewitter' // 'Heavy Thunderstorm'
-		//	, id221: 'Ragged Thunderstorm'
-		//	, id230: 'Thunderstorm with Light Drizzle'
-		//	, id231: 'Thunderstorm with Drizzle'
-		//	, id232: 'Thunderstorm with Heavy Drizzle'
-
-			, id300: 'Leichter Nieselregen' // 'Light Intensity Drizzle'
-			, id301: 'Nieselregen' // 'Drizzle'
-			, id302: 'Starker Nieselregen' // 'Heavy Intensity Drizzle'
-		//	, id310: 'Light Intensity Drizzle Rain'
-		//	, id311: 'Drizzle Rain'
-		//	, id312: 'Heavy Intensity Drizzle Rain'
-		//	, id321: 'Shower Drizzle'
-
-			, id500: 'Leichter Regen' // 'Light Rain'
-			, id501: 'Mäßiger Regen' // 'Moderate Rain'
-			, id502: 'Starker Regen' // 'Heavy Intensity Rain'
-			, id503: 'Ergiebiger Regen' // 'Very Heavy Rain'
-			, id504: 'Starkregen' // 'Extreme Rain'
-			, id511: 'Gefrierender Regen' // 'Freezing Rain'
-			, id520: 'Leichte Regenschauer' // 'Light Intensity Shower Rain'
-			, id521: 'Mäßige Regenschauer' // 'Shower Rain'
-			, id522: 'Wolkenbruchartige Regenschauer' // 'Heavy Intensity Shower Rain'
-
-			, id600: 'Leichter Schneefall' // 'Light Snow'
-			, id601: 'Mäßiger Schneefall' // 'Snow'
-			, id602: 'Starker Schneefall' // 'Heavy Snow'
-			, id611: 'Schneeregen' // 'Sleet'
-			, id621: 'Schneeschauer' // 'Shower Snow'
-			, id622: 'Starke Schneeschauer' // 'Heavy Shower Snow'
-
-			, id701: 'Dunst' // 'Mist'
-			, id711: 'Rauch' // 'Smoke'
-			, id721: 'Eingetrübt' // 'Haze'
-			, id731: 'Sand-/Staubwirbel' // 'Sand/Dust Whirls'
-			, id741: 'Nebel' // 'Fog'
-			, id751: 'Sand' // 'Sand'
-
-			, id800: 'Wolkenlos' // 'Sky is Clear'
-			, id800d: 'Sonnig' // 'Sky is Clear' at day
-			, id800n: 'Klar' // 'Sky is Clear' at night
-			, id801: 'Leicht bewölkt' // 'Few Clouds'
-			, id802: 'Wolkig' // 'Scattered Clouds'
-			, id803: 'Stark bewölkt' // 'Broken Clouds'
-			, id804: 'Bedeckt' // 'Overcast Clouds'
-
-			, id900: 'Tornado' // 'Tornado'
-			, id901: 'Tropischer Sturm' // 'Tropical Storm'
-			, id902: 'Orkan' // 'Hurricane'
-			, id903: 'Kälte' // 'Cold'
-			, id904: 'Hitze' // 'Hot'
-			, id905: 'Windig' // 'Windy'
-			, id906: 'Hagel' // 'Hail'
+			// Wetterbedingungen, siehe https://openweathermap.org/weather-conditions, 
+			id200: 'Gewitter mit leichtem Regen', // 'Thunderstorm with Light Rain', 
+			id201: 'Gewitter mit Regen', //'Thunderstorm with Rain', 
+			id202: 'Gewitter mit Starkregen', //'Thunderstorm with Heavy Rain', 
+			id210: 'Leichtes Gewitter', //'Light Thunderstorm', 
+			id211: 'Mäßiges Gewitter', //'Thunderstorm', 
+			id212: 'Starkes Gewitter', //'Heavy Thunderstorm' 
+			//	, id221: 'Ragged Thunderstorm' 
+			//	, id230: 'Thunderstorm with Light Drizzle' 
+			//	, id231: 'Thunderstorm with Drizzle' 
+			//	, id232: 'Thunderstorm with Heavy Drizzle', 
+			id300: 'Leichter Nieselregen', //'Light Intensity Drizzle', 
+			id301: 'Nieselregen', //'Drizzle', 
+			id302: 'Starker Nieselregen', //'Heavy Intensity Drizzle' 
+			//	, id310: 'Light Intensity Drizzle Rain'
+			//	, id311: 'Drizzle Rain'
+			//	, id312: 'Heavy Intensity Drizzle Rain' 
+			//	, id321: 'Shower Drizzle', 
+			id500: 'Leichter Regen', //'Light Rain', 
+			id501: 'Mäßiger Regen', //'Moderate Rain', 
+			id502: 'Starker Regen', //'Heavy Intensity Rain', 
+			id503: 'Ergiebiger Regen', //'Very Heavy Rain', 
+			id504: 'Starkregen', //'Extreme Rain', 
+			id511: 'Gefrierender Regen', //'Freezing Rain', 
+			id520: 'Leichte Regenschauer', //'Light Intensity Shower Rain', 
+			id521: 'Mäßige Regenschauer', //'Shower Rain', 
+			id522: 'Wolkenbruchartige Regenschauer', //'Heavy Intensity Shower Rain', 
+			id600: 'Leichter Schneefall', //'Light Snow', 
+			id601: 'Mäßiger Schneefall', //'Snow', 
+			id602: 'Starker Schneefall', //'Heavy Snow', 
+			id611: 'Schneeregen', //'Sleet', 
+			id621: 'Schneeschauer', //'Shower Snow', 
+			id622: 'Starke Schneeschauer', //'Heavy Shower Snow', 
+			id701: 'Dunst', //'Mist', 
+			id711: 'Rauch', //'Smoke', 
+			id721: 'Eingetrübt', //'Haze', 
+			id731: 'Sand-/Staubwirbel', //'Sand/Dust Whirls', 
+			id741: 'Nebel', //'Fog', 
+			id751: 'Sand', //'Sand', 
+			id800: 'Wolkenlos', //'Sky is Clear', 
+			id800d: 'Sonnig', //'Sky is Clear' at day, 
+			id800n: 'Klar', //'Sky is Clear' at night, 
+			id801: 'Leicht bewölkt', //'Few Clouds', 
+			id802: 'Wolkig', //'Scattered Clouds', 
+			id803: 'Stark bewölkt', //'Broken Clouds', 
+			id804: 'Bedeckt', //'Overcast Clouds', 
+			id900: 'Tornado', //'Tornado', 
+			id901: 'Tropischer Sturm', //'Tropical Storm', 
+			id902: 'Orkan', //'Hurricane', 
+			id903: 'Kälte', //'Cold', 
+			id904: 'Hitze', //'Hot', 
+			id905: 'Windig', //'Windy', 
+			id906: 'Hagel', //'Hail'
 		},
 
 		ru: {
-			owmlinktitle: 'Информация в OpenWeatherMap'
-			, temperature: 'Температура'
-			, temp_minmax: 'Макс./Мин. темп'
-			, wind: 'Ветер'
-			, gust: 'Порывы'
-			, windforce: 'Сила'
-			, direction: 'Направление'
-			, rain_1h: 'Дождь'
-			, humidity: 'Влажность'
-			, pressure: 'Давление'
-
-		// weather conditions, see https://openweathermap.org/weather-conditions
-			, id200: 'Гроза с легким дождем' // 'Thunderstorm with Light Rain'
-			, id201: 'Гроза с дождем' // 'Thunderstorm with Rain'
-			, id202: 'Гроза с ливнем' // 'Thunderstorm with Heavy Rain'
-			, id210: 'Легкая гроза' // 'Light Thunderstorm'
-			, id211: 'Гроза' // 'Thunderstorm'
-			, id212: 'Сильная гроза' // 'Heavy Thunderstorm'
-			, id221: 'Прерывистая гроза' // 'Ragged Thunderstorm'
-			, id230: 'Гроза с мелкой моросью' // 'Thunderstorm with Light Drizzle'
-			, id231: 'Гроза с моросью' // 'Thunderstorm with Drizzle'
-			, id232: 'Гроза с сильной моросью' // 'Thunderstorm with Heavy Drizzle'
-
-			, id300: 'Морось слабой интенсивности' // 'Light Intensity Drizzle'
-			, id301: 'Морось' // 'Drizzle'
-			, id302: 'Морось сильной интенсивности' // 'Heavy Intensity Drizzle'
-			, id310: 'Малоинтенсивный моросящий дождь' // 'Light Intensity Drizzle Rain'
-			, id311: 'Моросящий дождь' // 'Drizzle Rain'
-			, id312: 'Сильноинтенсивный моросящий дождь' // 'Heavy Intensity Drizzle Rain'
-			, id321: 'Проливной дождь' // 'Shower Drizzle'
-
-			, id500: 'Небольшой дождь' //'Light Rain'
-			, id501: 'Дождь' // 'Moderate Rain'
-			, id502: 'Сильный дождь' //'Heavy Intensity Rain'
-			, id503: 'Очень сильный дождь' //'Very Heavy Rain'
-			, id504: 'Сильный ливень' // 'Extreme Rain'
-			, id511: 'Ледяной дождь' // 'Freezing Rain'
-			, id520: 'Кратковременный слабый дождь' //'Light Intensity Shower Rain'
-			, id521: 'Кратковременный дождь' //'Shower Rain'
-			, id522: 'Кратковременный сильный дождь' //'Heavy Intensity Shower Rain'
-
-			, id600: 'Слабый снег' // 'Light Snow'
-			, id601: 'Снег' // 'Snow'
-			, id602: 'Сильный снег' // 'Heavy Snow'
-			, id611: 'Снег с дождем' //'Sleet'
-			, id621: 'Кратковременный снег' // 'Shower Snow'
-			, id622: 'Кратковременный сильный снег' //'Heavy Shower Snow'
-
-			, id701: 'Мгла' // 'Mist'
-			, id711: 'Смог' //'Smoke'
-			, id721: 'Дымка' // 'Haze'
-			, id731: 'Песочные/пыльевые вихри' // 'Sand/Dust Whirls'
-			, id741: 'Туман' // 'Fog'
-			, id751: 'Песок' // 'Sand'
-
-			, id800: 'Ясно' // 'Sky is Clear'
-			, id801: 'Малооблачно' // 'Few Clouds'
-			, id802: 'Переменная облачность' // 'Scattered Clouds'
-			, id803: 'Облачно с прояснениями' // 'Broken Clouds'
-			, id804: 'Облачно' // 'Overcast Clouds'
-
-			, id900: 'Торнадо' // 'Tornado'
-			, id901: 'Тропический шторм' // 'Tropical Storm'
-			, id902: 'Ураган' // 'Hurricane'
-			, id903: 'Холод'//'Cold'
-			, id904: 'Жара'//'Hot'
-			, id905: 'Ветрено'//'Windy'
-			, id906: 'Γрад' // 'Hail'
+			owmlinktitle: 'Информация в OpenWeatherMap',
+			temperature: 'Температура',
+			temp_minmax: 'Макс./Мин. темп',
+			wind: 'Ветер',
+			gust: 'Порывы',
+			windforce: 'Сила',
+			direction: 'Направление',
+			rain_1h: 'Дождь',
+			humidity: 'Влажность',
+			pressure: 'Давление', 
+			// weather conditions, see https://openweathermap.org/weather-conditions,
+			id200: 'Гроза с легким дождем', // 'Thunderstorm with Light Rain',
+			id201: 'Гроза с дождем', // 'Thunderstorm with Rain',
+			id202: 'Гроза с ливнем', // 'Thunderstorm with Heavy Rain',
+			id210: 'Легкая гроза', // 'Light Thunderstorm',
+			id211: 'Гроза', // 'Thunderstorm',
+			id212: 'Сильная гроза', // 'Heavy Thunderstorm',
+			id221: 'Прерывистая гроза', // 'Ragged Thunderstorm',
+			id230: 'Гроза с мелкой моросью', // 'Thunderstorm with Light Drizzle',
+			id231: 'Гроза с моросью', // 'Thunderstorm with Drizzle',
+			id232: 'Гроза с сильной моросью', // 'Thunderstorm with Heavy Drizzle',
+			id300: 'Морось слабой интенсивности', // 'Light Intensity Drizzle',
+			id301: 'Морось', // 'Drizzle',
+			id302: 'Морось сильной интенсивности', // 'Heavy Intensity Drizzle',
+			id310: 'Малоинтенсивный моросящий дождь', // 'Light Intensity Drizzle Rain',
+			id311: 'Моросящий дождь', // 'Drizzle Rain',
+			id312: 'Сильноинтенсивный моросящий дождь', // 'Heavy Intensity Drizzle Rain',
+			id321: 'Проливной дождь', // 'Shower Drizzle',
+			id500: 'Небольшой дождь', //'Light Rain',
+			id501: 'Дождь', // 'Moderate Rain',
+			id502: 'Сильный дождь', //'Heavy Intensity Rain',
+			id503: 'Очень сильный дождь', //'Very Heavy Rain',
+			id504: 'Сильный ливень', // 'Extreme Rain',
+			id511: 'Ледяной дождь', // 'Freezing Rain',
+			id520: 'Кратковременный слабый дождь', //'Light Intensity Shower Rain',
+			id521: 'Кратковременный дождь', //'Shower Rain',
+			id522: 'Кратковременный сильный дождь', //'Heavy Intensity Shower Rain',
+			id600: 'Слабый снег', // 'Light Snow',
+			id601: 'Снег', // 'Snow',
+			id602: 'Сильный снег', // 'Heavy Snow',
+			id611: 'Снег с дождем', //'Sleet',
+			id621: 'Кратковременный снег', // 'Shower Snow',
+			id622: 'Кратковременный сильный снег', //'Heavy Shower Snow',
+			id701: 'Мгла', // 'Mist',
+			id711: 'Смог', //'Smoke',
+			id721: 'Дымка', // 'Haze',
+			id731: 'Песочные/пыльевые вихри', // 'Sand/Dust Whirls',
+			id741: 'Туман', // 'Fog',
+			id751: 'Песок', // 'Sand',
+			id800: 'Ясно', // 'Sky is Clear',
+			id801: 'Малооблачно', // 'Few Clouds',
+			id802: 'Переменная облачность', // 'Scattered Clouds',
+			id803: 'Облачно с прояснениями', // 'Broken Clouds',
+			id804: 'Облачно', // 'Overcast Clouds',
+			id900: 'Торнадо', // 'Tornado',
+			id901: 'Тропический шторм', // 'Tropical Storm',
+			id902: 'Ураган', // 'Hurricane',
+			id903: 'Холод',//'Cold',
+			id904: 'Жара',//'Hot',
+			id905: 'Ветрено',//'Windy',
+			id906: 'Γрад', // 'Hail'
 		},
 
 		fr: {
-			owmlinktitle: 'Détails à OpenWeatherMap'
-			, temperature: 'Température'
-			, temp_minmax: 'Temp. min/max'
-			, wind: 'Vent'
-			, gust: 'Rafales'
-			, windforce: 'Force du vent'
-			, direction: 'Direction'
-			, rain_1h: 'Pluie'
-			, humidity: 'Humidité'
-			, pressure: 'Pression'
-
-		// Les conditions météorologiques, voir https://openweathermap.org/weather-conditions
-			, id200: 'Orage avec pluie légère' // 'Thunderstorm with Light Rain'
-			, id201: 'Orage avec pluie' // 'Thunderstorm with Rain'
-			, id202: 'Orage avec fortes précipitations' // 'Thunderstorm with Heavy Rain'
-		//	, id210: 'Light Thunderstorm'
-			, id211: 'Orage'
-			, id212: 'Orage violent' // 'Heavy Thunderstorm'
-		//	, id221: 'Ragged Thunderstorm'
-			, id230: 'Orage avec bruine faible' // 'Thunderstorm with Light Drizzle'
-			, id231: 'Orage avec bruine' // 'Thunderstorm with Drizzle'
-		//	, id232: 'Thunderstorm with Heavy Drizzle'
-
-		//	, id300: 'Light Intensity Drizzle'
-			, id301: 'Bruine' // 'Drizzle'
-		//	, id302: 'Heavy Intensity Drizzle'
-		//	, id310: 'Light Intensity Drizzle Rain'
-		//	, id311: 'Drizzle Rain'
-		//	, id312: 'Heavy Intensity Drizzle Rain'
-		//	, id321: 'Shower Drizzle'
-
-			, id500: 'Pluie légère' // 'Light Rain'
-			, id501: 'Pluie modérée' // 'Moderate Rain'
-			, id502: 'Pluie battante' // 'Heavy Intensity Rain'
-		//	, id503: 'Very Heavy Rain'
-		//	, id504: 'Extreme Rain'
-			, id511: 'Pluie verglassante' // 'Freezing Rain'
-			, id520: 'Averses de pluie fine' // 'Light Intensity Shower Rain'
-		//	, id521: 'Shower Rain'
-		//	, id522: 'Heavy Intensity Shower Rain'
-
-			, id600: 'Légers flocons' // 'Light Snow'
-			, id601: 'Neige' // 'Snow'
-			, id602: 'Fortes chutes de neige' // 'Heavy Snow'
-			, id611: 'Neige fondue' // 'Sleet'
-			, id621: 'Averses de neige' // 'Shower Snow'
-			, id622: 'Fortes chutes de neige' // 'Heavy Shower Snow'
-
-			, id701: 'Brume' // 'Mist'
-			, id711: 'Fumée' // 'Smoke'
-			, id721: 'Brume' // 'Haze'
-			, id731: 'Tourbillons de sable/poussière' // 'Sand/Dust Whirls'
-			, id741: 'Brouillard' // 'Fog'
-		//	, id751: 'Sand'
-
-			, id800: 'Ciel dégagé' // 'Sky is Clear'
-			, id801: 'Ciel voilé'
-			, id802: 'Nuageux' // 'Scattered Clouds'
-			, id803: 'Nuageux' // 'Broken Clouds'
-			, id804: 'Ciel couvert' // 'Overcast Clouds'
-
-			, id900: 'Tornade' // 'Tornado'
-			, id901: 'Tempête tropicale'// 'Tropical Storm'
-			, id902: 'Ouragan' // 'Hurricane'
-			, id903: 'Froid' // 'Cold'
-			, id904: 'Chaleur' // 'Hot'
-			, id905: 'Venteux' // 'Windy'
-			, id906: 'Grêle' // 'Hail'
+			owmlinktitle: 'Détails à OpenWeatherMap',
+			temperature: 'Température',
+			temp_minmax: 'Temp. min/max',
+			wind: 'Vent',
+			gust: 'Rafales',
+			windforce: 'Force du vent',
+			direction: 'Direction',
+			rain_1h: 'Pluie',
+			humidity: 'Humidité',
+			pressure: 'Pression', 
+			// Les conditions météorologiques, voir https://openweathermap.org/weather-conditions,
+			id200: 'Orage avec pluie légère', // 'Thunderstorm with Light Rain',
+			id201: 'Orage avec pluie', // 'Thunderstorm with Rain',
+			id202: 'Orage avec fortes précipitations', // 'Thunderstorm with Heavy Rain'
+			//id210: 'Light Thunderstorm',
+			id211: 'Orage',
+			id212: 'Orage violent', // 'Heavy Thunderstorm' 
+			//id221: 'Ragged Thunderstorm',
+			id230: 'Orage avec bruine faible', // 'Thunderstorm with Light Drizzle',
+			id231: 'Orage avec bruine', // 'Thunderstorm with Drizzle' 
+			//	, id232: 'Thunderstorm with Heavy Drizzle'
+			//	, id300: 'Light Intensity Drizzle',
+			id301: 'Bruine', // 'Drizzle' 
+			//	, id302: 'Heavy Intensity Drizzle'
+			//	, id310: 'Light Intensity Drizzle Rain'
+			//	, id311: 'Drizzle Rain' 
+			//	, id312: 'Heavy Intensity Drizzle Rain' 
+			//	, id321: 'Shower Drizzle',
+			id500: 'Pluie légère', // 'Light Rain',
+			id501: 'Pluie modérée', // 'Moderate Rain',
+			id502: 'Pluie battante', // 'Heavy Intensity Rain' 
+			//	, id503: 'Very Heavy Rain' 
+			//	, id504: 'Extreme Rain',
+			id511: 'Pluie verglassante', // 'Freezing Rain',
+			id520: 'Averses de pluie fine', // 'Light Intensity Shower Rain' 
+			//	, id521: 'Shower Rain'
+			//	, id522: 'Heavy Intensity Shower Rain',
+			id600: 'Légers flocons', // 'Light Snow',
+			id601: 'Neige', // 'Snow',
+			id602: 'Fortes chutes de neige', // 'Heavy Snow',
+			id611: 'Neige fondue', // 'Sleet',
+			id621: 'Averses de neige', // 'Shower Snow',
+			id622: 'Fortes chutes de neige', // 'Heavy Shower Snow',
+			id701: 'Brume', // 'Mist',
+			id711: 'Fumée', // 'Smoke',
+			id721: 'Brume', // 'Haze',
+			id731: 'Tourbillons de sable/poussière', // 'Sand/Dust Whirls',
+			id741: 'Brouillard', // 'Fog', //	, id751: 'Sand',
+			id800: 'Ciel dégagé', // 'Sky is Clear',
+			id801: 'Ciel voilé',
+			id802: 'Nuageux', // 'Scattered Clouds',
+			id803: 'Nuageux', // 'Broken Clouds',
+			id804: 'Ciel couvert', // 'Overcast Clouds',
+			id900: 'Tornade', // 'Tornado',
+			id901: 'Tempête tropicale',// 'Tropical Storm',
+			id902: 'Ouragan', // 'Hurricane',
+			id903: 'Froid', // 'Cold',
+			id904: 'Chaleur', // 'Hot',
+			id905: 'Venteux', // 'Windy',
+			id906: 'Grêle', // 'Hail'
 		},
 
-		nl: { //dutch translation
-			owmlinktitle: 'Details op OpenWeatherMap'
-			, temperature: 'Temperatuur'
-			, temp_minmax: 'Temp. min/max'
-			, wind: 'Wind'
-			, gust: 'Windvlaag'
-			, windforce: 'Windkracht'
-			, direction: 'Richting'
-			, rain_1h: 'Regen'
-			, humidity: 'Luchtvochtigheid'
-			, pressure: 'Luchtdruk'
-
-		// weeercondities, see https://openweathermap.org/weather-conditions
-			, id200: 'Onweer met lichte regen'
-			, id201: 'Onweer met met regen'
-			, id202: 'Onweer met hevige regen'
-			, id210: 'Lichte onweersbui'
-			, id211: 'Onweersbui'
-			, id212: 'Hevig onweer'
-			, id221: 'Onregelmatige onweersbui'
-			, id230: 'Onweer met licht motregen'
-			, id231: 'Onweer met motregen'
-			, id232: 'Onweer met hevige motregen'
-
-			, id300: 'Lichte motregen'
-			, id301: 'Motregen'
-			, id302: 'Hevige motregen'
-			, id310: 'Lichte motregen / regen'
-			, id311: 'Motregen / regen'
-			, id312: 'Hevige motregen / regen'
-			, id321: 'Douche motregen'
-
-			, id500: 'Lichte regen'
-			, id501: 'Gematigde regen'
-			, id502: 'Hevige regen'
-			, id503: 'Erg hevige regen'
-			, id504: 'Extreme regen'
-			, id511: 'Hagel'
-			, id520: 'Lichte miezerregen'
-			, id521: 'Miezerregen'
-			, id522: 'Hevige miezerregen'
-
-			, id600: 'Lichte sneeuwval'
-			, id601: 'Sneeuw'
-			, id602: 'Hevige sneeuwval'
-			, id611: 'Ijzel'
-			, id621: 'Douche sneeuw'
-			, id622: 'Hevige douche sneeuw'
-
-			, id701: 'Mist'
-			, id711: 'Rook'
-			, id721: 'Nevel'
-			, id731: 'Zand/stof werveling'
-			, id741: 'Mist'
-			, id751: 'Zand'
-
-			, id800: 'Onbewolkt'
-			, id801: 'Licht bewolkt'
-			, id802: 'Half bewolkt'
-			, id803: 'Overwegend bewolkt'
-			, id804: 'Bewolkt'
-
-			, id900: 'Tornado'
-			, id901: 'Tropische Storm'
-			, id902: 'Orkaan'
-			, id903: 'Koud'
-			, id904: 'Heet'
-			, id905: 'Winderig'
-			, id906: 'Hagel'
+		nl: { 
+			//dutch translation
+			owmlinktitle: 'Details op OpenWeatherMap',
+			temperature: 'Temperatuur',
+			temp_minmax: 'Temp. min/max',
+			wind: 'Wind',
+			gust: 'Windvlaag',
+			windforce: 'Windkracht',
+			direction: 'Richting',
+			rain_1h: 'Regen',
+			humidity: 'Luchtvochtigheid',
+			pressure: 'Luchtdruk', 
+			
+			// weeercondities, see https://openweathermap.org/weather-conditions,
+			id200: 'Onweer met lichte regen',
+			id201: 'Onweer met met regen',
+			id202: 'Onweer met hevige regen',
+			id210: 'Lichte onweersbui',
+			id211: 'Onweersbui',
+			id212: 'Hevig onweer',
+			id221: 'Onregelmatige onweersbui',
+			id230: 'Onweer met licht motregen',
+			id231: 'Onweer met motregen',
+			id232: 'Onweer met hevige motregen',
+			id300: 'Lichte motregen',
+			id301: 'Motregen',
+			id302: 'Hevige motregen',
+			id310: 'Lichte motregen / regen',
+			id311: 'Motregen / regen',
+			id312: 'Hevige motregen / regen',
+			id321: 'Douche motregen',
+			id500: 'Lichte regen',
+			id501: 'Gematigde regen',
+			id502: 'Hevige regen',
+			id503: 'Erg hevige regen',
+			id504: 'Extreme regen',
+			id511: 'Hagel',
+			id520: 'Lichte miezerregen',
+			id521: 'Miezerregen',
+			id522: 'Hevige miezerregen',
+			id600: 'Lichte sneeuwval',
+			id601: 'Sneeuw',
+			id602: 'Hevige sneeuwval',
+			id611: 'Ijzel',
+			id621: 'Douche sneeuw',
+			id622: 'Hevige douche sneeuw',
+			id701: 'Mist',
+			id711: 'Rook',
+			id721: 'Nevel',
+			id731: 'Zand/stof werveling',
+			id741: 'Mist',
+			id751: 'Zand',
+			id800: 'Onbewolkt',
+			id801: 'Licht bewolkt',
+			id802: 'Half bewolkt',
+			id803: 'Overwegend bewolkt',
+			id804: 'Bewolkt',
+			id900: 'Tornado',
+			id901: 'Tropische Storm',
+			id902: 'Orkaan',
+			id903: 'Koud',
+			id904: 'Heet',
+			id905: 'Winderig',
+			id906: 'Hagel'
 		},
 
-		es: { //spanish translation
-			owmlinktitle: 'Detalles en OpenWeatherMap'
-			, temperature: 'Temperatura'
-			, temp_minmax: 'Temp. mín/máx'
-			, wind: 'Viento'
-			, gust: 'Ráfagas'
-			, windforce: 'Fuerza del viento'
-			, direction: 'Dirección'
-			, rain_1h: 'Lluvia'
-			, humidity: 'Humedad'
-			, pressure: 'Presión'
-
-		// weather conditions, see https://openweathermap.org/weather-conditions
-			// Thunderstorm
-			, id200: 'Tormenta con lluvia débil'
-			, id201: 'Tormenta con lluvia'
-			, id202: 'Tormenta con lluvia fuerte'
-			, id210: 'Tormenta débil'
-			, id211: 'Tormenta'
-			, id212: 'Tormenta fuerte'
-			, id221: 'Tormenta irregular'
-			, id230: 'Tormenta con llovizna débil'
-			, id231: 'Tormenta con llovizna'
-			, id232: 'Tormenta con llovizna fuerte'
-
-			// Drizzle
-			, id300: 'Llovizna débil'
-			, id301: 'Llovizna'
-			, id302: 'Llovizna fuerte'
-			, id310: 'Lluvia/llovizna débil'
-			, id311: 'Lluvia/llovizna'
-			, id312: 'Lluvia/llovizna fuerte'
-			, id321: 'Chubasco de llovizna'
-
-			// Rain
-			, id500: 'Lluvia débil'
-			, id501: 'Lluvia moderada'
-			, id502: 'Lluvia fuerte'
-			, id503: 'Lluvia muy fuerte'
-			, id504: 'Lluvia extrema'
-			, id511: 'Granizo'
-			, id520: 'Chubasco de lluvia débil'
-			, id521: 'Chubasco de lluvia'
-			, id522: 'Chubasco de lluvia fuerte'
-			, id531: 'Chubasco de lluvia irregular'
-
-			// Snow
-			, id600: 'Nieve débil'
-			, id601: 'Nieve'
-			, id602: 'Nieve fuerte'
-			, id611: 'Aguanieve'
-			, id612: 'Chubasco de aguanieve'
-			, id615: 'Lluvia y nieve débiles'
-			, id616: 'Lluvia y nieve'
-			, id620: 'Chubasco de nieve débil'
-			, id621: 'Chubasco de nieve'
-			, id622: 'Chubasco de nieve fuerte'
-
-			// Atmosphere
-			, id701: 'Bruma'
-			, id711: 'Humo'
-			, id721: 'Neblina'
-			, id731: 'Torbellinos de arena/polvo'
-			, id741: 'Niebla'
-			, id751: 'Arena'
-			, id761: 'Polvo'
-			, id762: 'Ceniza volcánica'
-			, id771: 'Tempestad'
-			, id781: 'Tornado'
-
-			// Clouds
-			, id800: 'Cielo despejado'
-			, id801: 'Algunas nubes'
-			, id802: 'Nubes dispersas'
-			, id803: 'Intérvalos nubosos'
-			, id804: 'Nublado'
-
-			// Extreme
-			, id900: 'Tornado'
-			, id901: 'Tormenta tropical'
-			, id902: 'Huracán'
-			, id903: 'Bajas temperaturas'
-			, id904: 'Altas temperaturas'
-			, id905: 'Ventoso'
-			, id906: 'Granizo'
-
-			// Additional
-			, id951: 'Calma'
-			, id952: 'Brisa ligera'
-			, id953: 'Brisa suave'
-			, id954: 'Brisa moderada'
-			, id955: 'Brisa fresca'
-			, id956: 'Brisa fuerte'
-			, id957: 'Viento fuerte, próximo a vendaval'
-			, id958: 'Vendaval'
-			, id959: 'Vendaval fuerte'
-			, id960: 'Tempestad'
-			, id961: 'Tempestad violenta'
-			, id962: 'Huracán'
+		es: { 
+			//spanish translation
+			owmlinktitle: 'Detalles en OpenWeatherMap',
+			temperature: 'Temperatura',
+			temp_minmax: 'Temp. mín/máx',
+			wind: 'Viento',
+			gust: 'Ráfagas',
+			windforce: 'Fuerza del viento',
+			direction: 'Dirección',
+			rain_1h: 'Lluvia',
+			humidity: 'Humedad',
+			pressure: 'Presión', 
+			// weather conditions, see https://openweathermap.org/weather-conditions 
+			// Thunderstorm,
+			id200: 'Tormenta con lluvia débil',
+			id201: 'Tormenta con lluvia',
+			id202: 'Tormenta con lluvia fuerte',
+			id210: 'Tormenta débil',
+			id211: 'Tormenta',
+			id212: 'Tormenta fuerte',
+			id221: 'Tormenta irregular',
+			id230: 'Tormenta con llovizna débil',
+			id231: 'Tormenta con llovizna',
+			id232: 'Tormenta con llovizna fuerte', // Drizzle,
+			id300: 'Llovizna débil',
+			id301: 'Llovizna',
+			id302: 'Llovizna fuerte',
+			id310: 'Lluvia/llovizna débil',
+			id311: 'Lluvia/llovizna',
+			id312: 'Lluvia/llovizna fuerte',
+			id321: 'Chubasco de llovizna', // Rain,
+			id500: 'Lluvia débil',
+			id501: 'Lluvia moderada',
+			id502: 'Lluvia fuerte',
+			id503: 'Lluvia muy fuerte',
+			id504: 'Lluvia extrema',
+			id511: 'Granizo',
+			id520: 'Chubasco de lluvia débil',
+			id521: 'Chubasco de lluvia',
+			id522: 'Chubasco de lluvia fuerte',
+			id531: 'Chubasco de lluvia irregular', // Snow,
+			id600: 'Nieve débil',
+			id601: 'Nieve',
+			id602: 'Nieve fuerte',
+			id611: 'Aguanieve',
+			id612: 'Chubasco de aguanieve',
+			id615: 'Lluvia y nieve débiles',
+			id616: 'Lluvia y nieve',
+			id620: 'Chubasco de nieve débil',
+			id621: 'Chubasco de nieve',
+			id622: 'Chubasco de nieve fuerte', // Atmosphere,
+			id701: 'Bruma',
+			id711: 'Humo',
+			id721: 'Neblina',
+			id731: 'Torbellinos de arena/polvo',
+			id741: 'Niebla',
+			id751: 'Arena',
+			id761: 'Polvo',
+			id762: 'Ceniza volcánica',
+			id771: 'Tempestad',
+			id781: 'Tornado', // Clouds,
+			id800: 'Cielo despejado',
+			id801: 'Algunas nubes',
+			id802: 'Nubes dispersas',
+			id803: 'Intérvalos nubosos',
+			id804: 'Nublado', // Extreme,
+			id900: 'Tornado',
+			id901: 'Tormenta tropical',
+			id902: 'Huracán',
+			id903: 'Bajas temperaturas',
+			id904: 'Altas temperaturas',
+			id905: 'Ventoso',
+			id906: 'Granizo', // Additional,
+			id951: 'Calma',
+			id952: 'Brisa ligera',
+			id953: 'Brisa suave',
+			id954: 'Brisa moderada',
+			id955: 'Brisa fresca',
+			id956: 'Brisa fuerte',
+			id957: 'Viento fuerte, próximo a vendaval',
+			id958: 'Vendaval',
+			id959: 'Vendaval fuerte',
+			id960: 'Tempestad',
+			id961: 'Tempestad violenta',
+			id962: 'Huracán'
 		},
 
-		ca: { //catalan translation
-			owmlinktitle: 'Detalls en OpenWeatherMap'
-			, temperature: 'Temperatura'
-			, temp_minmax: 'Temp. mín/màx'
-			, wind: 'Vent'
-			, gust: 'Ràfegues'
-			, windforce: 'Força del vent'
-			, direction: 'Direcció'
-			, rain_1h: 'Pluja'
-			, humidity: 'Humitat'
-			, pressure: 'Pressió'
-
-		// weather conditions, see https://openweathermap.org/weather-conditions
-			// Thunderstorm
-			, id200: 'Tempesta amb pluja feble'
-			, id201: 'Tempesta amb pluja'
-			, id202: 'Tempesta amb pluja forta'
-			, id210: 'Tempesta feble'
-			, id211: 'Tempesta'
-			, id212: 'Tempesta forta'
-			, id221: 'Tempesta irregular'
-			, id230: 'Tempesta amb plugim feble'
-			, id231: 'Tempesta amb plugim'
-			, id232: 'Tempesta amb plugim fort'
-
-			// Drizzle
-			, id300: 'Plugim feble'
-			, id301: 'Plugim'
-			, id302: 'Plugim fort'
-			, id310: 'Pluja/plugim feble'
-			, id311: 'Pluja/plugim'
-			, id312: 'Pluja/plugim fort'
-			, id321: 'Ruixat de plugim'
-
-			// Rain
-			, id500: 'Pluja feble'
-			, id501: 'Pluja moderada'
-			, id502: 'Pluja forta'
-			, id503: 'Pluja molt forta'
-			, id504: 'Pluja extrema'
-			, id511: 'Calabruix'
-			, id520: 'Ruixat de pluja feble'
-			, id521: 'Ruixat de pluja'
-			, id522: 'Ruixat de pluja fort'
-			, id531: 'Ruixat de pluja irregular'
-
-			// Snow
-			, id600: 'Neu feble'
-			, id601: 'Neu'
-			, id602: 'Neu forta'
-			, id611: 'Aiguaneu'
-			, id612: 'Ruixat de aguanieve'
-			, id615: 'Pluja i neu febles'
-			, id616: 'Pluja i neu'
-			, id620: 'Ruixat de neu feble'
-			, id621: 'Ruixat de neu'
-			, id622: 'Ruixat de neu fort'
-
-			// Atmosphere
-			, id701: 'Bruma'
-			, id711: 'Fum'
-			, id721: 'Boirina'
-			, id731: 'Torbellinos de arena/polvo'
-			, id741: 'Boira'
-			, id751: 'Sorra'
-			, id761: 'Pols'
-			, id762: 'Cendra volcànica'
-			, id771: 'Tempestat'
-			, id781: 'Tornado'
-
-			// Clouds
-			, id800: 'Cel clar'
-			, id801: 'Alguns núvols'
-			, id802: 'Núvols dispersos'
-			, id803: 'Intervals nuvolosos'
-			, id804: 'Ennuvolat'
-
-			// Extreme
-			, id900: 'Tornado'
-			, id901: 'Tempesta tropical'
-			, id902: 'Huracà'
-			, id903: 'Temperatures baixes'
-			, id904: 'Temperatures altes'
-			, id905: 'Ventós'
-			, id906: 'Calabruix'
-
-			// Additional
-			, id951: 'Calma'
-			, id952: 'Brisa lleugera'
-			, id953: 'Brisa suau'
-			, id954: 'Brisa moderada'
-			, id955: 'Brisa fresca'
-			, id956: 'Brisa forta'
-			, id957: 'Vent fort, pròxim a vendaval'
-			, id958: 'Ventada'
-			, id959: 'Ventada forta'
-			, id960: 'Tempesta'
-			, id961: 'Tempesta violenta'
-			, id962: 'Huracà'
+		ca: { 
+			//catalan translation
+			owmlinktitle: 'Detalls en OpenWeatherMap',
+			temperature: 'Temperatura',
+			temp_minmax: 'Temp. mín/màx',
+			wind: 'Vent',
+			gust: 'Ràfegues',
+			windforce: 'Força del vent',
+			direction: 'Direcció',
+			rain_1h: 'Pluja',
+			humidity: 'Humitat',
+			pressure: 'Pressió', 
+			// weather conditions, see https://openweathermap.org/weather-conditions 
+			// Thunderstorm,
+			id200: 'Tempesta amb pluja feble',
+			id201: 'Tempesta amb pluja',
+			id202: 'Tempesta amb pluja forta',
+			id210: 'Tempesta feble',
+			id211: 'Tempesta',
+			id212: 'Tempesta forta',
+			id221: 'Tempesta irregular',
+			id230: 'Tempesta amb plugim feble',
+			id231: 'Tempesta amb plugim',
+			id232: 'Tempesta amb plugim fort', // Drizzle,
+			id300: 'Plugim feble',
+			id301: 'Plugim',
+			id302: 'Plugim fort',
+			id310: 'Pluja/plugim feble',
+			id311: 'Pluja/plugim',
+			id312: 'Pluja/plugim fort',
+			id321: 'Ruixat de plugim', // Rain,
+			id500: 'Pluja feble',
+			id501: 'Pluja moderada',
+			id502: 'Pluja forta',
+			id503: 'Pluja molt forta',
+			id504: 'Pluja extrema',
+			id511: 'Calabruix',
+			id520: 'Ruixat de pluja feble',
+			id521: 'Ruixat de pluja',
+			id522: 'Ruixat de pluja fort',
+			id531: 'Ruixat de pluja irregular', // Snow,
+			id600: 'Neu feble',
+			id601: 'Neu',
+			id602: 'Neu forta',
+			id611: 'Aiguaneu',
+			id612: 'Ruixat de aguanieve',
+			id615: 'Pluja i neu febles',
+			id616: 'Pluja i neu',
+			id620: 'Ruixat de neu feble',
+			id621: 'Ruixat de neu',
+			id622: 'Ruixat de neu fort', // Atmosphere,
+			id701: 'Bruma',
+			id711: 'Fum',
+			id721: 'Boirina',
+			id731: 'Torbellinos de arena/polvo',
+			id741: 'Boira',
+			id751: 'Sorra',
+			id761: 'Pols',
+			id762: 'Cendra volcànica',
+			id771: 'Tempestat',
+			id781: 'Tornado', // Clouds,
+			id800: 'Cel clar',
+			id801: 'Alguns núvols',
+			id802: 'Núvols dispersos',
+			id803: 'Intervals nuvolosos',
+			id804: 'Ennuvolat', // Extreme,
+			id900: 'Tornado',
+			id901: 'Tempesta tropical',
+			id902: 'Huracà',
+			id903: 'Temperatures baixes',
+			id904: 'Temperatures altes',
+			id905: 'Ventós',
+			id906: 'Calabruix', // Additional,
+			id951: 'Calma',
+			id952: 'Brisa lleugera',
+			id953: 'Brisa suau',
+			id954: 'Brisa moderada',
+			id955: 'Brisa fresca',
+			id956: 'Brisa forta',
+			id957: 'Vent fort, pròxim a vendaval',
+			id958: 'Ventada',
+			id959: 'Ventada forta',
+			id960: 'Tempesta',
+			id961: 'Tempesta violenta',
+			id962: 'Huracà'
 		},
-		pt_br: { //brazillian translation
-			owmlinktitle: 'Detalhes em OpenWeatherMap'
-			, temperature: 'Temperatura'
-			, temp_minmax: 'Temp. min/max'
-			, wind: 'Vento'
-			, gust: 'Rajadas'
-			, windforce: 'Força do Vento'
-			, direction: 'Direção'
-			, rain_1h: 'Chuva'
-			, humidity: 'Umidade'
-			, pressure: 'Pressão'
-
-		// weather conditions, see https://openweathermap.org/weather-conditions
-			, id200: 'Trovoadas com chuva fraca'
-			, id201: 'Trovoadas com chuva'
-			, id202: 'Trovoadas com chuva forte'
-			, id210: 'Trovoadas leves'
-			, id211: 'Trovoadas'
-			, id212: 'Trovoadas fortes'
-			, id221: 'Trovoadas irregulares'
-			, id230: 'Trovoadas com garoa fraca'
-			, id231: 'Trovoadas com garoa'
-			, id232: 'Trovoadas com garoa forte'
-
-			, id300: 'Garoa de fraca intensidade'
-			, id301: 'Garoa'
-			, id302: 'Garoa de forte intensidade'
-			, id310: 'Chuva com garoa de fraca intensidade'
-			, id311: 'Chuva com garoa'
-			, id312: 'Chuva com garoa de forte intensidade'
-			, id321: 'Garoa persistente'
-
-			, id500: 'Chuva fraca'
-			, id501: 'Chuva'
-			, id502: 'Chuva forte'
-			, id503: 'Chuva muito forte'
-			, id504: 'Chuva extrema'
-			, id511: 'Chuva de granizo'
-			, id520: 'Aguaceiro de chuva fraco'
-			, id521: 'Aguaceiro de chuva'
-			, id522: 'Aguaceiro de chuva forte'
-
-			, id600: 'Neve fraca'
-			, id601: 'Neve'
-			, id602: 'Neve forte'
-			, id611: 'Chuva com neve'
-			, id621: 'Aguaceiro de neve'
-			, id622: 'Aguaceiro de neve forte'
-
-			, id701: 'Névoa'
-			, id711: 'Fumaça'
-			, id721: 'Bruma'
-			, id731: 'Redemoinhos de Areia/Poeira'
-			, id741: 'Neblina'
-			, id751: 'Areia'
-
-			, id800: 'Ceu está limpo'
-			, id801: 'Poucas nuvens'
-			, id802: 'Nuvens dispersas'
-			, id803: 'Cirros'
-			, id804: 'Nublado'
-
-			, id900: 'Tornado'
-			, id901: 'Tempestade tropical'
-			, id902: 'Furacão'
-			, id903: 'Frio'
-			, id904: 'Calor'
-			, id905: 'Ventania'
-			, id906: 'Granizo'
+		pt_br: { 
+			//brazillian translation
+			owmlinktitle: 'Detalhes em OpenWeatherMap',
+			temperature: 'Temperatura',
+			temp_minmax: 'Temp. min/max',
+			wind: 'Vento',
+			gust: 'Rajadas',
+			windforce: 'Força do Vento',
+			direction: 'Direção',
+			rain_1h: 'Chuva',
+			humidity: 'Umidade',
+			pressure: 'Pressão',
+			// weather conditions, see https://openweathermap.org/weather-conditions,
+			id200: 'Trovoadas com chuva fraca',
+			id201: 'Trovoadas com chuva',
+			id202: 'Trovoadas com chuva forte',
+			id210: 'Trovoadas leves',
+			id211: 'Trovoadas',
+			id212: 'Trovoadas fortes',
+			id221: 'Trovoadas irregulares',
+			id230: 'Trovoadas com garoa fraca',
+			id231: 'Trovoadas com garoa',
+			id232: 'Trovoadas com garoa forte',
+			id300: 'Garoa de fraca intensidade',
+			id301: 'Garoa',
+			id302: 'Garoa de forte intensidade',
+			id310: 'Chuva com garoa de fraca intensidade',
+			id311: 'Chuva com garoa',
+			id312: 'Chuva com garoa de forte intensidade',
+			id321: 'Garoa persistente',
+			id500: 'Chuva fraca',
+			id501: 'Chuva',
+			id502: 'Chuva forte',
+			id503: 'Chuva muito forte',
+			id504: 'Chuva extrema',
+			id511: 'Chuva de granizo',
+			id520: 'Aguaceiro de chuva fraco',
+			id521: 'Aguaceiro de chuva',
+			id522: 'Aguaceiro de chuva forte',
+			id600: 'Neve fraca',
+			id601: 'Neve',
+			id602: 'Neve forte',
+			id611: 'Chuva com neve',
+			id621: 'Aguaceiro de neve',
+			id622: 'Aguaceiro de neve forte',
+			id701: 'Névoa',
+			id711: 'Fumaça',
+			id721: 'Bruma',
+			id731: 'Redemoinhos de Areia/Poeira',
+			id741: 'Neblina',
+			id751: 'Areia',
+			id800: 'Ceu está limpo',
+			id801: 'Poucas nuvens',
+			id802: 'Nuvens dispersas',
+			id803: 'Cirros',
+			id804: 'Nublado',
+			id900: 'Tornado',
+			id901: 'Tempestade tropical',
+			id902: 'Furacão',
+			id903: 'Frio',
+			id904: 'Calor',
+			id905: 'Ventania',
+			id906: 'Granizo'
 		}
 	}
 };
 
 
 
+
 },{}],17:[function(require,module,exports){
+
+},{}],20:[function(require,module,exports){
 L.Icon.OpenAqIcon = L.Icon.extend({
             options: {
                 iconUrl: 'https://i.stack.imgur.com/6cDGi.png',
@@ -28755,6 +30316,7 @@ L.Icon.OpenAqIcon = L.Icon.extend({
                     },
     
                     requestRegionData: function () {
+
                                     var self = this ;
     
                                     (function() {
@@ -28783,6 +30345,28 @@ L.Icon.OpenAqIcon = L.Icon.extend({
     
                     getMarker: function(data) {
                             var redDotIcon = new L.icon.openaqIcon()
+
+                        var self = this ;
+
+                        (function() {
+                        var $ = window.jQuery;
+                        var url = "https://api.openaq.org/v1/latest?limit=5000";
+
+                        if(typeof self._map.spin === 'function'){
+                        self._map.spin(true) ;
+                        }
+                        $.getJSON(url , function(regionalData){
+
+                                self.parseData(regionalData.results) ;
+                                if(typeof self._map.spin === 'function'){
+                                        self._map.spin(false) ;
+                                }
+                        });
+                        })();
+                    },
+    
+                    getMarker: function(data) {
+                            var redDotIcon = new L.icon.openaqIcon();
                             var distance = data.distance;
                             var lat = data.coordinates.latitude;
                             var lon = data.coordinates.longitude;
@@ -28794,9 +30378,15 @@ L.Icon.OpenAqIcon = L.Icon.extend({
                                 no2: "Nitrogen Dioxide",
                                 so2: "Sulphur Dioxide",
                                 co: "Carbon Monoxide",
+
                         }
                         for(var i = 0; i < data.measurements.length; i++) {
                             contentData+="<strong>"+labels[data.measurements[i].parameter]+" : </strong>"+data.measurements[i].value+" "+data.measurements[i].unit+"<br>"
+
+                        };
+                        for(var i = 0; i < data.measurements.length; i++) {
+                            contentData+="<strong>"+labels[data.measurements[i].parameter]+" : </strong>"+data.measurements[i].value+" "+data.measurements[i].unit+"<br>";
+
                         }
                             return L.marker([lat, lon], {icon: redDotIcon}).bindPopup(
                                 "<h3>"+data.location+", "+data.country+"</h3><br>"+
@@ -28853,9 +30443,14 @@ L.Icon.OpenAqIcon = L.Icon.extend({
     
     L.layerGroup.openaqLayer = function(options) {
             return new L.LayerGroup.OpenAqLayer(options);
+
     }
     
 },{}],18:[function(require,module,exports){
+
+    };
+    
+},{}],21:[function(require,module,exports){
 L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
 
     {
@@ -29207,7 +30802,11 @@ L.layerGroup.pfasLayer = function (options) {
 };
 
 
+
 },{}],20:[function(require,module,exports){
+
+},{}],22:[function(require,module,exports){
+
 require('jquery') ;
 require('leaflet') ;
 
@@ -29255,25 +30854,19 @@ L.LayerGroup.PurpleAirMarkerLayer = L.LayerGroup.extend(
         requestData: function () {
           if(this._map.getZoom() >= 7){
              var self = this;
-                  (function() {
-                      var script = document.createElement("SCRIPT");
-                      script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                      script.type = 'text/javascript';
-                      var zoom = self._map.getZoom(), northwest = self._map.getBounds().getNorthWest() , southeast = self._map.getBounds().getSouthEast() ;
-                      script.onload = function() {
-                          var $ = window.jQuery;
-                          var PurpleLayer_url = "https://www.purpleair.com/data.json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat="+(northwest.lat)+"&selat="+(southeast.lat)+"&nwlng="+(northwest.lng)+"&selng="+(southeast.lng) ;
-                          if(typeof self._map.spin === 'function'){
-                            self._map.spin(true) ;
-                          }
-                          $.getJSON(PurpleLayer_url , function(data){
-                          	 self.parseData(data) ;
-                             if(typeof self._map.spin === 'function'){
-                               self._map.spin(false) ;
-                             }
-              		    });
-                      };
-                      document.getElementsByTagName("head")[0].appendChild(script);
+                  (function() {                
+                    var zoom = self._map.getZoom(), northwest = self._map.getBounds().getNorthWest() , southeast = self._map.getBounds().getSouthEast() ;
+                    var $ = window.jQuery;
+                    var PurpleLayer_url = "https://www.purpleair.com/data.json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat="+(northwest.lat)+"&selat="+(southeast.lat)+"&nwlng="+(northwest.lng)+"&selng="+(southeast.lng) ;
+                    if(typeof self._map.spin === 'function'){
+                        self._map.spin(true) ;
+                    }
+                    $.getJSON(PurpleLayer_url , function(data){
+                        self.parseData(data) ;
+                        if(typeof self._map.spin === 'function'){
+                            self._map.spin(false) ;
+                        }
+                    });
                   })();
           }
         },
@@ -29324,6 +30917,9 @@ L.layerGroup.purpleAirMarkerLayer = function (options) {
 };
 
 },{"jquery":2,"leaflet":5}],21:[function(require,module,exports){
+
+},{"jquery":2,"leaflet":6}],23:[function(require,module,exports){
+
 require('heatmap.js') ;
 require('leaflet-heatmap') ;
 
@@ -29339,7 +30935,7 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
              latField: 'lat',
              lngField: 'lng',
              valueField: 'count' ,
-             blur: .75
+             blur: 0.75
         },
 
         initialize: function (options) {
@@ -29370,38 +30966,31 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
         requestData: function () {
            var self = this;
                 (function() {
-                    var script = document.createElement("SCRIPT");
-                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                    script.type = 'text/javascript';
-
-                    script.onload = function() {
-                        var $ = window.jQuery;
-                        var PurpleLayer_url = "https://www.purpleair.com/json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L";
+                    var $ = window.jQuery;
+                    var PurpleLayer_url = "https://www.purpleair.com/json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L";
+                    if(typeof self._map.spin === 'function'){
+                      self._map.spin(true) ;
+                    }
+                    $.getJSON(PurpleLayer_url , function(data){
+                        self.parseData(data) ;
                         if(typeof self._map.spin === 'function'){
-                          self._map.spin(true) ;
+                          self._map.spin(false) ;
                         }
-                        $.getJSON(PurpleLayer_url , function(data){
-                        	 self.parseData(data) ;
-                           if(typeof self._map.spin === 'function'){
-                             self._map.spin(false) ;
-                           }
-            		    });
-                    };
-                    document.getElementsByTagName("head")[0].appendChild(script);
+                    }); 
                 })();
 
 
         },
 
         getMarker: function (data) {
-              var lat = data.Lat ;
+              var lat = data.Lat;
               var lng = data.Lon;
-              var value = parseFloat(data.PM2_5Value) ;  //PM2.5 VALUE in microgram per metre cube
+              var value = parseFloat(data.PM2_5Value);  //PM2.5 VALUE in microgram per metre cube
 
-              var purpleLayer_object = new Object() ;
-              purpleLayer_object.lat = lat ;
-              purpleLayer_object.lng = lng ;
-              purpleLayer_object.count = value ;
+              var purpleLayer_object = {};
+              purpleLayer_object.lat = lat;
+              purpleLayer_object.lng = lng;
+              purpleLayer_object.count = value;
               /*
               var aqi ;
               if(value>=0 && value<=12.0)
@@ -29454,6 +31043,9 @@ L.layerGroup.purpleLayer = function (options) {
 };
 
 },{"heatmap.js":1,"leaflet-heatmap":3}],22:[function(require,module,exports){
+
+},{"heatmap.js":1,"leaflet-heatmap":4}],24:[function(require,module,exports){
+
 L.Icon.SkyTruthIcon = L.Icon.extend({
   options: {
     iconUrl: 'https://www.clker.com/cliparts/T/G/b/7/r/A/red-dot.svg',
@@ -29495,11 +31087,7 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
     requestData: function () {
       var self = this;
       (function() {
-        var script = document.createElement("SCRIPT");
-        script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-        script.type = 'text/javascript';
         var zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
-        script.onload = function() {
         var $ = window.jQuery;
         var SkyTruth_url = "https://alerts1.skytruth.org/json?n=100&l="+(southwest.lat)+","+(southwest.lng)+","+(northeast.lat)+","+(northeast.lng) ;
         if(typeof self._map.spin === 'function'){
@@ -29511,8 +31099,6 @@ L.LayerGroup.SkyTruthLayer = L.LayerGroup.extend(
             self._map.spin(false) ;
           }
         });
-        };
-      document.getElementsByTagName("head")[0].appendChild(script);
       })();
     },
     getMarker: function (data) {
@@ -29566,7 +31152,7 @@ L.layerGroup.skyTruthLayer = function (options) {
   return new L.LayerGroup.SkyTruthLayer(options);
 };
 
-},{}],23:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 L.Icon.ToxicReleaseIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://www.clker.com/cliparts/r/M/L/o/R/i/green-dot.svg',
@@ -29707,7 +31293,253 @@ L.layerGroup.toxicReleaseLayer = function (options) {
     return new L.LayerGroup.ToxicReleaseLayer(options);
 };
 
+
 },{}],24:[function(require,module,exports){
+
+},{}],26:[function(require,module,exports){
+L.Control.Layers.include({
+  getActiveOverlayNames: function() {
+    
+    var layers = [];
+    var control = this;
+    this._layers.forEach(function(layerObj) {
+      if(layerObj.overlay) {
+        
+        layerName = layerObj.name;
+        if(control._map.hasLayer(layerObj.layer)) layers.push(layerObj.name);
+      }
+    });
+    
+    return layers;
+  }
+});
+},{}],27:[function(require,module,exports){
+L.SpreadsheetLayer = L.LayerGroup.extend({
+    //options: {
+        //Must be supplied:
+        //url: String url of data sheet
+        //columns: Array of column names to be used
+        //lat, lon column names
+        //generatePopup: function used to create content of popups
+        
+        //Optional:
+        //imageOptions: defaults to blank
+        //sheet index: defaults to 0 (first sheet)
+    //},
+
+    initialize: function(options) {
+        options = options || {};
+        L.Util.setOptions(this, options);
+        this._layers = {};
+        this._columns = this.options.columns || [];
+        this.options.imageOptions = this.options.imageOptions || {};
+        this.options.sheetNum = this.options.sheetNum || 0;
+        this._parsedToOrig = {};
+        this._lat = this._cleanColumnName(this.options.lat);
+        this._lon = this._cleanColumnName(this.options.lon);
+        this._columns = this._cleanColumns(this._columns);
+    },
+    
+    _cleanColumns: function(columns) {
+        for(var i = 0; i < columns.length; i++) { //the names of the columns are processed before given in JSON, so we must parse these column names too
+            var parsedColumnName = this._cleanColumnName(columns[i]);
+            this._parsedToOrig[parsedColumnName] = columns[i]; //Here we create an object with the parsed names as keys and original names as values;
+            columns[i] = parsedColumnName;
+        }
+        if(L.Util.indexOf(columns, this._lat) <= -1) { //parse lat and lon names the same way, then add them to columns if not there
+            columns.push(this._lat);
+            this._parsedToOrig[this._lat] = this.options.lat;
+        }
+        if(L.Util.indexOf(columns, this._lon) <= -1) {
+            columns.push(this._lon);
+            this._parsedToOrig[this._lon] = this.options.lon;
+        }
+        return columns;
+    },
+    
+    _cleanColumnName: function(columnName) { //Tries to emulate google's conversion of column titles
+        return columnName.replace(/^[^a-zA-Z]+/g, '') //remove any non letters from the front till first letter
+                         .replace(/\s+|[!@#$%^&*()]+/g, '') //remove most symbols
+                         .toLowerCase();
+    },
+    
+    onAdd: function(map) {
+        this._map = map;
+        var self = this;
+        this._getURL().then(function() { //Wait for getURL to finish before requesting data. This way we can do it just once
+            self.requestData();
+        });
+    },
+
+    onRemove: function(map) {
+        this.clearLayers();
+        map.spin(false);
+        this._layers = {};
+    },
+
+    _getURL: function() {
+        var spreadsheetID = this._getSpreadsheetID(); //To find the URL we need, we first need to find the spreadsheetID
+        var self = this;
+        //Then we have to make another request in order to find the worksheet ID, which is changed by the sheet within the spreadsheet we want
+        var spreadsheetFeedURL = 'https://spreadsheets.google.com/feeds/worksheets/' + spreadsheetID + '/public/basic?alt=json';
+        //Here we return the getjson request so that the previous code may know when it has completed
+        return this._getWorksheetID(spreadsheetID, spreadsheetFeedURL);
+    },
+    
+    _getSpreadsheetID: function() {
+        var sections = this.options.url.split('/'); //The spreadsheet ID generally comes after a section with only 1 character, usually a D.
+        var spreadsheetID;
+        var len = sections.length;
+        for (var i = 1; i < len; i++) {
+            if (sections[i - 1].length === 1) { //Here we check to see if the previous one was 1 character
+                spreadsheetID = sections[i];
+                break;
+            }
+        }
+        return spreadsheetID;
+    },
+    
+    _getWorksheetID: function(spreadsheetID, spreadsheetFeedURL) {
+        var self = this;
+        return $.getJSON(spreadsheetFeedURL, function(data) {
+            //The worksheetID we want is dependent on which sheet we are looking for
+            var tmpLink = data.feed.entry[self.options.sheetNum].id.$t;
+            var sections = tmpLink.split('/');
+            //It is always the last section of the URL
+            var sheetID = sections[sections.length - 1];
+            //Set the URL to the final one.
+            self.options.url = 'https://spreadsheets.google.com/feeds/list/' + spreadsheetID + '/' + sheetID + '/public/values?alt=json';
+        });
+    },
+
+    requestData: function() {
+        var self = this;
+        (function() {
+            var script = document.createElement("SCRIPT");
+            script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
+            script.type = 'text/javascript';
+            script.onload = function() {
+                var $ = window.jQuery;
+                var ssURL = self.options.url || '';
+                self._map.spin(true);
+                //start fetching data from the URL
+                $.getJSON(ssURL, function(data) {
+                    self.parseData(data.feed.entry);
+                    self._map.spin(false);
+                });
+            };
+            document.getElementsByTagName("head")[0].appendChild(script);
+        })();
+        
+    },
+    
+    parseData: function(data) {
+        for (var i = 0; i < data.length; i++) {
+            this.addMarker(data[i]);
+        }
+    },
+    
+    addMarker: function(data) {
+        var urlSections = data.id.$t.split('/');
+        var key = urlSections[urlSections.length - 1];
+        if(!this._layers[key]) {
+            var marker = this.getMarker(data);
+            this._layers[key] = marker;
+            this.addLayer(marker);
+        }
+    },
+    
+    getMarker: function(data) {
+        var info = {};
+        for (var i = 0; i < this._columns.length; i++) {
+            info[this._columns[i]] = data['gsx$' + this._columns[i]].$t || ''; //The JSON has gsx$ appended to the front of each columnname
+        }
+        //Get coordinates the coordinates; remember that _lat and _lon are the column names, not the actual values
+        var latlon = [parseInt(info[this._lat]), parseInt(info[this._lon])];
+        var generatePopup = this.options.generatePopup || function() {return;};
+        //Generate an object using the original column names as keys
+        var origInfo = this._createOrigInfo(info);
+        return L.marker(latlon, this.options.imageOptions).bindPopup(generatePopup(origInfo));
+    },
+    
+    _createOrigInfo: function(info) {
+        //The user will most likely give their generatePopup in terms of the column names typed in,
+        //not the parsed names. So this creates a new object that uses the original typed column
+        //names as the keys
+        var origInfo = {};
+        for(var key in info) {
+            var origKey = this._parsedToOrig[key];
+            origInfo[origKey] = info[key];
+        }
+        return origInfo;
+    }
+    
+});
+
+L.spreadsheetLayer = function(options) {
+    return new L.SpreadsheetLayer(options);
+};
+},{}],28:[function(require,module,exports){
+L.Control.LegendControl = L.Control.extend({
+  options: {
+    position: 'bottomleft',
+  },
+  
+  initialize: function(options) {
+    L.Util.setOptions(this, options);
+    this._legendElement = L.DomUtil.create('div', 'legend-container');
+    this._legendElement.style.display = 'none';
+    this._legendURLs = []; //Array of URLs
+  },
+  
+  onAdd: function(map) {
+    return this._legendElement;
+  },
+  
+  onRemove: function(map) {
+    this._legendURLs = [];
+    this._drawLegend();
+    this._legendElement.style.display = 'none';
+  },
+  
+  addLegend: function(legendURL) {
+    this._legendURLs.push(legendURL);
+    this._drawLegend();
+    this._legendElement.style.display = 'block';
+  },
+  
+  removeLegend: function(legendURL) {
+    var index = this._legendURLs.indexOf(legendURL);
+    if(index > -1) {
+      this._legendURLs.splice(index, 1); //remove URL from the array
+    }    
+    if(!this._legendURLs.length) { //if no more URLs
+      this._legendElement.style.display = 'none';
+    }
+    this._drawLegend();
+  },
+  
+  _drawLegend: function() {
+
+    this._legendElement.innerHTML = '';
+    var self = this;
+    for(var i = 0; i < this._legendURLs.length; i++) {
+      var item = L.DomUtil.create('div', 'legend-item', this._legendElement);
+      item.innerHTML = '<img src="' + this._legendURLs[i] + '" style="height: 200px;"/>';
+      item.style.cssFloat = 'left';
+      item.style.margin = '5px';
+
+    }
+  }
+  
+});
+
+L.control.legendControl = function(options) { 
+  return new L.Control.LegendControl(options);
+};
+
+},{}],29:[function(require,module,exports){
+
 wisconsinLayer = function (map) {
    var Wisconsin_NM  = L.esri.featureLayer({
      url: 'https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/Nonmetallic_and_Potential_frac_sand_mine_proposals_in_West_Central_Wisconsin/FeatureServer/0/',
@@ -29735,4 +31567,8 @@ wisconsinLayer = function (map) {
    return Wisconsin_NM ;
 };
 
+
 },{}]},{},[13]);
+
+},{}]},{},[3,7,14,26,27,28]);
+

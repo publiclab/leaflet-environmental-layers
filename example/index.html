@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="utf-8"/>
   <title>Leaflet Environmental Layers</title>
 </head>
   <style>#map { position: fixed;
@@ -137,6 +138,8 @@
 
     var AQICNLayer = L.layerGroup.aqicnLayer();
     var OpenAqLayer = L.layerGroup.openaqLayer();
+    var LuftdatenLayer = L.layerGroup.luftdatenLayer();
+    var OpenSenseLayer = L.layerGroup.openSenseLayer();
 
     var city = L.OWM.current({intervall: 15, minZoom: 3});
     var windrose = L.OWM.current({intervall: 15, minZoom: 3, markerFunction: myWindroseMarker, popup: false, clusterSize: 50,imageLoadingBgUrl: 'https://openweathermap.org/img/w0/iwind.png' });
@@ -200,6 +203,8 @@
          "<span style='color: black'><strong>Indigenous Lands Treaties</strong></span>": IndigenousLandsTreaties,
          "<span style='color: black'><strong>Air Quality Index</strong></span>": AQICNLayer,
          "<span style='color: black'><strong>Open AQ </strong></span>": OpenAqLayer,
+         "<span style='color: black'><strong>Luftdaten Layer </strong></span>": LuftdatenLayer,
+         "<img src='https://banner2.kisspng.com/20180409/qcw/kisspng-computer-icons-font-awesome-computer-software-user-cubes-5acb63cb589078.9265215315232787953628.jpg' height='10px' width='10px'><span style='color: black'><strong> OpenSense </strong></span>": OpenSenseLayer,
          "<strong>OSM <span style='color: red'>Landfills</span>, <span style='color: blue'>Mines</span>, <span style='color: green'>Quarries</span></strong>": OSMLandfillMineQuarryLayer
 
     };
@@ -250,6 +255,8 @@
       "Treaties": IndigenousLandsTreaties,
       "AQI": AQICNLayer,
       "OpenAq":OpenAqLayer,
+      "Luftaden" : LuftdatenLayer,
+      "Opensense" : OpenSenseLayer,
       "LSM": OSMLandfillMineQuarryLayer
     };
     var hash = new L.Hash(map, allMapLayers);

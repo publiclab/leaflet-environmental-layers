@@ -20,4 +20,4 @@ fracTrackerMobileLayer = function(map) {
   });
 
   return FracTracker_mobile ;
-}
+};

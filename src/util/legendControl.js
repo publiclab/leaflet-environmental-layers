@@ -42,7 +42,7 @@ L.Control.LegendControl = L.Control.extend({
     this._legendElement.innerHTML = '';
     var self = this;
     for(var i = 0; i < this._legendURLs.length; i++) {
-      var item = L.DomUtil.create('div', 'legend-item', this._legendElement)
+      var item = L.DomUtil.create('div', 'legend-item', this._legendElement);
       item.innerHTML = '<img src="' + this._legendURLs[i] + '" style="height: 200px;"/>';
       item.style.cssFloat = 'left';
       item.style.margin = '5px';
@@ -54,4 +54,4 @@ L.Control.LegendControl = L.Control.extend({
 
 L.control.legendControl = function(options) { 
   return new L.Control.LegendControl(options);
-}
+};

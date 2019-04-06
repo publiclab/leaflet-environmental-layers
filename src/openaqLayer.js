@@ -39,34 +39,27 @@ L.Icon.OpenAqIcon = L.Icon.extend({
                     },
     
                     requestRegionData: function () {
-                                    var self = this ;
-    
-                                    (function() {
-                                            var script = document.createElement("SCRIPT");
-                                            script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                                            script.type = 'text/javascript';
-                                        
-                                            script.onload = function() {
-                                                    var $ = window.jQuery;
-                                                    var url = "https://api.openaq.org/v1/latest?limit=5000";
+                        var self = this ;
 
-                                                    if(typeof self._map.spin === 'function'){
-                                                     self._map.spin(true) ;
-                                                    }
-                                                     $.getJSON(url , function(regionalData){
-    
-                                                             self.parseData(regionalData.results) ;
-                                                             if(typeof self._map.spin === 'function'){
-                                                                 self._map.spin(false) ;
-                                                             }
-                                                     });
-                                            };
-                                            document.getElementsByTagName("head")[0].appendChild(script);
-                                    })();
+                        (function() {
+                        var $ = window.jQuery;
+                        var url = "https://api.openaq.org/v1/latest?limit=5000";
+
+                        if(typeof self._map.spin === 'function'){
+                        self._map.spin(true) ;
+                        }
+                        $.getJSON(url , function(regionalData){
+
+                                self.parseData(regionalData.results) ;
+                                if(typeof self._map.spin === 'function'){
+                                        self._map.spin(false) ;
+                                }
+                        });
+                        })();
                     },
     
                     getMarker: function(data) {
-                            var redDotIcon = new L.icon.openaqIcon()
+                            var redDotIcon = new L.icon.openaqIcon();
                             var distance = data.distance;
                             var lat = data.coordinates.latitude;
                             var lon = data.coordinates.longitude;
@@ -78,9 +71,9 @@ L.Icon.OpenAqIcon = L.Icon.extend({
                                 no2: "Nitrogen Dioxide",
                                 so2: "Sulphur Dioxide",
                                 co: "Carbon Monoxide",
-                        }
+                        };
                         for(var i = 0; i < data.measurements.length; i++) {
-                            contentData+="<strong>"+labels[data.measurements[i].parameter]+" : </strong>"+data.measurements[i].value+" "+data.measurements[i].unit+"<br>"
+                            contentData+="<strong>"+labels[data.measurements[i].parameter]+" : </strong>"+data.measurements[i].value+" "+data.measurements[i].unit+"<br>";
                         }
                             return L.marker([lat, lon], {icon: redDotIcon}).bindPopup(
                                 "<h3>"+data.location+", "+data.country+"</h3><br>"+
@@ -137,5 +130,5 @@ L.Icon.OpenAqIcon = L.Icon.extend({
     
     L.layerGroup.openaqLayer = function(options) {
             return new L.LayerGroup.OpenAqLayer(options);
-    }
+    };
     
