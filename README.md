@@ -11,7 +11,7 @@ https://publiclab.org/maps/
 https://www.npmjs.com/package/leaflet-environmental-layers
 
 ##### Bower :
-Seach leaflet-environmental-layers here : https://bower.io/search/
+Search leaflet-environmental-layers here : https://bower.io/search/
 
 
 
@@ -20,7 +20,7 @@ Seach leaflet-environmental-layers here : https://bower.io/search/
 The information of each layer can be found here :
 https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library
 
-
+#### Layer Names with color codings.
 
 | Layer Name | Color |
 | --- | --- |
@@ -61,7 +61,10 @@ https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-li
 
 ## Quick Setup :
 
-To set up the library first clone this repo to your local environment; then run 'npm install' to install all the neccessary packages required. Open examples/index.html to look at the preview of the library.
+To set up the library - 
+1. Clone this repo to your local environment. 
+2. Run `npm install` to install all the neccessary packages required. 
+3. Open `examples/index.html` to look at the preview of the library.
 
 
 ## Demo :
