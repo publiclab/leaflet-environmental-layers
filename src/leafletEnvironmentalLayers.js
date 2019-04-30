@@ -18,5 +18,7 @@ require('./openaqLayer.js');
 require('./osmLandfillMineQuarryLayer.js');
 require('./wisconsinLayer.js');
 require('./fracTrackerMobileLayer.js');
+require('./pfasLayer.js');
 require('./luftdatenLayer.js');
 require('./openSenseLayer.js');
+
