@@ -1,4 +1,5 @@
 # Leaflet Environmental Layers
+[![npm version](https://badge.fury.io/js/leaflet-environmental-layers.svg)](https://badge.fury.io/js/leaflet-environmental-layers)
 
 ## The library is integrated to following places :
 
