@@ -12,13 +12,28 @@ https://publiclab.org/maps/
 Search leaflet-environmental-layers here : https://bower.io/search/
 
 
-
 ## About :
 
 The information of each layer can be found here :
 https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library
 
-#### Layer Names with color codings.
+LEL consists of a set of **Base layers** that can be changed over which one or more **Overlay layers** can be added.
+
+#### Base Layers
+
+##### Standard
+<img src="https://user-images.githubusercontent.com/32260628/58070597-4f3adc80-7bb7-11e9-9716-dfb4b99ccdbd.png" width="200" height="100" />
+
+##### Grey-scale
+<img src="https://user-images.githubusercontent.com/32260628/58070602-54982700-7bb7-11e9-8c07-b801de24fc85.png" width="200" height="100" />
+
+##### Streets
+<img src="https://user-images.githubusercontent.com/32260628/58070608-582bae00-7bb7-11e9-9cd9-7badbf288bcd.png" width="200" height="100" />
+
+##### Dark
+<img src="https://user-images.githubusercontent.com/32260628/58070611-5b269e80-7bb7-11e9-8335-1c7b6c6c601c.png" width="200" height="100" />
+
+#### Overlay Layer Names with color codings.
 
 | Layer Name | Color |
 | --- | --- |
