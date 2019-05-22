@@ -1,19 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-  <title>Leaflet Environmental Layers</title>
-</head>
-  <style>#map { position: fixed;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    background: rgba(51,51,51,0.7);
-    z-index: 10; }
-
-    <!-- SEO Meta tags
-  ========================================================= -->
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta property="og:title" content="Leaflet Environmental Layers" />
     <meta
@@ -29,19 +17,17 @@
       content="https://publiclab.github.io/leaflet-environmental-layers/example/#3/50.51/56.78/BL2"
     />
     <meta name="twitter:card" content="summary_large_image" />
-  </head>
-
-  <style>
-    #map {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      left: 0;
-      top: 0;
-      background: rgba(51, 51, 51, 0.7);
-      z-index: 10;
-    }
+  <title>Leaflet Environmental Layers</title>
+</head>
+  <style>#map { position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background: rgba(51,51,51,0.7);
+    z-index: 10; }
   </style>
+  
   <script src="../dist/LeafletEnvironmentalLayers.js"></script>
   <script src="../src/windRoseLayer.js"></script>
   <script src="../node_modules/leaflet-fullhash/leaflet-fullHash.js"></script>
@@ -57,11 +43,11 @@
   <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet" />
 
   <script src="../node_modules/leaflet-spin/example/spin/dist/spin.min.js"></script>
-  <!-- Compulsory to add -->
   <script src="../node_modules/leaflet-spin/example/leaflet.spin.min.js"></script>
 
   <script src="https://unpkg.com/esri-leaflet@2.2.3/dist/esri-leaflet.js"></script>
   <script src="https://unpkg.com/esri-leaflet-renderers@2.0.6"></script>
+
     
   <style>
     .leaflet-control-layers {
@@ -94,6 +80,7 @@
     src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"
     type="text/javascript"
   ></script>
+
   <body>
     <div id="map"></div>
 
@@ -144,7 +131,6 @@
       var OdorReport = L.layerGroup.odorReportLayer();
       var MapKnitter = L.layerGroup.mapKnitterLayer();
       var ToxicRelease = L.layerGroup.toxicReleaseLayer();
-
       var OpenInfraMap_Power = L.tileLayer(
         "https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png",
         {
@@ -178,32 +164,7 @@
         }
       );
 
-    var PurpleLayer = L.layerGroup.purpleLayer() ;
-    var PurpleAirMarkerLayer = L.layerGroup.purpleAirMarkerLayer() ;
-    var SkyTruth = L.layerGroup.skyTruthLayer() ;
-    var Fractracker = L.layerGroup.fracTrackerLayer() ;
-    var OdorReport = L.layerGroup.odorReportLayer() ;
-    var MapKnitter = L.layerGroup.mapKnitterLayer() ;
-    var ToxicRelease = L.layerGroup.toxicReleaseLayer() ;
-    var PFASTracker = L.layerGroup.pfasLayer() ;
-      
-    var OpenInfraMap_Power = L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png',{
-        maxZoom: 18,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
-    });
-    var OpenInfraMap_Petroleum = L.tileLayer('https://tiles-{s}.openinframap.org/petroleum/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
-    });
-    var OpenInfraMap_Telecom = L.tileLayer('https://tiles-{s}.openinframap.org/telecoms/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
-    });
-    var OpenInfraMap_Water = L.tileLayer('https://tiles-{s}.openinframap.org/water/{z}/{x}/{y}.png',{
-      maxZoom: 18,
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
-    });
-
+    
     var Justicemap_income = L.tileLayer.provider('JusticeMap.income') ;
     var JusticeMap_americanIndian = L.tileLayer.provider('JusticeMap.americanIndian') ;
     var JusticeMap_asian = L.tileLayer.provider('JusticeMap.asian') ;
@@ -264,7 +225,7 @@
       "<img src='https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Location_dot_purple.svg/768px-Location_dot_purple.svg.png' height='10px' width='10px'>PurpleAirMarkerLayer": PurpleAirMarkerLayer,
       "<img src='https://www.clker.com/cliparts/T/G/b/7/r/A/red-dot.svg' height='15px' width='10px'>SkyTruth": SkyTruth,
       "<img src='http://www.clker.com/cliparts/2/3/f/a/11970909781608045989gramzon_Barrel.svg.med.png' height='10px' width='10px'> Fractracker": Fractracker,
-      "<span style='color: green''> PFASTracker": PFASTracker,
+       "<span style='color: green''> PFASTracker": PFASTracker,
 
       "<img src='https://www.clker.com/cliparts/r/M/L/o/R/i/green-dot.svg' height='10px' width='10px'> ToxicRelease": ToxicRelease,
       "<img src='https://www.clker.com/cliparts/T/3/6/T/S/8/ink-splash-md.png' height='10px' width='10px'> OdorReport": OdorReport,
@@ -360,104 +321,7 @@
     var leafletControl = new L.control.layers(baseMaps,overlayMaps);
     leafletControl.addTo(map)
 
-      var baseMaps = {
-        Baselayer1: baselayer1,
-        Baselayer2: baselayer2,
-        Baselayer3: baselayer3,
-        Baselayer4: baselayer4
-      };
-      var overlayMaps = {
-        "Wisconsin Non-Metal": Wisconsin_NM,
-        FracTracker_mobile: FracTracker_mobile,
-        "<span style='color: darkred'><strong>PurpleAirLayer-HeatMap</strong></span>": PurpleLayer,
-        "<img src='https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Location_dot_purple.svg/768px-Location_dot_purple.svg.png' height='10px' width='10px'>PurpleAirMarkerLayer": PurpleAirMarkerLayer,
-        "<img src='https://www.clker.com/cliparts/T/G/b/7/r/A/red-dot.svg' height='15px' width='10px'>SkyTruth": SkyTruth,
-        "<img src='http://www.clker.com/cliparts/2/3/f/a/11970909781608045989gramzon_Barrel.svg.med.png' height='10px' width='10px'> Fractracker": Fractracker,
-        "<img src='https://www.clker.com/cliparts/r/M/L/o/R/i/green-dot.svg' height='10px' width='10px'> ToxicRelease": ToxicRelease,
-        "<img src='https://www.clker.com/cliparts/T/3/6/T/S/8/ink-splash-md.png' height='10px' width='10px'> OdorReport": OdorReport,
-        "<img src='https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png' height='10px' width='10px'> MapKnitter": MapKnitter,
-        "<span style='color: pink'><strong>OpenInfraMap_Power</strong></span>": OpenInfraMap_Power,
-        "<span style='color: blue'><strong>OpenInfraMap_Telecom</strong></span>": OpenInfraMap_Telecom,
-        "<span style='color: brown'><strong>OpenInfraMap_Petroleum</strong></span>": OpenInfraMap_Petroleum,
-        "<span style='color: #4B0082'><strong>OpenInfraMap_Water</strong></span>": OpenInfraMap_Water,
-        "<span style='color: darkgreen'><strong>Justicemap_income</strong></span>": Justicemap_income,
-        "<span style='color: maroon'><strong>JusticeMap_americanIndian</strong></span>": JusticeMap_americanIndian,
-        "<span style='color: orange'><strong>JusticeMap_asian</strong></span>": JusticeMap_asian,
-        "<span style='color: #FFD700'><strong>JusticeMap_black</strong></span>": JusticeMap_black,
-        "<span style='color: pink'><strong>JusticeMap_multi</strong></span>": JusticeMap_multi,
-        "<span style='color: 	#DCDCDC'><strong>JusticeMap_hispanic</strong></span>": JusticeMap_hispanic,
-        "<span style='color: 	#808080'><strong>JusticeMap_nonWhite</strong></span>": JusticeMap_nonWhite,
-        "<span style='color: darkbrown'><strong>JusticeMap_white</strong></span>": JusticeMap_white,
-        "<span style='color: #800000'><strong>JusticeMap_plurality</strong></span>": JusticeMap_plurality,
-        "<span style='color: #80dfff'><strong>Clouds</strong></span>": clouds,
-        "<span style='color: #b3f0ff'><strong>clouds (classic)</strong></span>": cloudscls,
-        "<span style='color: #00ff55'><strong>precipitation</strong></span>": precipitation,
-        "<span style='color: darkblue'><strong>precipitation (classic)</strong></span>": precipitationcls,
-        "<span style='color: #8080ff'><strong>rain</strong></span>": rain,
-        "<span style='color: #1a1aff'><strong>rain (classic)</strong></span>": raincls,
-        "<span style='color: #80ffe5'><strong>snow</strong></span>": snow,
-        "<span style='color: #e62e00'><strong>pressure</strong></span>": pressure,
-        "<span style='color: #ff3300'><strong>pressure contour (zoom in)</strong></span>": pressurecntr,
-        "<span style='color: #ff3300'><strong>temp</strong></span>": temp,
-        "<span style='color: darkblue'><strong>wind</strong></span>": wind,
-        "<span style='color: #b3ffff'><strong>Cities (zoom in)</strong></span>": city,
-        "<span style='color: green'><strong>windrose (zoom in)</strong></span>": windrose,
-        "<span style='color: black'><strong>Indigenous Lands Territories</strong></span>": IndigenousLandsTerritories,
-        "<span style='color: black'><strong>Indigenous Lands Languages</strong></span>": IndigenousLandsLanguages,
-        "<span style='color: black'><strong>Indigenous Lands Treaties</strong></span>": IndigenousLandsTreaties,
-        "<span style='color: black'><strong>Air Quality Index</strong></span>": AQICNLayer,
-        "<strong>OSM <span style='color: red'>Landfills</span>, <span style='color: blue'>Mines</span>, <span style='color: green'>Quarries</span></strong>": OSMLandfillMineQuarryLayer
-      };
-      var allMapLayers = {
-        BL1: baselayer1,
-        BL2: baselayer2,
-        BL3: baselayer3,
-        BL4: baselayer4,
-
-        Wisconsin_NM: Wisconsin_NM,
-        FT_mobile: FracTracker_mobile,
-        PurpleHeat: PurpleLayer,
-        Purple: PurpleAirMarkerLayer,
-        STruth: SkyTruth,
-        FracTL: Fractracker,
-        ToxicR: ToxicRelease,
-        OdorR: OdorReport,
-        MapK: MapKnitter,
-        OIMPower: OpenInfraMap_Power,
-        OIMapTelecom: OpenInfraMap_Telecom,
-        OIMPetroleum: OpenInfraMap_Petroleum,
-        OIMWater: OpenInfraMap_Water,
-        JMincome: Justicemap_income,
-        JMamericanIndian: JusticeMap_americanIndian,
-        JMasian: JusticeMap_asian,
-        JMblack: JusticeMap_black,
-        JMmulti: JusticeMap_multi,
-        JMhispanic: JusticeMap_hispanic,
-        JMnonWhite: JusticeMap_nonWhite,
-        JMwhite: JusticeMap_white,
-        JMplurality: JusticeMap_plurality,
-        Clouds: clouds,
-        cloudsclassic: cloudscls,
-        precipitation: precipitation,
-        precipcls: precipitationcls,
-        rain: rain,
-        raincls: raincls,
-        snow: snow,
-        pressure: pressure,
-        pressurecontour: pressurecntr,
-        temp: temp,
-        wind: wind,
-        Cities: city,
-        windrose: windrose,
-        Territories: IndigenousLandsTerritories,
-        Languages: IndigenousLandsLanguages,
-        Treaties: IndigenousLandsTreaties,
-        AQI: AQICNLayer,
-        LSM: OSMLandfillMineQuarryLayer
-      };
-      var hash = new L.Hash(map, allMapLayers);
-      var leafletControl = new L.control.layers(baseMaps, overlayMaps);
-      leafletControl.addTo(map);
+      
     </script>
     <script src="../src/legendCreation.js"></script>
   </body>
