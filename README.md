@@ -1,17 +1,13 @@
 # Leaflet Environmental Layers
 
 [![npm version](https://badge.fury.io/js/leaflet-environmental-layers.svg)](https://badge.fury.io/js/leaflet-environmental-layers)
+<a href='https://bower.io/search/'><img src="https://benschwarz.github.io/bower-badges/badge@2x.png" width="130" height="30" alt='Bower Version'></a>
 
 ## The library is integrated to following places :
 
 https://mapknitter.org/
 
 https://publiclab.org/maps/
-
-##### Bower :
-Search leaflet-environmental-layers here : https://bower.io/search/
-
-
 
 ## About :
 
