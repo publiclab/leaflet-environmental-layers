@@ -9,11 +9,6 @@ https://mapknitter.org/
 
 https://publiclab.org/maps/
 
-##### Bower :
-Search leaflet-environmental-layers here : https://bower.io/search/
-
-
-
 ## About :
 
 The information of each layer can be found here :
