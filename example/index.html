@@ -44,25 +44,27 @@
   <style>
     .leaflet-control-layers {
       width: 250px;
+      overflow: auto;
     }
+
     .leaflet-control-layers:after {
-      content: "View nearby features";
+      content: "Turn on layers";
       display: block;
       color: black;
       background-color: white;
-      font-weight: bold;
-      font-size: 14px;
+      font-size: 16px;
       padding-bottom: 10px;
       padding-left: 10px;
+      margin-left: 70px;
     }
+
     .leaflet-control-layers-toggle {
       width: 44px;
       height: 44px;
-      padding-left: 160px;
+      padding-left: 70px;
       padding-bottom: 25px;
-      margin-left: 92px;
+      margin-right: 65px;
       display: inline;
-      padding-bottom: 36px;
     }
   </style>
 
@@ -145,7 +147,7 @@
     var JusticeMap_nonWhite = L.tileLayer.provider('JusticeMap.nonWhite') ;
     var JusticeMap_white = L.tileLayer.provider('JusticeMap.white') ;
     var JusticeMap_plurality = L.tileLayer.provider('JusticeMap.plurality') ;
-
+    
     var clouds = L.OWM.clouds({showLegend: true, opacity: 0.5});
     var cloudscls = L.OWM.cloudsClassic({});
     var precipitation = L.OWM.precipitation({});
@@ -157,7 +159,7 @@
     var pressurecntr = L.OWM.pressureContour({});
     var temp = L.OWM.temperature({});
     var wind = L.OWM.wind({});
-
+    
     var AQICNLayer = L.layerGroup.aqicnLayer();
     var OpenAqLayer = L.layerGroup.openaqLayer();
     var LuftdatenLayer = L.layerGroup.luftdatenLayer();
@@ -186,6 +188,7 @@
       "Streets": baselayer3 ,
       "Dark": baselayer4
     };
+
     var overlayMaps = {
          "Wisconsin Non-Metal" : Wisconsin_NM ,
          "FracTracker_mobile" : FracTracker_mobile ,
@@ -232,6 +235,7 @@
          "<img src='https://banner2.kisspng.com/20180409/qcw/kisspng-computer-icons-font-awesome-computer-software-user-cubes-5acb63cb589078.9265215315232787953628.jpg' height='10px' width='10px'><span style='color: black'><strong> OpenSense </strong></span>": OpenSenseLayer,
          "<strong>OSM <span style='color: red'>Landfills</span>, <span style='color: blue'>Mines</span>, <span style='color: green'>Quarries</span></strong>": OSMLandfillMineQuarryLayer
     };
+
     var allMapLayers = {
       "BL1": baselayer1,
       "BL2": baselayer2,
@@ -283,6 +287,7 @@
       "Opensense" : OpenSenseLayer,
       "LSM": OSMLandfillMineQuarryLayer
     };
+    
     var hash = new L.Hash(map, allMapLayers);
     var leafletControl = new L.control.layers(baseMaps,overlayMaps);
     leafletControl.addTo(map);
