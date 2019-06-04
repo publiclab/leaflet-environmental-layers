@@ -18,16 +18,25 @@
         $(document).ready(function() {
             console.log("ready!");
             
-            $('.collapse_expand_icon').on('click',function() {
+            $('.collapse_expand_justicemap').on('click',function() {
                 var i = $(this).find('i');
-                if ($(".collapse").is(':visible')) {
+                if ($(".jm_collapse").is(':visible')) {
             i.removeClass('fa-chevron-up').addClass('fa-chevron-down');
-                $(".collapse").hide();
+                $(".jm_collapse").hide();
                 } else {
                     i.removeClass('fa-chevron-down').addClass('fa-chevron-up');
-                    $(".collapse").show();
+                    $(".jm_collapse").show();
                 }
-                
+            });
+            $('.collapse_expand_weather').on('click',function() {
+                var i = $(this).find('i');
+                if ($(".weather_collapse").is(':visible')) {
+            i.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                $(".weather_collapse").hide();
+                } else {
+                    i.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+                    $(".weather_collapse").show();
+                }
             });
         });
     </script>
@@ -73,7 +82,7 @@
                 <tr>
 
                     <td>
-                        <a class="collapse_expand_icon" data-toggle="collapse" href="#collapse-section" aria-expanded="false" aria-controls="collapse-section">
+                        <a class="collapse_expand_justicemap" data-toggle="collapse" href="#collapse-section" aria-expanded="false" aria-controls="collapse-section">
                             <i class="fa fa-chevron-down" aria-hidden="true"></i>
                         </a>
                     </td>
@@ -88,7 +97,8 @@
 
                 </tr>
                 <!--JUSTICE MAP GROUP OF LAYERS - COLLAPSE-->
-                <tbody class="collapse" id="collapse-section" style="display:none">
+                <section>
+                <tbody class="jm_collapse" id="collapse-section" style="display:none">
 
                     <tr>
                         <td>
@@ -129,6 +139,70 @@
                     <td></td>
                     <td><a class="font-weight-bold" href="#">Asian</a></td>
                     <td class="description">By ethnicity</td>
+                    </tr>
+                </tbody>
+                </section>
+                
+                <!--WEATHER COLLAPSIBLE ROW - GROUP OF LAYERS-->
+                <tr>
+
+                    <td>
+                        <a class="collapse_expand_weather" data-toggle="collapse" href="#collapse-section" aria-expanded="false" aria-controls="collapse-section">
+                            <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <i class="fa fa-cloud" aria-hidden="true"></i>
+                    </td>
+                    <td></td>
+                    <td>
+                        <a class="font-weight-bold" href="#">Weather</a>
+                    </td>
+                    <td class="description">Weather data</td>
+
+                </tr>
+                <!--WEATHER GROUP OF LAYERS - COLLAPSE-->
+                <tbody class="weather_collapse" id="collapse-section" style="display:none">
+
+                    <tr>
+                        <td>
+                            <div class="custom-control custom-checkbox">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="rain">
+                                    <label class="custom-control-label" for="rain"></label>
+                                </div>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td><a class="font-weight-bold" href="#">Rain</a></td>
+                        <td class="description">By weather</td>
+                    </tr>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="snow">
+                                <label class="custom-control-label" for="snow"></label>
+                            </div>
+                        </div>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td><a class="font-weight-bold" href="#">Snow</a></td>
+                    <td class="description">By weather</td>
+                    </tr>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="pressure">
+                                <label class="custom-control-label" for="pressure"></label>
+                            </div>
+                        </div>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td><a class="font-weight-bold" href="#">Pressure</a></td>
+                    <td class="description">By weather</td>
                     </tr>
                 </tbody>
 
