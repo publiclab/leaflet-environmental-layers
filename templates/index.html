@@ -17,15 +17,17 @@
         /* global $ */
         $(document).ready(function() {
             console.log("ready!");
-
-            $("#heading-example").click(function() {
-                $('#collapse').toggle();
+            
+            $('.collapse_expand_icon').on('click',function() {
                 var i = $(this).find('i');
-                if ($("#collapse").is(':visible')) {
-                    i.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                if ($(".collapse").is(':visible')) {
+            i.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                $(".collapse").hide();
                 } else {
                     i.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+                    $(".collapse").show();
                 }
+                
             });
         });
     </script>
@@ -71,7 +73,7 @@
                 <tr>
 
                     <td>
-                        <a id="heading-example" data-toggle="collapse" href="#collapse-example" aria-expanded="false" aria-controls="collapse-example">
+                        <a class="collapse_expand_icon" data-toggle="collapse" href="#collapse-section" aria-expanded="false" aria-controls="collapse-section">
                             <i class="fa fa-chevron-down" aria-hidden="true"></i>
                         </a>
                     </td>
@@ -85,47 +87,48 @@
                     <td class="description">Race, ethnicity, & demographic data</td>
 
                 </tr>
-
-                <tbody class="collapse" id="collapse-example">
+                <!--JUSTICE MAP GROUP OF LAYERS - COLLAPSE-->
+                <tbody class="collapse" id="collapse-section" style="display:none">
 
                     <tr>
                         <td>
                             <div class="custom-control custom-checkbox">
                                 <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="frac_toggle">
-                                    <label class="custom-control-label" for="frac_toggle"></label>
+                                    <input type="checkbox" class="custom-control-input" id="justicemap_income">
+                                    <label class="custom-control-label" for="justicemap_income"></label>
                                 </div>
                             </div>
                         </td>
-                        <td>
-                            <div class="odor_log_marker marker_size rounded-circle"></div>
-                        </td>
-                        <td>
-                            <form action="#" method="get">
-                                <button style="line-height: 8px;" type="submit" class="btn btn-default btn-outline-secondary">Add a report</button>
-                            </form>
-                        </td>
+                        <td></td>
+                        <td></td>
                         <td><a class="font-weight-bold" href="#">Income</a></td>
                         <td class="description">By income</td>
                     </tr>
                     <td>
                         <div class="custom-control custom-checkbox">
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="frac_toggle">
-                                <label class="custom-control-label" for="frac_toggle"></label>
+                                <input type="checkbox" class="custom-control-input" id="jm_american_indian">
+                                <label class="custom-control-label" for="jm_american_indian"></label>
                             </div>
                         </div>
                     </td>
+                    <td></td>
+                    <td></td>
+                    <td><a class="font-weight-bold" href="#">American Indian</a></td>
+                    <td class="description">By ethnicity</td>
+                    </tr>
                     <td>
-                        <div class="odor_log_marker marker_size rounded-circle"></div>
+                        <div class="custom-control custom-checkbox">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="jm_asian">
+                                <label class="custom-control-label" for="jm_asian"></label>
+                            </div>
+                        </div>
                     </td>
-                    <td>
-                        <form action="#" method="get">
-                            <button style="line-height: 8px;" type="submit" class="btn btn-default btn-outline-secondary">Add a report</button>
-                        </form>
-                    </td>
-                    <td><a class="font-weight-bold" href="#">Income</a></td>
-                    <td class="description">By income</td>
+                    <td></td>
+                    <td></td>
+                    <td><a class="font-weight-bold" href="#">Asian</a></td>
+                    <td class="description">By ethnicity</td>
                     </tr>
                 </tbody>
 
