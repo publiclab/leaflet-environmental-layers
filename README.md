@@ -55,12 +55,12 @@ https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-li
 
 ## Quick Setup :
 
-Installation Instructions: 
+### Installation Instructions: 
 1. Clone this repository to your local environment. 
 2. Run `npm install` to install all the necessary packages required. 
 3. Open `examples/index.html` in your browser to look at the preview of the library.
 
-Instructions for a developer:
+### Instructions for a developer:
 1. Install grunt - https://gruntjs.com/installing-grunt.
 2. Make the changes you are working on in respective /src files.
 3. Run `grunt build` to generate files in the /dist directory.
