@@ -11,7 +11,11 @@
 
   <title>Leaflet Environmental Layers</title>
   
-  <script src="../node_modules/leaflet/dist/leaflet.js"></script>  
+  <script src="../node_modules/leaflet/dist/leaflet.js"></script>
+
+  <script src="../node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js"></script>
+  <script src="../node_modules/leaflet-blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js"></script>
+  
 
   <script src="../dist/LeafletEnvironmentalLayers.js"></script>
   <script src="../src/windRoseLayer.js"></script>
@@ -31,6 +35,9 @@
   <script src="https://unpkg.com/esri-leaflet@2.2.3/dist/esri-leaflet.js"></script>
   <script src="https://unpkg.com/esri-leaflet-renderers@2.0.6"></script>
 
+  <!-- <script src="../node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js"></script>
+  <script src="../node_modules/leaflet-blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js"></script>
+ -->
   <style>
     #map { position: fixed;
     width: 100%;
@@ -118,6 +125,7 @@
     var Fractracker = L.layerGroup.fracTrackerLayer() ;
     var OdorReport = L.layerGroup.odorReportLayer() ;
     var MapKnitter = L.layerGroup.mapKnitterLayer() ;
+    var PLpeople = L.layerGroup.pLpeopleLayer() ;
     var ToxicRelease = L.layerGroup.toxicReleaseLayer() ;
     var PFASTracker = L.layerGroup.pfasLayer() ;
 
@@ -190,7 +198,7 @@
     };
 
     var overlayMaps = {
-
+      "PLpeople" : PLpeople,
       "Wisconsin Non-Metal" : Wisconsin_NM ,
       "FracTracker_mobile" : FracTracker_mobile ,
       "<span style='color: darkred'><strong>PurpleAirLayer-HeatMap</strong></span>": PurpleLayer ,
@@ -253,6 +261,7 @@
       "PFAS": PFASTracker,
       "ToxicR": ToxicRelease,
       "OdorR": OdorReport,
+      "PLpeople" : PLpeople,
       "MapK": MapKnitter,
       "OIMPower": OpenInfraMap_Power ,
       "OIMapTelecom": OpenInfraMap_Telecom ,
@@ -295,6 +304,7 @@
     leafletControl.addTo(map);
     
     </script>
-    <script src="../src/legendCreation.js"></script>
+  <!--   <script src="../src/legendCreation.js"></script> -->
+    
   </body>
 </html>

@@ -46,6 +46,8 @@
     "leaflet-fullhash": "github:sagarpreet-chadha/leaflet-fullHash",
     "leaflet-heatmap": "1.0.0",
     "leaflet-providers": "^1.1.17",
-    "leaflet-spin": "1.1.0"
+    "leaflet-spin": "1.1.0",
+    "leaflet-blurred-location": "git://github.com/publiclab/leaflet-blurred-location#disableCenterMarker",
+    "leaflet-blurred-location-display": "git://github.com/publiclab/leaflet-blurred-location-display#deactivate_functions"
   }
 }
