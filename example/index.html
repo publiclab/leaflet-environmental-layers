@@ -291,7 +291,7 @@
     };
     
     var hash = new L.Hash(map, allMapLayers);
-    var leafletControl = new L.control.layers(baseMaps,overlayMaps);
+    var leafletControl = new L.control.layers(baseMaps,overlayMaps,{position: 'bottomright'});
     leafletControl.addTo(map);
     
     </script>
