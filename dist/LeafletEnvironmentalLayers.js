@@ -26445,7 +26445,7 @@ L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
                 map: this._map
             }
             this.BlurredLocation = new BlurredLocation(this.blurred_options);
-            this.locations = [[23.1 ,      77.1]] ; // testing marker
+            this.locations = [[23.1 , 77.1]] ; // testing marker
             this.options_display = {
                 blurredLocation: this.BlurredLocation,
                 locations: this.locations,
@@ -26465,6 +26465,11 @@ L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
             // this.clearLayers();
             this._layers = {} ;
             this.blurredLocationDisplay.removeLBLD() ;
+            var lbld =  this.blurredLocationDisplay ;
+            setTimeout(function(){ lbld.removeLBLD() ;}, 2000) ;
+            setTimeout(function(){ lbld.removeLBLD() ;}, 5000) ;
+            setTimeout(function(){ lbld.removeLBLD() ;}, 7000) ;
+            setTimeout(function(){ lbld.removeLBLD() ;}, 10000) ;
         },
         
     }

@@ -44,7 +44,11 @@ L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
             // this.clearLayers();
             this._layers = {} ;
             this.blurredLocationDisplay.removeLBLD() ;
-            this.blurredLocationDisplay.removeLBLD() ;
+            var lbld =  this.blurredLocationDisplay ;
+            setTimeout(function(){ lbld.removeLBLD() ;}, 2000) ;
+            setTimeout(function(){ lbld.removeLBLD() ;}, 5000) ;
+            setTimeout(function(){ lbld.removeLBLD() ;}, 7000) ;
+            setTimeout(function(){ lbld.removeLBLD() ;}, 10000) ;
         },
         
     }
