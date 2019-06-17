@@ -3,7 +3,7 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
     {
 
         options: {
-            url: this.url,
+            name: this.name,
             popupOnMouseover: false,
             clearOutsideBounds: false,
             target: '_self',
@@ -138,7 +138,7 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
     }
 );
 
-L.layerGroup.indigenousLayers = function (url,name,options) {
+L.layerGroup.indigenousLayers = function (name,options) {
         
-    return new L.LayerGroup.IndigenousLayers(url,name,options);
+    return new L.LayerGroup.IndigenousLayers(name,options);
 };

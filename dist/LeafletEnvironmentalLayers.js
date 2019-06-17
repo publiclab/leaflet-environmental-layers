@@ -26194,7 +26194,7 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
     {
 
         options: {
-            url: this.url,
+            name: this.name,
             popupOnMouseover: false,
             clearOutsideBounds: false,
             target: '_self',
@@ -26230,10 +26230,10 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
                     var $ = window.jQuery;
                     var ILL_url;
 
-                    if(this.name == "Territories"){
+                    if(this.name === "Territories"){
                         ILL_url = "https://native-land.ca/api/index.php?maps=territories&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
                     }
-                    else if(this.name == "Languages"){
+                    else if(this.name === "Languages"){
                         ILL_url = "https://native-land.ca/api/index.php?maps=languages&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
                     }
                     else{
@@ -26273,10 +26273,10 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
               var ill_poly ;
                if (!isNaN((coords[0][0][0]) && !isNaN((coords[0][0][1]))) ){
 
-              	if(this.name == "Territories"){
+              	if(this.name === "Territories"){
               		ill_poly = L.polygon(coords, {color: clr}).bindPopup("<strong>Name : </strong>" + nme + "<br><strong>Description: </strong> <a href=" + desc + ">Native Lands - " + nme + "</a><br><i>From the <a href='https://github.com/publiclab/leaflet-environmental-layers/pull/77'>Indigenous Territories Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>") ;
               	}
-                else if(this.name == "Languages"){
+                else if(this.name === "Languages"){
                     ill_poly = L.polygon(coords, {color: clr}).bindPopup("<strong>Name : </strong>" + nme + "<br><strong>Description: </strong> <a href=" + desc + ">Native Lands - " + nme + "</a><br><i>From the <a href='https://github.com/publiclab/leaflet-environmental-layers/pull/76'>Indigenous Languages Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>") ;
                 }
                 else{ 
@@ -26329,9 +26329,9 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
     }
 );
 
-L.layerGroup.indigenousLayers = function (url,name,options) {
+L.layerGroup.indigenousLayers = function (name,options) {
         
-    return new L.LayerGroup.IndigenousLayers(url,name,options);
+    return new L.LayerGroup.IndigenousLayers(name,options);
 };
 
 },{}],12:[function(require,module,exports){
