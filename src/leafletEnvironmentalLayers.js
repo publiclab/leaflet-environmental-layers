@@ -21,4 +21,5 @@ require('./fracTrackerMobileLayer.js');
 require('./pfasLayer.js');
 require('./luftdatenLayer.js');
 require('./openSenseLayer.js');
+require('./PLpeopleLayer.js');
 
