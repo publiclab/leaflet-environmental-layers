@@ -16,9 +16,7 @@ L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
         },
 
         onAdd: function (map) {
-            // map.on('moveend', this.requestData, this);
-            // this._map = map;
-            // this.requestData();
+           
             this._map = map ;
             this.blurred_options = {
                 map: this._map
@@ -37,11 +35,7 @@ L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
         },
 
         onRemove: function (map) {
-            //map.off('moveend', this.requestData, this);
-            // if(typeof map.spin === 'function'){
-            //   map.spin(false) ;
-            // }
-            // this.clearLayers();
+          
             this._layers = {} ;
             this.blurredLocationDisplay.removeLBLD() ;
             var lbld =  this.blurredLocationDisplay ;
