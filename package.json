@@ -48,6 +48,6 @@
     "leaflet-providers": "^1.1.17",
     "leaflet-spin": "1.1.0",
     "leaflet-blurred-location": "git://github.com/publiclab/leaflet-blurred-location#main",
-    "leaflet-blurred-location-display": "^1.1.0"
+    "leaflet.blurred-location-display": "^1.1.0"
   }
 }
