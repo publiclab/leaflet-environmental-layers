@@ -3,8 +3,7 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
     {
         options: {
             url: 'www.overpass-api.de/api/xapi?*[landuse=landfill][bbox=-119.89105224609376,34.1379517234964,-117.34634399414064,34.76192255039478]',
-            clearOutsideBounds: false,
-            minZoom: 7
+            clearOutsideBounds: false
         },
 
         initialize: function(options) {
