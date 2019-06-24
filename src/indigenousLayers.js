@@ -1,15 +1,17 @@
 L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
 
     {
-
+      
         options: {
-            name: this.name,
+            
             popupOnMouseover: false,
             clearOutsideBounds: false,
             target: '_self',
         },
 
-        initialize: function (options) {
+        initialize: function (name,options) {
+        
+            name1 = name;
             options = options || {};
             L.Util.setOptions(this, options);
             this._layers = {};
@@ -38,15 +40,15 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
                     var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
                     var $ = window.jQuery;
                     var ILL_url;
-
-                    if(this.name === "Territories"){
+       
+                    if(name1 === "Territories" ){
                         ILL_url = "https://native-land.ca/api/index.php?maps=territories&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
                     }
-                    else if(this.name === "Languages"){
+                    if (name1 === "Languages"){
                         ILL_url = "https://native-land.ca/api/index.php?maps=languages&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
                     }
-                    else{
-                        ILL_url = "https://native-land.ca/api/index.php?maps=treaties&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
+                    if(name1 === "Treaties" ){
+                         ILL_url = "https://native-land.ca/api/index.php?maps=treaties&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
                     }
 
                     if(typeof self._map.spin === 'function'){
@@ -82,14 +84,14 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
               var ill_poly ;
                if (!isNaN((coords[0][0][0]) && !isNaN((coords[0][0][1]))) ){
 
-              	if(this.name === "Territories"){
+              	if(name1 === "Territories"){
               		ill_poly = L.polygon(coords, {color: clr}).bindPopup("<strong>Name : </strong>" + nme + "<br><strong>Description: </strong> <a href=" + desc + ">Native Lands - " + nme + "</a><br><i>From the <a href='https://github.com/publiclab/leaflet-environmental-layers/pull/77'>Indigenous Territories Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>") ;
               	}
-                else if(this.name === "Languages"){
+                if(name1 === "Languages") {
                     ill_poly = L.polygon(coords, {color: clr}).bindPopup("<strong>Name : </strong>" + nme + "<br><strong>Description: </strong> <a href=" + desc + ">Native Lands - " + nme + "</a><br><i>From the <a href='https://github.com/publiclab/leaflet-environmental-layers/pull/76'>Indigenous Languages Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>") ;
                 }
-                else{ 
-                	ill_poly = L.polygon(coords, {color: clr}).bindPopup("<strong>Name : </strong>" + nme + "<br><strong>Description: </strong> <a href=" + desc + ">Native Lands - " + nme + "</a><br><i>From the <a href='https://github.com/publiclab/leaflet-environmental-layers/pull/78'>Indigenous Treaties Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>") ;
+                if(name1 === "Treaties"){ 
+                 	ill_poly = L.polygon(coords, {color: clr}).bindPopup("<strong>Name : </strong>" + nme + "<br><strong>Description: </strong> <a href=" + desc + ">Native Lands - " + nme + "</a><br><i>From the <a href='https://github.com/publiclab/leaflet-environmental-layers/pull/78'>Indigenous Treaties Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>") ;
                 }
               }
             return ill_poly ;
@@ -139,6 +141,5 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
 );
 
 L.layerGroup.indigenousLayers = function (name,options) {
-        
     return new L.LayerGroup.IndigenousLayers(name,options);
 };
