@@ -19,3 +19,5 @@ require('./pfasLayer.js');
 require('./luftdatenLayer.js');
 require('./openSenseLayer.js');
 require('./indigenousLayers.js');
+require('./PLpeopleLayer.js');
+
