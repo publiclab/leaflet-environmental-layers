@@ -1,7 +1,6 @@
 L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
 
     {
-      
         options: {
             
             popupOnMouseover: false,
@@ -11,7 +10,7 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
 
         initialize: function (name,options) {
         
-            name1 = name;
+            this.layer = name;
             options = options || {};
             L.Util.setOptions(this, options);
             this._layers = {};
@@ -41,13 +40,13 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
                     var $ = window.jQuery;
                     var ILL_url;
        
-                    if(name1 === "Territories" ){
+                    if(self.layer === "Territories" ){
                         ILL_url = "https://native-land.ca/api/index.php?maps=territories&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
                     }
-                    if (name1 === "Languages"){
+                    if (self.layer === "Languages"){
                         ILL_url = "https://native-land.ca/api/index.php?maps=languages&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
                     }
-                    if(name1 === "Treaties" ){
+                    if(self.layer === "Treaties" ){
                          ILL_url = "https://native-land.ca/api/index.php?maps=treaties&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
                     }
 
@@ -83,16 +82,17 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
               var key = data.id;
               var ill_poly ;
                if (!isNaN((coords[0][0][0]) && !isNaN((coords[0][0][1]))) ){
-
-              	if(name1 === "Territories"){
+                
+              	if(this.layer === "Territories"){
               		ill_poly = L.polygon(coords, {color: clr}).bindPopup("<strong>Name : </strong>" + nme + "<br><strong>Description: </strong> <a href=" + desc + ">Native Lands - " + nme + "</a><br><i>From the <a href='https://github.com/publiclab/leaflet-environmental-layers/pull/77'>Indigenous Territories Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>") ;
               	}
-                if(name1 === "Languages") {
+                if(this.layer === "Languages") {
                     ill_poly = L.polygon(coords, {color: clr}).bindPopup("<strong>Name : </strong>" + nme + "<br><strong>Description: </strong> <a href=" + desc + ">Native Lands - " + nme + "</a><br><i>From the <a href='https://github.com/publiclab/leaflet-environmental-layers/pull/76'>Indigenous Languages Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>") ;
                 }
-                if(name1 === "Treaties"){ 
+                if(this.layer === "Treaties"){ 
                  	ill_poly = L.polygon(coords, {color: clr}).bindPopup("<strong>Name : </strong>" + nme + "<br><strong>Description: </strong> <a href=" + desc + ">Native Lands - " + nme + "</a><br><i>From the <a href='https://github.com/publiclab/leaflet-environmental-layers/pull/78'>Indigenous Treaties Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>") ;
                 }
+
               }
             return ill_poly ;
         },
