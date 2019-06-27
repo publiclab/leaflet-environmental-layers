@@ -10,9 +10,6 @@ require('./mapKnitterLayer.js') ;
 require('./toxicReleaseLayer.js') ;
 require('leaflet-providers') ;
 require('./openWeatherMapLayer.js') ;
-require('./indigenousLandsTerritoriesLayer.js');
-require('./indigenousLandsLanguagesLayer.js');
-require('./indigenousLandsTreatiesLayer.js') ;
 require('./aqicnLayer.js');
 require('./openaqLayer.js');
 require('./osmLandfillMineQuarryLayer.js');
@@ -21,5 +18,6 @@ require('./fracTrackerMobileLayer.js');
 require('./pfasLayer.js');
 require('./luftdatenLayer.js');
 require('./openSenseLayer.js');
+require('./indigenousLayers.js');
 require('./PLpeopleLayer.js');
 

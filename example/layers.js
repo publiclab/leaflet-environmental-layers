@@ -99,9 +99,10 @@ var bounds = new L.LatLngBounds(
       });
       windrose.on("owmlayeradd", windroseAdded, windrose);
     
-    var IndigenousLandsTerritories = L.layerGroup.indigenousLandsTerritoriesLayer();
-    var IndigenousLandsLanguages = L.layerGroup.indigenousLandsLanguagesLayer();
-    var IndigenousLandsTreaties = L.layerGroup.indigenousLandsTreatiesLayer();
+    var IndigenousLandsTerritories = L.layerGroup.indigenousLayers("Territories");
+    var IndigenousLandsLanguages = L.layerGroup.indigenousLayers("Languages");
+    var IndigenousLandsTreaties = L.layerGroup.indigenousLayers("Treaties");
+
     var OSMLandfillMineQuarryLayer = L.layerGroup.osmLandfillMineQuarryLayer();
     var Wisconsin_NM = wisconsinLayer(map);
     var FracTracker_mobile = fracTrackerMobileLayer(map);
