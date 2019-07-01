@@ -81,23 +81,12 @@ L.LayerGroup.MapKnitterLayer = L.LayerGroup.extend(
               }
               var mapknitter ;
               if (!isNaN(lat) && !isNaN(lng) ){
-                if(image_url !== undefined){
+                if (image_url !== undefined){
                   mapknitter = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(
-                    "<strong>Title : </strong>"+ "<a href=" + map_page + ">" + title + "</a>" + 
-                    "<br><strong>Author :</strong> " + "<a href="+url+">"  +  author +"</a>" + 
-                    "<br><strong>Location : </strong>" + location  + 
-                    "<br><strong> Lat : </strong>" + lat + "  ,  <strong> Lon : </strong>" + lng +
-                    "<br><a href=" + image_url + "><img src="+image_url+" style='height: 202px ; width: 245px;'></a>"+
-                    "<br><i>For more info on <a href='https://github.com/publiclab/leaflet-environmental-layers/issues/10'>MapKnitter Layer</a>, visit <a href='https://mapknitter.org/'>here<a></i>"
-                  ) ;
-                }
-                else{
-                  mapknitter = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(
-                    "<strong>Title : </strong>"+ "<a href=" + map_page + ">" + title + "</a>" + 
-                    "<br><strong>Author :</strong> " + "<a href="+url+">"  +  author +"</a>" + 
-                    "<br><strong>Location : </strong>" + location  + 
-                    "<br><strong> Lat : </strong>" + lat + "  ,  <strong> Lon : </strong>" + lng +
-                    "<br><i>For more info on <a href='https://github.com/publiclab/leaflet-environmental-layers/issues/10'>MapKnitter Layer</a>, visit <a href='https://mapknitter.org/'>here<a></i>"
+                    "<h4>"+ "<a href=" + map_page + ">" + title + "</a></h4>" + 
+                    "<br>by " + "<a href=" + url + ">" + author + "</a>" + 
+                    " near " + location  + 
+                    "<br><a href=" + image_url + "><img src="+image_url+" style='width: 245px;'></a>"
                   ) ;
                 }
               }
