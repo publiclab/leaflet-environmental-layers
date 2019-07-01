@@ -26625,10 +26625,10 @@ L.LayerGroup.MapKnitterLayer = L.LayerGroup.extend(
               if (!isNaN(lat) && !isNaN(lng) ){
                 if (image_url !== undefined){
                   mapknitter = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(
-                    "<h4>"+ "<a href=" + map_page + ">" + title + "</a></h4>" + 
-                    "<br>by " + "<a href=" + url + ">" + author + "</a>" + 
+                    "<div class='mapknitter-info'><h4>"+ "<a href=" + map_page + ">" + title + "</a></h4>" + 
+                    "<p>by " + "<a href=" + url + ">" + author + "</a>" + 
                     " near " + location  + 
-                    "<br><a href=" + image_url + "><img src="+image_url+" style='width: 245px;'></a>"
+                    "</p><a href=" + map_page + "><img src="+image_url+" style='width: 245px;'></a></div>"
                   ) ;
                 }
               }
