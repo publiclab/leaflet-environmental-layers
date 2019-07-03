@@ -64,6 +64,10 @@
 .owm-legend-item {
 }
 
+.mapknitter-info {
+  text-align:center;
+}
+
 .aqiSign {
     position: absolute;
     color:#FFFFFF;
