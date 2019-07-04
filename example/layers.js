@@ -36,6 +36,7 @@ var bounds = new L.LatLngBounds(
         }
       );
   
+    var PLpeople = L.layerGroup.pLpeopleLayer() ;
     var PurpleLayer = L.layerGroup.purpleLayer() ;
     var PurpleAirMarkerLayer = L.layerGroup.purpleAirMarkerLayer() ;
     var SkyTruth = L.layerGroup.skyTruthLayer() ;
@@ -115,6 +116,7 @@ var bounds = new L.LatLngBounds(
     };
 
     var overlayMaps = {
+    	 "PLpeople" : PLpeople,
          "Wisconsin Non-Metal" : Wisconsin_NM ,
          "FracTracker_mobile" : FracTracker_mobile ,
          "<span style='color: darkred'><strong>PurpleAirLayer-HeatMap</strong></span>": PurpleLayer ,
@@ -166,7 +168,8 @@ var bounds = new L.LatLngBounds(
       "BL2": baselayer2,
       "BL3": baselayer3,
       "BL4": baselayer4,
-
+      
+      "PLpeople" : PLpeople,
       "Wisconsin_NM": Wisconsin_NM,
       "FT_mobile": FracTracker_mobile,
       "PurpleHeat": PurpleLayer ,
@@ -216,4 +219,6 @@ var bounds = new L.LatLngBounds(
     var hash = new L.Hash(map, allMapLayers);
     var leafletControl = new L.control.layers(baseMaps,overlayMaps);
     leafletControl.addTo(map);
+    
+
     
