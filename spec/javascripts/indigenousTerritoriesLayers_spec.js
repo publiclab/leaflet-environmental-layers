@@ -10,7 +10,7 @@ describe("Testing for indigenous Territories layer", function() {
 
   it("Checks if layer polygons are present", function () {
   // There should be atleast one polygon in the Territories layer always .
-  expect($("#map").children()[0].childNodes[2].childNodes[0].childNodes[0].length).toBe(1) ;
+  expect($("#map").children()[0].childNodes[2].childNodes[0].childNodes[0].childNodes.length).toBeGreaterThan(1);
   });
 
 });
