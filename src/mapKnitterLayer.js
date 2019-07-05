@@ -97,7 +97,7 @@ L.LayerGroup.MapKnitterLayer = L.LayerGroup.extend(
 
             key = data.id;
 
-            if (!this._layers[key]) {
+            if (marker && !this._layers[key]) {
                 this._layers[key] = marker;
                 this.addLayer(marker);
             }
