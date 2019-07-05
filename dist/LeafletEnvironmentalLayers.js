@@ -26615,7 +26615,8 @@ L.LayerGroup.MapKnitterLayer = L.LayerGroup.extend(
               var title = data.name ;
               var location = data.location ;
               var author = data.author ;
-              var url = "https://publiclab.org/profile/" + author ;
+              var slug = data.slug ;
+              var url = "https://publiclab.org/profile/" + slug ;
               var map_page = "https://mapknitter.org/maps/"+ title ;
               var image_url ;
               if(data.image_urls.length > 0){
