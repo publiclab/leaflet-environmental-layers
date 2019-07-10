@@ -33,6 +33,12 @@ The library consists of multiple layers. It needs to add several other layers. T
 2. Go through the documentaion provided to understand how the API works.
 3. Here's a codepen example that consists of a base layer and [Luftdaten Layer](https://github.com/publiclab/leaflet-environmental-layers/issues/88) as an overlay. You can check its full implementation [here](https://github.com/publiclab/leaflet-environmental-layers/pull/137).
 
+### Steps to test a new layer :
+1. Make a fixture file in html for the layer.
+2. Load the fixture and test for markers and polygons using jasmine testing framework.
+3. Run `grunt jasmine` to run tests and ensure they pass before making a commit.
+4. [Here](https://github.com/publiclab/leaflet-environmental-layers/pull/206/files) is an example PR for writing tests. 
+
 ### Some sample PRs to be referred for adding new layers:
 * OSM landfill mine quarry : [#94](https://github.com/publiclab/leaflet-environmental-layers/pull/94)
 * Indigenous Lands Treaties Layer : [#78](https://github.com/publiclab/leaflet-environmental-layers/pull/78)
