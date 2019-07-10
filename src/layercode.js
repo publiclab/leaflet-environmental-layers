@@ -38,9 +38,6 @@ L.icon.odorReportIcon = function () {
 };
 
 
-
-//------------------------------------------------------------------------------------------
-
 L.LayerGroup.LayerCode = L.LayerGroup.extend(
 
     {
@@ -83,7 +80,6 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                         Layer_URL = "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json" ;
                     }
                     if(self.layer == "skytruth"){
-                        console.log("HI");
                         zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
                         Layer_URL = "https://alerts1.skytruth.org/json?n=100&l="+(southwest.lat)+","+(southwest.lng)+","+(northeast.lat)+","+(northeast.lng) ;
                     }
@@ -110,7 +106,6 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         },
 
         getMarker: function(data) {
-            //var self = this;
             if(this.layer == "fractracker"){
                 var redDotIcon = new L.icon.fracTrackerIcon();
                 var props = ["timestamp", "name", "summary", "website", "contact", "email", "phone", "streetaddress", "city", "state", "zipcode", "latitude", "longitude", "category"];
@@ -160,7 +155,6 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         },
 
         generatePopup: function(item) {
-            //var self = this;
             if(this.layer == "fractracker"){
                 var content = "<strong>" + item["name"] + "</strong> ";
                 if(item["website"]) content += "(<a href=" + item["website"] + ">website</a>" + ")";
@@ -205,7 +199,6 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         },
 
         parseData: function (data) {
-            //var self = this;
             if(this.layer == "fractracker"){
                 for (i = 1 ; i < data.length ; i++) {
                  this.addMarker(data[i]) ;
