@@ -66,7 +66,8 @@ https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-li
 1. Install grunt - https://gruntjs.com/installing-grunt.
 2. Make the changes you are working on in respective /src files.
 3. Run `grunt build` to generate files in the /dist directory.
-4. Test your changes on a browser by opening `examples/index.html`.
+4. Run `grunt jasmine` to run tests on the LEL layers and ensure they pass.
+5. Test your changes on a browser by opening `examples/index.html`.
 
 ## Demo :
 
