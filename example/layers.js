@@ -42,7 +42,7 @@ var bounds = new L.LatLngBounds(
     var Fractracker = L.layerGroup.layerCode("fractracker") ;
     var SkyTruth = L.layerGroup.layerCode("skytruth") ;
     var OdorReport = L.layerGroup.layerCode("odorreport") ;
-    var MapKnitter = L.layerGroup.mapKnitterLayer() ;
+    var MapKnitter = L.layerGroup.layerCode("mapknitter") ;
     
     var ToxicRelease = L.layerGroup.toxicReleaseLayer() ;
     

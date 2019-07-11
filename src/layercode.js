@@ -1,49 +1,9 @@
-L.Icon.FracTrackerIcon = L.Icon.extend({
-   options: {
-    iconUrl: 'https://www.clker.com/cliparts/2/3/f/a/11970909781608045989gramzon_Barrel.svg.med.png',
-    iconSize:     [30, 20],
-    iconAnchor:   [20 , 0],
-    popupAnchor:  [-5, -5]
-  }
-});
-
-L.icon.fracTrackerIcon = function () {
-    return new L.Icon.FracTrackerIcon();
-};
-
-L.Icon.SkyTruthIcon = L.Icon.extend({
-  options: {
-    iconUrl: 'https://www.clker.com/cliparts/T/G/b/7/r/A/red-dot.svg',
-    iconSize:     [30, 20],
-    iconAnchor:   [20 , 0],
-    popupAnchor:  [-5, -5]
-  }
-});
-
-L.icon.skyTruthIcon = function () {
-  return new L.Icon.SkyTruthIcon();
-};
-
-L.Icon.OdorReportIcon = L.Icon.extend({
-    options: {
-      iconUrl: 'https://www.clker.com/cliparts/T/3/6/T/S/8/ink-splash-md.png',
-      iconSize:     [30, 20],
-      iconAnchor:   [20 , 0],
-      popupAnchor:  [-5, -5]
-    }
-});
-
-L.icon.odorReportIcon = function () {
-    return new L.Icon.OdorReportIcon();
-};
-
-
 L.LayerGroup.LayerCode = L.LayerGroup.extend(
 
     {
         options: {
             popupOnMouseover: false,
-            clearOutsideBounds: false,
+            clearOutsideBounds: true,
             target: '_self',
         },
 
@@ -86,6 +46,10 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                     if(self.layer == "odorreport"){
                         zoom = self._map.getZoom(), origin = self._map.getCenter() ;
                         Layer_URL = "https://odorlog.api.ushahidi.io/api/v3/posts/" ;
+                    }
+                    if(self.layer == "mapknitter"){
+                        zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
+                        Layer_URL = "https://mapknitter.org/map/region/Gulf-Coast.json?minlon="+(southwest.lng)+"&minlat="+(southwest.lat)+"&maxlon="+(northeast.lng)+"&maxlat="+(northeast.lat);
                     }
 
                     if(typeof self._map.spin === 'function'){
@@ -152,6 +116,44 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                 }
                 return odormarker;
            }
+
+           if(this.layer == "mapknitter"){
+                var redDotIcon =new L.icon.mapKnitterIcon();
+                var lat = data.lat ;
+                var lng = data.lon;
+                var title = data.name ;
+                var location = data.location ;
+                var author = data.author ;
+                var url = "https://publiclab.org/profile/" + author ;
+                var map_page = "https://mapknitter.org/maps/"+ title ;
+                var image_url ;
+                if(data.image_urls.length > 0){
+                  image_url = data.image_urls[0] ;
+                }
+                var mapknitter ;
+                if (!isNaN(lat) && !isNaN(lng) ){
+                  if(image_url !== undefined){
+                    mapknitter = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(
+                      "<strong>Title : </strong>"+ "<a href=" + map_page + ">" + title + "</a>" + 
+                      "<br><strong>Author :</strong> " + "<a href="+url+">"  +  author +"</a>" + 
+                      "<br><strong>Location : </strong>" + location  + 
+                      "<br><strong> Lat : </strong>" + lat + "  ,  <strong> Lon : </strong>" + lng +
+                      "<br><a href=" + image_url + "><img src="+image_url+" style='height: 202px ; width: 245px;'></a>"+
+                      "<br><i>For more info on <a href='https://github.com/publiclab/leaflet-environmental-layers/issues/10'>MapKnitter Layer</a>, visit <a href='https://mapknitter.org/'>here<a></i>"
+                    ) ;
+                  }
+                  else{
+                    mapknitter = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(
+                      "<strong>Title : </strong>"+ "<a href=" + map_page + ">" + title + "</a>" + 
+                      "<br><strong>Author :</strong> " + "<a href="+url+">"  +  author +"</a>" + 
+                      "<br><strong>Location : </strong>" + location  + 
+                      "<br><strong> Lat : </strong>" + lat + "  ,  <strong> Lon : </strong>" + lng +
+                      "<br><i>For more info on <a href='https://github.com/publiclab/leaflet-environmental-layers/issues/10'>MapKnitter Layer</a>, visit <a href='https://mapknitter.org/'>here<a></i>"
+                    ) ;
+                  }
+                }
+              return mapknitter ;
+             }
         },
 
         generatePopup: function(item) {
@@ -225,6 +227,16 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                 }
                 }
             }
+            if(this.layer == "mapknitter"){
+
+                for (i = 0 ; i < data.length ; i++) {
+                this.addMarker(data[i]) ;
+                }
+
+                if (this.options.clearOutsideBounds) {
+                this.clearOutsideBounds();
+                }
+            }
         },
 
         clearOutsideBounds: function () {
@@ -247,4 +259,59 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
 
 L.layerGroup.layerCode = function (name,options) {
     return new L.LayerGroup.LayerCode(name,options) ;
+};
+
+
+L.Icon.FracTrackerIcon = L.Icon.extend({
+   options: {
+    iconUrl: 'https://www.clker.com/cliparts/2/3/f/a/11970909781608045989gramzon_Barrel.svg.med.png',
+    iconSize:     [30, 20],
+    iconAnchor:   [20 , 0],
+    popupAnchor:  [-5, -5]
+  }
+});
+
+L.icon.fracTrackerIcon = function () {
+    return new L.Icon.FracTrackerIcon();
+};
+
+L.Icon.SkyTruthIcon = L.Icon.extend({
+  options: {
+    iconUrl: 'https://www.clker.com/cliparts/T/G/b/7/r/A/red-dot.svg',
+    iconSize:     [30, 20],
+    iconAnchor:   [20 , 0],
+    popupAnchor:  [-5, -5]
+  }
+});
+
+L.icon.skyTruthIcon = function () {
+  return new L.Icon.SkyTruthIcon();
+};
+
+L.Icon.OdorReportIcon = L.Icon.extend({
+    options: {
+      iconUrl: 'https://www.clker.com/cliparts/T/3/6/T/S/8/ink-splash-md.png',
+      iconSize:     [30, 20],
+      iconAnchor:   [20 , 0],
+      popupAnchor:  [-5, -5]
+    }
+});
+
+L.icon.odorReportIcon = function () {
+    return new L.Icon.OdorReportIcon();
+};
+
+L.Icon.MapKnitterIcon = L.Icon.extend({
+    options: {
+      iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+      iconSize: [12, 21],
+      iconAnchor: [6, 21],
+      popupAnchor: [1, -34],
+      shadowSize: [20, 20]
+    }
+});
+
+L.icon.mapKnitterIcon = function () {
+    return new L.Icon.MapKnitterIcon();
 };
