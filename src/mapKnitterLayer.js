@@ -73,31 +73,21 @@ L.LayerGroup.MapKnitterLayer = L.LayerGroup.extend(
               var title = data.name ;
               var location = data.location ;
               var author = data.author ;
+              var slug = data.slug ;
               var url = "https://publiclab.org/profile/" + author ;
-              var map_page = "https://mapknitter.org/maps/"+ title ;
+              var map_page = "https://mapknitter.org/maps/"+ slug ;
               var image_url ;
               if(data.image_urls.length > 0){
                 image_url = data.image_urls[0] ;
               }
               var mapknitter ;
               if (!isNaN(lat) && !isNaN(lng) ){
-                if(image_url !== undefined){
+                if (image_url !== undefined){
                   mapknitter = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(
-                    "<strong>Title : </strong>"+ "<a href=" + map_page + ">" + title + "</a>" + 
-                    "<br><strong>Author :</strong> " + "<a href="+url+">"  +  author +"</a>" + 
-                    "<br><strong>Location : </strong>" + location  + 
-                    "<br><strong> Lat : </strong>" + lat + "  ,  <strong> Lon : </strong>" + lng +
-                    "<br><a href=" + image_url + "><img src="+image_url+" style='height: 202px ; width: 245px;'></a>"+
-                    "<br><i>For more info on <a href='https://github.com/publiclab/leaflet-environmental-layers/issues/10'>MapKnitter Layer</a>, visit <a href='https://mapknitter.org/'>here<a></i>"
-                  ) ;
-                }
-                else{
-                  mapknitter = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(
-                    "<strong>Title : </strong>"+ "<a href=" + map_page + ">" + title + "</a>" + 
-                    "<br><strong>Author :</strong> " + "<a href="+url+">"  +  author +"</a>" + 
-                    "<br><strong>Location : </strong>" + location  + 
-                    "<br><strong> Lat : </strong>" + lat + "  ,  <strong> Lon : </strong>" + lng +
-                    "<br><i>For more info on <a href='https://github.com/publiclab/leaflet-environmental-layers/issues/10'>MapKnitter Layer</a>, visit <a href='https://mapknitter.org/'>here<a></i>"
+                    "<div class='mapknitter-info'><h4>"+ "<a href=" + map_page + ">" + title + "</a></h4>" + 
+                    "<p>by " + "<a href=" + url + ">" + author + "</a>" + 
+                    " near " + location  + 
+                    "</p><a href=" + map_page + "><img src="+image_url+" style='width: 245px;'></a></div>"
                   ) ;
                 }
               }
@@ -108,7 +98,7 @@ L.LayerGroup.MapKnitterLayer = L.LayerGroup.extend(
 
             key = data.id;
 
-            if (!this._layers[key]) {
+            if (marker && !this._layers[key]) {
                 this._layers[key] = marker;
                 this.addLayer(marker);
             }
