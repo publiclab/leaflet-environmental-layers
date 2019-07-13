@@ -99,7 +99,11 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                 var url = data.link ;
                 var skymarker ;
                 if (!isNaN(lat) && !isNaN(lng) ){
-                  skymarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup("<a href="+url+">" +title + "</a><br>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong> <br><br>Data provided by <a href='http://alerts.skytruth.org/'>alerts.skytruth.org/</a>") ;
+                  skymarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(
+                  	"<a href="+url+">" +title + "</a><br>" + 
+                  	"<br><strong> lat: " + lat + 
+                  	"</strong><br><strong> lon: " + lng + 
+                  	"</strong> <br><br>Data provided by <a href='http://alerts.skytruth.org/'>alerts.skytruth.org/</a>") ;
                 }
                 return skymarker;
            }
@@ -112,7 +116,11 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                 var url = data.url ;
                 var odormarker ;
                 if (!isNaN(lat) && !isNaN(lng) ){
-                  odormarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(title + "<br><a href="+url+">" + url +"</a>" + "<br><strong> lat: " + lat + "</strong><br><strong> lon: " + lng + "</strong><br><br>Data provided by <a href='https://odorlog.ushahidi.io'>https://odorlog.ushahidi.io</a>") ;
+                  odormarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(title + 
+                  	"<br><a href="+url+">" + url +"</a>" + 
+                  	"<br><strong> lat: " + lat + 
+                  	"</strong><br><strong> lon: " + lng + 
+                  	"</strong><br><br>Data provided by <a href='https://odorlog.ushahidi.io'>https://odorlog.ushahidi.io</a>") ;
                 }
                 return odormarker;
            }
