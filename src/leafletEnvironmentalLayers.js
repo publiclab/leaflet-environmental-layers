@@ -3,10 +3,6 @@ require('leaflet') ;
 
 require('./purpleAirMarkerLayer.js') ;
 require('./purpleLayer.js') ;
-require('./fractracker.js') ;
-require('./skyTruthLayer.js') ;
-require('./odorReportLayer.js') ;
-require('./mapKnitterLayer.js') ;
 require('./toxicReleaseLayer.js') ;
 require('leaflet-providers') ;
 require('./openWeatherMapLayer.js') ;
@@ -20,4 +16,4 @@ require('./luftdatenLayer.js');
 require('./openSenseLayer.js');
 require('./indigenousLayers.js');
 require('./PLpeopleLayer.js');
-
+require('./layercode.js')

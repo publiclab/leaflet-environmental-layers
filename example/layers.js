@@ -39,12 +39,16 @@ var bounds = new L.LatLngBounds(
     var PLpeople = L.layerGroup.pLpeopleLayer() ;
     var PurpleLayer = L.layerGroup.purpleLayer() ;
     var PurpleAirMarkerLayer = L.layerGroup.purpleAirMarkerLayer() ;
-    var SkyTruth = L.layerGroup.skyTruthLayer() ;
-    var Fractracker = L.layerGroup.fracTrackerLayer() ;
-    var OdorReport = L.layerGroup.odorReportLayer() ;
-    var MapKnitter = L.layerGroup.mapKnitterLayer() ;
+    
+    var Fractracker = L.layerGroup.layerCode("fractracker") ;
+    var SkyTruth = L.layerGroup.layerCode("skytruth") ;
+    var OdorReport = L.layerGroup.layerCode("odorreport") ;
+    var MapKnitter = L.layerGroup.layerCode("mapknitter") ;
+    
     var ToxicRelease = L.layerGroup.toxicReleaseLayer() ;
+    
     var PFASTracker = L.layerGroup.pfasLayer() ;
+
 
     var OpenInfraMap_Power = L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png',{
         maxZoom: 18,
