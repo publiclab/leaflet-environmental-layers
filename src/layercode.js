@@ -51,6 +51,10 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                         zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
                         Layer_URL = "https://mapknitter.org/map/region/Gulf-Coast.json?minlon="+(southwest.lng)+"&minlat="+(southwest.lat)+"&maxlon="+(northeast.lng)+"&maxlat="+(northeast.lat);
                     }
+                    if(self.layer == "luftdaten")
+                    {
+                        Layer_URL = "https://maps.luftdaten.info/data/v2/data.dust.min.json";
+                    }
 
                     if(typeof self._map.spin === 'function'){
                         self._map.spin(true) ;
@@ -162,6 +166,30 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                 }
               return mapknitter ;
              }
+
+             if(this.layer == "luftdaten")
+             {
+             	 var greenIcon = new L.icon.luftdatenIcon();
+      var country = data.location.country;
+      var lng = data.location.longitude;
+      var lat = data.location.latitude;
+      var sensorID = data.sensor.id;
+      var popupContent = "";
+
+      if(country){
+        popupContent += "<h3>Country: " + country + "</h3>";
+      }
+      if(sensorID){
+        popupContent += "<h4><b>Sensor ID: </b>" + sensorID + "</h4>";
+      }
+      if(data.sensordatavalues.length > 0){
+        for(let i in data.sensordatavalues){
+          popupContent += "<b>" + data.sensordatavalues[i].value_type + "</b>: " + data.sensordatavalues[i].value + "<br/>";
+        }
+      }
+
+      return L.marker([lat,lng], { icon: greenIcon }).bindPopup(popupContent);	
+             }
         },
 
         generatePopup: function(item) {
@@ -245,6 +273,11 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                 this.clearOutsideBounds();
                 }
             }
+            if(this.layer == "luftdaten"){
+            	for (var i = 0; i < data.length; i++) {
+        this.addMarker(data[i],i);
+      }
+            }
         },
 
         clearOutsideBounds: function () {
@@ -322,4 +355,17 @@ L.Icon.MapKnitterIcon = L.Icon.extend({
 
 L.icon.mapKnitterIcon = function () {
     return new L.Icon.MapKnitterIcon();
+};
+
+L.Icon.LuftdatenIcon = L.Icon.extend({
+  options: {
+    iconUrl: 'http://www.myiconfinder.com/uploads/iconsets/256-256-82a679a558f2fe4c3964c4123343f844.png',
+    iconSize: [15, 30],
+    iconAnchor: [6, 21],
+    popupAnchor: [1, -34]
+  }
+});
+
+L.icon.luftdatenIcon = function () {
+  return new L.Icon.LuftdatenIcon();
 };

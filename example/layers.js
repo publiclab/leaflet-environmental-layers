@@ -91,7 +91,7 @@ var bounds = new L.LatLngBounds(
     
     var AQICNLayer = L.layerGroup.aqicnLayer();
     var OpenAqLayer = L.layerGroup.openaqLayer();
-    var LuftdatenLayer = L.layerGroup.luftdatenLayer();
+    var LuftdatenLayer = L.layerGroup.layerCode("luftdaten");
     var OpenSenseLayer = L.layerGroup.openSenseLayer();
     var city = L.OWM.current({ intervall: 15, minZoom: 3 });
     var windrose = L.OWM.current({
