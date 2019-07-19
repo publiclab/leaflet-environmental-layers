@@ -7,7 +7,6 @@ require('./toxicReleaseLayer.js') ;
 require('leaflet-providers') ;
 require('./openWeatherMapLayer.js') ;
 require('./aqicnLayer.js');
-require('./openaqLayer.js');
 require('./osmLandfillMineQuarryLayer.js');
 require('./wisconsinLayer.js');
 require('./fracTrackerMobileLayer.js');

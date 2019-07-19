@@ -90,7 +90,7 @@ var bounds = new L.LatLngBounds(
     var wind = L.OWM.wind({});
     
     var AQICNLayer = L.layerGroup.aqicnLayer();
-    var OpenAqLayer = L.layerGroup.openaqLayer();
+    var OpenAqLayer = L.layerGroup.layerCode("openaq");
     var LuftdatenLayer = L.layerGroup.layerCode("luftdaten");
     var OpenSenseLayer = L.layerGroup.openSenseLayer();
     var city = L.OWM.current({ intervall: 15, minZoom: 3 });

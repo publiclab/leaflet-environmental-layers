@@ -51,10 +51,13 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                         zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
                         Layer_URL = "https://mapknitter.org/map/region/Gulf-Coast.json?minlon="+(southwest.lng)+"&minlat="+(southwest.lat)+"&maxlon="+(northeast.lng)+"&maxlat="+(northeast.lat);
                     }
-                    if(self.layer == "luftdaten")
-                    {
+                    if(self.layer == "luftdaten"){
                         Layer_URL = "https://maps.luftdaten.info/data/v2/data.dust.min.json";
                     }
+                    if(self.layer == "openaq"){
+                        Layer_URL = "https://api.openaq.org/v1/latest?limit=5000";
+                    }
+                    
 
                     if(typeof self._map.spin === 'function'){
                         self._map.spin(true) ;
@@ -62,6 +65,8 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                     $.getJSON(Layer_URL , function(data){
                     if(self.layer == "fractracker")
                         self.parseData(data.feed.entry);
+                    if(self.layer == "openaq")
+                        self.parseData(data.results) ;
                     else
                         self.parseData(data) ;
                     if(typeof self._map.spin === 'function'){
@@ -169,27 +174,52 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
 
              if(this.layer == "luftdaten")
              {
-             	 var greenIcon = new L.icon.luftdatenIcon();
-      var country = data.location.country;
-      var lng = data.location.longitude;
-      var lat = data.location.latitude;
-      var sensorID = data.sensor.id;
-      var popupContent = "";
+             	var greenIcon = new L.icon.luftdatenIcon();
+      			var country = data.location.country;
+      			var lng = data.location.longitude;
+      			var lat = data.location.latitude;
+      			var sensorID = data.sensor.id;
+      			var popupContent = "";
 
-      if(country){
-        popupContent += "<h3>Country: " + country + "</h3>";
-      }
-      if(sensorID){
-        popupContent += "<h4><b>Sensor ID: </b>" + sensorID + "</h4>";
-      }
-      if(data.sensordatavalues.length > 0){
-        for(let i in data.sensordatavalues){
-          popupContent += "<b>" + data.sensordatavalues[i].value_type + "</b>: " + data.sensordatavalues[i].value + "<br/>";
-        }
-      }
+			    if(country){
+			        popupContent += "<h3>Country: " + country + "</h3>";
+			      }
+			    if(sensorID){
+			        popupContent += "<h4><b>Sensor ID: </b>" + sensorID + "</h4>";
+			      }
+			    if(data.sensordatavalues.length > 0){
+			      for(let i in data.sensordatavalues){
+			          popupContent += "<b>" + data.sensordatavalues[i].value_type + "</b>: " + data.sensordatavalues[i].value + "<br/>";
+			        }
+			      }
 
-      return L.marker([lat,lng], { icon: greenIcon }).bindPopup(popupContent);	
-             }
+			      return L.marker([lat,lng], { icon: greenIcon }).bindPopup(popupContent);	
+			 }
+
+			 if(this.layer == "openaq")
+			 {
+			 	var redDotIcon = new L.icon.openaqIcon();
+                var distance = data.distance;
+                var lat = data.coordinates.latitude;
+                var lon = data.coordinates.longitude;
+                var  contentData = "";
+                var labels = {
+                    pm25: "PM<sub>2.5</sub>",
+                    pm10: "PM<sub>10</sub>",
+                    o3: "Ozone",
+                    no2: "Nitrogen Dioxide",
+                    so2: "Sulphur Dioxide",
+                    co: "Carbon Monoxide",
+                    };
+                for(var i = 0; i < data.measurements.length; i++) {
+                    contentData+="<strong>"+labels[data.measurements[i].parameter]+" : </strong>"+data.measurements[i].value+" "+data.measurements[i].unit+"<br>";
+                }
+                return L.marker([lat, lon], {icon: redDotIcon}).bindPopup(
+                    "<h3>"+data.location+", "+data.country+"</h3><br>"+
+                    "<strong>distance: "+"</strong>"+data.distance+"<br>"+contentData
+                    );
+    
+			 }
         },
 
         generatePopup: function(item) {
@@ -275,8 +305,20 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
             }
             if(this.layer == "luftdaten"){
             	for (var i = 0; i < data.length; i++) {
-        this.addMarker(data[i],i);
-      }
+                this.addMarker(data[i],i);
+                }
+            }
+            if(this.layer == "openaq"){
+            	if(!!data) {
+                for(var i = 0; i <data.length; i++) {
+                if(!!data[i].coordinates){
+                this.addMarker(data[i],i);
+                }
+                }
+                if(this.options.clearOutsideBounds) {
+                    this.clearOutsideBounds();
+                }
+                }
             }
         },
 
@@ -369,3 +411,18 @@ L.Icon.LuftdatenIcon = L.Icon.extend({
 L.icon.luftdatenIcon = function () {
   return new L.Icon.LuftdatenIcon();
 };
+
+L.Icon.OpenAqIcon = L.Icon.extend({
+            options: {
+                iconUrl: 'https://i.stack.imgur.com/6cDGi.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [12, 21],
+                iconAnchor: [6, 21],
+                popupAnchor: [1, -34],
+                shadowSize: [20, 20]
+            }
+    });
+
+    L.icon.openaqIcon = function () {
+            return new L.Icon.OpenAqIcon();
+    };
