@@ -29,6 +29,37 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
             this._layers = {};
         },
 
+        populatePopUp: function (e) {
+        	if(this.layer == "opensense"){
+		    if (e) {
+		      var popup = e.target.getPopup();
+		      var $ = window.jQuery;
+		      var url = "https://api.opensensemap.org/boxes/" + e.target.options.boxId;
+		      $.getJSON(url, function (data) {
+		        var popUpContent = "";
+		        if (data.name && data.grouptag) {
+		          popUpContent += "<h3>" + data.name + "," + data.grouptag + "</h3>";
+		        }
+		        else if (data.name) {
+		          popUpContent += "<h3>" + data.name + "</h3>";
+		        }
+		        for (var i in data.sensors) {
+		          if (data.sensors[i].lastMeasurement) {
+		            popUpContent += "<span><b>" + data.sensors[i].title + ": </b>" +
+		              data.sensors[i].lastMeasurement.value +
+		              data.sensors[i].unit + "</span><br>";
+		          }
+		        }
+		        if (data.lastMeasurementAt) {
+		          popUpContent += "<br><small>Measured at <i>" + data.lastMeasurementAt + "</i>";
+		        }
+		        popup.setContent(popUpContent);
+		      });
+		    }
+		}
+        },
+
+
         requestData: function () {
            var self = this;
                 (function() {
@@ -56,6 +87,10 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                     }
                     if(self.layer == "openaq"){
                         Layer_URL = "https://api.openaq.org/v1/latest?limit=5000";
+                    }
+                    if(self.layer == "opensense"){
+      					Layer_URL = "https://api.opensensemap.org/boxes";
+
                     }
                     
 
@@ -220,6 +255,15 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                     );
     
 			 }
+
+			 if(this.layer == "opensense")
+			 {
+			 	var blackCube = new L.icon.openSenseIcon();
+			    var lat = data.currentLocation.coordinates[1];
+			    var lng = data.currentLocation.coordinates[0];
+			    var loadingText = "Loading ...";
+			    return L.marker([lat, lng], { icon: blackCube, boxId: data._id }).bindPopup(loadingText);
+			 }
         },
 
         generatePopup: function(item) {
@@ -255,13 +299,34 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                 this.addLayer(marker);
             }
             }
-
+            
             else{
             var marker = this.getMarker(data),
             key = data.id;
             if (!this._layers[key]) {
                 this._layers[key] = marker;
                 this.addLayer(marker);
+            }
+            }
+        },
+
+        addMarker1: function (data, i) {
+            if(this.layer == "luftdaten" || this.layer == "openaq"){
+            var self = this;
+            var marker = this.getMarker(data);
+            var key = i;  
+            if (!this._layers[key]) {
+            this._layers[key] = marker;
+            this.addLayer(marker);
+            }
+            }
+            else{
+            var marker = this.getMarker(data);
+            var key = i;
+            if (!this._layers[key]) {
+              this._layers[key] = marker;
+              marker.on('click', this.populatePopUp);
+              this.addLayer(marker);
             }
             }
         },
@@ -303,16 +368,16 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                 this.clearOutsideBounds();
                 }
             }
-            if(this.layer == "luftdaten"){
+            if(this.layer == "luftdaten" || this.layer == "opensense"){
             	for (var i = 0; i < data.length; i++) {
-                this.addMarker(data[i],i);
+                this.addMarker1(data[i],i);
                 }
             }
             if(this.layer == "openaq"){
             	if(!!data) {
                 for(var i = 0; i <data.length; i++) {
                 if(!!data[i].coordinates){
-                this.addMarker(data[i],i);
+                this.addMarker1(data[i],i);
                 }
                 }
                 if(this.options.clearOutsideBounds) {
@@ -413,16 +478,28 @@ L.icon.luftdatenIcon = function () {
 };
 
 L.Icon.OpenAqIcon = L.Icon.extend({
-            options: {
-                iconUrl: 'https://i.stack.imgur.com/6cDGi.png',
-                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                iconSize: [12, 21],
-                iconAnchor: [6, 21],
-                popupAnchor: [1, -34],
-                shadowSize: [20, 20]
-            }
-    });
+  options: {
+     iconUrl: 'https://i.stack.imgur.com/6cDGi.png',
+     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+     iconSize: [12, 21],
+     iconAnchor: [6, 21],
+     popupAnchor: [1, -34],
+     shadowSize: [20, 20]
+  }
+});
 
-    L.icon.openaqIcon = function () {
-            return new L.Icon.OpenAqIcon();
-    };
+L.icon.openaqIcon = function () {
+  return new L.Icon.OpenAqIcon();
+};
+
+L.Icon.OpenSenseIcon = L.Icon.extend({
+  options: {
+    iconUrl: 'https://banner2.kisspng.com/20180409/qcw/kisspng-computer-icons-font-awesome-computer-software-user-cubes-5acb63cb589078.9265215315232787953628.jpg',
+    iconSize: [10, 10],
+    popupAnchor: [1, -34]
+  }
+});
+
+L.icon.openSenseIcon = function () {
+  return new L.Icon.OpenSenseIcon();
+};

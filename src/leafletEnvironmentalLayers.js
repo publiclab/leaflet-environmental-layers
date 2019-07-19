@@ -11,7 +11,6 @@ require('./osmLandfillMineQuarryLayer.js');
 require('./wisconsinLayer.js');
 require('./fracTrackerMobileLayer.js');
 require('./pfasLayer.js');
-require('./openSenseLayer.js');
 require('./indigenousLayers.js');
 require('./PLpeopleLayer.js');
 require('./layercode.js')
