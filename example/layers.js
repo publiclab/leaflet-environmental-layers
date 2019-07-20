@@ -38,7 +38,7 @@ var bounds = new L.LatLngBounds(
   
     var PLpeople = L.layerGroup.pLpeopleLayer() ;
     var PurpleLayer = L.layerGroup.purpleLayer() ;
-    var PurpleAirMarkerLayer = L.layerGroup.purpleAirMarkerLayer() ;
+    var PurpleAirMarkerLayer = L.layerGroup.layerCode("purpleairmarker") ;
     
     var Fractracker = L.layerGroup.layerCode("fractracker") ;
     var SkyTruth = L.layerGroup.layerCode("skytruth") ;

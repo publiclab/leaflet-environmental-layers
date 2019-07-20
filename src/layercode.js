@@ -1,3 +1,6 @@
+require('jquery') ;
+require('leaflet') ;
+
 L.LayerGroup.LayerCode = L.LayerGroup.extend(
 
     {
@@ -91,6 +94,10 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                     if(self.layer == "opensense"){
       					Layer_URL = "https://api.opensensemap.org/boxes";
 
+                    }
+                    if(self.layer == "purpleairmarker"){
+                        zoom = self._map.getZoom(), northwest = self._map.getBounds().getNorthWest() , southeast = self._map.getBounds().getSouthEast() ;
+                        Layer_URL = "https://www.purpleair.com/data.json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat="+(northwest.lat)+"&selat="+(southeast.lat)+"&nwlng="+(northwest.lng)+"&selng="+(southeast.lng) ;
                     }
                     
 
@@ -264,6 +271,27 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
 			    var loadingText = "Loading ...";
 			    return L.marker([lat, lng], { icon: blackCube, boxId: data._id }).bindPopup(loadingText);
 			 }
+
+             if(this.layer == "purpleairmarker")
+             {
+                var redDotIcon =new L.icon.purpleAirMarkerIcon();
+                var lat = data[25] ;  // Lat
+                var lng = data[26] ;  //Lon
+                var value = parseFloat(data[16]) ;  //PM2.5 VALUE in microgram per metre cube
+                var Label = data[24] ;  //Label
+                var temp_f = data[21] ;  // temperature (F)
+                var humidity = data[20] ; // Humidity
+                var pressure = data[22] ; //Pressure
+
+            //  var type = data.Type ;
+            //  var hardware = data.DEVICE_HARDWAREDISCOVERED ;
+
+                var purpleAirMarker ;
+                if(lat!=null && lng!=null){
+                purpleAirMarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup("<i style='color: purple ; size : 20px'>Label : " + Label + "</i><br><br> <strong>PM2.5 Value : " + value +"</strong><br><strong> Lat: " + lat + "</strong><br><strong> Lon: " + lng + "<br>Temp (F) : "+temp_f+"<br>Humidity : " + humidity + "<br>Pressure : " + pressure +"<br><br> <i>Data provided by <a href='www.purpleair.com'>www.purpleair.com</a></i>") ;
+                }
+                return purpleAirMarker ;
+                }
         },
 
         generatePopup: function(item) {
@@ -299,7 +327,16 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                 this.addLayer(marker);
             }
             }
-            
+            if(this.layer == "purpleairmarker"){
+            var marker = this.getMarker(data) ;
+            if(marker != null){
+            key = data[0] ;  // ID
+            if (!this._layers[key]) {
+                this._layers[key] = marker;
+                this.addLayer(marker);
+            }
+            }
+            }
             else{
             var marker = this.getMarker(data),
             key = data.id;
@@ -383,6 +420,11 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                 if(this.options.clearOutsideBounds) {
                     this.clearOutsideBounds();
                 }
+                }
+            }
+            if(this.layer == "purpleairmarker"){
+                for (i = 0 ; i < data.data.length ; i++) {
+                this.addMarker(data.data[i]) ;
                 }
             }
         },
@@ -502,4 +544,17 @@ L.Icon.OpenSenseIcon = L.Icon.extend({
 
 L.icon.openSenseIcon = function () {
   return new L.Icon.OpenSenseIcon();
+};
+
+L.Icon.PurpleAirMarkerIcon = L.Icon.extend({
+   options: {
+    iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Location_dot_purple.svg/768px-Location_dot_purple.svg.png',
+    iconSize:     [11 , 10],
+    iconAnchor:   [20 , 0],
+    popupAnchor:  [-5, -5]
+  }
+});
+
+L.icon.purpleAirMarkerIcon = function () {
+    return new L.Icon.PurpleAirMarkerIcon();
 };
