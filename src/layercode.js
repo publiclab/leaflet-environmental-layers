@@ -128,17 +128,14 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                 props.forEach(function(element) {
                     item[element] = data["gsx$" + element]["$t"];
                 });
-
                 item["updated"] = data.updated.$t;
                 item["use"] = (data.gsx$useformap.$t.replace(/\s+/g, '').toLowerCase() === "use");
                 item["latitude"] = item["latitude"].replace(/[^\d.-]/g, "");
                 item["latitude"] = item["latitude"].replace(/[^\d.-]/g, "");
-
                 var fracTracker;
                 fracTracker = L.marker([item["latitude"], item["longitude"]], {
                     icon: redDotIcon
                 }).bindPopup(this.generatePopup(item));
-
                 return fracTracker;
            }
 
@@ -222,7 +219,6 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
       			var lat = data.location.latitude;
       			var sensorID = data.sensor.id;
       			var popupContent = "";
-
 			    if(country){
 			        popupContent += "<h3>Country: " + country + "</h3>";
 			      }
@@ -260,7 +256,6 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                     "<h3>"+data.location+", "+data.country+"</h3><br>"+
                     "<strong>distance: "+"</strong>"+data.distance+"<br>"+contentData
                     );
-    
 			 }
 
 			 if(this.layer == "opensense")
@@ -275,17 +270,13 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
              if(this.layer == "purpleairmarker")
              {
                 var redDotIcon =new L.icon.purpleAirMarkerIcon();
-                var lat = data[25] ;  // Lat
-                var lng = data[26] ;  //Lon
-                var value = parseFloat(data[16]) ;  //PM2.5 VALUE in microgram per metre cube
-                var Label = data[24] ;  //Label
-                var temp_f = data[21] ;  // temperature (F)
-                var humidity = data[20] ; // Humidity
-                var pressure = data[22] ; //Pressure
-
-            //  var type = data.Type ;
-            //  var hardware = data.DEVICE_HARDWAREDISCOVERED ;
-
+                var lat = data[25] ;  
+                var lng = data[26] ;  
+                var value = parseFloat(data[16]) ;  
+                var Label = data[24] ;  
+                var temp_f = data[21] ;  
+                var humidity = data[20] ; 
+                var pressure = data[22] ; 
                 var purpleAirMarker ;
                 if(lat!=null && lng!=null){
                 purpleAirMarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup("<i style='color: purple ; size : 20px'>Label : " + Label + "</i><br><br> <strong>PM2.5 Value : " + value +"</strong><br><strong> Lat: " + lat + "</strong><br><strong> Lon: " + lng + "<br>Temp (F) : "+temp_f+"<br>Humidity : " + humidity + "<br>Pressure : " + pressure +"<br><br> <i>Data provided by <a href='www.purpleair.com'>www.purpleair.com</a></i>") ;
@@ -302,7 +293,6 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                 if(!!item["Descrition"]) content += "Description: <i>" + item["summary"] + "</i><br>";
                 if(!!item["contact"]) content += "<strong>Contact: " + item["contact"] + "<br></strong>";
                 var generics = ["phone", "email", "street", "city", "state", "zipcode", "timestamp", "latitude", "longitude"];
-
                 for (var i = 0; i < generics.length; i++) {
                     var key = generics[i];
                     if (!!item[generics[i]]) {
@@ -311,7 +301,6 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                         content += key + ": " + itemContent + "<br>";
                     }
                 }
-
                 content += "<hr>Data last updated " + item["updated"] + "<br>";
                 content += "<i>Data provided by <a href='http://fractracker.org/'>http://fractracker.org/</a></i>";
                 return content;
@@ -389,18 +378,15 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                 for (i = 0 ; i < data.total_count ; i++) {
                 this.addMarker(data.results[i]) ;
                 }
-
                 if (this.options.clearOutsideBounds) {
                 this.clearOutsideBounds();
                 }
                 }
             }
             if(this.layer == "mapknitter"){
-
                 for (i = 0 ; i < data.length ; i++) {
                 this.addMarker(data[i]) ;
                 }
-
                 if (this.options.clearOutsideBounds) {
                 this.clearOutsideBounds();
                 }
