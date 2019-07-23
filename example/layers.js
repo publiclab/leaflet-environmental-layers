@@ -38,7 +38,7 @@ var bounds = new L.LatLngBounds(
   
     var PLpeople = L.layerGroup.pLpeopleLayer() ;
     var PurpleLayer = L.layerGroup.purpleLayer() ;
-    var PurpleAirMarkerLayer = L.layerGroup.purpleAirMarkerLayer() ;
+    var PurpleAirMarkerLayer = L.layerGroup.layerCode("purpleairmarker") ;
     
     var Fractracker = L.layerGroup.layerCode("fractracker") ;
     var SkyTruth = L.layerGroup.layerCode("skytruth") ;
@@ -90,9 +90,9 @@ var bounds = new L.LatLngBounds(
     var wind = L.OWM.wind({});
     
     var AQICNLayer = L.layerGroup.aqicnLayer();
-    var OpenAqLayer = L.layerGroup.openaqLayer();
-    var LuftdatenLayer = L.layerGroup.luftdatenLayer();
-    var OpenSenseLayer = L.layerGroup.openSenseLayer();
+    var OpenAqLayer = L.layerGroup.layerCode("openaq");
+    var LuftdatenLayer = L.layerGroup.layerCode("luftdaten");
+    var OpenSenseLayer = L.layerGroup.layerCode("opensense");
     var city = L.OWM.current({ intervall: 15, minZoom: 3 });
     var windrose = L.OWM.current({
         intervall: 15,
