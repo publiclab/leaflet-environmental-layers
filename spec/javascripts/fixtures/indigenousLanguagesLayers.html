@@ -188,7 +188,11 @@
     }
 );
 
+
 L.layerGroup.indigenousLayers = function (options) {
+	  var latlngs = [[37, -109.05],[41, -109.03],[41, -102.05],[37, -102.04]];
+    var polygon = L.polygon(latlngs, {color: 'pink'}).addTo(map);
+    map.fitBounds(polygon.getBounds());
     return new L.LayerGroup.IndigenousLayers(options);
 };
 
