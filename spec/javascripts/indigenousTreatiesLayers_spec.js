@@ -1,7 +1,7 @@
 describe("Testing for indigenous Treaties layer", function() {
 
   beforeEach(function () {
-      loadFixtures('indigenousTreatiesLayer.html');
+      loadFixtures('indigenousTreatiesLayers.html');
     });
 
   it("Basic Test", function () {
@@ -10,7 +10,7 @@ describe("Testing for indigenous Treaties layer", function() {
 
   it("Checks if layer polygons are present", function () {
   // There should be atleast one polygon in the Treaties layer always .
-  expect($("#map").children()[0].childNodes[2].childNodes[0].childNodes[0].childNodes.length).toBeGreaterThan(1);
+  expect($("#map").children()[0].childNodes[2].childNodes[0].childNodes[0].childNodes.length).toBeGreaterThan(0);
   });
 
 });
