@@ -2,7 +2,7 @@ L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
 
     {
         options: {
-            url: 'https://publiclab.org/api/srch/nearbyPeople',
+            url: PLpeopleURL,
             clearOutsideBounds: false ,
         },
 
@@ -23,7 +23,7 @@ L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
             this.options_display = {
                 blurredLocation: this.BlurredLocation,
                 locations: this.locations,
-                source_url: "https://publiclab.org/api/srch/nearbyPeople",
+                source_url: PLpeopleURL,
                 color_code_markers: false, // by default this is false .
                 style: 'both' // or 'heatmap' or 'markers' , by default is 'both'
             }
