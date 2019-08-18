@@ -41,7 +41,6 @@ L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
             setTimeout(() => { lbld.removeLBLD() ;}, 7000) ;
             setTimeout(() => { lbld.removeLBLD() ;}, 10000) ;
         },
-        
     }
 );
 
