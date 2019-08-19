@@ -46,4 +46,9 @@ The library consists of multiple layers. It needs to add several other layers. T
 
 ## Bug reports
 
+
+## ES6-refactoring
+j-bitmaker
+
+
 If you want to submit a bug/issue , please go to https://github.com/publiclab/leaflet-environmental-layers/issues/new

@@ -7,37 +7,37 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
             tokenID: "566331c289f0aeacd78e0b18362b4bcfa5097572"
         },
 
-        initialize: function (options) {
+        initialize:  options => {
             options = options || {};
             L.Util.setOptions(this, options);
             this._layers = {};
         },
 
-        onAdd: function (map) {
+        onAdd: map => {
             map.on('moveend', this.requestRegionData, this);
             this._map = map;
             this.requestRegionData();
         },
 
-        onRemove: function (map) {
+        onRemove:  map => {
             map.off('moveend', this.requestRegionData, this);
             this.clearLayers();
             this._layers = {};
         },
 
-        requestRegionData: function () {
-                var self = this ;
+        requestRegionData:  () =>{
+                let self = this ;
 
-                (function() {
+                (() => {
 
-                    var zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
-                    var $ = window.jQuery;
-                    var AQI_url = "https://api.waqi.info/map/bounds/?latlng=" + southwest.lat + "," + southwest.lng + "," + northeast.lat + "," + northeast.lng + "&token=" + self.options.tokenID;
+                    let zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
+                    let $ = window.jQuery;
+                    let AQI_url = "https://api.waqi.info/map/bounds/?latlng=" + southwest.lat + "," + southwest.lng + "," + northeast.lat + "," + northeast.lng + "&token=" + self.options.tokenID;
 
                     if(typeof self._map.spin === 'function'){
                         self._map.spin(true) ;
                     }
-                        $.getJSON(AQI_url , function(regionalData){
+                        $.getJSON(AQI_url , regionalData => {
 
                             self.parseData(regionalData) ;
                             if(typeof self._map.spin === 'function'){
@@ -47,13 +47,13 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
                 })();
         },
 
-        getMarker: function(data) {
-            var aqi = data.aqi;
-            var lat = data.lat;
-            var lon = data.lon;
-            var uid = data.uid;
-            var clName = "aqiSign ";
-            var aqiN;
+        getMarker: data => {
+            let aqi = data.aqi;
+            let lat = data.lat;
+            let lon = data.lon;
+            let uid = data.uid;
+            let clName = "aqiSign ";
+            let aqiN;
 
             if (isNaN(aqi))  { //If it is not a number
                 clName += "aqiNull";
@@ -84,27 +84,27 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
 
         },
 
-        addMarker: function(data) {
-            var self = this;
-            var marker = this.getMarker(data);
-            var key = data.uid;
+        addMarker: data => {
+            let self = this;
+            let marker = this.getMarker(data);
+            let key = data.uid;
             //Code provided by widget API
             /* jshint ignore:start */
-            (function(w,d,t,f){  w[f]=w[f]||function(c,k,n){s=w[f],k=s['k']=(s['k']||(k?('&k='+k):''));s['c']=
+            ((w,d,t,f)=>{  w[f]=w[f]||function(c,k,n){s=w[f],k=s['k']=(s['k']||(k?('&k='+k):''));s['c']=
             c=(c  instanceof  Array)?c:[c];s['n']=n=n||0;Apa=d.createElement(t),e=d.getElementsByTagName(t)[0];
             Apa.async=1;Apa.src='http://feed.aqicn.org/feed/'+(c[n].city)+'/'+(c[n].lang||'')+'/feed.v1.js?n='+n+k;
             e.parentNode.insertBefore(Apa,e);  };  })(  window,document,'script','_aqiFeed'  );
             /* jshint ignore:end */
 
-            marker.bindPopup( function() { //Fetch popup content only when clicked; else the quota will be reached
-                var el = document.createElement('div');
+            marker.bindPopup(()=> { //Fetch popup content only when clicked; else the quota will be reached
+                let el = document.createElement('div');
                 el.classList.add("city-container");
                 el.id = "city-aqi-container";
 
-                var stationURL = "https://api.waqi.info/feed/@" + data.uid + "/?token=" + self.options.tokenID;
+                let stationURL = "https://api.waqi.info/feed/@" + data.uid + "/?token=" + self.options.tokenID;
 
-                $.getJSON(stationURL, function(stationData) {
-                    var labels = {
+                $.getJSON(stationURL, stationData => {
+                    let labels = {
 			             pm25: "PM<sub>2.5</sub>",
 			             pm10: "PM<sub>10</sub>",
 			             o3: "Ozone",
@@ -119,19 +119,19 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
 			             p: "Atmostpheric Pressure"
 		            };
 
-                    var strContent = "";
-                    var name = "<h2>" + stationData.data.city.name + "</h2><br> "; //Set the default content first
+                    let strContent = "";
+                    let name = "<h2>" + stationData.data.city.name + "</h2><br> "; //Set the default content first
 
-                    for(var species in stationData.data.iaqi) {
+                    for(let species in stationData.data.iaqi) {
                         strContent += "<strong>" + labels[species] + "</strong>: " + stationData.data.iaqi[species].v + ";<br>";
                     }
                     strContent += "See <a href=" + stationData.data.city.url + ">AQICN - " + stationData.data.city.name + "</a> for more info. Data provided by aqicn.org.<br>From the <a href=https://github.com/publiclab/leaflet-environmental-layers/pull/79>AQICN Inventory</a> (<a href = https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515>info</a>)";
                     el.innerHTML = name + strContent;
 
-                    var res = stationData.data.city.url.split("/");
+                    let res = stationData.data.city.url.split("/");
 
                     //Parse url to see what the city is called by the API; the majority of cities cannot be found.
-                    var cityName = res[res.length - 1];
+                    let cityName = res[res.length - 1];
                     if(cityName.length <= 1) cityName = res[res.length - 2];
                     //if city can be found, display is reset to include details
                     _aqiFeed({ display: name + "%details <br>" + strContent, container:"city-aqi-container",  city: cityName  });
@@ -147,10 +147,10 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
 
         },
 
-        parseData: function(regionalData) {
+        parseData: regionalData => {
             if(!!regionalData) {
 
-                for(var i = 0; i < regionalData.data.length; i++) {
+                for(let i = 0; i < regionalData.data.length; i++) {
 
                     //this.requestStationData(regionalData.data[i].uid);
                     this.addMarker(regionalData.data[i]);
@@ -163,8 +163,8 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
 
         },
 
-        clearOutsideBounds: function () {
-            var bounds = this._map.getBounds(),
+        clearOutsideBounds:  () => {
+            let bounds = this._map.getBounds(),
                 latLng,
                 key;
 
@@ -182,6 +182,5 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
     }
 );
 
-L.layerGroup.aqicnLayer = function(options) {
-    return new L.LayerGroup.AQICNLayer(options);
-};
+L.layerGroup.aqicnLayer = options => new L.LayerGroup.AQICNLayer(options);
+

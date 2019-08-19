@@ -3,31 +3,31 @@ L.Control.LegendControl = L.Control.extend({
     position: 'bottomleft',
   },
   
-  initialize: function(options) {
+  initialize: (options) => {
     L.Util.setOptions(this, options);
     this._legendElement = L.DomUtil.create('div', 'legend-container');
     this._legendElement.style.display = 'none';
     this._legendURLs = []; //Array of URLs
   },
   
-  onAdd: function(map) {
+  onAdd: map => {
     return this._legendElement;
   },
   
-  onRemove: function(map) {
+  onRemove: map => {
     this._legendURLs = [];
     this._drawLegend();
     this._legendElement.style.display = 'none';
   },
   
-  addLegend: function(legendURL) {
+  addLegend: legendURL => {
     this._legendURLs.push(legendURL);
     this._drawLegend();
     this._legendElement.style.display = 'block';
   },
   
-  removeLegend: function(legendURL) {
-    var index = this._legendURLs.indexOf(legendURL);
+  removeLegend: legendURL => {
+    let index = this._legendURLs.indexOf(legendURL);
     if(index > -1) {
       this._legendURLs.splice(index, 1); //remove URL from the array
     }    
@@ -37,12 +37,12 @@ L.Control.LegendControl = L.Control.extend({
     this._drawLegend();
   },
   
-  _drawLegend: function() {
+  _drawLegend: () =>{
 
     this._legendElement.innerHTML = '';
-    var self = this;
-    for(var i = 0; i < this._legendURLs.length; i++) {
-      var item = L.DomUtil.create('div', 'legend-item', this._legendElement);
+    let self = this;
+    for(let i = 0; i < this._legendURLs.length; i++) {
+      let item = L.DomUtil.create('div', 'legend-item', this._legendElement);
       item.innerHTML = '<img src="' + this._legendURLs[i] + '" style="height: 200px;"/>';
       item.style.cssFloat = 'left';
       item.style.margin = '5px';
@@ -52,6 +52,5 @@ L.Control.LegendControl = L.Control.extend({
   
 });
 
-L.control.legendControl = function(options) { 
-  return new L.Control.LegendControl(options);
-};
+L.control.legendControl = options => new L.Control.LegendControl(options);
+

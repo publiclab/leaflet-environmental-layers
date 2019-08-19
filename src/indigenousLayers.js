@@ -8,7 +8,7 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
             target: '_self',
         },
 
-        initialize: function (name,options) {
+        initialize: (name,options) => {
         
             this.layer = name;
             options = options || {};
@@ -17,14 +17,14 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
 
         },
 
-        onAdd: function (map) {
+        onAdd: map => {
             map.on('moveend', this.requestData, this);
             this._map = map;
             this.requestData();
 
         },
 
-        onRemove: function (map) {
+        onRemove: map => {
             map.off('moveend', this.requestData, this);
             if(typeof map.spin === 'function'){
               map.spin(false) ;
@@ -33,12 +33,12 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
             this._layers = {};
         },
 
-        requestData: function () {
-                var self = this ;
-                (function() {
-                    var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
-                    var $ = window.jQuery;
-                    var ILL_url;
+        requestData: () => {
+                let self = this ;
+                (() => {
+                    let zoom = self._map.getZoom(), origin = self._map.getCenter() ;
+                    let $ = window.jQuery;
+                    let ILL_url;
        
                     if(self.layer === "Territories" ){
                         ILL_url = "https://native-land.ca/api/index.php?maps=territories&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
@@ -64,23 +64,23 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
         },
 
 
-        getPoly: function (data) {
-              var coords = data.geometry.coordinates;
+        getPoly: data => {
+              let coords = data.geometry.coordinates;
 
-              for(var j = 0; j < coords[0].length; j++) {
-                var temp = coords[0][j][1];
+              for(let j = 0; j < coords[0].length; j++) {
+                let temp = coords[0][j][1];
                 coords[0][j][1] = coords[0][j][0];
                 coords[0][j][0] = temp;
               }
 
 
-              var nme = data.properties.Name;
-              var frNme = data.properties.FrenchName;
-              var desc = data.properties.description;
-              var frDesc = data.properties.FrenchDescription;
-              var clr = data.properties.color;
-              var key = data.id;
-              var ill_poly ;
+              let nme = data.properties.Name;
+              let frNme = data.properties.FrenchName;
+              let desc = data.properties.description;
+              let frDesc = data.properties.FrenchDescription;
+              let clr = data.properties.color;
+              let key = data.id;
+              let ill_poly ;
                if (!isNaN((coords[0][0][0]) && !isNaN((coords[0][0][1]))) ){
                 
               	if(this.layer === "Territories"){
@@ -97,8 +97,8 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
             return ill_poly ;
         },
 
-        addPoly: function (data) {
-            var poly = this.getPoly(data), key = data.id ;
+        addPoly: data => {
+            let poly = this.getPoly(data), key = data.id ;
 
             if (!this._layers[key]) {
                 this._layers[key] = poly;
@@ -107,10 +107,10 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
             }
         },
 
-        parseData: function (data) {
+        parseData: data => {
 
         if (!!data){
-           for (var i = 0 ; i < data.length ; i++) {
+           for (let i = 0 ; i < data.length ; i++) {
 
             this.addPoly(data[i]) ;
 
@@ -121,8 +121,8 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
           }
         },
 
-        clearOutsideBounds: function () {
-            var bounds = this._map.getBounds(),
+        clearOutsideBounds: () => {
+            let bounds = this._map.getBounds(),
                 polyBounds,
                 key;
 
@@ -140,6 +140,4 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
     }
 );
 
-L.layerGroup.indigenousLayers = function (name,options) {
-    return new L.LayerGroup.IndigenousLayers(name,options);
-};
+L.layerGroup.indigenousLayers = (name,options) => new L.LayerGroup.IndigenousLayers(name,options);

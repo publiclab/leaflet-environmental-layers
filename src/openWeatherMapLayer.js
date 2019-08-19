@@ -9,9 +9,9 @@ L.OWM = L.TileLayer.extend({
 		attribution: 'Weather from <a href="https://openweathermap.org/" alt="World Map and worldwide Weather Forecast online">OpenWeatherMap</a>'
 	},
 
-	initialize: function (options) {
+	initialize: options => {
 		L.Util.setOptions(this, options);
-		var tileurl = this.options.baseUrl.replace('{layername}', this._owmLayerName);
+		let tileurl = this.options.baseUrl.replace('{layername}', this._owmLayerName);
 		tileurl = tileurl + '?appid=' + this.options.appId;
 
 		this._map = null;
@@ -21,7 +21,7 @@ L.OWM = L.TileLayer.extend({
 		L.TileLayer.prototype.initialize.call(this, this._owmtileurl, options);
 	},
 
-	onAdd: function(map) {
+	onAdd: map => {
 		this._map = map;
 		if (this.options.showLegend && this.options.legendImagePath != null) {
 			this._legendControl = this._getLegendControl();
@@ -30,7 +30,7 @@ L.OWM = L.TileLayer.extend({
 		L.TileLayer.prototype.onAdd.call(this, map);
 	},
 
-	onRemove: function(map) {
+	onRemove: map => {
 		if (this._legendControl != null) {
 			this._legendControl.removeLegend(this._legendId);
 			this._legendControl = null;
@@ -40,7 +40,7 @@ L.OWM = L.TileLayer.extend({
 		this._map = null;
 	},
 
-	_getLegendControl: function() {
+	_getLegendControl: () => {
 		if (typeof this._map._owm_legendcontrol == 'undefined' || !this._map._owm_legendcontrol) {
 			this._map._owm_legendcontrol = new L.OWM.LegendControl({position: this.options.legendPosition});
 			this._map.addControl(this._map._owm_legendcontrol);
@@ -49,18 +49,18 @@ L.OWM = L.TileLayer.extend({
 	}
 });
 
-(function () {
+(function(){
 
 	L.OWM.Precipitation = L.OWM.extend({
 		_owmLayerName: 'precipitation'
 	});
-	L.OWM.precipitation = function (options) { return new L.OWM.Precipitation(options); };
+	L.OWM.precipitation = options => new L.OWM.Precipitation(options); 
 
 	L.OWM.PrecipitationClassic = L.OWM.extend({
 		_owmLayerName: 'precipitation_cls'
 	});
-	L.OWM.precipitationClassic = function (options) {
-		var layer = new L.OWM.PrecipitationClassic(options);
+	L.OWM.precipitationClassic = options => {
+		let layer = new L.OWM.PrecipitationClassic(options);
 		if (layer.options.legendImagePath == null) {
 			layer.options.legendImagePath = 'https://openweathermap.org/img/a/PR.png';
 		}
@@ -70,13 +70,13 @@ L.OWM = L.TileLayer.extend({
 	L.OWM.Rain = L.OWM.extend({
 		_owmLayerName: 'rain'
 	});
-	L.OWM.rain = function (options) { return new L.OWM.Rain(options); };
+	L.OWM.rain = options => new L.OWM.Rain(options); 
 
 	L.OWM.RainClassic = L.OWM.extend({
 		_owmLayerName: 'rain_cls'
 	});
-	L.OWM.rainClassic = function (options) {
-		var layer = new L.OWM.RainClassic(options);
+	L.OWM.rainClassic = options =>{
+		let layer = new L.OWM.RainClassic(options);
 		if (layer.options.legendImagePath == null) {
 			layer.options.legendImagePath = 'https://openweathermap.org/img/a/RN.png';
 		}
@@ -86,8 +86,8 @@ L.OWM = L.TileLayer.extend({
 	L.OWM.Snow = L.OWM.extend({
 		_owmLayerName: 'snow'
 	});
-	L.OWM.snow = function (options) {
-		var layer = new L.OWM.Snow(options);
+	L.OWM.snow = options => {
+		let layer = new L.OWM.Snow(options);
 		if (layer.options.legendImagePath == null) {
 			layer.options.legendImagePath = 'https://openweathermap.org/img/a/SN.png';
 		}
@@ -97,13 +97,13 @@ L.OWM = L.TileLayer.extend({
 	L.OWM.Clouds = L.OWM.extend({
 		_owmLayerName: 'clouds'
 	});
-	L.OWM.clouds = function (options) { return new L.OWM.Clouds(options); };
+	L.OWM.clouds = options => new L.OWM.Clouds(options); 
 
 	L.OWM.CloudsClassic = L.OWM.extend({
 		_owmLayerName: 'clouds_cls'
 	});
-	L.OWM.cloudsClassic = function (options) {
-		var layer = new L.OWM.CloudsClassic(options);
+	L.OWM.cloudsClassic = options => {
+		let layer = new L.OWM.CloudsClassic(options);
 		if (layer.options.legendImagePath == null) {
 			layer.options.legendImagePath = 'https://openweathermap.org/img/a/NT.png';
 		}
@@ -113,8 +113,8 @@ L.OWM = L.TileLayer.extend({
 	L.OWM.Pressure = L.OWM.extend({
 		_owmLayerName: 'pressure'
 	});
-	L.OWM.pressure = function (options) {
-		var layer = new L.OWM.Pressure(options);
+	L.OWM.pressure = options => {
+		let layer = new L.OWM.Pressure(options);
 		if (layer.options.legendImagePath == null) {
 			layer.options.legendImagePath = 'https://openweathermap.org/img/a/PN.png';
 		}
@@ -124,13 +124,13 @@ L.OWM = L.TileLayer.extend({
 	L.OWM.PressureContour = L.OWM.extend({
 		_owmLayerName: 'pressure_cntr'
 	});
-	L.OWM.pressureContour = function (options) { return new L.OWM.PressureContour(options); };
+	L.OWM.pressureContour = options => new L.OWM.PressureContour(options); 
 
 	L.OWM.Temperature = L.OWM.extend({
 		_owmLayerName: 'temp'
 	});
-	L.OWM.temperature = function (options) {
-		var layer = new L.OWM.Temperature(options);
+	L.OWM.temperature = options => {
+		let layer = new L.OWM.Temperature(options);
 		if (layer.options.legendImagePath == null) {
 			layer.options.legendImagePath = 'https://openweathermap.org/img/a/TT.png';
 		}
@@ -140,8 +140,8 @@ L.OWM = L.TileLayer.extend({
 	L.OWM.Wind = L.OWM.extend({
 		_owmLayerName: 'wind'
 	});
-	L.OWM.wind = function (options) {
-		var layer = new L.OWM.Wind(options);
+	L.OWM.wind = options => {
+		let layer = new L.OWM.Wind(options);
 		if (layer.options.legendImagePath == null) {
 			layer.options.legendImagePath = 'https://openweathermap.org/img/a/UV.png';
 		}
@@ -155,7 +155,7 @@ L.OWM.LegendControl = L.Control.extend({
 		position: "bottomleft"
 	},
 
-	initialize: function(options) {
+	initialize: options => {
 		L.Util.setOptions(this, options);
 		this._container = L.DomUtil.create('div', 'owm-legend-container');
 		this._container.style.display = 'none';
@@ -163,25 +163,25 @@ L.OWM.LegendControl = L.Control.extend({
 		this._legendContainer = [];
 	},
 
-	onAdd: function(map) {
+	onAdd: map => {
 		return this._container;
 	},
 
-	addLegend: function(legendImagePath) {
-		var legendId = this._legendCounter++;
+	addLegend: legendImagePath => {
+		let legendId = this._legendCounter++;
 		this._legendContainer[legendId] = legendImagePath;
 		this._redrawLegend();
 		this._container.style.display = 'block';
 		return legendId;
 	},
 
-	removeLegend: function(legendId) {
+	removeLegend: legendId => {
 		if (typeof this._legendContainer[legendId] != 'undefined') {
 			delete this._legendContainer[legendId];
 		}
 		// reset counter if no legend is in collection
-		var containerEmpty = true;
-		for (var idx in this._legendContainer) {
+		let containerEmpty = true;
+		for (let idx in this._legendContainer) {
 			containerEmpty = false;
 			break;
 		}
@@ -192,16 +192,16 @@ L.OWM.LegendControl = L.Control.extend({
 		this._redrawLegend();
 	},
 
-	_redrawLegend: function() {
+	_redrawLegend: () => {
 		this._container.innerHTML = ''; // clear container
-		var isLeft = this.options.position.indexOf('left') !== -1;
-		var cssFloat = isLeft ? 'left' : 'right';
-		for (var idx in this._legendContainer) {
+		let isLeft = this.options.position.indexOf('left') !== -1;
+		let cssFloat = isLeft ? 'left' : 'right';
+		for (let idx in this._legendContainer) {
 			if (isNaN(idx)) {
 				continue;
 			}
-			var imgPath = this._legendContainer[idx];
-			var item = L.DomUtil.create('div', 'owm-legend-item', this._container);
+			let imgPath = this._legendContainer[idx];
+			let item = L.DomUtil.create('div', 'owm-legend-item', this._container);
 			item.style.cssFloat = cssFloat;
 			if (isLeft) {
 				item.style.marginRight = '10px';
@@ -256,7 +256,7 @@ L.OWM.Current = L.Layer.extend({
 		keepOnMinZoom: false // keep or remove markers when zoom < minZoom
 	},
 
-	initialize: function(options) {
+	initialize: options => {
 		L.setOptions(this, options);
 		this._layer = L.layerGroup();
 		this._timeoutId = null;
@@ -270,7 +270,7 @@ L.OWM.Current = L.Layer.extend({
 		this._tempUnits = { K: 'K', C: '°C', F: 'F'};
 		this._progressCtrl = null;
 		if (this.options.progressControl) {
-			var bgIcon;
+			let bgIcon;
 			if (this.options.imageLoadingBgUrl) {
 				bgIcon = this.options.imageLoadingBgUrl;
 			} else {
@@ -289,7 +289,7 @@ L.OWM.Current = L.Layer.extend({
 		this._cache = L.OWM.currentCache({ maxAge: this.options.cacheMaxAge });
 	},
 
-	onAdd: function(map) {
+	onAdd: map => {
 		this._map = map;
 		this._map.addLayer(this._layer);
 		this._map.on('moveend', this.update, this);
@@ -300,7 +300,7 @@ L.OWM.Current = L.Layer.extend({
 		this.update();
 	},
 
-	onRemove: function(map) {
+	onRemove: map => {
 		// clear timeout
 		if (this._timeoutId !== null) {
 			window.clearTimeout(this._timeoutId);
@@ -318,23 +318,23 @@ L.OWM.Current = L.Layer.extend({
 		this._cache.clear();
 	},
 
-	getAttribution: function() {
+	getAttribution: () => {
 		return 'Weather from <a href="https://openweathermap.org/" ' +
 		'alt="World Map and worldwide Weather Forecast online">OpenWeatherMap</a>';
 	},
 
-	update: function() {
+	update: () => {
 		// clear existing timeout
 		if (this._timeoutId) {
 			window.clearTimeout(this._timeoutId);
 			this._timeoutId = null;
 		}
 
-		var _this = this;
+		let _this = this;
 
 		// clear requests for all types
-		for (var typ in this._requests) {
-			var request = this._requests[typ];
+		for (let typ in this._requests) {
+			let request = this._requests[typ];
 			this.fire('owmloadingend', {type: typ});
 			request.abort();
 		}
@@ -349,8 +349,8 @@ L.OWM.Current = L.Layer.extend({
 		}
 
 		// try to get cached data first
-		var bounds = this._map.getBounds();
-		var data = null;
+		let bounds = this._map.getBounds();
+		let data = null;
 		if (this.options.caching) {
 			data = this._cache.get(bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth());
 		}
@@ -360,7 +360,7 @@ L.OWM.Current = L.Layer.extend({
 		} else {
 			// fetch new data from OWM
 			this.fire('owmloadingstart', {type: _this.options.type});
-			var url = this._urlTemplate
+			let url = this._urlTemplate
 						.replace('{appId}', this.options.appId ? 'APPID=' + this.options.appId + '&' : '')
 						.replace('{type}', this.options.type)
 						.replace('{minlon}', bounds.getWest())
@@ -388,25 +388,25 @@ L.OWM.Current = L.Layer.extend({
 		}
 	},
 
-	_processRequestedData: function(_this, data) {
+	_processRequestedData: (_this, data) => {
 
 		// read all cities
-		var stations = {};
-		for (var i in data) {
-			var stat = data[i];
+		let stations = {};
+		for (let i in data) {
+			let stat = data[i];
 			if (!_this._map) { // maybe layer is gone while we are looping here
 				return;
 			}
 			// only use cities having a minimum distance of some pixels on the map
-			var pt = _this._map.latLngToLayerPoint(new L.LatLng(stat.coord.Lat, stat.coord.Lon));
-			var key = '' + (Math.round(pt.x/_this.options.clusterSize)) + "_" + (Math.round(pt.y/_this.options.clusterSize));
+			let pt = _this._map.latLngToLayerPoint(new L.LatLng(stat.coord.Lat, stat.coord.Lon));
+			let key = '' + (Math.round(pt.x/_this.options.clusterSize)) + "_" + (Math.round(pt.y/_this.options.clusterSize));
 			if (!stations[key] || parseInt(stations[key].rang) < parseInt(stat.rang)) {
 				stations[key] = stat;
 			}
 		}
 
 		// hide LayerGroup from map and remove old markers
-		var markerWithPopup = null;
+		let markerWithPopup = null;
 		if (_this.options.keepPopup) {
 			markerWithPopup = _this._getMarkerWithPopup(_this._markers);
 		}
@@ -417,8 +417,8 @@ L.OWM.Current = L.Layer.extend({
 
 		// add the cities as markers to the LayerGroup
 		_this._markers = [];
-		for (var key in stations) {
-			var marker;
+		for (let key in stations) {
+			let marker;
 			if (_this.options.markerFunction != null && typeof _this.options.markerFunction == 'function') {
 				marker = _this.options.markerFunction.call(_this, stations[key]);
 			} else {
@@ -449,10 +449,10 @@ L.OWM.Current = L.Layer.extend({
 		_this.fire('owmlayeradd', {markers: _this._markers});
 	},
 
-	_getMarkerWithPopup: function(markers) {
-		var marker = null;
-		for (var idx in markers) {
-			var m = markers[idx];
+	_getMarkerWithPopup: markers => {
+		let marker = null;
+		for (let idx in markers) {
+			let m = markers[idx];
 			if (m._popup && m._map && m._map.hasLayer(m._popup)) {
 				marker = m;
 				break;
@@ -461,11 +461,11 @@ L.OWM.Current = L.Layer.extend({
 		return marker;
 	},
 
-	_createPopup: function(station) {
-		var showLink = typeof station.id != 'undefined' && this.options.showOwmStationLink;
-		var txt = '<div class="owm-popup-name">';
+	_createPopup: station => {
+		let showLink = typeof station.id != 'undefined' && this.options.showOwmStationLink;
+		let txt = '<div class="owm-popup-name">';
 		if (showLink) {
-			var typ = 'station';
+			let typ = 'station';
 			if (typeof station.weather != 'undefined') {
 				typ = 'city';
 			}
@@ -484,7 +484,7 @@ L.OWM.Current = L.Layer.extend({
 				' (' + station.weather[0].id + ')') + '</div>';
 			}
 		}
-		var imgData = this._getImageData(station);
+		let imgData = this._getImageData(station);
 		txt += '<div class="owm-popup-main"><img src="' + imgData.url + '" width="' + imgData.width + 
 		'" height="' + imgData.height + '" border="0" />';
 		if (typeof station.main != 'undefined' && typeof station.main.temp != 'undefined') {
@@ -577,11 +577,11 @@ L.OWM.Current = L.Layer.extend({
 		return txt;
 	},
 
-	_getImageData: function(station) {
-		var imageUrl;
-		var imageWidth = this.options.imageWidth;
-		var imageHeight = this.options.imageHeight;
-		var imageUrlTemplate = this.options.imageUrlCity;
+	_getImageData: station => {
+		let imageUrl;
+		let imageWidth = this.options.imageWidth;
+		let imageHeight = this.options.imageHeight;
+		let imageUrlTemplate = this.options.imageUrlCity;
 		if (station.weather && station.weather[0] && station.weather[0].icon) {
 			imageUrl = imageUrlTemplate.replace('{icon}', station.weather[0].icon);
 		} else if (station.type && station.type == 1) {
@@ -596,20 +596,20 @@ L.OWM.Current = L.Layer.extend({
 		return {url: imageUrl, width: imageWidth, height: imageHeight};
 	},
 
-	_createMarker: function(station) {
-		var imageData = this._getImageData(station);
-		var icon = L.divIcon({
+	_createMarker: station => {
+		let imageData = this._getImageData(station);
+		let icon = L.divIcon({
 						className: '',
 						iconAnchor: new L.Point(25, imageData.height/2),
 						popupAnchor: new L.Point(0, -10),
 						html: this._icondivtext(station, imageData.url, imageData.width, imageData.height)
 					});
-		var marker = L.marker([station.coord.Lat, station.coord.Lon], {icon: icon});
+		let marker = L.marker([station.coord.Lat, station.coord.Lon], {icon: icon});
 		return marker;
 	},
 
-	_icondivtext: function(station, imageurl, width, height) {
-		var txt = '';
+	_icondivtext: (station, imageurl, width, height) => {
+		let txt = '';
 		txt += '<div class="owm-icondiv">' + 
 		'<img src="' + imageurl + '" border="0" width="' + width + '" height="' + height + '" />';
 		if (typeof station.main != 'undefined' && typeof station.main.temp != 'undefined') {
@@ -620,8 +620,8 @@ L.OWM.Current = L.Layer.extend({
 		return txt;
 	},
 
-	_temperatureConvert: function(tempC) {
-		var temp = tempC;
+	_temperatureConvert: tempC => {
+		let temp = tempC;
 		switch (this.options.temperatureUnit) {
 			case 'K':
 				temp = (tempC + 273.15);
@@ -635,17 +635,17 @@ L.OWM.Current = L.Layer.extend({
 		return temp.toFixed(this.options.temperatureDigits);
 	},
 
-	_displayTemperatureUnit: function() {
-		var unit = this._tempUnits['K'];
+	_displayTemperatureUnit: () => {
+		let unit = this._tempUnits['K'];
 		if (typeof this._tempUnits[this.options.temperatureUnit] != 'undefined') {
 			unit = this._tempUnits[this.options.temperatureUnit];
 		}
 		return unit;
 	},
 
-	_windMsToBft: function(ms) {
-		var bft = 18;
-		for (var key in this._msbft) {
+	_windMsToBft: ms => {
+		let bft = 18;
+		for (let key in this._msbft) {
 			if (ms < this._msbft[key]) {
 				bft = key;
 				break;
@@ -654,8 +654,8 @@ L.OWM.Current = L.Layer.extend({
 		return bft;
 	},
 
-	_displaySpeedUnit: function() {
-		var unit = 'm/s';
+	_displaySpeedUnit: () => {
+		let unit = 'm/s';
 		switch (this.options.speedUnit) {
 			case 'kmh':
 				unit = 'km/h';
@@ -667,8 +667,8 @@ L.OWM.Current = L.Layer.extend({
 		return unit;
 	},
 
-	_convertSpeed: function(speed) {
-		var sp = speed;
+	_convertSpeed: speed => {
+		let sp = speed;
 		switch (this.options.speedUnit) {
 			case 'kmh':
 				sp = 3.6*sp;
@@ -680,7 +680,7 @@ L.OWM.Current = L.Layer.extend({
 		return sp.toFixed(this.options.speedDigits);
 	},
 
-	_convertTimestamp: function(tstmp) {
+	_convertTimestamp: tstmp => {
 		if (this.options.useLocalTime) {
 			return (new Date(tstmp*1000));
 		} else {
@@ -688,8 +688,8 @@ L.OWM.Current = L.Layer.extend({
 		}
 	},
 
-	i18n: function(key, fallback) {
-		var lang = this.options.lang;
+	i18n: (key, fallback) => {
+		let lang = this.options.lang;
 		if (typeof L.OWM.Utils.i18n != 'undefined' && 
 		typeof L.OWM.Utils.i18n[lang] != 'undefined' && 
 		typeof L.OWM.Utils.i18n[lang][key] != 'undefined') {
@@ -699,7 +699,7 @@ L.OWM.Current = L.Layer.extend({
 	}
 
 });
-L.OWM.current = function(options) { return new L.OWM.Current(options); };
+L.OWM.current = (options) => { return new L.OWM.Current(options); };
 
 L.OWM.ProgressControl = L.Control.extend({
 
@@ -709,7 +709,7 @@ L.OWM.ProgressControl = L.Control.extend({
 		bgImage: null // bgImage is set in L.OWM.Current when creating this ProgressControll instance
 	},
 
-	initialize: function(options) {
+	initialize: options => {
 		L.Util.setOptions(this, options);
 		this._container = L.DomUtil.create('div', 'leaflet-control-layers');
 		if (this.options.bgImage != null) {
@@ -721,26 +721,26 @@ L.OWM.ProgressControl = L.Control.extend({
 		this._container.innerHTML = '<img src="' + this.options.imageLoadingUrl + '" width="50" height="50" />';
 	},
 
-	onAdd: function(map) {
+	onAdd: map => {
 		this._map = map;
 		this.options.owmInstance.on('owmloadingstart', this._activate, this);
 		this.options.owmInstance.on('owmloadingend', this._deactivate, this);
 		return this._container;
 	},
 
-	_activate: function(e) {
+	_activate: e => {
 		if (e.target.options.type == this.options.type) {
 			this._container.style.display = 'block';
 		}
 	},
 
-	_deactivate: function(e) {
+	_deactivate: e => {
 		if (e.target.options.type == this.options.type) {
 			this._container.style.display = 'none';
 		}
 	},
 
-	onRemove: function(map) {
+	onRemove: map => {
 		this.options.owmInstance.off('owmloadingstart', this._activate, this);
 		this.options.owmInstance.off('owmloadingend', this._deactivate, this);
 		this._container.style.display = 'none';
@@ -748,7 +748,7 @@ L.OWM.ProgressControl = L.Control.extend({
 	}
 
 });
-L.OWM.progressControl = function(options) { return new L.OWM.ProgressControl(options); };
+L.OWM.progressControl = options => new L.OWM.ProgressControl(options); 
 
 L.OWM.CurrentCache = L.Class.extend({
 
@@ -756,18 +756,18 @@ L.OWM.CurrentCache = L.Class.extend({
 		maxAge: 15 // age in minutes before cache data is invalidated
 	},
 
-	initialize: function(options) {
+	initialize: options => {
 		L.Util.setOptions(this, options);
 		this.clear();
 	},
 
-	clear: function() {
+	clear: () => {
 		this._cachedData = null;
 		this._cachedTime = 0;
 		this._cachedBBox = {minLon: 181, minLat: 91, maxLon: -181, maxLat: -91};
 	},
 
-	get: function(minLon, minLat, maxLon, maxLat) {
+	get: (minLon, minLat, maxLon, maxLat) => {
 		if (this._cachedData == null) {
 			// no cached data available
 			return null;
@@ -785,10 +785,10 @@ L.OWM.CurrentCache = L.Class.extend({
 		}
 
 		// clip cached data to bounds
-		var clippedStations = [];
-		var cnt = 0;
-		for (var k in this._cachedData.list) {
-			var station = this._cachedData.list[k];
+		let clippedStations = [];
+		let cnt = 0;
+		for (let k in this._cachedData.list) {
+			let station = this._cachedData.list[k];
 			if (station.coord.Lon >= minLon && station.coord.Lon <= maxLon
 					&& station.coord.Lat >= minLat && station.coord.Lat <= maxLat) {
 				clippedStations[k] = station;
@@ -798,7 +798,7 @@ L.OWM.CurrentCache = L.Class.extend({
 		return clippedStations;
 	},
 
-	set: function(data, bounds) {
+	set: (data, bounds) => {
 		this._cachedData = data;
 		this._cachedBBox.minLon = bounds.getWest();
 		this._cachedBBox.minLat = bounds.getSouth();
@@ -808,7 +808,7 @@ L.OWM.CurrentCache = L.Class.extend({
 	}
 
 });
-L.OWM.currentCache = function(options) { return new L.OWM.CurrentCache(options); };
+L.OWM.currentCache = options => new L.OWM.CurrentCache(options); 
 
 
 L.OWM.Utils = {
@@ -816,18 +816,18 @@ L.OWM.Utils = {
 	callbacks: {},
 	callbackCounter: 0,
 
-	jsonp: function(url, callbackFn) {
-		var _this = this;
-		var elem = document.createElement('script');
-		var counter = this.callbackCounter++;
-		var callback = 'L.OWM.Utils.callbacks[' + counter + ']';
-		var abort = function() {
+	jsonp: (url, callbackFn) => {
+		let _this = this;
+		let elem = document.createElement('script');
+		let counter = this.callbackCounter++;
+		let callback = 'L.OWM.Utils.callbacks[' + counter + ']';
+		let abort = function() {
 			if (elem.parentNode) {
 				return elem.parentNode.removeChild(elem);
 			}
 		};
 
-		this.callbacks[counter] = function(data) {
+		this.callbacks[counter] = data => {
 			delete _this.callbacks[counter];
 			return callbackFn(data);
 		};
@@ -1509,5 +1509,3 @@ L.OWM.Utils = {
 		}
 	}
 };
-
-

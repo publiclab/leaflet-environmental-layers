@@ -9,7 +9,7 @@ L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
             clearOutsideBounds: false ,
         },
 
-        initialize: function (options) {
+        initialize: options => {
             options = options || {};
             L.Util.setOptions(this, options);
             this._layers = {};
@@ -34,11 +34,11 @@ L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
             this.blurredLocationDisplay = new BlurredLocationDisplay(this.options_display);
         },
 
-        onRemove: function (map) {
+        onRemove: map => {
           
             this._layers = {} ;
             this.blurredLocationDisplay.removeLBLD() ;
-            var lbld =  this.blurredLocationDisplay ;
+            let lbld =  this.blurredLocationDisplay ;
             setTimeout(function(){ lbld.removeLBLD() ;}, 2000) ;
             setTimeout(function(){ lbld.removeLBLD() ;}, 5000) ;
             setTimeout(function(){ lbld.removeLBLD() ;}, 7000) ;
@@ -49,6 +49,5 @@ L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
 );
 
 
-L.layerGroup.pLpeopleLayer = function (options) {
-    return new L.LayerGroup.PLpeopleLayer(options) ;
-};
+L.layerGroup.pLpeopleLayer = options => new L.LayerGroup.PLpeopleLayer(options) ;
+
