@@ -7,9 +7,8 @@ L.Icon.ToxicReleaseIcon = L.Icon.extend({
     }
 });
 
-L.icon.toxicReleaseIcon = function () {
-    return new L.Icon.ToxicReleaseIcon();
-};
+L.icon.toxicReleaseIcon = () => new L.Icon.ToxicReleaseIcon();
+
 
 
 L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
@@ -24,21 +23,21 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
             maxZoom: 18
         },
 
-        initialize: function (options) {
+        initialize: options => {
             options = options || {};
             L.Util.setOptions(this, options);
             this._layers = {};
 
         },
 
-        onAdd: function (map) {
+        onAdd: map => {
             map.on('moveend', this.requestData, this);
             this._map = map;
             this.requestData();
 
         },
 
-        onRemove: function (map) {
+        onRemove: map => {
             map.off('moveend', this.requestData, this);
             if(typeof map.spin === 'function'){
               map.spin(false) ;
@@ -47,20 +46,20 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
             this._layers = {};
         },
 
-        requestData: function () {
-                var self = this ;
-                (function() {
-                    var script = document.createElement("SCRIPT");
+        requestData: () => {
+                let self = this ;
+                (() => {
+                    let script = document.createElement("SCRIPT");
                     script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
                     script.type = 'text/javascript';
-                    var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
-                    script.onload = function() {
-                        var $ = window.jQuery;
-                        var TRI_url = "https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/"+parseInt(origin.lat)+"/PREF_LONGITUDE/BEGINNING/"+parseInt(-1*origin.lng)+"/rows/0:300/JSON" ;
+                    let zoom = self._map.getZoom(), origin = self._map.getCenter() ;
+                    script.onload = () => {
+                        let $ = window.jQuery;
+                        let TRI_url = "https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/"+parseInt(origin.lat)+"/PREF_LONGITUDE/BEGINNING/"+parseInt(-1*origin.lng)+"/rows/0:300/JSON" ;
                         if(typeof self._map.spin === 'function'){
                           self._map.spin(true) ;
                         }
-                        $.getJSON(TRI_url , function(data){
+                        $.getJSON(TRI_url , data => {
                          // console.log(parseInt(origin.lat) +" and "+parseInt(origin.lng)) ;
                          self.parseData(data) ;
                          if(typeof self._map.spin === 'function'){
@@ -74,25 +73,25 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
 
         },
 
-        getMarker: function (data) {
+        getMarker: data => {
 
-            var greenDotIcon =new L.icon.toxicReleaseIcon();
-              var lat = data.PREF_LATITUDE ;
-              var lng = -1*data.PREF_LONGITUDE;
+            let greenDotIcon = () => new L.icon.toxicReleaseIcon();
+              let lat = data.PREF_LATITUDE ;
+              let lng = -1*data.PREF_LONGITUDE;
              // console.log(lat +"  "+lng) ;
-              var fac_name = data.FACILITY_NAME ;
-              var city = data.CITY_NAME ;
-              var mail_street_addr = data.MAIL_STREET_ADDRESS ;
-              var contact = data.ASGN_PUBLIC_PHONE ;
-              var tri_marker ;
+              let fac_name = data.FACILITY_NAME ;
+              let city = data.CITY_NAME ;
+              let mail_street_addr = data.MAIL_STREET_ADDRESS ;
+              let contact = data.ASGN_PUBLIC_PHONE ;
+              let tri_marker ;
               if (!isNaN((lat)) && !isNaN((lng)) ){
                 tri_marker = L.marker([lat , lng] , {icon: greenDotIcon}).bindPopup("<strong>Name : </strong>" + fac_name + "<br><strong> City :" + city +"</strong>" + "<br><strong> Street address : " + mail_street_addr + "</strong><br><strong> Contact : " + contact + "</strong><br>Lat :"+lat+"<br>Lon :"+lng +"<br><i>From the <a href='https://github.com/publiclab/leaflet-environmental-layers/pull/8'>Toxic Release Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>") ;
               }
             return tri_marker ;
         },
 
-        addMarker: function (data) {
-            var marker = this.getMarker(data),
+        addMarker: data => {
+            let marker = this.getMarker(data),
 
              key = data.TRI_FACILITY_ID ;
 
@@ -102,7 +101,7 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
             }
         },
 
-        parseData: function (data) {
+        parseData: data => {
 
         if (!!data){
            for (i = 0 ; i < data.length ; i++) {
@@ -115,8 +114,8 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
           }
         },
 
-        clearOutsideBounds: function () {
-            var bounds = this._map.getBounds(),
+        clearOutsideBounds: () => {
+            let bounds = this._map.getBounds(),
                 latLng,
                 key;
 
@@ -134,6 +133,5 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
     }
 );
 
-L.layerGroup.toxicReleaseLayer = function (options) {
-    return new L.LayerGroup.ToxicReleaseLayer(options);
-};
+L.layerGroup.toxicReleaseLayer = options => new L.LayerGroup.ToxicReleaseLayer(options);
+

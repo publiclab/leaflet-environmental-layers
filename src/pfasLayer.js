@@ -7,9 +7,8 @@ L.Icon.PfasLayerIcon = L.Icon.extend({
   }
 });
 
-L.icon.pfasLayerIcon = function () {
-    return new L.Icon.PfasLayerIcon();
-};
+L.icon.pfasLayerIcon = () => new L.Icon.PfasLayerIcon();
+
 
 L.LayerGroup.PfasLayer = L.LayerGroup.extend(
 
@@ -18,18 +17,18 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
             url: 'https://spreadsheets.google.com/feeds/list/1cjQ3H_DX-0dhVL5kMEesFEKaoJKLfC2wWAhokMnJxV4/1/public/values?alt=json',
         },
 
-        initialize: function (options) {
+        initialize: options => {
             options = options || {};
             L.Util.setOptions(this, options);
             this._layers = {};
         },
 
-        onAdd: function (map) {
+        onAdd: map => {
             this._map = map;
             this.requestData();
         },
 
-        onRemove: function (map) {
+        onRemove: map => {
             this.clearLayers();
             if(typeof map.spin === 'function'){
               map.spin(false) ;
@@ -37,20 +36,20 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
             this._layers = {};
         },
 
-        requestData: function () {
-           var self = this;
-                (function() {
-                    var script = document.createElement("SCRIPT");
+        requestData: () => {
+           let self = this;
+                (() => {
+                    let script = document.createElement("SCRIPT");
                     script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
                     script.type = 'text/javascript';
 
-                    script.onload = function() {
-                        var $ = window.jQuery;
-                        var PFAS_URL = "https://spreadsheets.google.com/feeds/list/1cjQ3H_DX-0dhVL5kMEesFEKaoJKLfC2wWAhokMnJxV4/1/public/values?alt=json" ;
+                    script.onload = () => {
+                        let $ = window.jQuery;
+                        let PFAS_URL = "https://spreadsheets.google.com/feeds/list/1cjQ3H_DX-0dhVL5kMEesFEKaoJKLfC2wWAhokMnJxV4/1/public/values?alt=json" ;
                         if(typeof self._map.spin === 'function'){
                           self._map.spin(true) ;
                         }
-                        $.getJSON(PFAS_URL , function(data){
+                        $.getJSON(PFAS_URL , data => {
                         self.parseData(data.feed.entry);
                         if(typeof self._map.spin === 'function'){
                           self._map.spin(false) ;
@@ -63,19 +62,19 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
 
         },
 
-        getMarker: function(data) {
-            var redDotIcon = new L.icon.pfasLayerIcon();
+        getMarker: data => {
+            let redDotIcon = new L.icon.pfasLayerIcon();
             //added the column names which are formatted here and called in the generatePopup function
-            var props = ["contaminationsite", "natureofsources", "location", "pfoapfos","dateofdiscovery","suspectedcontaminationsource","suspectedsourceurl", "otherpfas", "reggovresponse", "litigationdetails", "latitude", "longitude"];
-            var item = {};
-            props.forEach(function(element) {
+            let props = ["contaminationsite", "natureofsources", "location", "pfoapfos","dateofdiscovery","suspectedcontaminationsource","suspectedsourceurl", "otherpfas", "reggovresponse", "litigationdetails", "latitude", "longitude"];
+            let item = {};
+            props.forEach(element => {
                 item[element] = data["gsx$" + element]["$t"];
             });
 
             item["latitude"] = item["latitude"].replace(/[^\d.-]/g, "");
             item["latitude"] = item["latitude"].replace(/[^\d.-]/g, "");
 
-            var pfasTracker;
+            let pfasTracker;
             pfasTracker = L.marker([item["latitude"], item["longitude"]], {
                 icon: redDotIcon
             }).bindPopup(this.generatePopup(item));
@@ -83,13 +82,13 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
             return pfasTracker;
         },
 
-        generatePopup: function(item) {
-            var content = "<strong><center>" + item["contaminationsite"] + "</strong></center><hr /><br />";
+        generatePopup: item => {
+            let content = "<strong><center>" + item["contaminationsite"] + "</strong></center><hr /><br />";
             
-            var regResponse = item["reggovresponse"];
-            var regResponseTruncate = regResponse.split(" ").splice(0,30).join(" ");
-            var litigation = item["litigationdetails"];
-            var litigationTruncate = 
+            let regResponse = item["reggovresponse"];
+            let regResponseTruncate = regResponse.split(" ").splice(0,30).join(" ");
+            let litigation = item["litigationdetails"];
+            let litigationTruncate = 
             litigation.split(" ").splice(0,30).join(" ");
             
             if(item["dateofdiscovery"]) content += "<strong> Date of Discovery:</strong> " + item["dateofdiscovery"] + '</span>' + "<br>";
@@ -115,12 +114,12 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
             }
 
             
-            var generics = ["location"];
+            let generics = ["location"];
 
-            for (var i = 0; i < generics.length; i++) {
-                var key = generics[i];
+            for (let i = 0; i < generics.length; i++) {
+                let key = generics[i];
                 if (!!item[generics[i]]) {
-                    var itemContent = item[generics[i]];
+                    let itemContent = item[generics[i]];
                     key = key.charAt(0).toUpperCase() + key.slice(1);
                     content += key + ": " + itemContent + "<br>";
                 }
@@ -131,18 +130,18 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
             return content;
         },
 
-        addMarker: function (data) {
+        addMarker: data => {
             //changed this to the value from my dataset
-            //var key = data.gsx$name.$t; 
-            var key = data.gsx$contaminationsite.$t;
+            //let key = data.gsx$name.$t; 
+            let key = data.gsx$contaminationsite.$t;
             if (!this._layers[key]) {
-                var marker = this.getMarker(data);
+                let marker = this.getMarker(data);
                 this._layers[key] = marker;
                 this.addLayer(marker);
             }
         },
 
-        parseData: function (data) {
+        parseData: data => {
             for (i = 1 ; i < data.length ; i++) {
              this.addMarker(data[i]) ;
             }
@@ -151,7 +150,6 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
 );
 
 
-L.layerGroup.pfasLayer = function (options) {
-    return new L.LayerGroup.PfasLayer(options) ;
-};
+L.layerGroup.pfasLayer = options => new L.LayerGroup.PfasLayer(options);
+
 

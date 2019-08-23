@@ -6,7 +6,7 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
             clearOutsideBounds: false
         },
 
-        initialize: function(options) {
+        initialize: options => {
             options = options || {};
             L.Util.setOptions(this, options);
             this._layers = {};
@@ -18,14 +18,14 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
             }; //Colors for each of the 3 usage types
         },
 
-        onAdd: function(map) {
+        onAdd: map => {
             map.on('moveend', this.requestData, this);
             this._map = map;
             this.requestData();
 
         },
 
-        onRemove: function(map) {
+        onRemove: map => {
             map.off('moveend', this.requestData, this);
             if(typeof map.spin === 'function'){
               map.spin(false);
@@ -34,21 +34,21 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
             this._layers = {};
         },
 
-        requestData: function() {
-            var self = this;
+        requestData: () => {
+            let self = this;
             (function() {
-                var script = document.createElement("SCRIPT");
+                let script = document.createElement("SCRIPT");
                 script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
                 script.type = 'text/javascript';
-                var northeast = self._map.getBounds().getNorthEast(),
+                let northeast = self._map.getBounds().getNorthEast(),
                     southwest = self._map.getBounds().getSouthWest();
 
-                script.onload = function() {
-                    var $ = window.jQuery;
-                    var countLayers = 0;
-                    for (var key in self._colorOptions) {
+                script.onload = () => {
+                    let $ = window.jQuery;
+                    let countLayers = 0;
+                    for (let key in self._colorOptions) {
                         //Generate URL for each type
-                        var LMQ_url = "http://www.overpass-api.de/api/xapi?*[landuse=" + key + "][bbox=" + (southwest.lng) + "," + (southwest.lat) + "," + (northeast.lng) + "," + (northeast.lat) + "]";
+                        let LMQ_url = "http://www.overpass-api.de/api/xapi?*[landuse=" + key + "][bbox=" + (southwest.lng) + "," + (southwest.lat) + "," + (northeast.lng) + "," + (northeast.lat) + "]";
                         if(typeof self._map.spin === 'function'){
                           self._map.spin(true);
                         }
@@ -83,20 +83,20 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
 
         },
 
-        getPolygon: function(selector) {
-            var latlngs = [];
-            var self = this;
+        getPolygon: selector => {
+            let latlngs = [];
+            let self = this;
 
-            var id = $(selector).attr('id');
-            $(selector).find('nd').each(function() {
+            let id = $(selector).attr('id');
+            $(selector).find('nd').each(() => {
                 if (self._nodes[$(this).attr('ref')]) { //Find the coordinates based on the node id
-                    var coords = self._nodes[$(this).attr('ref')];
+                    let coords = self._nodes[$(this).attr('ref')];
                     latlngs.push([coords.lat, coords.lng]); //Add node coordinates
                 } else {
                     console.log("ERROR: COULDN'T FIND THE NODE ID");
                 }
             });
-            var LSMPoly;
+            let LSMPoly;
             LSMPoly = L.polygon(latlngs, {
                 color: self._colorOptions[$(selector).find('tag[k="landuse"]').attr('v')] //Selects color based on the value for the landuse key
             }).bindPopup(self.getPopupContent(selector));
@@ -104,12 +104,12 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
             return LSMPoly;
         },
 
-        getPopupContent: function(selector) {
-            var content = '';
+        getPopupContent: selector => {
+            let content = '';
             //Add each key value pair found
-            $(selector).find('tag').each(function() {
-                var key = $(this).attr('k');
-                var val = $(this).attr('v');
+            $(selector).find('tag').each(() => {
+                let key = $(this).attr('k');
+                let val = $(this).attr('v');
                 if (key === 'landuse') val = val.charAt(0).toUpperCase() + val.slice(1); //Capitalize first letter of the landuse
                 key = key.charAt(0).toUpperCase() + key.slice(1); //Capitalize first letter
                 //Check if the value is a link
@@ -125,24 +125,24 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
             return content;
         },
 
-        addPolygon: function(selector) {
-            var key = $(selector).attr('id'); //Use the id for the way as the key
+        addPolygon: selector => {
+            let key = $(selector).attr('id'); //Use the id for the way as the key
             if (!this._layers[key]) {
-                var poly = this.getPolygon(selector, key);
+                let poly = this.getPolygon(selector, key);
                 this._layers[key] = poly;
                 this.addLayer(poly);
             }
         },
 
-        parseData: function(data) {
-            var self = this;
+        parseData: data => {
+            let self = this;
 
             (function() {
                 //Create the map of nodes
-                $(data).find('node').each(function() {
-                    var id = $(this).attr('id'); //Use id as the key
-                    var nodeLat = $(this).attr('lat');
-                    var nodeLng = $(this).attr('lon');
+                $(data).find('node').each(() => {
+                    let id = $(this).attr('id'); //Use id as the key
+                    let nodeLat = $(this).attr('lat');
+                    let nodeLng = $(this).attr('lon');
 
                     if (!self._nodes[id]) {
                         self._nodes[id] = { //Set value as lat, lng pair provided key doesn't exist
@@ -154,8 +154,8 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
                 });
             })();
 
-            (function() {
-                $(data).find('way').each(function() { //Add for each way
+            (() => {
+                $(data).find('way').each(() => { //Add for each way
                     self.addPolygon(this);
                 })
             })();
@@ -165,8 +165,8 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
             }
         },
 
-        clearOutsideBounds: function() {
-            var bounds = this._map.getBounds(),
+        clearOutsideBounds: () => {
+            let bounds = this._map.getBounds(),
                 polyBounds,
                 key;
 
@@ -185,6 +185,5 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
 );
 
 
-L.layerGroup.osmLandfillMineQuarryLayer = function(options) {
-    return new L.LayerGroup.OSMLandfillMineQuarryLayer(options);
-};
+L.layerGroup.osmLandfillMineQuarryLayer = options => new L.LayerGroup.OSMLandfillMineQuarryLayer(options);
+

@@ -1,16 +1,16 @@
 function myWindroseMarker(data) {
-	var content = '<canvas id="id_' + data.id + '" width="50" height="50"></canvas>';
-	var icon = L.divIcon({html: content, iconSize: [50,50], className: 'owm-div-windrose'});
+	let content = '<canvas id="id_' + data.id + '" width="50" height="50"></canvas>';
+	let icon = L.divIcon({html: content, iconSize: [50,50], className: 'owm-div-windrose'});
 	return L.marker([data.coord.Lat, data.coord.Lon], {icon: icon, clickable: false});
 }
 
 function myWindroseDrawCanvas(data, owm) {
 
-	var canvas = document.getElementById('id_' + data.id);
+	let canvas = document.getElementById('id_' + data.id);
 	canvas.title = data.name;
-	var angle = 0;
-	var speed = 0;
-	var gust = 0;
+	let angle = 0;
+	let speed = 0;
+	let gust = 0;
 	if (typeof data.wind != 'undefined') {
 		if (typeof data.wind.speed != 'undefined') {
 			canvas.title += ', ' + data.wind.speed + ' m/s';
@@ -27,8 +27,8 @@ function myWindroseDrawCanvas(data, owm) {
 		}
 	}
 	if (canvas.getContext && speed > 0) {
-		var red = 0;
-		var green = 0;
+		let red = 0;
+		let green = 0;
 		if (speed <= 10) {
 			green = 10*speed+155;
 			red = 255*speed/10.0;
@@ -36,7 +36,7 @@ function myWindroseDrawCanvas(data, owm) {
 			red = 255;
 			green = 255-(255*(Math.min(speed, 21)-10)/11.0);
 		}
-		var ctx = canvas.getContext('2d');
+		let ctx = canvas.getContext('2d');
 		ctx.translate(25, 25);
 		ctx.rotate(angle*Math.PI/180);
 		ctx.fillStyle = 'rgb(' + Math.floor(red) + ',' + Math.floor(green) + ',' + 0 + ')';
@@ -74,11 +74,11 @@ function myWindroseDrawCanvas(data, owm) {
 }
 
 function windroseAdded(e) {
-	for (var i in this._markers) {
-		var m = this._markers[i];
-		var cv = document.getElementById('id_' + m.options.owmId);
-		for (var j in this._cache._cachedData.list) {
-			var station = this._cache._cachedData.list[j];
+	for (let i in this._markers) {
+		let m = this._markers[i];
+		let cv = document.getElementById('id_' + m.options.owmId);
+		for (let j in this._cache._cachedData.list) {
+			let station = this._cache._cachedData.list[j];
 			if (station.id == m.options.owmId) {
 				myWindroseDrawCanvas(station, this);
 			}

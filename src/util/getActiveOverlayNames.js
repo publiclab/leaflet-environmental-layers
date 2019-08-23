@@ -1,9 +1,9 @@
 L.Control.Layers.include({
-  getActiveOverlayNames: function() {
+  getActiveOverlayNames: () => {
     
-    var layers = [];
-    var control = this;
-    this._layers.forEach(function(layerObj) {
+    let layers = [];
+    let control = this;
+    this._layers.forEach(layerObj => {
       if(layerObj.overlay) {
         
         layerName = layerObj.name;

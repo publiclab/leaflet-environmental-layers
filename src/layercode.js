@@ -10,20 +10,20 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
             target: '_self',
         },
 
-        initialize: function (name,options) {
+        initialize: (name,options) => {
             this.layer = name;
             options = options || {};
             L.Util.setOptions(this, options);
             this._layers = {};
         },
 
-        onAdd: function (map) {
+        onAdd:  map => {
             map.on('moveend', this.requestData, this);
             this._map = map;
             this.requestData();
         },
 
-        onRemove: function (map) {
+        onRemove: map => {
             map.off('moveend', this.requestData, this);
             if(typeof map.spin === 'function'){
               map.spin(false) ;
@@ -32,21 +32,21 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
             this._layers = {};
         },
 
-        populatePopUp: function (e) {
+        populatePopUp: e => {
         	if(this.layer == "opensense"){
 		    if (e) {
-		      var popup = e.target.getPopup();
-		      var $ = window.jQuery;
-		      var url = "https://api.opensensemap.org/boxes/" + e.target.options.boxId;
-		      $.getJSON(url, function (data) {
-		        var popUpContent = "";
+		      let popup = e.target.getPopup();
+		      let $ = window.jQuery;
+		      let url = "https://api.opensensemap.org/boxes/" + e.target.options.boxId;
+		      $.getJSON(url, data => {
+		        let popUpContent = "";
 		        if (data.name && data.grouptag) {
 		          popUpContent += "<h3>" + data.name + "," + data.grouptag + "</h3>";
 		        }
 		        else if (data.name) {
 		          popUpContent += "<h3>" + data.name + "</h3>";
 		        }
-		        for (var i in data.sensors) {
+		        for (let i in data.sensors) {
 		          if (data.sensors[i].lastMeasurement) {
 		            popUpContent += "<span><b>" + data.sensors[i].title + ": </b>" +
 		              data.sensors[i].lastMeasurement.value +
@@ -63,12 +63,12 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         },
 
 
-        requestData: function () {
-           var self = this;
-                (function() {
-                    var zoom;
-                    var Layer_URL;
-                    var $ = window.jQuery;
+        requestData:  () => {
+           let self = this;
+                (() => {
+                    let zoom;
+                    let Layer_URL;
+                    let $ = window.jQuery;
 
                     if (self.layer == "fractracker"){
                         Layer_URL = "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json" ;
@@ -104,7 +104,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                     if(typeof self._map.spin === 'function'){
                         self._map.spin(true) ;
                     }
-                    $.getJSON(Layer_URL , function(data){
+                    $.getJSON(Layer_URL , data => {
                     if(self.layer == "fractracker")
                         self.parseData(data.feed.entry);
                     if(self.layer == "openaq")
@@ -120,19 +120,19 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
 
         },
 
-        getMarker: function(data) {
+        getMarker: data => {
             if(this.layer == "fractracker"){
-                var redDotIcon = new L.icon.fracTrackerIcon();
-                var props = ["timestamp", "name", "summary", "website", "contact", "email", "phone", "streetaddress", "city", "state", "zipcode", "latitude", "longitude", "category"];
-                var item = {};
-                props.forEach(function(element) {
+                let redDotIcon = new L.icon.fracTrackerIcon();
+                let props = ["timestamp", "name", "summary", "website", "contact", "email", "phone", "streetaddress", "city", "state", "zipcode", "latitude", "longitude", "category"];
+                let item = {};
+                props.forEach(element => {
                     item[element] = data["gsx$" + element]["$t"];
                 });
                 item["updated"] = data.updated.$t;
                 item["use"] = (data.gsx$useformap.$t.replace(/\s+/g, '').toLowerCase() === "use");
                 item["latitude"] = item["latitude"].replace(/[^\d.-]/g, "");
                 item["latitude"] = item["latitude"].replace(/[^\d.-]/g, "");
-                var fracTracker;
+                let fracTracker;
                 fracTracker = L.marker([item["latitude"], item["longitude"]], {
                     icon: redDotIcon
                 }).bindPopup(this.generatePopup(item));
@@ -140,12 +140,12 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
            }
 
            if(this.layer == "skytruth"){
-                var redDotIcon =new L.icon.skyTruthIcon();
-                var lat = data.lat ;
-                var lng = data.lng;
-                var title = data.title ;
-                var url = data.link ;
-                var skymarker ;
+                let redDotIcon = new L.icon.skyTruthIcon();
+                let lat = data.lat ;
+                let lng = data.lng;
+                let title = data.title ;
+                let url = data.link ;
+                let skymarker ;
                 if (!isNaN(lat) && !isNaN(lng) ){
                   skymarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(
                   	"<a href="+url+">" +title + "</a><br>" + 
@@ -157,12 +157,12 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
            }
 
            if(this.layer == "odorreport"){
-                var redDotIcon =new L.icon.odorReportIcon() ;
-                var lat = data.values["bcc29002-c4d3-4c2c-92c7-1c9032c3b0fd"][0].lat ;
-                var lng = data.values["bcc29002-c4d3-4c2c-92c7-1c9032c3b0fd"][0].lon ;
-                var title = data.title ;
-                var url = data.url ;
-                var odormarker ;
+                let redDotIcon =new L.icon.odorReportIcon() ;
+                let lat = data.values["bcc29002-c4d3-4c2c-92c7-1c9032c3b0fd"][0].lat ;
+                let lng = data.values["bcc29002-c4d3-4c2c-92c7-1c9032c3b0fd"][0].lon ;
+                let title = data.title ;
+                let url = data.url ;
+                let odormarker ;
                 if (!isNaN(lat) && !isNaN(lng) ){
                   odormarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(title + 
                   	"<br><a href="+url+">" + url +"</a>" + 
@@ -174,19 +174,19 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
            }
 
            if(this.layer == "mapknitter"){
-                var redDotIcon =new L.icon.mapKnitterIcon();
-                var lat = data.lat ;
-                var lng = data.lon;
-                var title = data.name ;
-                var location = data.location ;
-                var author = data.author ;
-                var url = "https://publiclab.org/profile/" + author ;
-                var map_page = "https://mapknitter.org/maps/"+ title ;
-                var image_url ;
+                let redDotIcon =new L.icon.mapKnitterIcon();
+                let lat = data.lat ;
+                let lng = data.lon;
+                let title = data.name ;
+                let location = data.location ;
+                let author = data.author ;
+                let url = "https://publiclab.org/profile/" + author ;
+                let map_page = "https://mapknitter.org/maps/"+ title ;
+                let image_url ;
                 if(data.image_urls.length > 0){
                   image_url = data.image_urls[0] ;
                 }
-                var mapknitter ;
+                let mapknitter ;
                 if (!isNaN(lat) && !isNaN(lng) ){
                   if(image_url !== undefined){
                     mapknitter = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(
@@ -213,12 +213,12 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
 
              if(this.layer == "luftdaten")
              {
-             	var greenIcon = new L.icon.luftdatenIcon();
-      			var country = data.location.country;
-      			var lng = data.location.longitude;
-      			var lat = data.location.latitude;
-      			var sensorID = data.sensor.id;
-      			var popupContent = "";
+             	let greenIcon = new L.icon.luftdatenIcon();
+      			let country = data.location.country;
+      			let lng = data.location.longitude;
+      			let lat = data.location.latitude;
+      			let sensorID = data.sensor.id;
+      			let popupContent = "";
 			    if(country){
 			        popupContent += "<h3>Country: " + country + "</h3>";
 			      }
@@ -236,12 +236,12 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
 
 			 if(this.layer == "openaq")
 			 {
-			 	var redDotIcon = new L.icon.openaqIcon();
-                var distance = data.distance;
-                var lat = data.coordinates.latitude;
-                var lon = data.coordinates.longitude;
-                var  contentData = "";
-                var labels = {
+			 	let redDotIcon = new L.icon.openaqIcon();
+                let distance = data.distance;
+                let lat = data.coordinates.latitude;
+                let lon = data.coordinates.longitude;
+                let  contentData = "";
+                let labels = {
                     pm25: "PM<sub>2.5</sub>",
                     pm10: "PM<sub>10</sub>",
                     o3: "Ozone",
@@ -249,7 +249,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                     so2: "Sulphur Dioxide",
                     co: "Carbon Monoxide",
                     };
-                for(var i = 0; i < data.measurements.length; i++) {
+                for(let i = 0; i < data.measurements.length; i++) {
                     contentData+="<strong>"+labels[data.measurements[i].parameter]+" : </strong>"+data.measurements[i].value+" "+data.measurements[i].unit+"<br>";
                 }
                 return L.marker([lat, lon], {icon: redDotIcon}).bindPopup(
@@ -260,24 +260,24 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
 
 			 if(this.layer == "opensense")
 			 {
-			 	var blackCube = new L.icon.openSenseIcon();
-			    var lat = data.currentLocation.coordinates[1];
-			    var lng = data.currentLocation.coordinates[0];
-			    var loadingText = "Loading ...";
+			 	let blackCube = new L.icon.openSenseIcon();
+			    let lat = data.currentLocation.coordinates[1];
+			    let lng = data.currentLocation.coordinates[0];
+			    let loadingText = "Loading ...";
 			    return L.marker([lat, lng], { icon: blackCube, boxId: data._id }).bindPopup(loadingText);
 			 }
 
              if(this.layer == "purpleairmarker")
              {
-                var redDotIcon =new L.icon.purpleAirMarkerIcon();
-                var lat = data[25] ;  
-                var lng = data[26] ;  
-                var value = parseFloat(data[16]) ;  
-                var Label = data[24] ;  
-                var temp_f = data[21] ;  
-                var humidity = data[20] ; 
-                var pressure = data[22] ; 
-                var purpleAirMarker ;
+                let redDotIcon =new L.icon.purpleAirMarkerIcon();
+                let lat = data[25] ;  
+                let lng = data[26] ;  
+                let value = parseFloat(data[16]) ;  
+                let Label = data[24] ;  
+                let temp_f = data[21] ;  
+                let humidity = data[20] ; 
+                let pressure = data[22] ; 
+                let purpleAirMarker ;
                 if(lat!=null && lng!=null){
                 purpleAirMarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup("<i style='color: purple ; size : 20px'>Label : " + Label + "</i><br><br> <strong>PM2.5 Value : " + value +"</strong><br><strong> Lat: " + lat + "</strong><br><strong> Lon: " + lng + "<br>Temp (F) : "+temp_f+"<br>Humidity : " + humidity + "<br>Pressure : " + pressure +"<br><br> <i>Data provided by <a href='www.purpleair.com'>www.purpleair.com</a></i>") ;
                 }
@@ -285,16 +285,16 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                 }
         },
 
-        generatePopup: function(item) {
+        generatePopup: item => {
             if(this.layer == "fractracker"){
-                var content = "<strong>" + item["name"] + "</strong> ";
+                let content = "<strong>" + item["name"] + "</strong> ";
                 if(item["website"]) content += "(<a href=" + item["website"] + ">website</a>" + ")";
                 content += "<hr>";
                 if(!!item["Descrition"]) content += "Description: <i>" + item["summary"] + "</i><br>";
                 if(!!item["contact"]) content += "<strong>Contact: " + item["contact"] + "<br></strong>";
-                var generics = ["phone", "email", "street", "city", "state", "zipcode", "timestamp", "latitude", "longitude"];
-                for (var i = 0; i < generics.length; i++) {
-                    var key = generics[i];
+                let generics = ["phone", "email", "street", "city", "state", "zipcode", "timestamp", "latitude", "longitude"];
+                for (let i = 0; i < generics.length; i++) {
+                    let key = generics[i];
                     if (!!item[generics[i]]) {
                         itemContent = item[generics[i]];
                         key = key.charAt(0).toUpperCase() + key.slice(1);
@@ -307,17 +307,17 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
             }
         },
 
-        addMarker: function (data) {
+        addMarker:  data => {
             if(this.layer == "fractracker"){
-            var key = data.gsx$name.$t;
+            let key = data.gsx$name.$t;
             if (!this._layers[key]) {
-                var marker = this.getMarker(data);
+                let marker = this.getMarker(data);
                 this._layers[key] = marker;
                 this.addLayer(marker);
             }
             }
             if(this.layer == "purpleairmarker"){
-            var marker = this.getMarker(data) ;
+            let marker = this.getMarker(data) ;
             if(marker != null){
             key = data[0] ;  // ID
             if (!this._layers[key]) {
@@ -327,7 +327,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
             }
             }
             else{
-            var marker = this.getMarker(data),
+            let marker = this.getMarker(data),
             key = data.id;
             if (!this._layers[key]) {
                 this._layers[key] = marker;
@@ -336,19 +336,19 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
             }
         },
 
-        addMarker1: function (data, i) {
+        addMarker1: (data, i) => {
             if(this.layer == "luftdaten" || this.layer == "openaq"){
-            var self = this;
-            var marker = this.getMarker(data);
-            var key = i;  
+            let self = this;
+            let marker = this.getMarker(data);
+            let key = i;  
             if (!this._layers[key]) {
             this._layers[key] = marker;
             this.addLayer(marker);
             }
             }
             else{
-            var marker = this.getMarker(data);
-            var key = i;
+            let marker = this.getMarker(data);
+            let key = i;
             if (!this._layers[key]) {
               this._layers[key] = marker;
               marker.on('click', this.populatePopUp);
@@ -357,7 +357,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
             }
         },
 
-        parseData: function (data) {
+        parseData: data => {
             if(this.layer == "fractracker"){
                 for (i = 1 ; i < data.length ; i++) {
                  this.addMarker(data[i]) ;
@@ -392,13 +392,13 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                 }
             }
             if(this.layer == "luftdaten" || this.layer == "opensense"){
-            	for (var i = 0; i < data.length; i++) {
+            	for (let i = 0; i < data.length; i++) {
                 this.addMarker1(data[i],i);
                 }
             }
             if(this.layer == "openaq"){
             	if(!!data) {
-                for(var i = 0; i <data.length; i++) {
+                for(let i = 0; i <data.length; i++) {
                 if(!!data[i].coordinates){
                 this.addMarker1(data[i],i);
                 }
@@ -415,8 +415,8 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
             }
         },
 
-        clearOutsideBounds: function () {
-            var bounds = this._map.getBounds(),
+        clearOutsideBounds: () => {
+            let bounds = this._map.getBounds(),
             latLng,
             key;
             for (key in this._layers) {
@@ -433,10 +433,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
 );
 
 
-L.layerGroup.layerCode = function (name,options) {
-    return new L.LayerGroup.LayerCode(name,options) ;
-};
-
+L.layerGroup.layerCode = (name,options) => new L.LayerGroup.LayerCode(name,options);
 
 L.Icon.FracTrackerIcon = L.Icon.extend({
    options: {
@@ -447,9 +444,8 @@ L.Icon.FracTrackerIcon = L.Icon.extend({
   }
 });
 
-L.icon.fracTrackerIcon = function () {
-    return new L.Icon.FracTrackerIcon();
-};
+L.icon.fracTrackerIcon = () => new L.Icon.FracTrackerIcon();
+
 
 L.Icon.SkyTruthIcon = L.Icon.extend({
   options: {
@@ -460,9 +456,7 @@ L.Icon.SkyTruthIcon = L.Icon.extend({
   }
 });
 
-L.icon.skyTruthIcon = function () {
-  return new L.Icon.SkyTruthIcon();
-};
+L.icon.skyTruthIcon = () => new L.Icon.SkyTruthIcon();
 
 L.Icon.OdorReportIcon = L.Icon.extend({
     options: {
@@ -473,9 +467,7 @@ L.Icon.OdorReportIcon = L.Icon.extend({
     }
 });
 
-L.icon.odorReportIcon = function () {
-    return new L.Icon.OdorReportIcon();
-};
+L.icon.odorReportIcon = () => new L.Icon.OdorReportIcon();
 
 L.Icon.MapKnitterIcon = L.Icon.extend({
     options: {
@@ -488,9 +480,8 @@ L.Icon.MapKnitterIcon = L.Icon.extend({
     }
 });
 
-L.icon.mapKnitterIcon = function () {
-    return new L.Icon.MapKnitterIcon();
-};
+L.icon.mapKnitterIcon = () => new L.Icon.MapKnitterIcon();
+
 
 L.Icon.LuftdatenIcon = L.Icon.extend({
   options: {
@@ -501,9 +492,8 @@ L.Icon.LuftdatenIcon = L.Icon.extend({
   }
 });
 
-L.icon.luftdatenIcon = function () {
-  return new L.Icon.LuftdatenIcon();
-};
+L.icon.luftdatenIcon = () => new L.Icon.LuftdatenIcon();
+
 
 L.Icon.OpenAqIcon = L.Icon.extend({
   options: {
@@ -516,9 +506,7 @@ L.Icon.OpenAqIcon = L.Icon.extend({
   }
 });
 
-L.icon.openaqIcon = function () {
-  return new L.Icon.OpenAqIcon();
-};
+L.icon.openaqIcon = () => new L.Icon.OpenAqIcon();
 
 L.Icon.OpenSenseIcon = L.Icon.extend({
   options: {
@@ -528,9 +516,7 @@ L.Icon.OpenSenseIcon = L.Icon.extend({
   }
 });
 
-L.icon.openSenseIcon = function () {
-  return new L.Icon.OpenSenseIcon();
-};
+L.icon.openSenseIcon = () => new L.Icon.OpenSenseIcon();
 
 L.Icon.PurpleAirMarkerIcon = L.Icon.extend({
    options: {
@@ -541,6 +527,4 @@ L.Icon.PurpleAirMarkerIcon = L.Icon.extend({
   }
 });
 
-L.icon.purpleAirMarkerIcon = function () {
-    return new L.Icon.PurpleAirMarkerIcon();
-};
+L.icon.purpleAirMarkerIcon = () => new L.Icon.PurpleAirMarkerIcon();
