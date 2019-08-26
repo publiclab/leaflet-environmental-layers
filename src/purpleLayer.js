@@ -16,7 +16,7 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
              blur: 0.75
         },
 
-        initialize: function (options) {
+        initialize:  (options) => {
             options = options || {};
             L.Util.setOptions(this, options);
             this._layers = {};
@@ -24,7 +24,7 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
             this.heatmapLayer ;
         },
 
-        onAdd: function (map) {
+        onAdd: (map) => {
              this._map = map;
              this.heatmapLayer = new HeatmapOverlay(this.options) ;
              this.requestData();
@@ -32,7 +32,7 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
 
         },
 
-        onRemove: function (map) {
+        onRemove: (map) => {
             this._map.removeLayer(this.heatmapLayer) ;
             if(typeof map.spin === 'function'){
               map.spin(false) ;
@@ -41,9 +41,9 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
             this._layers = {};
         },
 
-        requestData: function () {
+        requestData: () => {
            var self = this;
-                (function() {
+                (() => {
                     var $ = window.jQuery;
                     var PurpleLayer_url = "https://www.purpleair.com/json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L";
                     if(typeof self._map.spin === 'function'){
@@ -60,7 +60,7 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
 
         },
 
-        getMarker: function (data) {
+        getMarker: (data) => {
               var lat = data.Lat;
               var lng = data.Lon;
               var value = parseFloat(data.PM2_5Value);  //PM2.5 VALUE in microgram per metre cube
@@ -99,11 +99,11 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
               return purpleLayer_object ;
         },
 
-        addMarker: function (data) {
+        addMarker: (data) => {
             this._purpleLayerArray.push(this.getMarker(data)) ;
         },
 
-        parseData: function (data) {
+        parseData: (data) => {
 
             for (i = 0 ; i < data.results.length ; i++) {
              this.addMarker(data.results[i]) ;
