@@ -29293,10 +29293,9 @@ wisconsinLayer = function (map) {
        map.spin(false) ;
      }
    });
-   Wisconsin_NM.on('add', function(e){
-     map.setView([43.9929 , -90.3883], 12);
-   });
-
+   // Wisconsin_NM.on('add', function(e){
+   //   map.setView([43.9929 , -90.3883], 12);
+   // });
    return Wisconsin_NM ;
 };
 
