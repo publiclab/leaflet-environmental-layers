@@ -1,4 +1,6 @@
 wisconsinLayer = function (map) {
+   var info = require("./info.json")
+   console.log(info);
    var Wisconsin_NM  = L.esri.featureLayer({
      url: 'https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/Nonmetallic_and_Potential_frac_sand_mine_proposals_in_West_Central_Wisconsin/FeatureServer/0/',
      simplifyFactor: 1

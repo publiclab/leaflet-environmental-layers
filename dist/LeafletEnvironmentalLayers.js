@@ -26336,6 +26336,21 @@ L.layerGroup.indigenousLayers = function (name,options) {
     return new L.LayerGroup.IndigenousLayers(name,options);
 };
 },{}],12:[function(require,module,exports){
+module.exports={
+   "wisconsin": {
+      "name": "Wisconsin Non-Metallic Mining",
+      "url": "https://example.com/docs",
+      "extents": {
+        "minLat": 0,
+        "maxLat": 0,
+        "minLng": 0,
+        "maxLng": 0,
+        "minZoom": 2,
+        "maxZoom": 6
+      }
+    }
+}
+},{}],13:[function(require,module,exports){
 require('jquery') ;
 require('leaflet') ;
 
@@ -26882,7 +26897,7 @@ L.Icon.PurpleAirMarkerIcon = L.Icon.extend({
 L.icon.purpleAirMarkerIcon = function () {
     return new L.Icon.PurpleAirMarkerIcon();
 };
-},{"jquery":2,"leaflet":6}],13:[function(require,module,exports){
+},{"jquery":2,"leaflet":6}],14:[function(require,module,exports){
 require('jquery') ;
 require('leaflet') ;
 
@@ -26900,7 +26915,7 @@ require('./indigenousLayers.js');
 //require('./PLpeopleLayer.js');
 require('./layercode.js')
 
-},{"./AllLayers.js":8,"./aqicnLayer.js":9,"./fracTrackerMobileLayer.js":10,"./indigenousLayers.js":11,"./layercode.js":12,"./openWeatherMapLayer.js":14,"./osmLandfillMineQuarryLayer.js":15,"./pfasLayer.js":16,"./purpleLayer.js":17,"./toxicReleaseLayer.js":18,"./wisconsinLayer.js":22,"jquery":2,"leaflet":6,"leaflet-providers":5}],14:[function(require,module,exports){
+},{"./AllLayers.js":8,"./aqicnLayer.js":9,"./fracTrackerMobileLayer.js":10,"./indigenousLayers.js":11,"./layercode.js":13,"./openWeatherMapLayer.js":15,"./osmLandfillMineQuarryLayer.js":16,"./pfasLayer.js":17,"./purpleLayer.js":18,"./toxicReleaseLayer.js":19,"./wisconsinLayer.js":23,"jquery":2,"leaflet":6,"leaflet-providers":5}],15:[function(require,module,exports){
 L.OWM = L.TileLayer.extend({
 	options: {
 		appId: '4c6704566155a7d0d5d2f107c5156d6e', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
@@ -28415,7 +28430,7 @@ L.OWM.Utils = {
 
 
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
 
     {
@@ -28607,7 +28622,7 @@ L.layerGroup.osmLandfillMineQuarryLayer = function(options) {
     return new L.LayerGroup.OSMLandfillMineQuarryLayer(options);
 };
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 L.Icon.PfasLayerIcon = L.Icon.extend({
    options: {
     iconUrl: 'https://openclipart.org/image/300px/svg_to_png/117253/1297044906.png',
@@ -28766,7 +28781,7 @@ L.layerGroup.pfasLayer = function (options) {
 };
 
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 require('heatmap.js') ;
 require('leaflet-heatmap') ;
 
@@ -28889,7 +28904,7 @@ L.layerGroup.purpleLayer = function (options) {
     return new L.LayerGroup.PurpleLayer(options) ;
 };
 
-},{"heatmap.js":1,"leaflet-heatmap":4}],18:[function(require,module,exports){
+},{"heatmap.js":1,"leaflet-heatmap":4}],19:[function(require,module,exports){
 L.Icon.ToxicReleaseIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://www.clker.com/cliparts/r/M/L/o/R/i/green-dot.svg',
@@ -29030,7 +29045,7 @@ L.layerGroup.toxicReleaseLayer = function (options) {
     return new L.LayerGroup.ToxicReleaseLayer(options);
 };
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 L.Control.Layers.include({
   getActiveOverlayNames: function() {
     
@@ -29047,7 +29062,7 @@ L.Control.Layers.include({
     return layers;
   }
 });
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 L.SpreadsheetLayer = L.LayerGroup.extend({
     //options: {
         //Must be supplied:
@@ -29213,7 +29228,7 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
 L.spreadsheetLayer = function(options) {
     return new L.SpreadsheetLayer(options);
 };
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 L.Control.LegendControl = L.Control.extend({
   options: {
     position: 'bottomleft',
@@ -29272,8 +29287,10 @@ L.control.legendControl = function(options) {
   return new L.Control.LegendControl(options);
 };
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 wisconsinLayer = function (map) {
+   var info = require("./info.json")
+   console.log(info);
    var Wisconsin_NM  = L.esri.featureLayer({
      url: 'https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/Nonmetallic_and_Potential_frac_sand_mine_proposals_in_West_Central_Wisconsin/FeatureServer/0/',
      simplifyFactor: 1
@@ -29299,4 +29316,4 @@ wisconsinLayer = function (map) {
    return Wisconsin_NM ;
 };
 
-},{}]},{},[3,7,13,19,20,21]);
+},{"./info.json":12}]},{},[3,7,14,20,21,22]);
