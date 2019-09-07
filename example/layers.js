@@ -1,4 +1,4 @@
-var bounds = new L.LatLngBounds(
+      var bounds = new L.LatLngBounds(
         new L.LatLng(84.67351257, -172.96875),
         new L.LatLng(-54.36775852, 178.59375)
       );
@@ -36,18 +36,22 @@ var bounds = new L.LatLngBounds(
         }
       );
   
-    var PLpeople = L.layerGroup.pLpeopleLayer() ;
+    //var PLpeople = L.layerGroup.pLpeopleLayer() ;
     var PurpleLayer = L.layerGroup.purpleLayer() ;
+    var ToxicRelease = L.layerGroup.toxicReleaseLayer() ;
+    var PFASTracker = L.layerGroup.pfasLayer() ;
+    var AQICNLayer = L.layerGroup.aqicnLayer();
+    var OSMLandfillMineQuarryLayer = L.layerGroup.osmLandfillMineQuarryLayer();
+
     var PurpleAirMarkerLayer = L.layerGroup.layerCode("purpleairmarker") ;
-    
     var Fractracker = L.layerGroup.layerCode("fractracker") ;
     var SkyTruth = L.layerGroup.layerCode("skytruth") ;
     var OdorReport = L.layerGroup.layerCode("odorreport") ;
     var MapKnitter = L.layerGroup.layerCode("mapknitter") ;
-    
-    var ToxicRelease = L.layerGroup.toxicReleaseLayer() ;
-    
-    var PFASTracker = L.layerGroup.pfasLayer() ;
+    var OpenAqLayer = L.layerGroup.layerCode("openaq");
+    var LuftdatenLayer = L.layerGroup.layerCode("luftdaten");
+    var OpenSenseLayer = L.layerGroup.layerCode("opensense");
+
 
 
     var OpenInfraMap_Power = L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png',{
@@ -89,10 +93,7 @@ var bounds = new L.LatLngBounds(
     var temp = L.OWM.temperature({});
     var wind = L.OWM.wind({});
     
-    var AQICNLayer = L.layerGroup.aqicnLayer();
-    var OpenAqLayer = L.layerGroup.layerCode("openaq");
-    var LuftdatenLayer = L.layerGroup.layerCode("luftdaten");
-    var OpenSenseLayer = L.layerGroup.layerCode("opensense");
+
     var city = L.OWM.current({ intervall: 15, minZoom: 3 });
     var windrose = L.OWM.current({
         intervall: 15,
@@ -108,7 +109,6 @@ var bounds = new L.LatLngBounds(
     var IndigenousLandsLanguages = L.layerGroup.indigenousLayers("Languages");
     var IndigenousLandsTreaties = L.layerGroup.indigenousLayers("Treaties");
 
-    var OSMLandfillMineQuarryLayer = L.layerGroup.osmLandfillMineQuarryLayer();
     var Wisconsin_NM = wisconsinLayer(map);
     var FracTracker_mobile = fracTrackerMobileLayer(map);
     
@@ -120,7 +120,7 @@ var bounds = new L.LatLngBounds(
     };
 
     var overlayMaps = {
-    	 "PLpeople" : PLpeople,
+    	// "PLpeople" : PLpeople,
          "Wisconsin Non-Metal" : Wisconsin_NM ,
          "FracTracker_mobile" : FracTracker_mobile ,
          "<span style='color: darkred'><strong>PurpleAirLayer-HeatMap</strong></span>": PurpleLayer ,
@@ -173,7 +173,7 @@ var bounds = new L.LatLngBounds(
       "BL3": baselayer3,
       "BL4": baselayer4,
       
-      "PLpeople" : PLpeople,
+     // "PLpeople" : PLpeople,
       "Wisconsin_NM": Wisconsin_NM,
       "FT_mobile": FracTracker_mobile,
       "PurpleHeat": PurpleLayer ,
