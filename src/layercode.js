@@ -65,39 +65,43 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
 
         requestData: function () {
            var self = this;
+           var info = require("./info.json");
                 (function() {
                     var zoom;
                     var Layer_URL;
                     var $ = window.jQuery;
 
-                    if (self.layer == "fractracker"){
-                        Layer_URL = "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json" ;
+                    if (self.layer === "fractracker"){
+                        Layer_URL = info.fractracker.api_url; ;
                     }
-                    if(self.layer == "skytruth"){
+                    if(self.layer === "skytruth"){
                         zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
-                        Layer_URL = "https://alerts1.skytruth.org/json?n=100&l="+(southwest.lat)+","+(southwest.lng)+","+(northeast.lat)+","+(northeast.lng) ;
+                        Layer_URL = info.skytruth.api_url + "?n=100&l="+(southwest.lat)+","+(southwest.lng)+","+(northeast.lat)+","+(northeast.lng) ;
                     }
-                    if(self.layer == "odorreport"){
+                    if(self.layer === "odorreport"){
                         zoom = self._map.getZoom(), origin = self._map.getCenter() ;
-                        Layer_URL = "https://odorlog.api.ushahidi.io/api/v3/posts/" ;
+                        Layer_URL =  info.odorreport.api_url ;
                     }
-                    if(self.layer == "mapknitter"){
+                    if(self.layer === "mapknitter"){
                         zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
-                        Layer_URL = "https://mapknitter.org/map/region/Gulf-Coast.json?minlon="+(southwest.lng)+"&minlat="+(southwest.lat)+"&maxlon="+(northeast.lng)+"&maxlat="+(northeast.lat);
+                        Layer_URL = info.mapknitter.api_url + "?minlon="+(southwest.lng)+"&minlat="+(southwest.lat)+"&maxlon="+(northeast.lng)+"&maxlat="+(northeast.lat);
                     }
-                    if(self.layer == "luftdaten"){
+                    if(self.layer === "luftdaten"){
                         Layer_URL = "https://maps.luftdaten.info/data/v2/data.dust.min.json";
                     }
-                    if(self.layer == "openaq"){
+                    if(self.layer === "openaq"){
                         Layer_URL = "https://api.openaq.org/v1/latest?limit=5000";
                     }
-                    if(self.layer == "opensense"){
+                    if(self.layer === "opensense"){
       					Layer_URL = "https://api.opensensemap.org/boxes";
 
                     }
                     if(self.layer == "purpleairmarker"){
                         zoom = self._map.getZoom(), northwest = self._map.getBounds().getNorthWest() , southeast = self._map.getBounds().getSouthEast() ;
-                        Layer_URL = "https://www.purpleair.com/data.json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat="+(northwest.lat)+"&selat="+(southeast.lat)+"&nwlng="+(northwest.lng)+"&selng="+(southeast.lng) ;
+                        if(zoom < info.purpleairmarker.extents.minZoom){
+                          return;
+                        }
+                        Layer_URL = info.purpleairmarker.api_url + "?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat="+(northwest.lat)+"&selat="+(southeast.lat)+"&nwlng="+(northwest.lng)+"&selng="+(southeast.lng) ;
                     }
                     
 

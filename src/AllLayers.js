@@ -45,7 +45,6 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         	}
             
             this.options.layers = param;
-            console.log(this.options);
         },
 
         onAdd: function (map) {

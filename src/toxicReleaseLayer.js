@@ -16,12 +16,9 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
 
     {
         options: {
-            url: 'https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/45/PREF_LONGITUDE/BEGINNING/72/rows/0:500/JSON',
             popupOnMouseover: false,
             clearOutsideBounds: false,
             target: '_self',
-            minZoom: 0,
-            maxZoom: 18
         },
 
         initialize: function (options) {
@@ -49,14 +46,27 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
 
         requestData: function () {
                 var self = this ;
+                var info = require("./info.json");
                 (function() {
                     var script = document.createElement("SCRIPT");
                     script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
                     script.type = 'text/javascript';
                     var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
+                    var extents = info.toxicReleaseLayer.extents;
+                    if(zoom < extents.minZoom){
+                      return;
+                    }
+                    var bounds = new L.LatLngBounds(
+                    new L.LatLng(extents.NE_lat, extents.NE_lng),
+                    new L.LatLng(extents.SW_lat, extents.SW_lng));
+
+                    if(!bounds.contains(new L.LatLng(origin.lat, origin.lng))){
+                      return;
+                    }
+
                     script.onload = function() {
                         var $ = window.jQuery;
-                        var TRI_url = "https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/"+parseInt(origin.lat)+"/PREF_LONGITUDE/BEGINNING/"+parseInt(-1*origin.lng)+"/rows/0:300/JSON" ;
+                        var TRI_url = info.toxicReleaseLayer.api_url + parseInt(origin.lat)+"/PREF_LONGITUDE/BEGINNING/"+parseInt(-1*origin.lng)+"/rows/0:300/JSON" ;
                         if(typeof self._map.spin === 'function'){
                           self._map.spin(true) ;
                         }
@@ -70,7 +80,6 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);
                 })();
-
 
         },
 

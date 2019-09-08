@@ -25895,7 +25895,6 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         	}
             
             this.options.layers = param;
-            console.log(this.options);
         },
 
         onAdd: function (map) {
@@ -26339,16 +26338,139 @@ L.layerGroup.indigenousLayers = function (name,options) {
 module.exports={
    "wisconsin": {
       "name": "Wisconsin Non-Metallic Mining",
-      "url": "https://example.com/docs",
+      "url": "https://services.arcgis.com",
+      "api_url": "https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/Nonmetallic_and_Potential_frac_sand_mine_proposals_in_West_Central_Wisconsin/FeatureServer/0/",
       "extents": {
-        "minLat": 0,
-        "maxLat": 0,
-        "minLng": 0,
-        "maxLng": 0,
-        "minZoom": 2,
-        "maxZoom": 6
+        "NE_lat":  44.08758502824518,
+        "NE_lng": -91.40625,
+        "SW_lat":  43.068887774169625,
+        "SW_lng": -92.8125,
+        "minZoom": 10,
+        "maxZoom": 15
       }
-    }
+    },
+
+    "skytruth": {
+      "name": "SkyTruth Alerts ",
+      "about": "SkyTruth Alerts delivers real-time updates about environmental incidents in your back yard (or whatever part of the world you know and love)." ,
+      "url": "https://alerts.skytruth.org/",
+      "api_url": "https://alerts1.skytruth.org/json",
+      "extents": {
+        "NE_lat": 0,
+        "NE_lng": 0,
+        "SW_lat": 0,
+        "SW_lng": 0,
+        "minZoom": 10,
+        "maxZoom": 15
+      }
+    },
+
+    "odorreport": {
+      "name": " Odor Report Layer ",
+      "about": "To facilitate monitoring of bad odor events through the collection of data using a written odor log and an online map.",
+      "url": "https://odorlog.ushahidi.io/views/map",
+      "api_url": "https://odorlog.api.ushahidi.io/api/v3/posts/",
+      "extents": {
+        "NE_lat": 0,
+        "NE_lng": 0,
+        "SW_lat": 0,
+        "SW_lng": 0,
+        "minZoom": 10,
+        "maxZoom": 15
+      }
+    },
+
+    "toxicReleaseLayer": {
+      "name": " Toxic Release Layer ",
+      "url": "https://www.epa.gov/enviro/tri-search",
+      "about": "The Toxics Release Inventory (TRI) Search retrieves data from the TRI database in Envirofacts.",
+      "api_url": "https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/",
+      "extents": {
+        "NE_lat":  51.536085601784755,
+        "NE_lng":  -59.98535156250001,
+        "SW_lat":  27.800209937418252,
+        "SW_lng": -123.26660156250001,
+        "minZoom": 5,
+        "maxZoom": 15
+      }
+    },
+
+
+    "fractracker": {
+      "name": " FracTracker Layer",
+      "url": "https://www.fractracker.org/about-us/",
+      "about": "FracTracker Alliance studies, maps, and communicates the risks of oil and gas development to protect our planet and support the renewable energy transformation.",
+      "api_url": "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json" ,
+     "extents": {
+        "NE_lat": 0,
+        "NE_lng": 0,
+        "SW_lat": 0,
+        "SW_lng": 0,
+        "minZoom": 10,
+        "maxZoom": 15
+      }
+    },
+
+
+    "fracTrackerMobile": {
+      "name": " FracTracker Layer",
+      "url": "https://www.fractracker.org/about-us/",
+      "about": "FracTracker Alliance studies, maps, and communicates the risks of oil and gas development to protect our planet and support the renewable energy transformation.",
+      "extents": {
+        "NE_lat":  51.536085601784755,
+        "NE_lng":  -59.98535156250001,
+        "SW_lat":  27.800209937418252,
+        "SW_lng": -123.26660156250001,
+        "minZoom": 5,
+        "maxZoom": 15
+      }
+    },
+
+    "mapknitter": {
+      "name": " MapKnitter Layer ",
+      "url": "https://mapknitter.org/",
+      "about": "Balloon mapping is a low-cost way to take aerial photos using a camera, attached to a balloon, on a spool of string. People have done this from a few hundred feet up all the way to over 4,000 feet in the air.",
+      "api_url": "https://mapknitter.org/map/region/Gulf-Coast.json",
+      "extents": {
+        "NE_lat": 0,
+        "NE_lng": 0,
+        "SW_lat": 0,
+        "SW_lng": 0,
+        "minZoom": 10,
+        "maxZoom": 15
+      }
+    },
+
+     "OSMLandfillMineQuarryLayer": {
+      "name": "OSMLandfillMineQuarry Layer ",
+      "url": "https://wiki.openstreetmap.org/wiki/Map_Features",
+      "about": "Landfill area:Place where waste is dumped. ",
+      "api_url": "http://www.overpass-api.de/api/xapi",
+      "extents": {
+        "NE_lat": 0,
+        "NE_lng": 0,
+        "SW_lat": 0,
+        "SW_lng": 0,
+        "minZoom": 11,
+        "maxZoom": 15
+      }
+    },
+
+    "purpleairmarker": {
+      "name": "purpleairmarker Layer ",
+      "url": "https://www.purpleair.com",
+      "api_url": "https://www.purpleair.com/data.json",
+      "about": "",
+      "extents": {
+        "NE_lat": 0,
+        "NE_lng": 0,
+        "SW_lat": 0,
+        "SW_lng": 0,
+        "minZoom": 8,
+        "maxZoom": 15
+      }
+    },
+
 }
 },{}],13:[function(require,module,exports){
 require('jquery') ;
@@ -26418,39 +26540,43 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
 
         requestData: function () {
            var self = this;
+           var info = require("./info.json");
                 (function() {
                     var zoom;
                     var Layer_URL;
                     var $ = window.jQuery;
 
-                    if (self.layer == "fractracker"){
-                        Layer_URL = "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json" ;
+                    if (self.layer === "fractracker"){
+                        Layer_URL = info.fractracker.api_url; ;
                     }
-                    if(self.layer == "skytruth"){
+                    if(self.layer === "skytruth"){
                         zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
-                        Layer_URL = "https://alerts1.skytruth.org/json?n=100&l="+(southwest.lat)+","+(southwest.lng)+","+(northeast.lat)+","+(northeast.lng) ;
+                        Layer_URL = info.skytruth.api_url + "?n=100&l="+(southwest.lat)+","+(southwest.lng)+","+(northeast.lat)+","+(northeast.lng) ;
                     }
-                    if(self.layer == "odorreport"){
+                    if(self.layer === "odorreport"){
                         zoom = self._map.getZoom(), origin = self._map.getCenter() ;
-                        Layer_URL = "https://odorlog.api.ushahidi.io/api/v3/posts/" ;
+                        Layer_URL =  info.odorreport.api_url ;
                     }
-                    if(self.layer == "mapknitter"){
+                    if(self.layer === "mapknitter"){
                         zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
-                        Layer_URL = "https://mapknitter.org/map/region/Gulf-Coast.json?minlon="+(southwest.lng)+"&minlat="+(southwest.lat)+"&maxlon="+(northeast.lng)+"&maxlat="+(northeast.lat);
+                        Layer_URL = info.mapknitter.api_url + "?minlon="+(southwest.lng)+"&minlat="+(southwest.lat)+"&maxlon="+(northeast.lng)+"&maxlat="+(northeast.lat);
                     }
-                    if(self.layer == "luftdaten"){
+                    if(self.layer === "luftdaten"){
                         Layer_URL = "https://maps.luftdaten.info/data/v2/data.dust.min.json";
                     }
-                    if(self.layer == "openaq"){
+                    if(self.layer === "openaq"){
                         Layer_URL = "https://api.openaq.org/v1/latest?limit=5000";
                     }
-                    if(self.layer == "opensense"){
+                    if(self.layer === "opensense"){
       					Layer_URL = "https://api.opensensemap.org/boxes";
 
                     }
                     if(self.layer == "purpleairmarker"){
                         zoom = self._map.getZoom(), northwest = self._map.getBounds().getNorthWest() , southeast = self._map.getBounds().getSouthEast() ;
-                        Layer_URL = "https://www.purpleair.com/data.json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat="+(northwest.lat)+"&selat="+(southeast.lat)+"&nwlng="+(northwest.lng)+"&selng="+(southeast.lng) ;
+                        if(zoom < info.purpleairmarker.extents.minZoom){
+                          return;
+                        }
+                        Layer_URL = info.purpleairmarker.api_url + "?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat="+(northwest.lat)+"&selat="+(southeast.lat)+"&nwlng="+(northwest.lng)+"&selng="+(southeast.lng) ;
                     }
                     
 
@@ -26897,7 +27023,7 @@ L.Icon.PurpleAirMarkerIcon = L.Icon.extend({
 L.icon.purpleAirMarkerIcon = function () {
     return new L.Icon.PurpleAirMarkerIcon();
 };
-},{"jquery":2,"leaflet":6}],14:[function(require,module,exports){
+},{"./info.json":12,"jquery":2,"leaflet":6}],14:[function(require,module,exports){
 require('jquery') ;
 require('leaflet') ;
 
@@ -28469,6 +28595,7 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
 
         requestData: function() {
             var self = this;
+            var info = require("./info.json");
             (function() {
                 var script = document.createElement("SCRIPT");
                 script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
@@ -28476,12 +28603,17 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
                 var northeast = self._map.getBounds().getNorthEast(),
                     southwest = self._map.getBounds().getSouthWest();
 
+                var currentMapZoom = self._map.getZoom();
+                 if(currentMapZoom < info.OSMLandfillMineQuarryLayer.extents.minZoom){
+                      return;
+                 }
+                
                 script.onload = function() {
                     var $ = window.jQuery;
                     var countLayers = 0;
                     for (var key in self._colorOptions) {
                         //Generate URL for each type
-                        var LMQ_url = "http://www.overpass-api.de/api/xapi?*[landuse=" + key + "][bbox=" + (southwest.lng) + "," + (southwest.lat) + "," + (northeast.lng) + "," + (northeast.lat) + "]";
+                        var LMQ_url = info.OSMLandfillMineQuarryLayer.api_url + "?*[landuse=" + key + "][bbox=" + (southwest.lng) + "," + (southwest.lat) + "," + (northeast.lng) + "," + (northeast.lat) + "]";
                         if(typeof self._map.spin === 'function'){
                           self._map.spin(true);
                         }
@@ -28490,9 +28622,7 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
                             dataType: "xml",
                             success: function(data) {
                                 self.parseData(data);
-                                if(typeof self._map.spin === 'function'){
-                                  self._map.spin(false);
-                                }
+                               
                             }
                         });
                         /* The structure of the document is as follows:
@@ -28569,7 +28699,9 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
 
         parseData: function(data) {
             var self = this;
-
+            if(typeof self._map.spin === 'function'){
+                self._map.spin(false);
+            }
             (function() {
                 //Create the map of nodes
                 $(data).find('node').each(function() {
@@ -28622,7 +28754,7 @@ L.layerGroup.osmLandfillMineQuarryLayer = function(options) {
     return new L.LayerGroup.OSMLandfillMineQuarryLayer(options);
 };
 
-},{}],17:[function(require,module,exports){
+},{"./info.json":12}],17:[function(require,module,exports){
 L.Icon.PfasLayerIcon = L.Icon.extend({
    options: {
     iconUrl: 'https://openclipart.org/image/300px/svg_to_png/117253/1297044906.png',
@@ -28923,12 +29055,9 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
 
     {
         options: {
-            url: 'https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/45/PREF_LONGITUDE/BEGINNING/72/rows/0:500/JSON',
             popupOnMouseover: false,
             clearOutsideBounds: false,
             target: '_self',
-            minZoom: 0,
-            maxZoom: 18
         },
 
         initialize: function (options) {
@@ -28956,14 +29085,27 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
 
         requestData: function () {
                 var self = this ;
+                var info = require("./info.json");
                 (function() {
                     var script = document.createElement("SCRIPT");
                     script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
                     script.type = 'text/javascript';
                     var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
+                    var extents = info.toxicReleaseLayer.extents;
+                    if(zoom < extents.minZoom){
+                      return;
+                    }
+                    var bounds = new L.LatLngBounds(
+                    new L.LatLng(extents.NE_lat, extents.NE_lng),
+                    new L.LatLng(extents.SW_lat, extents.SW_lng));
+
+                    if(!bounds.contains(new L.LatLng(origin.lat, origin.lng))){
+                      return;
+                    }
+
                     script.onload = function() {
                         var $ = window.jQuery;
-                        var TRI_url = "https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/"+parseInt(origin.lat)+"/PREF_LONGITUDE/BEGINNING/"+parseInt(-1*origin.lng)+"/rows/0:300/JSON" ;
+                        var TRI_url = info.toxicReleaseLayer.api_url + parseInt(origin.lat)+"/PREF_LONGITUDE/BEGINNING/"+parseInt(-1*origin.lng)+"/rows/0:300/JSON" ;
                         if(typeof self._map.spin === 'function'){
                           self._map.spin(true) ;
                         }
@@ -28977,7 +29119,6 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
                     };
                     document.getElementsByTagName("head")[0].appendChild(script);
                 })();
-
 
         },
 
@@ -29045,7 +29186,7 @@ L.layerGroup.toxicReleaseLayer = function (options) {
     return new L.LayerGroup.ToxicReleaseLayer(options);
 };
 
-},{}],20:[function(require,module,exports){
+},{"./info.json":12}],20:[function(require,module,exports){
 L.Control.Layers.include({
   getActiveOverlayNames: function() {
     
@@ -29289,10 +29430,10 @@ L.control.legendControl = function(options) {
 
 },{}],23:[function(require,module,exports){
 wisconsinLayer = function (map) {
-   var info = require("./info.json")
-   console.log(info);
+   var info = require("./info.json");
+
    var Wisconsin_NM  = L.esri.featureLayer({
-     url: 'https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/Nonmetallic_and_Potential_frac_sand_mine_proposals_in_West_Central_Wisconsin/FeatureServer/0/',
+     url: info.wisconsin.api_url,
      simplifyFactor: 1
    }) ;
 
@@ -29305,13 +29446,17 @@ wisconsinLayer = function (map) {
        map.spin(true) ;
      }
    });
+
    Wisconsin_NM.on('load', function(e){
     if(typeof map.spin === 'function'){
        map.spin(false) ;
      }
    });
+
    // Wisconsin_NM.on('add', function(e){
-   //   map.setView([43.9929 , -90.3883], 12);
+   //    if(map.getZoom() < info.wisconsin.extents.minZoom){
+   //      return;
+   //    }
    // });
    return Wisconsin_NM ;
 };
