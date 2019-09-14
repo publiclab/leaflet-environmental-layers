@@ -64,7 +64,8 @@
           ).addTo(map);
 
       L.LayerGroup.EnvironmentalLayers({
-        //include: ['mapknitter', 'clouds'],
+        include: ['mapknitter', 'clouds'],
+        // exclude: ['mapknitter', 'clouds'],
         hash: true,
       }).addTo(map);
 

@@ -53,13 +53,12 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
                     script.type = 'text/javascript';
                     var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
                     var extents = info.toxicReleaseLayer.extents;
+                    var latLngbounds = extents.bounds;
                     if(zoom < extents.minZoom){
                       return;
                     }
-                    var bounds = new L.LatLngBounds(
-                    new L.LatLng(extents.NE_lat, extents.NE_lng),
-                    new L.LatLng(extents.SW_lat, extents.SW_lng));
-
+                    var bounds = new L.LatLngBounds(latLngbounds);
+                    
                     if(!bounds.contains(new L.LatLng(origin.lat, origin.lng))){
                       return;
                     }

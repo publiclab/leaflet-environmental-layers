@@ -26341,13 +26341,13 @@ module.exports={
       "url": "https://services.arcgis.com",
       "api_url": "https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/Nonmetallic_and_Potential_frac_sand_mine_proposals_in_West_Central_Wisconsin/FeatureServer/0/",
       "extents": {
-        "NE_lat":  44.08758502824518,
-        "NE_lng": -91.40625,
-        "SW_lat":  43.068887774169625,
-        "SW_lng": -92.8125,
-        "minZoom": 10,
-        "maxZoom": 15
-      }
+        "bounds": [
+                    [44.08758502824518, -91.40625],
+                    [43.068887774169625, -92.8125]
+                  ],
+         "minZoom": 10,
+         "maxZoom": 15
+       }
     },
 
     "skytruth": {
@@ -26356,13 +26356,13 @@ module.exports={
       "url": "https://alerts.skytruth.org/",
       "api_url": "https://alerts1.skytruth.org/json",
       "extents": {
-        "NE_lat": 0,
-        "NE_lng": 0,
-        "SW_lat": 0,
-        "SW_lng": 0,
-        "minZoom": 10,
-        "maxZoom": 15
-      }
+        "bounds": [
+                    [0, 0],
+                    [0, 0]
+                  ],
+         "minZoom": 10,
+         "maxZoom": 15
+       }
     },
 
     "odorreport": {
@@ -26371,13 +26371,13 @@ module.exports={
       "url": "https://odorlog.ushahidi.io/views/map",
       "api_url": "https://odorlog.api.ushahidi.io/api/v3/posts/",
       "extents": {
-        "NE_lat": 0,
-        "NE_lng": 0,
-        "SW_lat": 0,
-        "SW_lng": 0,
-        "minZoom": 10,
-        "maxZoom": 15
-      }
+        "bounds": [
+                    [0, 0],
+                    [0, 0]
+                  ],
+         "minZoom": 10,
+         "maxZoom": 15
+       }
     },
 
     "toxicReleaseLayer": {
@@ -26386,13 +26386,13 @@ module.exports={
       "about": "The Toxics Release Inventory (TRI) Search retrieves data from the TRI database in Envirofacts.",
       "api_url": "https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/",
       "extents": {
-        "NE_lat":  51.536085601784755,
-        "NE_lng":  -59.98535156250001,
-        "SW_lat":  27.800209937418252,
-        "SW_lng": -123.26660156250001,
-        "minZoom": 5,
-        "maxZoom": 15
-      }
+        "bounds": [
+                    [60.54377524118842, -21.708984375000004],
+                    [13.66733825965496, -148.27148437500003]
+                  ],
+         "minZoom": 5,
+         "maxZoom": 15
+       }
     },
 
 
@@ -26401,14 +26401,14 @@ module.exports={
       "url": "https://www.fractracker.org/about-us/",
       "about": "FracTracker Alliance studies, maps, and communicates the risks of oil and gas development to protect our planet and support the renewable energy transformation.",
       "api_url": "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json" ,
-     "extents": {
-        "NE_lat": 0,
-        "NE_lng": 0,
-        "SW_lat": 0,
-        "SW_lng": 0,
-        "minZoom": 10,
-        "maxZoom": 15
-      }
+      "extents": {
+        "bounds": [
+                    [0, 0],
+                    [0, 0]
+                  ],
+         "minZoom": 10,
+         "maxZoom": 15
+       }
     },
 
 
@@ -26416,14 +26416,14 @@ module.exports={
       "name": " FracTracker Layer",
       "url": "https://www.fractracker.org/about-us/",
       "about": "FracTracker Alliance studies, maps, and communicates the risks of oil and gas development to protect our planet and support the renewable energy transformation.",
-      "extents": {
-        "NE_lat":  51.536085601784755,
-        "NE_lng":  -59.98535156250001,
-        "SW_lat":  27.800209937418252,
-        "SW_lng": -123.26660156250001,
-        "minZoom": 5,
-        "maxZoom": 15
-      }
+       "extents": {
+        "bounds": [
+                    [51.536085601784755, -59.98535156250001],
+                    [27.800209937418252, -123.26660156250001]
+                  ],
+         "minZoom": 5,
+         "maxZoom": 15
+       }
     },
 
     "mapknitter": {
@@ -26431,14 +26431,14 @@ module.exports={
       "url": "https://mapknitter.org/",
       "about": "Balloon mapping is a low-cost way to take aerial photos using a camera, attached to a balloon, on a spool of string. People have done this from a few hundred feet up all the way to over 4,000 feet in the air.",
       "api_url": "https://mapknitter.org/map/region/Gulf-Coast.json",
-      "extents": {
-        "NE_lat": 0,
-        "NE_lng": 0,
-        "SW_lat": 0,
-        "SW_lng": 0,
-        "minZoom": 10,
-        "maxZoom": 15
-      }
+     "extents": {
+        "bounds": [
+                    [0, 0],
+                    [0, 0]
+                  ],
+         "minZoom": 10,
+         "maxZoom": 15
+       }
     },
 
      "OSMLandfillMineQuarryLayer": {
@@ -26447,13 +26447,13 @@ module.exports={
       "about": "Landfill area:Place where waste is dumped. ",
       "api_url": "http://www.overpass-api.de/api/xapi",
       "extents": {
-        "NE_lat": 0,
-        "NE_lng": 0,
-        "SW_lat": 0,
-        "SW_lng": 0,
-        "minZoom": 11,
-        "maxZoom": 15
-      }
+        "bounds": [
+                    [0, 0],
+                    [0, 0]
+                  ],
+         "minZoom": 11,
+         "maxZoom": 15
+       }
     },
 
     "purpleairmarker": {
@@ -26461,14 +26461,14 @@ module.exports={
       "url": "https://www.purpleair.com",
       "api_url": "https://www.purpleair.com/data.json",
       "about": "",
-      "extents": {
-        "NE_lat": 0,
-        "NE_lng": 0,
-        "SW_lat": 0,
-        "SW_lng": 0,
-        "minZoom": 8,
-        "maxZoom": 15
-      }
+       "extents": {
+        "bounds": [
+                    [0, 0],
+                    [0, 0]
+                  ],
+         "minZoom": 8,
+         "maxZoom": 15
+       }
     },
 
 }
@@ -29092,13 +29092,12 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
                     script.type = 'text/javascript';
                     var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
                     var extents = info.toxicReleaseLayer.extents;
+                    var latLngbounds = extents.bounds;
                     if(zoom < extents.minZoom){
                       return;
                     }
-                    var bounds = new L.LatLngBounds(
-                    new L.LatLng(extents.NE_lat, extents.NE_lng),
-                    new L.LatLng(extents.SW_lat, extents.SW_lng));
-
+                    var bounds = new L.LatLngBounds(latLngbounds);
+                    
                     if(!bounds.contains(new L.LatLng(origin.lat, origin.lng))){
                       return;
                     }
