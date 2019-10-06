@@ -199,7 +199,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                       "<br><strong> Lat : </strong>" + lat + "  ,  <strong> Lon : </strong>" + lng +
                       "<br><a href=" + image_url + "><img src="+image_url+" style='height: 202px ; width: 245px;'></a>"+
                       "<br><i>For more info on <a href='https://github.com/publiclab/leaflet-environmental-layers/issues/10'>MapKnitter Layer</a>, visit <a href='https://mapknitter.org/'>here<a></i>";
-                    mapknitter = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(" " + url_1) ;
+                    mapknitter = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(String(" " + url_1)) ;
                   }
                   else{
                     const url_2 = "<strong>Title : </strong>"+ "<a href=" + map_page + ">" + title + "</a>" + 
@@ -207,7 +207,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                       "<br><strong>Location : </strong>" + location  + 
                       "<br><strong> Lat : </strong>" + lat + "  ,  <strong> Lon : </strong>" + lng +
                       "<br><i>For more info on <a href='https://github.com/publiclab/leaflet-environmental-layers/issues/10'>MapKnitter Layer</a>, visit <a href='https://mapknitter.org/'>here<a></i>";                    
-                    mapknitter = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(" " + url_2) ;
+                    mapknitter = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(String(" " + url_2)) ;
                   }
                 }
               return mapknitter ;
