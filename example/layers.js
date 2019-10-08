@@ -111,6 +111,8 @@
 
     var Wisconsin_NM = wisconsinLayer(map);
     var FracTracker_mobile = fracTrackerMobileLayer(map);
+
+    var EonetFiresLayer = L.geoJSON.eonetFiresLayer();
     
     var baseMaps = {
       "Standard": baselayer1 ,
@@ -164,7 +166,8 @@
          "<span style='color: black'><strong>Open AQ </strong></span>": OpenAqLayer,
          "<span style='color: black'><strong>Luftdaten Layer </strong></span>": LuftdatenLayer,
          "<img src='https://banner2.kisspng.com/20180409/qcw/kisspng-computer-icons-font-awesome-computer-software-user-cubes-5acb63cb589078.9265215315232787953628.jpg' height='10px' width='10px'><span style='color: black'><strong> OpenSense </strong></span>": OpenSenseLayer,
-         "<strong>OSM <span style='color: red'>Landfills</span>, <span style='color: blue'>Mines</span>, <span style='color: green'>Quarries</span></strong>": OSMLandfillMineQuarryLayer
+         "<strong>OSM <span style='color: red'>Landfills</span>, <span style='color: blue'>Mines</span>, <span style='color: green'>Quarries</span></strong>": OSMLandfillMineQuarryLayer,
+         "<span style='color: #78fffa'><strong>EONET Fires</strong></span>": EonetFiresLayer
     };
 
     var allMapLayers = {
@@ -217,7 +220,8 @@
       "OpenAq":OpenAqLayer,
       "Luftaden" : LuftdatenLayer,
       "Opensense" : OpenSenseLayer,
-      "LSM": OSMLandfillMineQuarryLayer
+      "LSM": OSMLandfillMineQuarryLayer,
+      "EONETFires": EonetFiresLayer
     };
     
     var hash = new L.Hash(map, allMapLayers);
