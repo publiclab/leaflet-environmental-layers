@@ -85,11 +85,11 @@ L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
               var lat = coords.lat;
               var lng = coords.lng;
               var title = data.title;
-              var date = data.geometries[0].date;
+              var date = new Date(data.geometries[0].date).toUTCString();
               var source = data.sources && data.sources[0].url
               var fire_marker ;
               if (!isNaN((lat)) && !isNaN((lng)) ){
-                fire_marker = L.marker([lat , lng] , {icon: fireIcon}).bindPopup("<strong>Name : </strong>" + title + "<br>Lat :"+lat+"<br>Lon :"+lng + "<br>Lat :"+date+"<br><i><a href='https://github.com/publiclab/leaflet-environmental-layers/pull/8'>Toxic Release Inventory</a> (<a href='+source+'>source<a>)</i>") ;
+                fire_marker = L.marker([lat , lng] , {icon: fireIcon}).bindPopup("<strong>Event : </strong>" + title + "<br>Lat : " + lat + "<br>Lon : "+ lng + "<br>Date : " + date + "<br><i><a href=" + source + ">source<a></i>") ;
               }
             return fire_marker ;
             // console.log(coords, lat, lng);
