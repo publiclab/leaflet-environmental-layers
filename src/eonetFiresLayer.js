@@ -1,6 +1,6 @@
 L.Icon.EonetFiresIcon = L.Icon.extend({
     options: {
-      iconUrl: 'https://www.clker.com/cliparts/r/M/L/o/R/i/green-dot.svg',
+      iconUrl: './images/fire.svg',
       iconSize:     [30, 20],
       iconAnchor:   [20 , 0],
       popupAnchor:  [-5, -5]
@@ -14,9 +14,8 @@ L.icon.eonetFiresIcon = function () {
 L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
     {
         options: {
-            pointToLayer: function (feature, latlng) {
-                return L.circleMarker(latlng, geojsonMarkerOptions);
-            },
+            attribution: '<div>Icon made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>'
+        },
             onEachFeature: function (feature, layer) {},
             coordsToLatLng: this.coordsToLatLng
         },
