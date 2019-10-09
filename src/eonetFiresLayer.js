@@ -96,7 +96,13 @@ L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
         },
 
         addMarker: function (data) {
-            var marker = this.getMarker(data);
+            var marker;
+            var key = data.id ;
+            if (!this._layers[key]) {
+                marker = this.getMarker(data);
+                this._layers[key] = marker;
+                this.addLayer(marker);
+            }
         },
 
         coordsToLatLng: function (coords) {
