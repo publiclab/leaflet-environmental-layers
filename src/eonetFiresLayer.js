@@ -100,8 +100,8 @@ L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
         },
 
         coordsToLatLng: function (coords) {
-            return new L.LatLng(coords[0], coords[1]);
-        }
+            return new L.LatLng(coords[1], coords[0]);
+        },
         
 
     }
