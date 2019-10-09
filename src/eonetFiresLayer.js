@@ -11,16 +11,14 @@ L.icon.eonetFiresIcon = function () {
     return new L.Icon.EonetFiresIcon();
 };
 
+
 L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
     {
         options: {
             attribution: '<div>Icon made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>'
         },
-            onEachFeature: function (feature, layer) {},
-            coordsToLatLng: this.coordsToLatLng
-        },
+    
         initialize: function (options) {
-            // console.log('fires')
             options = options || {};
             L.Util.setOptions(this, options);
             this._layers = {};
@@ -44,7 +42,6 @@ L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
         },
 
         requestData: function () {
-            // var info = require('./info.json');
             var self = this;
 
             (function() {
@@ -64,21 +61,14 @@ L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
         },
 
         parseData: function (data) {
-            // console.log(data.events);
             if (!!data){
                 for (i = 0 ; i < data.events.length ; i++) {
-                    // console.log(data.events[i]);
                     this.addMarker(data.events[i]) ;
                 }
-
-                // if (this.options.clearOutsideBounds) {
-                //     this.clearOutsideBounds();
-                // }
             }
         },
 
         getMarker: function (data) {
-            // console.log(data);
             var fireIcon = new L.icon.eonetFiresIcon();
             var coords = this.coordsToLatLng(data.geometries[0].coordinates);
               var lat = coords.lat;
@@ -91,7 +81,6 @@ L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
                 fire_marker = L.marker([lat , lng] , {icon: fireIcon}).bindPopup("<strong>Event : </strong>" + title + "<br>Lat : " + lat + "<br>Lon : "+ lng + "<br>Date : " + date + "<br><i><a href=" + source + ">source<a></i>") ;
               }
             return fire_marker ;
-            // console.log(coords, lat, lng);
         },
 
         addMarker: function (data) {
@@ -106,8 +95,7 @@ L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
 
         coordsToLatLng: function (coords) {
             return new L.LatLng(coords[1], coords[0]);
-        },
-        
+        },  
 
     }
 );
