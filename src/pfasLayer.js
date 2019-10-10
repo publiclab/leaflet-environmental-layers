@@ -80,6 +80,8 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
                 icon: redDotIcon
             }).bindPopup(this.generatePopup(item));
 
+            oms.addMarker(pfasTracker);
+
             return pfasTracker;
         },
 
@@ -139,6 +141,8 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
                 var marker = this.getMarker(data);
                 this._layers[key] = marker;
                 this.addLayer(marker);
+                // oms.addMarker(marker);
+                // console.log(oms)
             }
         },
 
