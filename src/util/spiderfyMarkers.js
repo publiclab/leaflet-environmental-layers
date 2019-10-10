@@ -1,4 +1,4 @@
-omsUtil = function (map) {
+omsUtil = function (map, options) {
     var oms = new OverlappingMarkerSpiderfier(map);
 
     oms.addListener('click', function(marker) {
