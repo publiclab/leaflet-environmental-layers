@@ -26649,6 +26649,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                   	"</strong><br><strong> lon: " + lng + 
                   	"</strong><br><br>Data provided by <a href='https://odorlog.ushahidi.io'>https://odorlog.ushahidi.io</a>") ;
                 }
+                oms.addMarker(odormarker);
                 return odormarker;
            }
 
@@ -26676,6 +26677,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                       "<br><a href=" + image_url + "><img src="+image_url+" style='height: 202px ; width: 245px;'></a>"+
                       "<br><i>For more info on <a href='https://github.com/publiclab/leaflet-environmental-layers/issues/10'>MapKnitter Layer</a>, visit <a href='https://mapknitter.org/'>here<a></i>"
                     ) ;
+                    oms.addMarker(mapknitter);
                   }
                   else{
                     mapknitter = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(
@@ -26685,6 +26687,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                       "<br><strong> Lat : </strong>" + lat + "  ,  <strong> Lon : </strong>" + lng +
                       "<br><i>For more info on <a href='https://github.com/publiclab/leaflet-environmental-layers/issues/10'>MapKnitter Layer</a>, visit <a href='https://mapknitter.org/'>here<a></i>"
                     ) ;
+                    oms.addMarker(mapknitter);
                   }
                 }
               return mapknitter ;
@@ -27041,7 +27044,7 @@ require('./indigenousLayers.js');
 //require('./PLpeopleLayer.js');
 require('./layercode.js')
 
-},{"./AllLayers.js":8,"./aqicnLayer.js":9,"./fracTrackerMobileLayer.js":10,"./indigenousLayers.js":11,"./layercode.js":13,"./openWeatherMapLayer.js":15,"./osmLandfillMineQuarryLayer.js":16,"./pfasLayer.js":17,"./purpleLayer.js":18,"./toxicReleaseLayer.js":19,"./wisconsinLayer.js":23,"jquery":2,"leaflet":6,"leaflet-providers":5}],15:[function(require,module,exports){
+},{"./AllLayers.js":8,"./aqicnLayer.js":9,"./fracTrackerMobileLayer.js":10,"./indigenousLayers.js":11,"./layercode.js":13,"./openWeatherMapLayer.js":15,"./osmLandfillMineQuarryLayer.js":16,"./pfasLayer.js":17,"./purpleLayer.js":18,"./toxicReleaseLayer.js":19,"./wisconsinLayer.js":24,"jquery":2,"leaflet":6,"leaflet-providers":5}],15:[function(require,module,exports){
 L.OWM = L.TileLayer.extend({
 	options: {
 		appId: '4c6704566155a7d0d5d2f107c5156d6e', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
@@ -28837,6 +28840,8 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
                 icon: redDotIcon
             }).bindPopup(this.generatePopup(item));
 
+            oms.addMarker(pfasTracker);
+
             return pfasTracker;
         },
 
@@ -29428,6 +29433,23 @@ L.control.legendControl = function(options) {
 };
 
 },{}],23:[function(require,module,exports){
+omsUtil = function (map, options) {
+    var oms = new OverlappingMarkerSpiderfier(map, options);
+
+    var popup = new L.Popup();
+    oms.addListener('click', function(marker) {
+        popup.setContent(marker._popup._content);
+        popup.setLatLng(marker.getLatLng());
+        map.openPopup(popup);
+    });
+
+    oms.addListener('spiderfy', function(markers) {
+        map.closePopup();
+    });
+
+    return oms;
+}
+},{}],24:[function(require,module,exports){
 wisconsinLayer = function (map) {
    var info = require("./info.json");
 
@@ -29460,4 +29482,4 @@ wisconsinLayer = function (map) {
    return Wisconsin_NM ;
 };
 
-},{"./info.json":12}]},{},[3,7,14,20,21,22]);
+},{"./info.json":12}]},{},[3,7,14,20,21,22,23]);
