@@ -12,6 +12,5 @@ omsUtil = function (map, options) {
         map.closePopup();
     });
 
-    console.log('util working');
     return oms;
 }
