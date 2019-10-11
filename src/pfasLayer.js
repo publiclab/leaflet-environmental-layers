@@ -141,8 +141,6 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
                 var marker = this.getMarker(data);
                 this._layers[key] = marker;
                 this.addLayer(marker);
-                // oms.addMarker(marker);
-                // console.log(oms)
             }
         },
 
