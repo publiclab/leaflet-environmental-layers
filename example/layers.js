@@ -223,6 +223,11 @@
       "LSM": OSMLandfillMineQuarryLayer,
       "EONETFires": EonetFiresLayer
     };
+
+    var oms = omsUtil(map, {
+      keepSpiderfied: true,
+      circleSpiralSwitchover: 0
+    });
     
     var hash = new L.Hash(map, allMapLayers);
     var leafletControl = new L.control.layers(baseMaps,overlayMaps);

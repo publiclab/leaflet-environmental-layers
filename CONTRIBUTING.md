@@ -31,7 +31,7 @@ The library consists of multiple layers. It needs to add several other layers. T
 ### Steps to add a new layer :
 1. Find an issue labelled <i>new layer</i>.
 2. Go through the documentaion provided to understand how the API works.
-3. Here's a codepen example that consists of a base layer and [Luftdaten Layer](https://github.com/publiclab/leaflet-environmental-layers/issues/88) as an overlay. You can check its full implementation [here](https://github.com/publiclab/leaflet-environmental-layers/pull/137).
+3. Here's a [codepen example](https://codepen.io/rkpattnaik780/full/MxMRBP) that consists of a base layer and [Luftdaten Layer](https://github.com/publiclab/leaflet-environmental-layers/issues/88) as an overlay. You can check its full implementation [here](https://github.com/publiclab/leaflet-environmental-layers/pull/137).
 
 ### Steps to test a new layer :
 1. Make a fixture file in html for the layer.
