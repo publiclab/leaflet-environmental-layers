@@ -215,3 +215,29 @@ We're going to try spinning this out into its own library; see: https://github.c
 
     // Assuming your map instance is in a variable called map
     var hash = new L.Hash(map);    
+    
+    
+  
+ ## Add all LEL Layers at once:
+ 
+ 	 L.LayerGroup.EnvironmentalLayers().addTo(map);
+	 
+## Add all layers except some layers: 
+
+	 L.LayerGroup.EnvironmentalLayers({
+            exclude: ['mapknitter', 'clouds'],
+         }).addTo(map);
+	 
+## Add some layers only: 
+
+	 L.LayerGroup.EnvironmentalLayers({
+            include: ['mapknitter', 'clouds'],
+         }).addTo(map);
+
+## Turn on Leaflet Hash in the URL: 
+
+	 L.LayerGroup.EnvironmentalLayers({
+            exclude: ['mapknitter', 'clouds'],
+	    hash: true,             // by default this is FALSE
+         }).addTo(map);
+	
