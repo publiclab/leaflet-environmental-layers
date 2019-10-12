@@ -29,6 +29,12 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
               map.spin(false) ;
             }
             this.clearLayers();
+            map.eachLayer((layer) => {
+              if(layer._path) { // check for visible spider legs
+                  map.closePopup();
+                  map.removeLayer(layer);  
+              }
+            });
             this._layers = {};
         },
 
