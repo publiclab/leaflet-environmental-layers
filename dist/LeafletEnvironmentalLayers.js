@@ -26504,6 +26504,12 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
               map.spin(false) ;
             }
             this.clearLayers();
+            map.eachLayer((layer) => {
+              if(layer._path) { // check for visible spider legs
+                  map.closePopup();
+                  map.removeLayer(layer);  
+              }
+            });
             this._layers = {};
         },
 
@@ -28794,6 +28800,12 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
             if(typeof map.spin === 'function'){
               map.spin(false) ;
             }
+            map.eachLayer((layer) => {
+                if(layer._path) { // check for visible spider legs
+                    map.closePopup();
+                    map.removeLayer(layer);  
+                }
+            });
             this._layers = {};
         },
 
