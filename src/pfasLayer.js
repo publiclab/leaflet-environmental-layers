@@ -34,6 +34,8 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
             if(typeof map.spin === 'function'){
               map.spin(false) ;
             }
+            map.closePopup();
+            oms.clearMarkers();
             this._layers = {};
         },
 
@@ -79,6 +81,8 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
             pfasTracker = L.marker([item["latitude"], item["longitude"]], {
                 icon: redDotIcon
             }).bindPopup(this.generatePopup(item));
+
+            oms.addMarker(pfasTracker);
 
             return pfasTracker;
         },
