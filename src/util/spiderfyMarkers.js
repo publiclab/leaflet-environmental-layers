@@ -1,10 +1,9 @@
 omsUtil = function (map, options) {
     var oms = new OverlappingMarkerSpiderfier(map, options);
 
-    var popup = new L.Popup();
+    var popup;
     oms.addListener('click', function(marker) {
-        popup.setContent(marker._popup._content);
-        popup.setLatLng(marker.getLatLng());
+        popup = marker.getPopup();
         map.openPopup(popup);
     });
 
