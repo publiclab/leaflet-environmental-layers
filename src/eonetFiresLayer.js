@@ -1,6 +1,6 @@
 L.Icon.EonetFiresIcon = L.Icon.extend({
     options: {
-      iconUrl: './images/fire.svg',
+      iconUrl: 'https://image.flaticon.com/icons/svg/785/785116.svg',
       iconSize:     [30, 20],
       iconAnchor:   [20 , 0],
       popupAnchor:  [-5, -5]
