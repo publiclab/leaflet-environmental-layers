@@ -26166,7 +26166,7 @@ L.layerGroup.aqicnLayer = function(options) {
 },{}],10:[function(require,module,exports){
 L.Icon.EonetFiresIcon = L.Icon.extend({
     options: {
-      iconUrl: './images/fire.svg',
+      iconUrl: 'https://image.flaticon.com/icons/svg/785/785116.svg',
       iconSize:     [30, 20],
       iconAnchor:   [20 , 0],
       popupAnchor:  [-5, -5]
@@ -26613,12 +26613,8 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
               map.spin(false) ;
             }
             this.clearLayers();
-            map.eachLayer((layer) => {
-              if(layer._path) { // check for visible spider legs
-                  map.closePopup();
-                  map.removeLayer(layer);  
-              }
-            });
+            map.closePopup();
+            oms.clearMarkers();
             this._layers = {};
         },
 
@@ -27160,7 +27156,7 @@ require('./indigenousLayers.js');
 require('./layercode.js')
 require('./eonetFiresLayer')
 
-},{"./AllLayers.js":8,"./aqicnLayer.js":9,"./fracTrackerMobileLayer.js":10,"./indigenousLayers.js":11,"./layercode.js":13,"./openWeatherMapLayer.js":15,"./osmLandfillMineQuarryLayer.js":16,"./pfasLayer.js":17,"./purpleLayer.js":18,"./toxicReleaseLayer.js":19,"./wisconsinLayer.js":24,"jquery":2,"leaflet":6,"leaflet-providers":5}],15:[function(require,module,exports){
+},{"./AllLayers.js":8,"./aqicnLayer.js":9,"./eonetFiresLayer":10,"./fracTrackerMobileLayer.js":11,"./indigenousLayers.js":12,"./layercode.js":14,"./openWeatherMapLayer.js":16,"./osmLandfillMineQuarryLayer.js":17,"./pfasLayer.js":18,"./purpleLayer.js":19,"./toxicReleaseLayer.js":20,"./wisconsinLayer.js":25,"jquery":2,"leaflet":6,"leaflet-providers":5}],16:[function(require,module,exports){
 L.OWM = L.TileLayer.extend({
 	options: {
 		appId: '4c6704566155a7d0d5d2f107c5156d6e', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
@@ -28910,12 +28906,8 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
             if(typeof map.spin === 'function'){
               map.spin(false) ;
             }
-            map.eachLayer((layer) => {
-                if(layer._path) { // check for visible spider legs
-                    map.closePopup();
-                    map.removeLayer(layer);  
-                }
-            });
+            map.closePopup();
+            oms.clearMarkers();
             this._layers = {};
         },
 
@@ -29554,14 +29546,13 @@ L.control.legendControl = function(options) {
   return new L.Control.LegendControl(options);
 };
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 omsUtil = function (map, options) {
     var oms = new OverlappingMarkerSpiderfier(map, options);
 
-    var popup = new L.Popup();
+    var popup;
     oms.addListener('click', function(marker) {
-        popup.setContent(marker._popup._content);
-        popup.setLatLng(marker.getLatLng());
+        popup = marker.getPopup();
         map.openPopup(popup);
     });
 
@@ -29571,7 +29562,7 @@ omsUtil = function (map, options) {
 
     return oms;
 }
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 wisconsinLayer = function (map) {
    var info = require("./info.json");
 
@@ -29604,4 +29595,4 @@ wisconsinLayer = function (map) {
    return Wisconsin_NM ;
 };
 
-},{"./info.json":12}]},{},[3,7,14,20,21,22,23]);
+},{"./info.json":13}]},{},[3,7,15,21,22,23,24]);
