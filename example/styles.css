@@ -41,5 +41,8 @@ z-index: 10; }
   color: black;
   font-weight: bold;
   font-size: 1.4em;
+  margin-left: 80%;
+  position: absolute;
   text-align: center;
+  top: 9px;   
 }
