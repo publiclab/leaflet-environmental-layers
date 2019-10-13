@@ -25854,7 +25854,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         options: {
         	hash: false,
         	 // Source of Truth of Layers name .
-		    layers0: ["purpleLayer","toxicReleaseLayer","pfasLayer","aqicnLayer","osmLandfillMineQuarryLayer"],
+		    layers0: ["purpleLayer","toxicReleaseLayer","pfasLayer","aqicnLayer","osmLandfillMineQuarryLayer", "eonetFiresLayer"],
 		    layers1: ["purpleairmarker","skytruth","fractracker","odorreport","mapknitter","openaq","luftdaten","opensense"],
 	        layers2: ["Power","Petroleum","Telecom","Water"],
 	        layers3: ["wisconsin","fracTrackerMobile"],
@@ -26164,6 +26164,115 @@ L.layerGroup.aqicnLayer = function(options) {
 };
 
 },{}],10:[function(require,module,exports){
+L.Icon.EonetFiresIcon = L.Icon.extend({
+    options: {
+      iconUrl: 'https://image.flaticon.com/icons/svg/785/785116.svg',
+      iconSize:     [30, 20],
+      iconAnchor:   [20 , 0],
+      popupAnchor:  [-5, -5]
+    }
+});
+
+L.icon.eonetFiresIcon = function () {
+    return new L.Icon.EonetFiresIcon();
+};
+
+
+L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
+    {
+        options: {
+            attribution: '<div>Icon made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>'
+        },
+    
+        initialize: function (options) {
+            options = options || {};
+            L.Util.setOptions(this, options);
+            this._layers = {};
+
+        },
+
+        onAdd: function (map) {
+            map.on('moveend', this.requestData, this);
+            this._map = map;
+            this.requestData();
+
+        },
+
+        onRemove: function (map) {
+            map.off('moveend', this.requestData, this);
+            if(typeof map.spin === 'function'){
+                map.spin(false) ;
+            }
+            this.clearLayers();
+            this._layers = {};
+        },
+
+        requestData: function () {
+            var self = this;
+
+            (function() {
+                var $ = window.jQuery;
+                var EonetFire_url = "https://eonet.sci.gsfc.nasa.gov/api/v2.1/categories/8";
+                if(typeof self._map.spin === 'function'){
+                  self._map.spin(true) ;
+                }
+                
+                $.getJSON(EonetFire_url , function(data){
+                    self.parseData(data) ;
+                    if(typeof self._map.spin === 'function'){
+                      self._map.spin(false) ;
+                    }
+                }); 
+            })();
+        },
+
+        parseData: function (data) {
+            if (!!data){
+                for (i = 0 ; i < data.events.length ; i++) {
+                    this.addMarker(data.events[i]) ;
+                }
+            }
+        },
+
+        getMarker: function (data) {
+            var fireIcon = new L.icon.eonetFiresIcon();
+            var coords = this.coordsToLatLng(data.geometries[0].coordinates);
+              var lat = coords.lat;
+              var lng = coords.lng;
+              var title = data.title;
+              var date = new Date(data.geometries[0].date).toUTCString();
+              var source = data.sources && data.sources[0].url
+              var fire_marker ;
+              if (!isNaN((lat)) && !isNaN((lng)) ){
+                fire_marker = L.marker([lat , lng] , {icon: fireIcon}).bindPopup("<strong>Event : </strong>" + title + "<br>Lat : " + lat + "<br>Lon : "+ lng + "<br>Date : " + date + "<br><i><a href=" + source + ">source<a></i>") ;
+              }
+            return fire_marker ;
+        },
+
+        addMarker: function (data) {
+            var marker;
+            var key = data.id ;
+            if (!this._layers[key]) {
+                marker = this.getMarker(data);
+                this._layers[key] = marker;
+                this.addLayer(marker);
+            }
+        },
+
+        coordsToLatLng: function (coords) {
+            return new L.LatLng(coords[1], coords[0]);
+        },  
+
+    }
+);
+
+
+
+L.geoJSON.eonetFiresLayer = function (options) {
+    return new L.GeoJSON.EonetFiresLayer(options);
+};
+
+},{}],11:[function(require,module,exports){
 fracTrackerMobileLayer = function(map) {
   var FracTracker_mobile  = L.esri.featureLayer({
     url: 'https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/FracTrackerMobileAppNPCAMesaVerdeNationalPark_051416/FeatureServer/0/',
@@ -26188,7 +26297,7 @@ fracTrackerMobileLayer = function(map) {
   return FracTracker_mobile ;
 };
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
 
     {
@@ -26334,7 +26443,7 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
 L.layerGroup.indigenousLayers = function (name,options) {
     return new L.LayerGroup.IndigenousLayers(name,options);
 };
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 module.exports={
    "wisconsin": {
       "name": "Wisconsin Non-Metallic Mining",
@@ -26472,7 +26581,7 @@ module.exports={
     },
 
 }
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 require('jquery') ;
 require('leaflet') ;
 
@@ -26504,12 +26613,8 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
               map.spin(false) ;
             }
             this.clearLayers();
-            map.eachLayer((layer) => {
-              if(layer._path) { // check for visible spider legs
-                  map.closePopup();
-                  map.removeLayer(layer);  
-              }
-            });
+            map.closePopup();
+            oms.clearMarkers();
             this._layers = {};
         },
 
@@ -27032,7 +27137,7 @@ L.Icon.PurpleAirMarkerIcon = L.Icon.extend({
 L.icon.purpleAirMarkerIcon = function () {
     return new L.Icon.PurpleAirMarkerIcon();
 };
-},{"./info.json":12,"jquery":2,"leaflet":6}],14:[function(require,module,exports){
+},{"./info.json":13,"jquery":2,"leaflet":6}],15:[function(require,module,exports){
 require('jquery') ;
 require('leaflet') ;
 
@@ -27049,8 +27154,9 @@ require('./pfasLayer.js');
 require('./indigenousLayers.js');
 //require('./PLpeopleLayer.js');
 require('./layercode.js')
+require('./eonetFiresLayer')
 
-},{"./AllLayers.js":8,"./aqicnLayer.js":9,"./fracTrackerMobileLayer.js":10,"./indigenousLayers.js":11,"./layercode.js":13,"./openWeatherMapLayer.js":15,"./osmLandfillMineQuarryLayer.js":16,"./pfasLayer.js":17,"./purpleLayer.js":18,"./toxicReleaseLayer.js":19,"./wisconsinLayer.js":24,"jquery":2,"leaflet":6,"leaflet-providers":5}],15:[function(require,module,exports){
+},{"./AllLayers.js":8,"./aqicnLayer.js":9,"./eonetFiresLayer":10,"./fracTrackerMobileLayer.js":11,"./indigenousLayers.js":12,"./layercode.js":14,"./openWeatherMapLayer.js":16,"./osmLandfillMineQuarryLayer.js":17,"./pfasLayer.js":18,"./purpleLayer.js":19,"./toxicReleaseLayer.js":20,"./wisconsinLayer.js":25,"jquery":2,"leaflet":6,"leaflet-providers":5}],16:[function(require,module,exports){
 L.OWM = L.TileLayer.extend({
 	options: {
 		appId: '4c6704566155a7d0d5d2f107c5156d6e', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
@@ -28565,7 +28671,7 @@ L.OWM.Utils = {
 
 
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
 
     {
@@ -28763,7 +28869,7 @@ L.layerGroup.osmLandfillMineQuarryLayer = function(options) {
     return new L.LayerGroup.OSMLandfillMineQuarryLayer(options);
 };
 
-},{"./info.json":12}],17:[function(require,module,exports){
+},{"./info.json":13}],18:[function(require,module,exports){
 L.Icon.PfasLayerIcon = L.Icon.extend({
    options: {
     iconUrl: 'https://openclipart.org/image/300px/svg_to_png/117253/1297044906.png',
@@ -28800,12 +28906,8 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
             if(typeof map.spin === 'function'){
               map.spin(false) ;
             }
-            map.eachLayer((layer) => {
-                if(layer._path) { // check for visible spider legs
-                    map.closePopup();
-                    map.removeLayer(layer);  
-                }
-            });
+            map.closePopup();
+            oms.clearMarkers();
             this._layers = {};
         },
 
@@ -28930,7 +29032,7 @@ L.layerGroup.pfasLayer = function (options) {
 };
 
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 require('heatmap.js') ;
 require('leaflet-heatmap') ;
 
@@ -29053,7 +29155,7 @@ L.layerGroup.purpleLayer = function (options) {
     return new L.LayerGroup.PurpleLayer(options) ;
 };
 
-},{"heatmap.js":1,"leaflet-heatmap":4}],19:[function(require,module,exports){
+},{"heatmap.js":1,"leaflet-heatmap":4}],20:[function(require,module,exports){
 L.Icon.ToxicReleaseIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://www.clker.com/cliparts/r/M/L/o/R/i/green-dot.svg',
@@ -29202,7 +29304,7 @@ L.layerGroup.toxicReleaseLayer = function (options) {
     return new L.LayerGroup.ToxicReleaseLayer(options);
 };
 
-},{"./info.json":12}],20:[function(require,module,exports){
+},{"./info.json":13}],21:[function(require,module,exports){
 L.Control.Layers.include({
   getActiveOverlayNames: function() {
     
@@ -29219,7 +29321,7 @@ L.Control.Layers.include({
     return layers;
   }
 });
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 L.SpreadsheetLayer = L.LayerGroup.extend({
     //options: {
         //Must be supplied:
@@ -29385,7 +29487,7 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
 L.spreadsheetLayer = function(options) {
     return new L.SpreadsheetLayer(options);
 };
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 L.Control.LegendControl = L.Control.extend({
   options: {
     position: 'bottomleft',
@@ -29444,14 +29546,13 @@ L.control.legendControl = function(options) {
   return new L.Control.LegendControl(options);
 };
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 omsUtil = function (map, options) {
     var oms = new OverlappingMarkerSpiderfier(map, options);
 
-    var popup = new L.Popup();
+    var popup;
     oms.addListener('click', function(marker) {
-        popup.setContent(marker._popup._content);
-        popup.setLatLng(marker.getLatLng());
+        popup = marker.getPopup();
         map.openPopup(popup);
     });
 
@@ -29461,7 +29562,7 @@ omsUtil = function (map, options) {
 
     return oms;
 }
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 wisconsinLayer = function (map) {
    var info = require("./info.json");
 
@@ -29494,4 +29595,4 @@ wisconsinLayer = function (map) {
    return Wisconsin_NM ;
 };
 
-},{"./info.json":12}]},{},[3,7,14,20,21,22,23]);
+},{"./info.json":13}]},{},[3,7,15,21,22,23,24]);

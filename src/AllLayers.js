@@ -4,7 +4,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         options: {
         	hash: false,
         	 // Source of Truth of Layers name .
-		    layers0: ["purpleLayer","toxicReleaseLayer","pfasLayer","aqicnLayer","osmLandfillMineQuarryLayer"],
+		    layers0: ["purpleLayer","toxicReleaseLayer","pfasLayer","aqicnLayer","osmLandfillMineQuarryLayer", "eonetFiresLayer"],
 		    layers1: ["purpleairmarker","skytruth","fractracker","odorreport","mapknitter","openaq","luftdaten","opensense"],
 	        layers2: ["Power","Petroleum","Telecom","Water"],
 	        layers3: ["wisconsin","fracTrackerMobile"],
