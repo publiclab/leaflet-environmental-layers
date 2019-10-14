@@ -241,3 +241,11 @@ We're going to try spinning this out into its own library; see: https://github.c
 	    hash: true,             // by default this is FALSE
          }).addTo(map);
 	
+## Add badge to display number of active layers
+
+  // To add the badge 
+  // map and leafletControl are variables containing the map and layers control instances
+  var badge = activeLayersBadge(map, leafletControl);
+
+  // The badge will be included when line is used
+  L.LayerGroup.EnvironmentalLayers().addTo(map, leafletControl);
