@@ -230,4 +230,4 @@
     leafletControl.addTo(map);
     
     // Display number of active overlay layers
-    var badge = activeLayersBadge(map);
+    var badge = activeLayersBadge(map, leafletControl);

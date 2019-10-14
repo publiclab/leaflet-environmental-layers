@@ -1,4 +1,4 @@
-activeLayersBadge = function(map) {
+activeLayersBadge = function(map, leafletControl) {
     var touched = false;
     var activeOverlays = leafletControl.getActiveOverlayNames();
     var badge = L.control.badge(activeOverlays.length, { position: 'topright' }).addTo(map);
