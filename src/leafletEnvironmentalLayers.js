@@ -14,3 +14,4 @@ require('./pfasLayer.js');
 require('./indigenousLayers.js');
 //require('./PLpeopleLayer.js');
 require('./layercode.js')
+require('./activeLayersBadge');

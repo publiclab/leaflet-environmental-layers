@@ -113,6 +113,8 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 		   if(this.options.hash)
 		     var hash = new L.Hash(map, this.overlayMaps);
 		          
+			// Display number of active overlay layers
+			var badge = activeLayersBadge(map);       
         },
 
         onRemove: function (map) {},
