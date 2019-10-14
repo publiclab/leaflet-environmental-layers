@@ -32,6 +32,7 @@ activeLayersBadge = function(map) {
     });
 
     L.DomEvent.on(leafletControl.getContainer(), 'mouseout', function (ev) {
+        touched = false;
         $(badge.getContainer()).css("display", "block");
     });
     
