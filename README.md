@@ -307,13 +307,17 @@ We're going to try spinning this out into its own library; see: https://github.c
     };
     ```
 
-6) In src/leafletEnvironmentalLayers, add `require('./layerName')`.
+6) In `src/leafletEnvironmentalLayers.js`, add `require('./layerName')` to make the layer available to use in the project.
 
 7) In `example/layers.js`:
     - Add the below line to instantiate the new layer
     ```var LayerName = L.layerGroup.layerName();```
-    - Add the layer to the list of overlay maps in the layers control by adding a key-value pair to the `overlayMaps` object.
-    ```"<span style='color: #000'><strong>Layer name</strong></span>": LayerName```
+    - Add the layer to the list of overlay maps in the layers control by adding a key-value pair, where the key is the layer name and the value is the layer object, to the `overlayMaps` object. The keys can have HTML where additional styling can be given to the layer names.
+    `"<span style='color: #000'><strong>Layer name</strong></span>": LayerName`
     - Add `"LayerName": LayerName` to `allMapLayers` object.
 
-8) Add the layer to the `layers0` array under options in `src/AllLayers.js` .
+8) Add the layer to the `layers0` array under options in `src/AllLayers.js`.
+
+9) Check if the layer is working correctly.
+
+10) Add the layer name and color to the layers table in the README.md file.
