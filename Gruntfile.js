@@ -6,6 +6,16 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
+        copy: {
+          dist: {
+            files: [
+              // copy badge stylesheet
+              {expand: true, src: ['src/css/badge.css'], dest: 'dist/css/', flatten: true, filter: 'isFile'}
+        
+            ],
+          },
+        },
+
         watch: {
           files: ['<%= jshint.files %>'],
           tasks: ['jshint']  // test file can be added here
@@ -60,6 +70,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     */
 
     /* Default (development): Watch files and build on change. */
@@ -67,6 +78,7 @@ module.exports = function(grunt) {
     grunt.registerTask("default", ["watch", "jasmine"]);
     grunt.registerTask("test", ["jshint", "jasmine"]);
     grunt.registerTask('build', [
+        'copy',
         'browserify:dist'
     ]);
 
