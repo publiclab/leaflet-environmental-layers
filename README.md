@@ -243,9 +243,12 @@ We're going to try spinning this out into its own library; see: https://github.c
 	
 ## Add badge to display number of active layers
 
-  // To add the badge 
-  // map and leafletControl are variables containing the map and layers control instances
-  var badge = activeLayersBadge(map, leafletControl);
+    // Link to stylesheet
+    <link rel="stylesheet" href="../dist/css/badge.css">
+    
+    // To add the badge 
+    // map and leafletControl are variables containing the map and layers control instances
+    var badge = activeLayersBadge(map, leafletControl);
 
-  // The badge will be included when line is used
-  L.LayerGroup.EnvironmentalLayers().addTo(map, leafletControl);
+    // The badge will be included when line is used
+    L.LayerGroup.EnvironmentalLayers().addTo(map, leafletControl);
