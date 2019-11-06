@@ -2,6 +2,7 @@ require('jquery') ;
 require('leaflet') ;
 
 require('./AllLayers.js') ;
+require('./BaseLayers.js') ;
 require('./purpleLayer.js') ;
 require('./toxicReleaseLayer.js') ;
 require('leaflet-providers') ;
