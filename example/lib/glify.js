@@ -20964,8 +20964,8 @@ var glify = {
     return Math.sqrt(dx * dx + dy * dy);
   },
   locationDistance: function locationDistance(location1, location2, map) {
-    var point1 = map.latLngToLayerPoint(location1),
-        point2 = map.latLngToLayerPoint(location2),
+    var point1 = map.latLngToLayerPoint(location1.hasOwnProperty('geometry') ? location1.geometry.coordinates : location1),
+        point2 = map.latLngToLayerPoint(location2.hasOwnProperty('geometry') ? location2.geometry.coordinates : location2),
         dx = point1.x - point2.x,
         dy = point1.y - point2.y;
     return this.vectorDistance(dx, dy);
@@ -21657,12 +21657,12 @@ Points.prototype = {
     for (; i < max; i++) {
       latLng = data.hasOwnProperty('features') ? data.features[i] : data[i];
       // detect geoJSON points instead of simple flat array of coords
-      if (latLng.hasOwnProperty('geometry')) {
-        latLng = [latLng.geometry.coordinates[latitudeKey], latLng.geometry.coordinates[longitudeKey]];
-      }
-      key = latLng[0].toFixed(2) + 'x' + latLng[1].toFixed(2);
+      //if (latLng.hasOwnProperty('geometry')) {
+      //  latLng = [latLng.geometry.coordinates[latitudeKey], latLng.geometry.coordinates[longitudeKey]];
+      //}
+      key = latLng[latitudeKey].toFixed(2) + 'x' + latLng[longitudeKey].toFixed(2);
       lookup = latLngLookup[key];
-      pixel = settings.map.project(L.latLng(latLng[0], latLng[1]), 0);
+      pixel = settings.map.project(L.latLng(latLng[latitudeKey], latLng[longitudeKey]), 0);
 
       if (lookup === undefined) {
         lookup = latLngLookup[key] = [];
@@ -21826,13 +21826,11 @@ Points.prototype = {
         }
       }
     } //try matches first, if it is empty, try the data, and hope it isn't too big
-
 // here, we actually want to return an array of all coordinates, which doesn't work for geoJson... 
 // we need something like .collect(&:geometry).collect(&:coordinates)
 // well, we're trying to find nearest neighbors. Maybe if we don't find any matches, we can give up instead of searching ALL points?
     if (this.settings.data.hasOwnProperty('features')) {
-      var dataCoords = this.settings.data.features[0].geometry.coordinates;
-      var copy = L.latLng([dataCoords[this.settings.latitudeKey], dataCoords[this.settings.longitudeKey]]);
+      var copy = this.settings.data.features;
     } else var copy = this.settings.data.slice(0);
     return this.settings.closest(coords, matches.length === 0 ? copy : matches, this.settings.map);
   },
@@ -21868,12 +21866,13 @@ Points.tryClick = function (e, map) {
   if (found === null) return;
   instance = instancesLookup[found];
   if (!instance) return;
-  latLng = L.latLng(found);
+  latLng = L.latLng(found[settings.latitudeKey], found[settings.longitudeKey]);
   xy = map.latLngToLayerPoint(latLng);
 
+console.log('found', found, xy, e.layerPoint, closestFromEach, latLng);
+console.log(utils.pointInCircle(xy, e.layerPoint, instance.pointSize() * instance.settings.sensitivity)) 
+
   if (utils.pointInCircle(xy, e.layerPoint, instance.pointSize() * instance.settings.sensitivity)) {
-// found should return the whole GeoJSON record, not just a coord!!
-console.log('found', found);
     result = instance.settings.click(e, found, xy);
     return result !== undefined ? result : true;
   }

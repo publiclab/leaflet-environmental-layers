@@ -82,10 +82,17 @@
         hash: true,
       }).addTo(map);
 
-L.glify.longitudeFirst()
-
 $.get('socioeco.json')
  .done(function(data) {
+
+   // standardize lat/lon instead of lon/lat
+   // and add non-nested coords for feature[0], feature[1]
+   data.features.forEach(function(f) {
+     f[1] = f.geometry.coordinates[0];
+     f[0] = f.geometry.coordinates[1];
+     f.geometry.coordinates[0] = f[0];
+     f.geometry.coordinates[1] = f[1];
+   });
 
    var trimmedData = {
      type: "FeatureCollection",
@@ -103,11 +110,15 @@ $.get('socioeco.json')
      sensitivity: 5,
      click: function (e, point, xy) {
        //set up a standalone popup (use a popup as a layer)
+       var content = "<b>" + point.properties.name + ", " + point.properties.city + "</b></br />";
+       content += point.properties.open + " until " + point.properties.close + "</br />";
+       content += point.properties.sic_name + "</br />";
+       content += point.properties.street + "</br />";
+       content += point.properties.employees + " employees</br />";
        L.popup()
-         .setLatLng(point)
-         .setContent("You clicked the point at " + point)
+         .setLatLng([point[0], point[1]])
+         .setContent(content)
          .openOn(map);
-         //.setContent("You clicked the point at " + point.properties.name + ", " + point.properties.city)
      },
    });
 
