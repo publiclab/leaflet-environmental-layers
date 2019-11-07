@@ -21869,9 +21869,6 @@ Points.tryClick = function (e, map) {
   latLng = L.latLng(found[settings.latitudeKey], found[settings.longitudeKey]);
   xy = map.latLngToLayerPoint(latLng);
 
-console.log('found', found, xy, e.layerPoint, closestFromEach, latLng);
-console.log(utils.pointInCircle(xy, e.layerPoint, instance.pointSize() * instance.settings.sensitivity)) 
-
   if (utils.pointInCircle(xy, e.layerPoint, instance.pointSize() * instance.settings.sensitivity)) {
     result = instance.settings.click(e, found, xy);
     return result !== undefined ? result : true;
