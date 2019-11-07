@@ -51,7 +51,7 @@
 <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.js'></script>
 <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.css' rel='stylesheet' />
 -->
-<script src="../glify-debug.js"></script>
+<script src="lib/glify.js"></script>
 
 <!--
   <script src="https://robertleeplummerjr.github.io/Leaflet.glify/glify.js"></script>
@@ -66,7 +66,7 @@
       var map = L.map("map", {
         maxBounds: bounds,
         maxBoundsViscosity: 0.75
-      }).setView([43, -83], 3);
+      }).setView([41.83, -71.44], 10);
       map.options.minZoom = 3;
 
       var baselayer1 =L.tileLayer(
@@ -84,32 +84,32 @@
 
 L.glify.longitudeFirst()
 
-$.get('../socioeco.json')
+$.get('socioeco.json')
  .done(function(data) {
 
- data.features.forEach(function(f){
-   f.color = 'blue';
- });
-
-  var trimmedData = {
-    type: "FeatureCollection",
-    features: data.features.slice(0,1000)
-  }
-
-  L.glify.points({
-    map: map,
-    data: trimmedData,
-    //size: 8,
-    sensitivity: 4,
-    click: function (e, point, xy) {
-      //set up a standalone popup (use a popup as a layer)
-      L.popup()
-          .setLatLng([point[1],point[0]])
-          .setContent("You clicked the point at " + point)
-          .openOn(map);
-          //.setContent("You clicked the point at " + point.properties.name + ", " + point.properties.city)
-    },
-  });
+   var trimmedData = {
+     type: "FeatureCollection",
+     features: data.features.slice(0,1000)
+   }
+   
+   L.glify.points({
+     map: map,
+     data: trimmedData,
+     //size: 8,
+     color: function(index, point) {
+       // console.log(point); // point is currently just []
+       return { r: 0.1, g: 0.1, b: 1 };
+     },
+     sensitivity: 5,
+     click: function (e, point, xy) {
+       //set up a standalone popup (use a popup as a layer)
+       L.popup()
+         .setLatLng(point)
+         .setContent("You clicked the point at " + point)
+         .openOn(map);
+         //.setContent("You clicked the point at " + point.properties.name + ", " + point.properties.city)
+     },
+   });
 
  });
     </script>
