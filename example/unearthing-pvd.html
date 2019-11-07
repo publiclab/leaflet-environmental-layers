@@ -96,15 +96,10 @@ $.get('socioeco.json')
      f.geometry.coordinates[0] = f[0];
      f.geometry.coordinates[1] = f[1];
    });
-
-   var trimmedData = {
-     type: "FeatureCollection",
-     features: data.features.slice(0,1000)
-   }
    
    L.glify.points({
      map: map,
-     data: trimmedData,
+     data: data,
      //size: 8,
      color: function(index, point) {
        // console.log(point); // point is currently just []
