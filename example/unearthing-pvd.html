@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta property="og:title" content="Leaflet Environmental Layers" />
+  <meta property="og:description" content="Collection of different environmental map layers in an easy to use Leaflet library."/>
+  <meta property="og:image" content="https://avatars2.githubusercontent.com/u/4621650?s=200&v=4"/>
+  <meta property="og:url" content="https://publiclab.github.io/leaflet-environmental-layers/example/#3/50.51/56.78/BL2"/>
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <title>Leaflet Environmental Layers</title>
+  
+  <script src="../node_modules/leaflet/dist/leaflet.js"></script>
+
+  <script src="../node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js"></script>
+  <script src="../node_modules/leaflet.blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js"></script>
+
+  <script src="../socio-eco-project-data.js"></script> 
+  <script src="https://leafletjs.com/examples/geojson/sample-geojson.js"></script> 
+
+  <script src="../dist/LeafletEnvironmentalLayers.js"></script>
+  <script src="../src/windRoseLayer.js"></script>
+  <script src="../node_modules/leaflet-fullhash/leaflet-fullHash.js"></script>
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+  <script src="../node_modules/heatmap.js/build/heatmap.min.js"></script>
+  <script src="../node_modules/leaflet-heatmap/leaflet-heatmap.js"></script>
+
+  <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet" />
+  <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet" />
+
+  <script src="../node_modules/leaflet-spin/example/spin/dist/spin.min.js"></script>
+  <script src="../node_modules/leaflet-spin/example/leaflet.spin.min.js"></script>
+
+  <script src="https://unpkg.com/esri-leaflet@2.2.3/dist/esri-leaflet.js"></script>
+  <script src="https://unpkg.com/esri-leaflet-renderers@2.0.6"></script>
+
+  
+  <link rel="stylesheet" href="styles.css">
+
+  </head>
+
+  <body>
+    <div id="map"></div>
+
+
+<!--
+<script src="../node_modules/mapbox-gl-leaflet/leaflet-mapbox-gl.js"></script>
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.css' rel='stylesheet' />
+-->
+<script src="lib/glify.js"></script>
+
+<!--
+  <script src="https://robertleeplummerjr.github.io/Leaflet.glify/glify.js"></script>
+  <script src="../node_modules/leaflet.glify/"></script>
+-->
+    <script>
+
+      var bounds = new L.LatLngBounds(
+        new L.LatLng(84.67351257, -172.96875),
+        new L.LatLng(-54.36775852, 178.59375)
+      );
+      var map = L.map("map", {
+        maxBounds: bounds,
+        maxBoundsViscosity: 0.75
+      }).setView([41.83, -71.44], 10);
+      map.options.minZoom = 3;
+
+      var baselayer1 =L.tileLayer(
+        "https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png",
+        {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }
+      ).addTo(map);
+
+      L.LayerGroup.EnvironmentalLayers({
+        include: ['mapknitter', 'clouds'],
+        // exclude: ['mapknitter', 'clouds'],
+        hash: true,
+      }).addTo(map);
+
+
+// Layer code begins:
+
+$.get('socioeco.json')
+ .done(function(data) {
+
+   // standardize lat/lon instead of lon/lat
+   // and add non-nested coords for feature[0], feature[1]
+   data.features.forEach(function(f) {
+     f[1] = f.geometry.coordinates[0];
+     f[0] = f.geometry.coordinates[1];
+     f.geometry.coordinates[0] = f[0];
+     f.geometry.coordinates[1] = f[1];
+   });
+   
+   L.glify.points({
+     map: map,
+     data: data,
+     //size: 8,
+     color: function(index, point) {
+       // console.log(point); // point is currently just []
+       return { r: 0.1, g: 0.1, b: 1 };
+     },
+     sensitivity: 5,
+     click: function (e, point, xy) {
+       //set up a standalone popup (use a popup as a layer)
+       var content = "<b>" + point.properties.name + ", " + point.properties.city + "</b></br />";
+       content += point.properties.open + " until " + point.properties.close + "</br />";
+       content += point.properties.sic_name + "</br />";
+       content += point.properties.street + "</br />";
+       content += point.properties.employees + " employees</br />";
+       content += "<p><a class='btn btn-primary' href='https://publiclab.org/post?tags=unearthing-pvd-stories,lat:" + point[0] + ",lon:" + point[1] + "'>Add your story</a></p>";
+       L.popup()
+         .setLatLng([point[0], point[1]])
+         .setContent(content)
+         .openOn(map);
+     },
+   });
+
+ });
+
+// Layer code ends
+
+    </script>
+    
+  </body>
+</html>
+

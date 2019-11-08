@@ -1,3 +1,8 @@
+v2.0.0:
+  date: 2018-05-19
+  changes:
+    - Fix to security warnings
+    - Update to latest grunt-legacy-log-utils
 v1.0.1:
   date: 2018-03-01
   changes:

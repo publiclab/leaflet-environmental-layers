@@ -13,7 +13,7 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
              latField: 'lat',
              lngField: 'lng',
              valueField: 'count' ,
-             blur: .75
+             blur: 0.75
         },
 
         initialize: function (options) {
@@ -44,38 +44,31 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
         requestData: function () {
            var self = this;
                 (function() {
-                    var script = document.createElement("SCRIPT");
-                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                    script.type = 'text/javascript';
-
-                    script.onload = function() {
-                        var $ = window.jQuery;
-                        var PurpleLayer_url = "https://www.purpleair.com/json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L";
+                    var $ = window.jQuery;
+                    var PurpleLayer_url = "https://www.purpleair.com/json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L";
+                    if(typeof self._map.spin === 'function'){
+                      self._map.spin(true) ;
+                    }
+                    $.getJSON(PurpleLayer_url , function(data){
+                        self.parseData(data) ;
                         if(typeof self._map.spin === 'function'){
-                          self._map.spin(true) ;
+                          self._map.spin(false) ;
                         }
-                        $.getJSON(PurpleLayer_url , function(data){
-                        	 self.parseData(data) ;
-                           if(typeof self._map.spin === 'function'){
-                             self._map.spin(false) ;
-                           }
-            		    });
-                    };
-                    document.getElementsByTagName("head")[0].appendChild(script);
+                    }); 
                 })();
 
 
         },
 
         getMarker: function (data) {
-              var lat = data.Lat ;
+              var lat = data.Lat;
               var lng = data.Lon;
-              var value = parseFloat(data.PM2_5Value) ;  //PM2.5 VALUE in microgram per metre cube
+              var value = parseFloat(data.PM2_5Value);  //PM2.5 VALUE in microgram per metre cube
 
-              var purpleLayer_object = new Object() ;
-              purpleLayer_object.lat = lat ;
-              purpleLayer_object.lng = lng ;
-              purpleLayer_object.count = value ;
+              var purpleLayer_object = {};
+              purpleLayer_object.lat = lat;
+              purpleLayer_object.lng = lng;
+              purpleLayer_object.count = value;
               /*
               var aqi ;
               if(value>=0 && value<=12.0)

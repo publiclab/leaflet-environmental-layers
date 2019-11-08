@@ -3,8 +3,7 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
     {
         options: {
             url: 'www.overpass-api.de/api/xapi?*[landuse=landfill][bbox=-119.89105224609376,34.1379517234964,-117.34634399414064,34.76192255039478]',
-            clearOutsideBounds: false,
-            minZoom: 7
+            clearOutsideBounds: false
         },
 
         initialize: function(options) {
@@ -37,6 +36,7 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
 
         requestData: function() {
             var self = this;
+            var info = require("./info.json");
             (function() {
                 var script = document.createElement("SCRIPT");
                 script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
@@ -44,12 +44,17 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
                 var northeast = self._map.getBounds().getNorthEast(),
                     southwest = self._map.getBounds().getSouthWest();
 
+                var currentMapZoom = self._map.getZoom();
+                 if(currentMapZoom < info.OSMLandfillMineQuarryLayer.extents.minZoom){
+                      return;
+                 }
+                
                 script.onload = function() {
                     var $ = window.jQuery;
                     var countLayers = 0;
                     for (var key in self._colorOptions) {
                         //Generate URL for each type
-                        var LMQ_url = "http://www.overpass-api.de/api/xapi?*[landuse=" + key + "][bbox=" + (southwest.lng) + "," + (southwest.lat) + "," + (northeast.lng) + "," + (northeast.lat) + "]";
+                        var LMQ_url = info.OSMLandfillMineQuarryLayer.api_url + "?*[landuse=" + key + "][bbox=" + (southwest.lng) + "," + (southwest.lat) + "," + (northeast.lng) + "," + (northeast.lat) + "]";
                         if(typeof self._map.spin === 'function'){
                           self._map.spin(true);
                         }
@@ -58,9 +63,7 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
                             dataType: "xml",
                             success: function(data) {
                                 self.parseData(data);
-                                if(typeof self._map.spin === 'function'){
-                                  self._map.spin(false);
-                                }
+                               
                             }
                         });
                         /* The structure of the document is as follows:
@@ -113,7 +116,13 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
                 var val = $(this).attr('v');
                 if (key === 'landuse') val = val.charAt(0).toUpperCase() + val.slice(1); //Capitalize first letter of the landuse
                 key = key.charAt(0).toUpperCase() + key.slice(1); //Capitalize first letter
-                content += "<strong>" + key + ": </strong>" + val + "<br>";
+                //Check if the value is a link
+                if (/^((http|https|ftp):\/\/)/.test(val)) {
+                    content += "<strong>" + key + ": </strong><a href='" + val + "' target='_blank'>" + val + "</a><br>";
+                }
+                else {
+                    content += "<strong>" + key + ": </strong>" + val + "<br>";
+                }
             });
             content += "<hr>The data included in this layer is from www.openstreetmap.org. The data is made available under ODbL.<br>";
             content += "From the <a href=https://github.com/publiclab/leaflet-environmental-layers/pull/94>OSM LMQ Inventory</a> (<a href = https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515>info</a>).";
@@ -131,7 +140,9 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
 
         parseData: function(data) {
             var self = this;
-
+            if(typeof self._map.spin === 'function'){
+                self._map.spin(false);
+            }
             (function() {
                 //Create the map of nodes
                 $(data).find('node').each(function() {

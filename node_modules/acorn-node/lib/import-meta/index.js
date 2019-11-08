@@ -14,7 +14,7 @@ var nextTokenIsDot = function (parser) {
 }
 
 module.exports = function(Parser) {
-  return (function (Parser) {
+  return /*@__PURE__*/(function (Parser) {
     function anonymous () {
       Parser.apply(this, arguments);
     }
