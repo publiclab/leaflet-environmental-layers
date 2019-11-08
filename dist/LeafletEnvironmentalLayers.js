@@ -25855,7 +25855,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         	hash: false,
         	 // Source of Truth of Layers name .
 		    layers0: ["purpleLayer","toxicReleaseLayer","pfasLayer","aqicnLayer","osmLandfillMineQuarryLayer", "eonetFiresLayer"],
-		    layers1: ["purpleairmarker","skytruth","fractracker","odorreport","mapknitter","openaq","luftdaten","opensense"],
+		    layers1: ["purpleairmarker","skytruth","fractracker","odorreport","mapknitter","openaq","luftdaten","opensense","unearthing"],
 	        layers2: ["Power","Petroleum","Telecom","Water"],
 	        layers3: ["wisconsin","fracTrackerMobile"],
 	        layers4: ["income","americanIndian","asian","black","multi","hispanic","nonWhite","white","plurality"],
@@ -26459,6 +26459,20 @@ module.exports={
        }
     },
 
+   "unearthing": {
+      "name": "Unearthing Providence",
+      "url": "https://publiclab.org/unearthing-pvd",
+      "api_url": "",
+      "extents": {
+        "bounds": [
+                    [42.2102, -72.0204],
+                    [41.2272, -70.9618]
+                  ],
+         "minZoom": 6,
+         "maxZoom": 18
+       }
+    },
+
     "skytruth": {
       "name": "SkyTruth Alerts ",
       "about": "SkyTruth Alerts delivers real-time updates about environmental incidents in your back yard (or whatever part of the world you know and love)." ,
@@ -26581,6 +26595,7 @@ module.exports={
     },
 
 }
+
 },{}],14:[function(require,module,exports){
 require('jquery') ;
 require('leaflet') ;
@@ -27151,12 +27166,13 @@ require('./osmLandfillMineQuarryLayer.js');
 require('./wisconsinLayer.js');
 require('./fracTrackerMobileLayer.js');
 require('./pfasLayer.js');
+require('./unearthing.js');
 require('./indigenousLayers.js');
 //require('./PLpeopleLayer.js');
 require('./layercode.js')
 require('./eonetFiresLayer')
 
-},{"./AllLayers.js":8,"./aqicnLayer.js":9,"./eonetFiresLayer":10,"./fracTrackerMobileLayer.js":11,"./indigenousLayers.js":12,"./layercode.js":14,"./openWeatherMapLayer.js":16,"./osmLandfillMineQuarryLayer.js":17,"./pfasLayer.js":18,"./purpleLayer.js":19,"./toxicReleaseLayer.js":20,"./wisconsinLayer.js":25,"jquery":2,"leaflet":6,"leaflet-providers":5}],16:[function(require,module,exports){
+},{"./AllLayers.js":8,"./aqicnLayer.js":9,"./eonetFiresLayer":10,"./fracTrackerMobileLayer.js":11,"./indigenousLayers.js":12,"./layercode.js":14,"./openWeatherMapLayer.js":16,"./osmLandfillMineQuarryLayer.js":17,"./pfasLayer.js":18,"./purpleLayer.js":19,"./toxicReleaseLayer.js":20,"./unearthing.js":21,"./wisconsinLayer.js":26,"jquery":2,"leaflet":6,"leaflet-providers":5}],16:[function(require,module,exports){
 L.OWM = L.TileLayer.extend({
 	options: {
 		appId: '4c6704566155a7d0d5d2f107c5156d6e', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
@@ -29305,6 +29321,51 @@ L.layerGroup.toxicReleaseLayer = function (options) {
 };
 
 },{"./info.json":13}],21:[function(require,module,exports){
+unearthing = function(map) {
+  var unearthingLayer;
+
+  $.get('socioeco.json')
+   .done(function(data) {
+
+    // standardize lat/lon instead of lon/lat
+    // and add non-nested coords for feature[0], feature[1]
+    data.features.forEach(function(f) {
+      f[1] = f.geometry.coordinates[0];
+      f[0] = f.geometry.coordinates[1];
+      f.geometry.coordinates[0] = f[0];
+      f.geometry.coordinates[1] = f[1];
+    });
+    
+    unearthingLayer = L.glify.points({
+      map: map,
+      data: data,
+      //size: 8,
+      color: function(index, point) {
+        // console.log(point); // point is currently just []
+        return { r: 0.1, g: 0.1, b: 1 };
+      },
+      sensitivity: 5,
+      click: function (e, point, xy) {
+        //set up a standalone popup (use a popup as a layer)
+        var content = "<b>" + point.properties.name + ", " + point.properties.city + "</b></br />";
+        content += point.properties.open + " until " + point.properties.close + "</br />";
+        content += point.properties.sic_name + "</br />";
+        content += point.properties.street + "</br />";
+        content += point.properties.employees + " employees</br />";
+        content += "<p><a class='btn btn-primary' href='https://publiclab.org/post?tags=unearthing-pvd-stories,lat:" + point[0] + ",lon:" + point[1] + "'>Add your story</a></p>";
+        L.popup()
+          .setLatLng([point[0], point[1]])
+          .setContent(content)
+          .openOn(map);
+      },
+    });
+ 
+  });
+
+  return FracTracker_mobile ;
+};
+
+},{}],22:[function(require,module,exports){
 L.Control.Layers.include({
   getActiveOverlayNames: function() {
     
@@ -29321,7 +29382,7 @@ L.Control.Layers.include({
     return layers;
   }
 });
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 L.SpreadsheetLayer = L.LayerGroup.extend({
     //options: {
         //Must be supplied:
@@ -29487,7 +29548,7 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
 L.spreadsheetLayer = function(options) {
     return new L.SpreadsheetLayer(options);
 };
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 L.Control.LegendControl = L.Control.extend({
   options: {
     position: 'bottomleft',
@@ -29546,7 +29607,7 @@ L.control.legendControl = function(options) {
   return new L.Control.LegendControl(options);
 };
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 omsUtil = function (map, options) {
     var oms = new OverlappingMarkerSpiderfier(map, options);
 
@@ -29562,7 +29623,7 @@ omsUtil = function (map, options) {
 
     return oms;
 }
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 wisconsinLayer = function (map) {
    var info = require("./info.json");
 
@@ -29595,4 +29656,4 @@ wisconsinLayer = function (map) {
    return Wisconsin_NM ;
 };
 
-},{"./info.json":13}]},{},[3,7,15,21,22,23,24]);
+},{"./info.json":13}]},{},[3,7,15,22,23,24,25]);

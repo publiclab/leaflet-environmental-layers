@@ -13,6 +13,20 @@
        }
     },
 
+   "unearthing": {
+      "name": "Unearthing Providence",
+      "url": "https://publiclab.org/unearthing-pvd",
+      "api_url": "",
+      "extents": {
+        "bounds": [
+                    [42.2102, -72.0204],
+                    [41.2272, -70.9618]
+                  ],
+         "minZoom": 6,
+         "maxZoom": 18
+       }
+    },
+
     "skytruth": {
       "name": "SkyTruth Alerts ",
       "about": "SkyTruth Alerts delivers real-time updates about environmental incidents in your back yard (or whatever part of the world you know and love)." ,
