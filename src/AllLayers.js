@@ -55,7 +55,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         },
 
         onAdd: function (map) {
-           
+
             this._map = map ;
           
 		    var baselayer = L.tileLayer(
