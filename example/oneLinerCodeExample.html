@@ -64,9 +64,10 @@
           ).addTo(map);
 
       L.LayerGroup.EnvironmentalLayers({
-        include: ['mapknitter', 'clouds'],
+        include: ['clouds', 'asian'],
         // exclude: ['mapknitter', 'clouds'],
         hash: true,
+        embed: true, // False by default
       }).addTo(map);
 
     </script>

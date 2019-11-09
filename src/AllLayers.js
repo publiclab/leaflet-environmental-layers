@@ -3,6 +3,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
     {
         options: {
         	hash: false,
+        	embed: false, // activates layers on map by default if true.
         	 // Source of Truth of Layers name .
 		    layers0: ["purpleLayer","toxicReleaseLayer","pfasLayer","aqicnLayer","osmLandfillMineQuarryLayer", "eonetFiresLayer"],
 		    layers1: ["purpleairmarker","skytruth","fractracker","odorreport","mapknitter","openaq","luftdaten","opensense"],
@@ -45,6 +46,10 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         	}
             
             this.options.layers = param;
+
+            if(!!param.embed) {
+            	this.options.embed = param.embed;
+            }
         },
 
         onAdd: function (map) {
@@ -64,7 +69,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 		      "Grey-scale": baselayer ,
 		    };
 
-		    for(let layer of this.options.layers.include){
+		    for(let layer of this.options.layers.include) {
 
 		       if(this.options.layers0.includes(layer)) {
 	               this.overlayMaps[layer] = window["L"]["layerGroup"][layer]();
@@ -104,6 +109,10 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 	                   obj = {intervall: 15, minZoom: 3};
 	               }
 	               this.overlayMaps[layer] = window["L"]["OWM"][layer](obj);
+	           }
+
+	           if(this.options.embed) {
+	           		this.overlayMaps[layer].addTo(map);
 	           }
 
 	       }
