@@ -35,7 +35,7 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
               map.spin(false) ;
             }
             map.closePopup();
-            oms.clearMarkers();
+            // oms.clearMarkers();
             this._layers = {};
         },
 
@@ -82,7 +82,7 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
                 icon: redDotIcon
             }).bindPopup(this.generatePopup(item));
 
-            oms.addMarker(pfasTracker);
+            // oms.addMarker(pfasTracker);
 
             return pfasTracker;
         },

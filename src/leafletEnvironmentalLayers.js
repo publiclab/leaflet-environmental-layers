@@ -1,7 +1,6 @@
 require('jquery') ;
 require('leaflet') ;
 
-require('./AllLayers.js') ;
 require('./purpleLayer.js') ;
 require('./toxicReleaseLayer.js') ;
 require('leaflet-providers') ;
@@ -16,3 +15,4 @@ require('./indigenousLayers.js');
 //require('./PLpeopleLayer.js');
 require('./layercode.js')
 require('./eonetFiresLayer')
+require('./AllLayers.js') ;
