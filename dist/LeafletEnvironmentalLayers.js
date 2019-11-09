@@ -26517,7 +26517,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         },
 
         onAdd: function (map) {
-           
+
             this._map = map ;
           
 		    var baselayer = L.tileLayer(
@@ -27239,7 +27239,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
             }
             this.clearLayers();
             map.closePopup();
-            oms.clearMarkers();
+            // oms.clearMarkers();
             this._layers = {};
         },
 
@@ -27385,7 +27385,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                   	"</strong><br><strong> lon: " + lng + 
                   	"</strong><br><br>Data provided by <a href='https://odorlog.ushahidi.io'>https://odorlog.ushahidi.io</a>") ;
                 }
-                oms.addMarker(odormarker);
+                // oms.addMarker(odormarker);
                 return odormarker;
            }
 
@@ -27413,7 +27413,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                       "<br><a href=" + image_url + "><img src="+image_url+" style='height: 202px ; width: 245px;'></a>"+
                       "<br><i>For more info on <a href='https://github.com/publiclab/leaflet-environmental-layers/issues/10'>MapKnitter Layer</a>, visit <a href='https://mapknitter.org/'>here<a></i>"
                     ) ;
-                    oms.addMarker(mapknitter);
+                    // oms.addMarker(mapknitter);
                   }
                   else{
                     mapknitter = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(
@@ -27423,7 +27423,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
                       "<br><strong> Lat : </strong>" + lat + "  ,  <strong> Lon : </strong>" + lng +
                       "<br><i>For more info on <a href='https://github.com/publiclab/leaflet-environmental-layers/issues/10'>MapKnitter Layer</a>, visit <a href='https://mapknitter.org/'>here<a></i>"
                     ) ;
-                    oms.addMarker(mapknitter);
+                    // oms.addMarker(mapknitter);
                   }
                 }
               return mapknitter ;
@@ -29532,7 +29532,7 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
               map.spin(false) ;
             }
             map.closePopup();
-            oms.clearMarkers();
+            // oms.clearMarkers();
             this._layers = {};
         },
 
@@ -29579,7 +29579,7 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
                 icon: redDotIcon
             }).bindPopup(this.generatePopup(item));
 
-            oms.addMarker(pfasTracker);
+            // oms.addMarker(pfasTracker);
 
             return pfasTracker;
         },

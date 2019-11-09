@@ -65,13 +65,13 @@
           ).addTo(map);
 
       /* This is required, make this optional! */
-      var oms = omsUtil(map, {
-        keepSpiderfied: true,
-        circleSpiralSwitchover: 0
-      });
+      // var oms = omsUtil(map, {
+      //   keepSpiderfied: true,
+      //   circleSpiralSwitchover: 0
+      // });
 
       L.LayerGroup.EnvironmentalLayers({
-        include: ['odorreport', 'asian', 'clouds'],
+        include: ['odorreport', 'asian', 'clouds', 'eonetFiresLayer'],
         // exclude: ['mapknitter', 'clouds'],
         hash: true,
         embed: true
