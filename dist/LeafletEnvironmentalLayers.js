@@ -26467,13 +26467,15 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         	hash: false,
         	embed: false, // activates layers on map by default if true.
         	 // Source of Truth of Layers name .
-		    layers0: ["purpleLayer","toxicReleaseLayer","pfasLayer","aqicnLayer","osmLandfillMineQuarryLayer", "eonetFiresLayer"],
+        	 // please put name of Layers carefully in the the appropriate layer group.
+		    layers0: ["purpleLayer","toxicReleaseLayer","pfasLayer","aqicnLayer","osmLandfillMineQuarryLayer"],
 		    layers1: ["purpleairmarker","skytruth","fractracker","odorreport","mapknitter","openaq","luftdaten","opensense"],
 	        layers2: ["Power","Petroleum","Telecom","Water"],
 	        layers3: ["wisconsin","fracTrackerMobile"],
 	        layers4: ["income","americanIndian","asian","black","multi","hispanic","nonWhite","white","plurality"],
 	        layers5: ["clouds","cloudsClassic","precipitation","precipitationClassic","rain","rainClassic","snow","pressure","pressureContour","temperature","wind","city"],
-       	
+       		layers6: ["eonetFiresLayer"],
+
 		    OpenInfraMap_Power: L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png',{
 		        maxZoom: 18,
 		        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
@@ -26497,7 +26499,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         	if(!!param.hash) {
         		this.options.hash = param.hash;
         	}
-        	param.all =  [...this.options.layers0 , ...this.options.layers1 , ...this.options.layers2 , ...this.options.layers3 , ...this.options.layers4 , ...this.options.layers5];
+        	param.all =  [...this.options.layers0 , ...this.options.layers1 , ...this.options.layers2 , ...this.options.layers3 , ...this.options.layers4 , ...this.options.layers5 , ...this.options.layers6];
         	if(!param.include || !param.include.length) {
         		param.include = param.all;
         	}
@@ -26555,13 +26557,13 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 	               		break;
 	              }
 	           }
-	           else if(this.options.layers3.includes(layer)){
+	           else if(this.options.layers3.includes(layer)) {
 	               this.overlayMaps[layer] =  window[layer + "Layer"](map);
 	           }
 	           else if(this.options.layers4.includes(layer)){
 	               this.overlayMaps[layer] = window["L"]["tileLayer"]["provider"]('JusticeMap.'+layer);
 	           }
-	           else if(this.options.layers5.includes(layer)){
+	           else if(this.options.layers5.includes(layer)) {
 	               let obj = {};
 	               if(layer === "clouds"){
 	                   obj = {showLegend: true, opacity: 0.5};
@@ -26571,6 +26573,8 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 	                   obj = {intervall: 15, minZoom: 3};
 	               }
 	               this.overlayMaps[layer] = window["L"]["OWM"][layer](obj);
+	           } else if (this.options.layers6.includes(layer)) {
+	           	   this.overlayMaps[layer] = window["L"]["geoJSON"][layer]();
 	           }
 
 	           if(this.options.embed) {
