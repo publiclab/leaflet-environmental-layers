@@ -14,10 +14,10 @@ L.LayerGroup.unearthing = L.LayerGroup.extend(
         onAdd: function (map) {
 
           this._map = map ;
-          this.requestData();
+          this.requestData(map);
         },
 
-        requestData: function () {
+        requestData: function (map) {
 
           this.pointsLayer = {};
           var points = this.pointsLayer;
