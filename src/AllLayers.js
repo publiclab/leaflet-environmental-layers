@@ -6,7 +6,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         	embed: false, // activates layers on map by default if true.
         	 // Source of Truth of Layers name .
         	 // please put name of Layers carefully in the the appropriate layer group.
-		    layers0: ["purpleLayer","toxicReleaseLayer","pfasLayer","aqicnLayer","osmLandfillMineQuarryLayer"],
+		    layers0: ["purpleLayer","toxicReleaseLayer","pfasLayer","aqicnLayer","osmLandfillMineQuarryLayer", "Unearthing"],
 		    layers1: ["purpleairmarker","skytruth","fractracker","odorreport","mapknitter","openaq","luftdaten","opensense"],
 	        layers2: ["Power","Petroleum","Telecom","Water"],
 	        layers3: ["wisconsin","fracTrackerMobile"],
@@ -111,8 +111,12 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 	                   obj = {intervall: 15, minZoom: 3};
 	               }
 	               this.overlayMaps[layer] = window["L"]["OWM"][layer](obj);
-	           } else if (this.options.layers6.includes(layer)) {
+	           } 
+	           else if (this.options.layers6.includes(layer)) {
 	           	   this.overlayMaps[layer] = window["L"]["geoJSON"][layer]();
+	           }
+	           else {
+	           	console.log("Incorrect Layer Name");
 	           }
 
 	           if(this.options.embed) {
