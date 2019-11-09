@@ -73,7 +73,6 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 
 		    for(let layer of this.options.layers.include) {
 
-		    	console.log(layer);
 		       if(this.options.layers0.includes(layer)) {
 	               this.overlayMaps[layer] = window["L"]["layerGroup"][layer]();
 	           }

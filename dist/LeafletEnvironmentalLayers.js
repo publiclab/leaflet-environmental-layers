@@ -22384,7 +22384,7 @@ Map.include({
 	// Creates a popup with the specified content and options and opens it in the given point on a map.
 	openPopup: function (popup, latlng, options) {
 		if (!(popup instanceof Popup)) {
-			popup = new Popup(options).setContent(popup);
+			popup = new Popup(options).setContent(popup._content ? popup._content : popup);
 		}
 
 		if (latlng) {
@@ -26535,7 +26535,6 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 
 		    for(let layer of this.options.layers.include) {
 
-		    	console.log(layer);
 		       if(this.options.layers0.includes(layer)) {
 	               this.overlayMaps[layer] = window["L"]["layerGroup"][layer]();
 	           }
