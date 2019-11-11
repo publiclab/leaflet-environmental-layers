@@ -125,11 +125,14 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 
 	       }
 
-           L.control.layers(baseMaps,this.overlayMaps).addTo(map);
+		   var leafletControl = L.control.layers(baseMaps,this.overlayMaps);
+		   leafletControl.addTo(map);
 
 		   if(this.options.hash)
 		     var hash = new L.Hash(map, this.overlayMaps);
 		          
+			// Display number of active overlay layers
+			var badge = activeLayersBadge(map, leafletControl);       
         },
 
         onRemove: function (map) {},

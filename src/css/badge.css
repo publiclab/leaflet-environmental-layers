@@ -1,0 +1,16 @@
+/*--- Badge styles ---*/
+.badge {
+    width: 30px;
+    height: 30px;
+    padding: 4px 2px 0;
+    border-radius: 50px;
+    border: 2px solid #908f8f;
+    background: white;
+    color: black;
+    font-weight: bold;
+    font-size: 1.4em;
+    margin-left: 80%;
+    position: absolute;
+    text-align: center;
+    top: 9px;   
+}

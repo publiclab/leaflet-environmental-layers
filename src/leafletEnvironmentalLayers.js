@@ -14,5 +14,6 @@ require('./unearthing.js');
 require('./indigenousLayers.js');
 //require('./PLpeopleLayer.js');
 require('./layercode.js')
+require('./activeLayersBadge');
 require('./eonetFiresLayer')
 require('./AllLayers.js') ;
