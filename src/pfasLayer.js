@@ -2,8 +2,7 @@ L.Icon.PfasLayerIcon = L.Icon.extend({
    options: {
     iconUrl: 'https://openclipart.org/image/300px/svg_to_png/117253/1297044906.png',
     iconSize:     [10, 10],
-    iconAnchor:   [20 , 0],
-    popupAnchor:  [-5, -5]
+    popupAnchor:  [1, -2]
   }
 });
 
