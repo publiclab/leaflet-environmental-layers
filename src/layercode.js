@@ -476,9 +476,7 @@ L.icon.skyTruthIcon = function () {
 L.Icon.OdorReportIcon = L.Icon.extend({
     options: {
       iconUrl: 'https://www.clker.com/cliparts/T/3/6/T/S/8/ink-splash-md.png',
-      iconSize:     [30, 20],
-      iconAnchor:   [20 , 0],
-      popupAnchor:  [-5, -5]
+      iconSize:     [30, 20]
     }
 });
 
