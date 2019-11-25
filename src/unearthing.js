@@ -50,7 +50,7 @@ L.LayerGroup.unearthing = L.LayerGroup.extend(
                    content += point.properties.sic_name + "</br />";
                    content += point.properties.street + "</br />";
                    content += point.properties.employees + " employees</br />";
-                   content += "<p><a class='btn btn-primary' href='https://publiclab.org/post?tags=unearthing-pvd-stories,lat:" + point[0] + ",lon:" + point[1] + "'>Add your story</a></p>";
+                   content += "<p><a class='btn btn-outline-primary' href='https://publiclab.org/post?tags=unearthing-pvd-stories,lat:" + point[0] + ",lon:" + point[1] + "'>Add your story</a></p>";
                    L.popup()
                      .setLatLng([point[0], point[1]])
                      .setContent(content)
