@@ -172,7 +172,23 @@ We're going to try spinning this out into its own library; see: https://github.c
 			<script src="../node_modules/heatmap.js/build/heatmap.min.js"></script>
 			<script src="../node_modules/leaflet-heatmap/leaflet-heatmap.js"></script>
 
+## To use overlapping marker spiderfier plugin:
+  
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/OverlappingMarkerSpiderfier-Leaflet/0.2.6/oms.min.js"></script>
+      var oms = omsUtil(map, {
+            keepSpiderfied: true,
+            circleSpiralSwitchover: 0
+      });
+        
+      The second parameter in the omsUtil function is the options object. The details of the available options can be found in [https://github.com/jawj/OverlappingMarkerSpiderfier-Leaflet](https://github.com/jawj/OverlappingMarkerSpiderfier-Leaflet). 
+      
 
+## To implement the plugin in each layer:
+      `oms.addMarker(marker);` 
+      To be called after the marker is instantiated to add the markers of the layer to the overlapping marker spiderfier instance. 
+      _Note: Currently used in the mapknitter layer, pfaslayer, and odorreport layer._
+
+ 
 ## Real Time Layers :
 
 1.) city (by openWeather)
