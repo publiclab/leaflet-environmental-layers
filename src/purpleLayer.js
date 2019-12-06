@@ -63,11 +63,14 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
         getMarker: function (data) {
               var lat = data.Lat;
               var lng = data.Lon;
-              var value = parseFloat(data.PM2_5Value);  //PM2.5 VALUE in microgram per metre cube
 
+              var value = parseFloat(data.PM2_5Value);  //PM2.5 VALUE in microgram per metre cube
+              if(! (lat || lng || value) ){
+                return
+              }
               var purpleLayer_object = {};
-              purpleLayer_object.lat = lat;
-              purpleLayer_object.lng = lng;
+              purpleLayer_object.lat = parseFloat(lat);
+              purpleLayer_object.lng = parseFloat(lng);
               purpleLayer_object.count = value;
               /*
               var aqi ;
@@ -100,15 +103,17 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
         },
 
         addMarker: function (data) {
-            this._purpleLayerArray.push(this.getMarker(data)) ;
+          var marker = this.getMarker(data)
+
+          if (marker && marker.lat && marker.lng) {
+            this._purpleLayerArray.push(marker) ;
+          }
         },
 
         parseData: function (data) {
-
             for (i = 0 ; i < data.results.length ; i++) {
              this.addMarker(data.results[i]) ;
             }
-            //console.log(this._purpleLayerArray) ;
             this.heatmapLayer.setData({data: this._purpleLayerArray}) ;
             this._map.addLayer(this.heatmapLayer) ;
         }
