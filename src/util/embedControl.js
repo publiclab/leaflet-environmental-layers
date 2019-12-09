@@ -45,6 +45,6 @@ L.Control.Embed = L.Control.extend({
 
 })
 
-L.control.embed = function() {
-    return new L.Control.Embed();
+L.control.embed = function(options) {
+    return new L.Control.Embed(options);
 }
