@@ -20,8 +20,8 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
             options = options || {};
             L.Util.setOptions(this, options);
             this._layers = {};
-            this._purpleLayerArray = [] ;
-            this.heatmapLayer ;
+            this._purpleLayerArray = [];
+            this.heatmapLayer;
         },
 
         onAdd: function (map) {
@@ -47,12 +47,12 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
                     var $ = window.jQuery;
                     var PurpleLayer_url = "https://www.purpleair.com/json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L";
                     if(typeof self._map.spin === 'function'){
-                      self._map.spin(true) ;
+                      self._map.spin(true);
                     }
                     $.getJSON(PurpleLayer_url , function(data){
-                        self.parseData(data) ;
+                        self.parseData(data);
                         if(typeof self._map.spin === 'function'){
-                          self._map.spin(false) ;
+                          self._map.spin(false);
                         }
                     }); 
                 })();
@@ -65,8 +65,10 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
               var lng = data.Lon;
 
               var value = parseFloat(data.PM2_5Value);  //PM2.5 VALUE in microgram per metre cube
-              if(! (lat || lng || value) ){
-                return
+              var isLocationPresent = lat || lng || value;
+
+              if (!isLocationPresent) {
+                return;
               }
               var purpleLayer_object = {};
               purpleLayer_object.lat = parseFloat(lat);
@@ -99,28 +101,28 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
 
               purpleLayer_object.count = aqi ;
               */
-              return purpleLayer_object ;
+              return purpleLayer_object;
         },
 
         addMarker: function (data) {
-          var marker = this.getMarker(data)
+          var marker = this.getMarker(data);
 
           if (marker && marker.lat && marker.lng) {
-            this._purpleLayerArray.push(marker) ;
+            this._purpleLayerArray.push(marker);
           }
         },
 
         parseData: function (data) {
             for (i = 0 ; i < data.results.length ; i++) {
-             this.addMarker(data.results[i]) ;
+             this.addMarker(data.results[i]);
             }
-            this.heatmapLayer.setData({data: this._purpleLayerArray}) ;
-            this._map.addLayer(this.heatmapLayer) ;
+            this.heatmapLayer.setData({data: this._purpleLayerArray});
+            this._map.addLayer(this.heatmapLayer);
         }
     }
 );
 
 
 L.layerGroup.purpleLayer = function (options) {
-    return new L.LayerGroup.PurpleLayer(options) ;
+    return new L.LayerGroup.PurpleLayer(options);
 };
