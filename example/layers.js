@@ -232,6 +232,8 @@
     var hash = new L.Hash(map, allMapLayers);
     var leafletControl = new L.control.layers(baseMaps,overlayMaps);
     leafletControl.addTo(map);
-    
+
+    var embedControl = new L.control.embed();
+    embedControl.addTo(map); 
 
     
