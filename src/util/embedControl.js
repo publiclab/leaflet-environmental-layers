@@ -15,7 +15,7 @@ L.Control.Embed = L.Control.extend({
         this._embedAnchorElement.setAttribute('role', 'button');
         this._embedAnchorElement.setAttribute('aria-labelledby', 'embed');
         this._embedElement.appendChild(this._embedAnchorElement);
-        this._embedIconElement = L.DomUtil.create('i', 'fa fa-code');
+        this._embedIconElement = L.DomUtil.create('i', 'fas fa-code');
         this._embedAnchorElement.appendChild(this._embedIconElement);
         this.onClick();
     },
