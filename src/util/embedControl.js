@@ -1,14 +1,22 @@
 L.Control.Embed = L.Control.extend({
 
     options: {
-        position: 'bottomleft',
+        position: 'topleft',
     },
 
     initialize: function(options) {
         L.Util.setOptions(this, options);
-        this._embedElement = L.DomUtil.create('button');
-        this._embedIconElement = L.DomUtil.create('i', 'fa fa-code')
-        this._embedElement.appendChild(this._embedIconElement);
+        this._embedElement = L.DomUtil.create('div');
+        this._embedElement.classList.add('leaflet-control-embed', 'leaflet-bar', 'leaflet-control')
+        this._embedAnchorElement = L.DomUtil.create('a');
+        this._embedAnchorElement.classList.add('leaflet-control-embed-link');
+        this._embedAnchorElement.setAttribute('href', '#');
+        this._embedAnchorElement.setAttribute('title', 'embed');
+        this._embedAnchorElement.setAttribute('role', 'button');
+        this._embedAnchorElement.setAttribute('aria-labelledby', 'embed');
+        this._embedElement.appendChild(this._embedAnchorElement);
+        this._embedIconElement = L.DomUtil.create('i', 'fa fa-code');
+        this._embedAnchorElement.appendChild(this._embedIconElement);
         this.onClick();
     },
 
