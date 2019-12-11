@@ -11,6 +11,7 @@ L.Control.Embed = L.Control.extend({
         this._embedAnchorElement = L.DomUtil.create('a');
         this._embedAnchorElement.classList.add('leaflet-control-embed-link');
         this._embedAnchorElement.setAttribute('href', '#');
+        this._embedAnchorElement.setAttribute('onclick', 'return false'); // To prevent the removal of url hash
         this._embedAnchorElement.setAttribute('title', 'embed');
         this._embedAnchorElement.setAttribute('role', 'button');
         this._embedAnchorElement.setAttribute('aria-labelledby', 'embed');
@@ -27,25 +28,14 @@ L.Control.Embed = L.Control.extend({
     onClick: function() {
         var self = this;
         L.DomEvent.on(this._embedElement, 'click', function(ev) {
-            prompt('Use this HTML code to embed this map on another site.', self.generateCode())
+            prompt('Use this HTML code to embed this map on another site.', self.generateCode());
         })
     },
 
-    getUrlHashParameters: function() {
-        var hash = window.location.hash;
-        var getValues = hash.substr(1).split('/');
-        var params = {
-            lat: getValues[1],
-            lng: getValues[2],
-            zoom: getValues[0],
-            layers: getValues[3]
-        }
-        return params;
-    },
-
     generateCode: function() {
-        var params = this.getUrlHashParameters();
-        var code = '<iframe style="border:none;" width="100%" height="900px" src="//publiclab.github.io/leaflet-environmental-layers/example/#' + params.zoom + '/' + params.lat + '/' + params.lng + '/' + params.layers +'"></iframe>';
+        var currentHash = window.location.hash;
+        var path = window.location.pathname;
+        var code = '<iframe style="border:none;" width="100%" height="900px" src="//publiclab.github.io/leaflet-environmental-layers' + path + currentHash +'"></iframe>';
         return code;
     },
 
