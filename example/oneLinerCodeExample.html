@@ -39,6 +39,9 @@
 
   <script src="lib/glify.js"></script>
 
+  <script src="lib/leaflet-fullUrlHash.js"></script>
+
+  <link href="../node_modules\@fortawesome\fontawesome-free\css\all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css">
 
   </head>
@@ -71,11 +74,11 @@
       //   keepSpiderfied: true,
       //   circleSpiralSwitchover: 0
       // });
-
       L.LayerGroup.EnvironmentalLayers({
         include: ['odorreport', 'asian', 'clouds', 'eonetFiresLayer', 'Unearthing'],
         // exclude: ['mapknitter', 'clouds'],
         hash: true,
+        embed: true
       }).addTo(map);
 
     </script>

@@ -120,15 +120,18 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 	           }
 
 	           if(this.options.embed) {
-	           		this.overlayMaps[layer].addTo(map);
+					this.overlayMaps[layer].addTo(map);	
 	           }
 
-	       }
-
+		   }
+		   	if(this.options.embed) {
+				L.control.embed().addTo(map);	
+	   	   	}
+		   
            L.control.layers(baseMaps,this.overlayMaps).addTo(map);
 
 		   if(this.options.hash)
-		     var hash = new L.Hash(map, this.overlayMaps);
+			   var hash = new L.FullHash(map,this.overlayMaps);	 
 		          
         },
 
