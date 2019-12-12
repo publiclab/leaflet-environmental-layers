@@ -39,8 +39,17 @@ L.LayerGroup.unearthing = L.LayerGroup.extend(
                  data: data,
                  //size: 8,
                  color: function(index, point) {
-                   // console.log(point); // point is currently just []
-                   return { r: 0.1, g: 0.1, b: 1 };
+                   var years;
+                   var preset_year = 2012;
+                   if (point.properties.years){
+                    years = point.properties.years.split(",").map(Number);
+                   }
+                   if (years && years.includes(preset_year)) {
+                    return { r: 0.1, g: 1.0, b: 0.1 }; 
+                   }
+                   else {
+                    return { r: 0.01, g: 0.01, b: 1.00 };
+                   }
                  },
                  sensitivity: 5,
                  click: function (e, point, xy) {
