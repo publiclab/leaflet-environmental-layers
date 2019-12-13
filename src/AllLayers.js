@@ -121,7 +121,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 	           }
 
 	           if(this.options.embed) {
-					this.overlayMaps[layer].addTo(map);	
+					// this.overlayMaps[layer].addTo(map);	
 	           }
 
 		   }
