@@ -72,6 +72,9 @@
       ).addTo(map);
 
       L.LayerGroup.EnvironmentalLayers({
+        baseLayers: {
+          'Grey-scale': baselayer1
+        },
         include: ['asian', 'clouds', 'Unearthing'],
         // exclude: ['mapknitter', 'clouds'],
         hash: true,

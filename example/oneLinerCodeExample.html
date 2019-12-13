@@ -75,6 +75,9 @@
       //   circleSpiralSwitchover: 0
       // });
       L.LayerGroup.EnvironmentalLayers({
+        baseLayers: {
+          'Grey-scale': baselayer1
+        },
         include: ['odorreport', 'asian', 'clouds', 'eonetFiresLayer', 'Unearthing'],
         // exclude: ['mapknitter', 'clouds'],
         hash: true,

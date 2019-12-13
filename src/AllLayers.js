@@ -37,7 +37,10 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         	param = param || {};
         	if(!!param.hash) {
         		this.options.hash = param.hash;
-        	}
+			}
+			if(!!param.baseLayers) {
+				this.options.baseLayers = param.baseLayers;
+			}
         	param.all =  [...this.options.layers0 , ...this.options.layers1 , ...this.options.layers2 , ...this.options.layers3 , ...this.options.layers4 , ...this.options.layers5 , ...this.options.layers6];
         	if(!param.include || !param.include.length) {
         		param.include = param.all;
@@ -58,19 +61,9 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         onAdd: function (map) {
 
             this._map = map ;
-          
-		    var baselayer = L.tileLayer(
-		        "https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png",
-		        {
-		          attribution:
-		            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-		        }
-		      );
 		   
 		    this.overlayMaps = {};
-		    var baseMaps = {
-		      "Grey-scale": baselayer ,
-		    };
+		    var baseMaps = this.options.baseLayers;
 
 		    for(let layer of this.options.layers.include) {
 
@@ -131,8 +124,9 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 		   
            L.control.layers(baseMaps,this.overlayMaps).addTo(map);
 
+		   var allMaps = Object.assign(baseMaps, this.overlayMaps);
 		   if(this.options.hash)
-			   var hash = new L.FullHash(map,this.overlayMaps);
+			   var hash = new L.FullHash(map,allMaps);
 				// Parse map data from location hash
 				var parsed = hash.parseHash(this.options.currentHash);
 				var layers = parsed.layers;
