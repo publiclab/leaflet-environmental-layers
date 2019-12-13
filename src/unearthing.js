@@ -2,7 +2,7 @@ L.LayerGroup.unearthing = L.LayerGroup.extend(
 
     {
         options: {
-          json_url: 'https://sagarpreet-chadha.github.io/socioeco.json',
+          json_url: 'https://publiclab.github.io/unearthing-pvd/RI_mfgs.json',
         },
 
         initialize: function (param) {
@@ -22,7 +22,7 @@ L.LayerGroup.unearthing = L.LayerGroup.extend(
           this.pointsLayer = {};
           var points = this.pointsLayer;
           var setP = this.setPoints;
-          $.get('https://sagarpreet-chadha.github.io/socioeco.json')
+          $.get('https://publiclab.github.io/unearthing-pvd/RI_mfgs.json')
              .done(function(data) {
 
                // standardize lat/lon instead of lon/lat
@@ -44,13 +44,16 @@ L.LayerGroup.unearthing = L.LayerGroup.extend(
                  },
                  sensitivity: 5,
                  click: function (e, point, xy) {
+                   var point_properties = ['street', 'employees', 'conames', 'years']
                    //set up a standalone popup (use a popup as a layer)
-                   var content = "<b>" + point.properties.name + ", " + point.properties.city + "</b></br />";
-                   content += point.properties.open + " until " + point.properties.close + "</br />";
-                   content += point.properties.sic_name + "</br />";
-                   content += point.properties.street + "</br />";
-                   content += point.properties.employees + " employees</br />";
+                   var content =  "<h4>" + (point.properties.sic_name || '') +'</h4>';
+                   content += "<table>"
+                   point_properties.forEach(function(property) {
+                     content +=  "<tr><td><b>" + property + "</b></td><td>" + (point.properties[property] || '') +'</td></tr>';
+                   })
+                   content += "</table>"
                    content += "<p><a class='btn btn-outline-primary' href='https://publiclab.org/post?tags=unearthing-pvd-stories,lat:" + point[0] + ",lon:" + point[1] + "'>Add your story</a></p>";
+                   
                    L.popup()
                      .setLatLng([point[0], point[1]])
                      .setContent(content)
@@ -60,8 +63,6 @@ L.LayerGroup.unearthing = L.LayerGroup.extend(
                setP(points.glLayer);
 
              });
-
-
         },
 
         setPoints: function (points) {
