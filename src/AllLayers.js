@@ -127,14 +127,8 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 		   var allMaps = Object.assign(baseMaps, this.overlayMaps);
 		   if(this.options.hash)
 			   var hash = new L.FullHash(map,allMaps);
-				// Parse map data from location hash
-				var parsed = hash.parseHash(this.options.currentHash);
-				var layers = parsed.layers;
-				// Set map state from parsed hash
-				map.setView(parsed.center, parsed.zoom);
-				layers.forEach(function(layer) {
-					if(hash.options[layer] && !map.hasLayer(hash.options[layer])) map.addLayer(hash.options[layer])
-			 	});
+				// Update map state from hash
+				hash.update(this.options.currentHash);
 		          
         },
 
