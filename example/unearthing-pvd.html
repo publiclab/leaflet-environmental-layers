@@ -29,8 +29,11 @@
   <script src="https://unpkg.com/esri-leaflet-renderers@2.0.6"></script>
 
 
-  <script src="lib/glify.js"></script>
+  <script src="../lib/glify.js"></script>
+
+  <script src="../lib/leaflet-fullUrlHash.js"></script>
   
+  <link href="../node_modules\@fortawesome\fontawesome-free\css\all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css">
 
   </head>
@@ -69,9 +72,13 @@
       ).addTo(map);
 
       L.LayerGroup.EnvironmentalLayers({
+        baseLayers: {
+          'Grey-scale': baselayer1
+        },
         include: ['asian', 'clouds', 'Unearthing'],
         // exclude: ['mapknitter', 'clouds'],
         hash: true,
+        embed: true
       }).addTo(map);
 
     </script>

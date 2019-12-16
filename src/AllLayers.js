@@ -38,6 +38,9 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       if (!!param.hash) {
         this.options.hash = param.hash;
       }
+      if(!!param.baseLayers) {
+				this.options.baseLayers = param.baseLayers;
+			}
       param.all = [...this.options.layers0, ...this.options.layers1, ...this.options.layers2, ...this.options.layers3, ...this.options.layers4, ...this.options.layers5, ...this.options.layers6];
       if (!param.include || !param.include.length) {
         param.include = param.all;
@@ -57,19 +60,8 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 
     onAdd: function(map) {
       this._map = map;
-
-      var baselayer = L.tileLayer(
-        'https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png',
-        {
-          attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        },
-      );
-
       this.overlayMaps = {};
-      var baseMaps = {
-        'Grey-scale': baselayer,
-      };
+      var baseMaps = this.options.baseLayers;
 
       for (let layer of this.options.layers.include) {
         if (this.options.layers0.includes(layer)) {
@@ -117,25 +109,20 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         else {
           console.log('Incorrect Layer Name');
         }
-
-        if (this.options.embed) {
-          this.overlayMaps[layer].addTo(map);
-        }
       }
 
-      L.control.layers(baseMaps, this.overlayMaps).addTo(map);
-
-      if (this.options.hash) {
-        var hash = new L.Hash(map, this.overlayMaps);
+      if(this.options.embed) {
+				L.control.embed().addTo(map);	
       }
-      // Parse map data from location hash
-      var parsed = hash.parseHash(this.options.currentHash);
-      var layers = parsed.layers;
-      // Set map state from parsed hash
-      map.setView(parsed.center, parsed.zoom);
-      layers.forEach(function(layer) {
-        if (hash.options[layer] && !map.hasLayer(hash.options[layer])) map.addLayer(hash.options[layer]);
-      });
+		   
+      L.control.layers(baseMaps,this.overlayMaps).addTo(map);
+
+      var allMaps = Object.assign(baseMaps, this.overlayMaps);
+      if(this.options.hash) {
+        var hash = new L.FullHash(map,allMaps);
+        // Update map state from hash
+        hash.update(this.options.currentHash);
+      }    
     },
 
     onRemove: function(map) {},
