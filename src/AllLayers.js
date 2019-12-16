@@ -119,11 +119,6 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 	           else {
 	           	console.log("Incorrect Layer Name");
 	           }
-
-	           if(this.options.embed) {
-					// this.overlayMaps[layer].addTo(map);	
-	           }
-
 		   }
 		   	if(this.options.embed) {
 				L.control.embed().addTo(map);	
