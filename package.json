@@ -26,6 +26,8 @@
     "@fortawesome/fontawesome-free": "^5.11.2",
     "bootstrap": "^4.1.1",
     "browserify": "latest",
+    "eslint": "^6.7.2",
+    "eslint-config-google": "^0.14.0",
     "grunt": "^1.0.4",
     "grunt-browserify": "^5.0.0",
     "grunt-contrib-concat": "^1.0.1",

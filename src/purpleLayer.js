@@ -1,80 +1,76 @@
-require('heatmap.js') ;
-require('leaflet-heatmap') ;
+require('heatmap.js');
+require('leaflet-heatmap');
 
 L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
 
-    {
+  {
 
-        options: {
-            "radius": 2,
-            "maxOpacity": 1 ,
-            "scaleRadius": true,
-            "useLocalExtrema": true,
-             latField: 'lat',
-             lngField: 'lng',
-             valueField: 'count' ,
-             blur: 0.75
-        },
+    options: {
+      'radius': 2,
+      'maxOpacity': 1,
+      'scaleRadius': true,
+      'useLocalExtrema': true,
+      'latField': 'lat',
+      'lngField': 'lng',
+      'valueField': 'count',
+      'blur': 0.75,
+    },
 
-        initialize: function (options) {
-            options = options || {};
-            L.Util.setOptions(this, options);
-            this._layers = {};
-            this._purpleLayerArray = [];
-            this.heatmapLayer;
-        },
+    initialize: function(options) {
+      options = options || {};
+      L.Util.setOptions(this, options);
+      this._layers = {};
+      this._purpleLayerArray = [];
+      this.heatmapLayer;
+    },
 
-        onAdd: function (map) {
-             this._map = map;
-             this.heatmapLayer = new HeatmapOverlay(this.options) ;
-             this.requestData();
+    onAdd: function(map) {
+      this._map = map;
+      this.heatmapLayer = new HeatmapOverlay(this.options);
+      this.requestData();
+    },
 
+    onRemove: function(map) {
+      this._map.removeLayer(this.heatmapLayer);
+      if (typeof map.spin === 'function') {
+        map.spin(false);
+      }
+      this.clearLayers();
+      this._layers = {};
+    },
 
-        },
+    requestData: function() {
+      var self = this;
+      (function() {
+        var $ = window.jQuery;
+        var PurpleLayer_url = 'https://www.purpleair.com/json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L';
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(true);
+        }
+        $.getJSON(PurpleLayer_url, function(data) {
+          self.parseData(data);
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        });
+      })();
+    },
 
-        onRemove: function (map) {
-            this._map.removeLayer(this.heatmapLayer) ;
-            if(typeof map.spin === 'function'){
-              map.spin(false) ;
-            }
-            this.clearLayers();
-            this._layers = {};
-        },
+    getMarker: function(data) {
+      var lat = data.Lat;
+      var lng = data.Lon;
 
-        requestData: function () {
-           var self = this;
-                (function() {
-                    var $ = window.jQuery;
-                    var PurpleLayer_url = "https://www.purpleair.com/json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L";
-                    if(typeof self._map.spin === 'function'){
-                      self._map.spin(true);
-                    }
-                    $.getJSON(PurpleLayer_url , function(data){
-                        self.parseData(data);
-                        if(typeof self._map.spin === 'function'){
-                          self._map.spin(false);
-                        }
-                    }); 
-                })();
+      var value = parseFloat(data.PM2_5Value); // PM2.5 VALUE in microgram per metre cube
+      var isLocationPresent = lat || lng || value;
 
-
-        },
-
-        getMarker: function (data) {
-              var lat = data.Lat;
-              var lng = data.Lon;
-
-              var value = parseFloat(data.PM2_5Value);  //PM2.5 VALUE in microgram per metre cube
-              var isLocationPresent = lat || lng || value;
-
-              if (!isLocationPresent) {
-                return;
-              }
-              var purpleLayer_object = {};
-              purpleLayer_object.lat = parseFloat(lat);
-              purpleLayer_object.lng = parseFloat(lng);
-              purpleLayer_object.count = value;
-              /*
+      if (!isLocationPresent) {
+        return;
+      }
+      var purpleLayer_object = {};
+      purpleLayer_object.lat = parseFloat(lat);
+      purpleLayer_object.lng = parseFloat(lng);
+      purpleLayer_object.count = value;
+      /*
               var aqi ;
               if(value>=0 && value<=12.0)
               {
@@ -101,28 +97,28 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
 
               purpleLayer_object.count = aqi ;
               */
-              return purpleLayer_object;
-        },
+      return purpleLayer_object;
+    },
 
-        addMarker: function (data) {
-          var marker = this.getMarker(data);
+    addMarker: function(data) {
+      var marker = this.getMarker(data);
 
-          if (marker && marker.lat && marker.lng) {
-            this._purpleLayerArray.push(marker);
-          }
-        },
+      if (marker && marker.lat && marker.lng) {
+        this._purpleLayerArray.push(marker);
+      }
+    },
 
-        parseData: function (data) {
-            for (i = 0 ; i < data.results.length ; i++) {
-             this.addMarker(data.results[i]);
-            }
-            this.heatmapLayer.setData({data: this._purpleLayerArray});
-            this._map.addLayer(this.heatmapLayer);
-        }
-    }
+    parseData: function(data) {
+      for (i = 0; i < data.results.length; i++) {
+        this.addMarker(data.results[i]);
+      }
+      this.heatmapLayer.setData({data: this._purpleLayerArray});
+      this._map.addLayer(this.heatmapLayer);
+    },
+  },
 );
 
 
-L.layerGroup.purpleLayer = function (options) {
-    return new L.LayerGroup.PurpleLayer(options);
+L.layerGroup.purpleLayer = function(options) {
+  return new L.LayerGroup.PurpleLayer(options);
 };
