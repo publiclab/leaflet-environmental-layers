@@ -229,7 +229,7 @@ var allMapLayers = {
 // });
 
 var hash = new L.FullHash(map, allMapLayers);
-var leafletControl = new L.control.layers(baseMaps,overlayMaps);
+var leafletControl = new L.control.layers(baseMaps, overlayMaps);
 leafletControl.addTo(map);
 
 var embedControl = new L.control.embed({
