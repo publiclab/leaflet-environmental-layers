@@ -232,6 +232,8 @@ var hash = new L.FullHash(map, allMapLayers);
 var leafletControl = new L.control.layers(baseMaps,overlayMaps);
 leafletControl.addTo(map);
 
-var embedControl = new L.control.embed();
+var embedControl = new L.control.embed({
+  // hostname: 'your domain name goes here'
+});
 embedControl.addTo(map);
 

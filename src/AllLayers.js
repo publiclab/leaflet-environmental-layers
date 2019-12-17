@@ -56,6 +56,9 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       if (!!param.embed) {
         this.options.embed = param.embed;
       }
+      if(!!param.hostname) {
+				this.options.hostname = param.hostname;
+			}
     },
 
     onAdd: function(map) {
@@ -112,7 +115,11 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       }
 
       if(this.options.embed) {
-				L.control.embed().addTo(map);	
+        this.options.hostname ? (
+          L.control.embed({
+            hostname: this.options.hostname
+          }).addTo(map)
+        ) : L.control.embed().addTo(map);
       }
 		   
       L.control.layers(baseMaps,this.overlayMaps).addTo(map);
