@@ -38,9 +38,9 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       if (!!param.hash) {
         this.options.hash = param.hash;
       }
-      if(!!param.baseLayers) {
-				this.options.baseLayers = param.baseLayers;
-			}
+      if (!!param.baseLayers) {
+        this.options.baseLayers = param.baseLayers;
+      }
       param.all = [...this.options.layers0, ...this.options.layers1, ...this.options.layers2, ...this.options.layers3, ...this.options.layers4, ...this.options.layers5, ...this.options.layers6];
       if (!param.include || !param.include.length) {
         param.include = param.all;
@@ -55,6 +55,9 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 
       if (!!param.embed) {
         this.options.embed = param.embed;
+      }
+      if (!!param.hostname) {
+        this.options.hostname = param.hostname;
       }
     },
 
@@ -111,18 +114,22 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         }
       }
 
-      if(this.options.embed) {
-				L.control.embed().addTo(map);	
+      if (this.options.embed) {
+        this.options.hostname ? (
+          L.control.embed({
+            hostname: this.options.hostname,
+          }).addTo(map)
+        ) : L.control.embed().addTo(map);
       }
-		   
-      L.control.layers(baseMaps,this.overlayMaps).addTo(map);
+
+      L.control.layers(baseMaps, this.overlayMaps).addTo(map);
 
       var allMaps = Object.assign(baseMaps, this.overlayMaps);
-      if(this.options.hash) {
-        var hash = new L.FullHash(map,allMaps);
+      if (this.options.hash) {
+        var hash = new L.FullHash(map, allMaps);
         // Update map state from hash
         hash.update(this.options.currentHash);
-      }    
+      }
     },
 
     onRemove: function(map) {},

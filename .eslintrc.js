@@ -25,6 +25,7 @@ module.exports = {
     "indent": ["error", 2],
     "camelcase": 0,
     "no-unused-vars": ["warn", { "vars": "local", "args": "none" }],
-    "require-jsdoc": 0
+    "require-jsdoc": 0,
+    "linebreak-style": 0
   },
 };
