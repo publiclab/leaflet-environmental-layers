@@ -35,7 +35,7 @@ L.Control.Embed = L.Control.extend({
 
   generateCode: function() {
     var currentHash = window.location.hash;
-    var path = window.location.pathname;
+    var path = window.location.pathname === '/example/embed.html' ? '/example/index.html' : window.location.pathname;
     var hostname = this.options.hostname;
     var code = '<iframe style="border:none;" width="100%" height="900px" src="//' + hostname + '/leaflet-environmental-layers' + path + currentHash +'"></iframe>';
     return code;
