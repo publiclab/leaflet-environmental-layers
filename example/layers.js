@@ -236,9 +236,3 @@ var embedControl = new L.control.embed({
   // hostname: 'your domain name goes here'
 });
 embedControl.addTo(map);
-
-// Info displayed on top of map
-var displayInfo = new L.control.info({
-  text: 'Pan & zoom the map below and select layers to display, then use the `</>` button to generate an embed code you can use on your own website.'
-});
-displayInfo.addTo(map);
