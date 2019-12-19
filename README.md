@@ -214,18 +214,19 @@ We're going to try spinning this out into its own library; see: https://github.c
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
     });   
 
-## Add Leaflet-FullHash for easy sharing of map :    
+## Add hash support for easy sharing of map :    
 
 ### Steps To add :
 
 1.) Add link :
 
-    <script src="../node_modules/leaflet-fullhash/leaflet-fullHash.js"></script>
+       <script src="../lib/leaflet-fullUrlHash.js"></script>
 
 2.) Once you have initialized the map (an instance of L.Map), add the following code :
 
-    // Assuming your map instance is in a variable called map
-    var hash = new L.Hash(map);    
+     // Assuming your map instance is in a variable called map and an object with all the map layers is 
+    in a variable called allMapLayers
+    var hash = new L.FullHash(map, allMapLayers);    
     
     
   
