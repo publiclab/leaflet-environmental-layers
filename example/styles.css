@@ -30,3 +30,8 @@ z-index: 10; }
   color: #a2a2a2;
   cursor: pointer;
 }
+
+.leaflet-control-layers-menu {
+  width: 35vw;
+  max-width: 100%;
+}
