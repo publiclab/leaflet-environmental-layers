@@ -281,7 +281,6 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     var groupHolder = document.createElement('div');
     groupHolder.className = 'collapse';
     groupHolder.setAttribute('id', obj.group);
-    // groupHolder.style.marginLeft = '3em';
 
     var container = obj.overlay ? this._overlaysList : this._baseLayersList;
     container.appendChild(groupHolder);
