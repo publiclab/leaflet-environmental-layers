@@ -1,0 +1,33 @@
+{
+  "justicemap": {
+    "url": "http://www.justicemap.org/index.php?giAdvanced=0#instruction_div",
+    "data": {
+      "type": "",
+      "disclaimer": "Our information comes from the Census Bureau - the 2010 Census and the latest American Community Survey (five year summary)."
+    },
+    "description": "Visualize race and income data for your neighborhood, county, state, or the entire US",
+    "layer_desc": "U.S race and income data"
+  },
+  "odorreport": {
+    "url": "https://odorlog.ushahidi.io/views/map",
+    "report_url": "http://www.odorcomplaint.com/",
+    "data": {
+      "type": "",
+      "disclaimer": "Data based on the the <a href=\"http://www.odorcomplaint.com/\">Odor Complaint Form</a> plus a couple of logs found online"
+    },
+    "description": "Facilitates monitoring of bad odor events through the collection of data using a written odor log and an online map.",
+    "layer_desc": "Bad odor events",
+    "icon": "yellow"
+  },
+  "purpleair": {
+    "url": "https://www.purpleair.com",
+    "report_url": "https://www.purpleair.com/register",
+    "data": {
+      "type": "RT",
+      "disclaimer": "Every icon on the PurpleAir map represents a public PurpleAir sensor and the color indicates the real time PM2.5 reading on the US EPA Air Quality Index scale."
+    },
+    "description": "An air quality monitoring network built on a new generation of \"Internet of Things\" sensors",
+    "layer_desc": "Air quality data from PurpleAir sensors",
+    "icon": "purple"
+  }
+} 
