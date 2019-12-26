@@ -191,6 +191,91 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     return separator;
   },
 
+  _createLayerInfoElements: function(obj) {
+    var layerData = require('../layerData.json');
+    var data = layerData[obj.group && obj.group.toLowerCase() || obj.name.toLowerCase()];
+    var icon = document.createElement('div');
+    icon.className = 'rounded-circle';
+    icon.style.width = '10px';
+    icon.style.height = '10px';
+    icon.style.backgroundColor = data && data.icon || 'black';
+    icon.style.display = 'inline-block';
+    icon.style.margin = '0 1em';
+
+    var reportBtn = document.createElement('a');
+    reportBtn.setAttribute('role', 'button');
+    reportBtn.setAttribute('href', '#');
+    reportBtn.setAttribute('target', '_blank');
+    reportBtn.innerHTML = 'Add a report';
+    reportBtn.className = 'btn btn-default btn-outline-secondary btn-sm invisible';
+    reportBtn.style.margin = '0 1em';
+    reportBtn.style.lineHeight = '10px';
+    reportBtn.style.color = '#717171';
+
+    if(data && data.report_url) {
+      reportBtn.setAttribute('href', data.report_url);
+      reportBtn.classList.remove('invisible');
+    }
+
+    reportBtn.addEventListener('mouseover', function() {
+      reportBtn.style.color = 'white';
+    });
+
+    reportBtn.addEventListener('mouseout', function() {
+      reportBtn.style.color = '#717171';
+    });
+
+    var layerDesc = document.createElement('span');
+    layerDesc.innerHTML = data && data.layer_desc;
+    layerDesc.style.margin = '0 1em';
+    layerDesc.style.fontSize = '1.2em';
+
+    var dataInfo = document.createElement('div');
+    dataInfo.style.display = 'inline-block';
+    dataInfo.className = 'float-right';
+
+    if(obj.overlay && !obj.group) {
+      dataInfo.style.transform = 'translateY(3px)';
+    } else {
+      dataInfo.style.transform = 'translateY(6px)';
+    }
+
+    var dataType = document.createElement('span');
+    dataType.innerHTML = 'NRT/RT';
+    dataType.style.color = '#717171';
+
+    if(data && data.data.type === '') {
+      dataType.classList.add('invisible');
+    }
+
+    var dataInfoBtn = document.createElement('button');
+    dataInfoBtn.style.backgroundColor = 'transparent';
+    dataInfoBtn.style.borderColor = 'transparent';
+    var infoIcon = document.createElement('i');
+    infoIcon.className = 'fas fa-info-circle';
+    infoIcon.style.fontSize = '1.2em';
+    infoIcon.style.color = '#717171';
+
+    dataInfoBtn.addEventListener('click', function() {
+      var infoModal = new L.control.info({ text: data && data.data.disclaimer });
+      infoModal.addTo(map);
+    });
+
+    dataInfo.appendChild(dataType);
+    dataInfo.appendChild(dataInfoBtn);
+    dataInfoBtn.appendChild(infoIcon);
+
+    return {
+      icon: icon,
+      reportBtn: reportBtn,
+      layerDesc: layerDesc,
+      dataInfo: dataInfo,
+      dataType: dataType,
+      dataInfoBtn: dataInfoBtn,
+      infoIcon: infoIcon
+    }
+  },
+
   _createGroup: function(obj) {
     var layerGroup = document.createElement('a');
     layerGroup.href = '#' + obj.group;
@@ -204,6 +289,8 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     groupName.style.margin = '0 1em';
     groupName.style.fontSize = '1.2em';
     groupName.style.fontWeight = 'bold';
+    groupName.style.display = 'inline-block';
+    groupName.style.width = '7em';
 
     var chevron = document.createElement('i');
     chevron.className = 'fa fa-chevron-down';
@@ -214,62 +301,22 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       var list = document.querySelector('#'+ obj.group);
       if(chevron.className === 'fa fa-chevron-down') {
         chevron.className = 'fa fa-chevron-up';
-        list.appendChild(self._createSeperator());
       } else {
         chevron.className = 'fa fa-chevron-down';
-
-        list.removeChild(list.lastChild);
       }
     });
 
-    var icon = document.createElement('div');
-    icon.className = 'rounded-circle';
-    icon.style.width = '10px';
-    icon.style.height = '10px';
-    icon.style.backgroundColor = 'black';
-    icon.style.display = 'inline-block';
-    icon.style.margin = '0 1em';
-
-    var reportBtn = document.createElement('a');
-    reportBtn.setAttribute('role', 'button');
-    reportBtn.setAttribute('href', '#');
-    reportBtn.setAttribute('target', '_blank');
-    reportBtn.innerHTML = 'Add a report';
-    reportBtn.style.margin = '0 1em';
-
-    var layerDesc = document.createElement('span');
-    layerDesc.innerHTML = 'Layer description goes here';
-    layerDesc.style.margin = '0 1em';
-
-    var dataInfo = document.createElement('div');
-    dataInfo.style.display = 'inline-block';
-    dataInfo.style.float = 'right';
-
-    var dataType = document.createElement('span');
-    dataType.innerHTML = 'NRT/RT';
-
-    var dataInfoBtn = document.createElement('button');
-    dataInfoBtn.style.backgroundColor = 'transparent';
-    dataInfoBtn.style.borderColor = 'transparent';
-    var infoIcon = document.createElement('i');
-    infoIcon.className = 'fas fa-info-circle';
-
-    dataInfoBtn.addEventListener('click', function() {
-      var infoModal = new L.control.info({ text: 'data information goes here' });
-      infoModal.addTo(map);
-    });
+    var elements = this._createLayerInfoElements(obj);
 
     var titleHolder = document.createElement('div');
+    titleHolder.className = 'clearfix';
     titleHolder.appendChild(layerGroup);
     layerGroup.appendChild(chevron);
-    layerGroup.appendChild(icon);
-    titleHolder.appendChild(reportBtn);
+    layerGroup.appendChild(elements.icon);
+    titleHolder.appendChild(elements.reportBtn);
     titleHolder.appendChild(groupName);
-    titleHolder.appendChild(layerDesc);
-    titleHolder.appendChild(dataInfo);
-    dataInfo.appendChild(dataType);
-    dataInfo.appendChild(dataInfoBtn);
-    dataInfoBtn.appendChild(infoIcon);
+    titleHolder.appendChild(elements.layerDesc);
+    titleHolder.appendChild(elements.dataInfo);
     
     var container = obj.overlay ? this._overlaysList : this._baseLayersList;
     container.appendChild(titleHolder);
@@ -305,10 +352,6 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       input = this._createRadioElement('leaflet-base-layers_' + L.Util.stamp(this), checked);
     }
 
-    if(obj.overlay && obj.group) {
-      label.style.marginLeft = '3em';
-    }
-
     this._layerControlInputs.push(input);
     input.layerId = L.Util.stamp(obj.layer);
 
@@ -317,43 +360,11 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     var name = document.createElement('span');
     name.innerHTML = ' ' + obj.name;
     name.style.fontWeight = 'bold';
+    name.style.display = 'inline-block';
+    
+    name.style.fontSize = '1.2em';
 
-    var icon = document.createElement('div');
-    icon.className = 'rounded-circle';
-    icon.style.width = '10px';
-    icon.style.height = '10px';
-    icon.style.backgroundColor = 'black';
-    icon.style.display = 'inline-block';
-    icon.style.margin = '0 1em';
-
-    var reportBtn = document.createElement('a');
-    reportBtn.setAttribute('role', 'button');
-    reportBtn.setAttribute('href', '#');
-    reportBtn.setAttribute('target', '_blank');
-    reportBtn.innerHTML = 'Add a report';
-    reportBtn.style.margin = '0 1em';
-
-    var layerDesc = document.createElement('span');
-    layerDesc.innerHTML = 'Layer description goes here';
-    layerDesc.style.margin = '0 1em';
-
-    var dataInfo = document.createElement('div');
-    dataInfo.style.display = 'inline-block';
-    dataInfo.style.float = 'right';
-
-    var dataType = document.createElement('span');
-    dataType.innerHTML = 'NRT/RT';
-
-    var dataInfoBtn = document.createElement('button');
-    dataInfoBtn.style.backgroundColor = 'transparent';
-    dataInfoBtn.style.borderColor = 'transparent';
-    var infoIcon = document.createElement('i');
-    infoIcon.className = 'fas fa-info-circle';
-
-    dataInfoBtn.addEventListener('click', function() {
-      var infoModal = new L.control.info({ text: 'data information goes here' });
-      infoModal.addTo(map);
-    });
+    var elements = this._createLayerInfoElements(obj);
 
     // Helps from preventing layer control flicker when checkboxes are disabled
     // https://github.com/Leaflet/Leaflet/issues/2771
@@ -363,19 +374,24 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     label.appendChild(holder);
     holder.appendChild(input);
     if(obj.overlay && !obj.group) {
-      holder.appendChild(icon);
-      holder.appendChild(reportBtn);
-      name.style.margin = '0 0.6em';
-      name.style.fontSize = '1.2em';
-      name.style.fontWeight = 'bold';
+      holder.appendChild(elements.icon);
+      holder.appendChild(elements.reportBtn);
+      name.style.margin = '0 1em';
+      name.style.width = '7em';
     }
     holder.appendChild(name);
+    if(obj.overlay && obj.group) {
+      label.style.width = '100%';
+      label.style.marginBottom = '3px';
+      input.style.marginLeft = '3.8em';
+      name.style.marginLeft = '9.6em';
+      name.style.color = '#717171';
+      labelContainer.appendChild(this._createSeperator());
+    }
     if(obj.overlay && !obj.group) {
-      labelContainer.appendChild(layerDesc);
-      labelContainer.appendChild(dataInfo);
-      dataInfo.appendChild(dataType);
-      dataInfo.appendChild(dataInfoBtn);
-      dataInfoBtn.appendChild(infoIcon);
+      labelContainer.appendChild(elements.layerDesc);
+      labelContainer.className = 'clearfix';
+      labelContainer.appendChild(elements.dataInfo);
       labelContainer.appendChild(this._createSeperator());
     }
     
