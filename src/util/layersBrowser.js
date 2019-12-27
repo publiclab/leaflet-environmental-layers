@@ -193,9 +193,16 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
 
   _createLayerInfoElements: function(obj) {
     var layerData = require('../layerData.json');
-    var data = layerData[obj.group && obj.group.toLowerCase() || obj.name.toLowerCase()];
+    var data;
+    for (let i in layerData) {
+      if((obj.group && obj.group.replace(/\s/g, '').toLowerCase() === i.toLowerCase()) ||
+        (obj.name.replace(/\s/g, '').toLowerCase() === i.toLowerCase())) {
+          data = layerData[i];
+      }
+    }
+    
     var icon = document.createElement('div');
-    icon.className = 'rounded-circle';
+    icon.className = 'rounded-circle layer-icon';
     icon.style.width = '10px';
     icon.style.height = '10px';
     icon.style.backgroundColor = data && data.icon || 'black';
@@ -207,7 +214,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     reportBtn.setAttribute('href', '#');
     reportBtn.setAttribute('target', '_blank');
     reportBtn.innerHTML = 'Add a report';
-    reportBtn.className = 'btn btn-default btn-outline-secondary btn-sm invisible';
+    reportBtn.className = 'btn btn-default btn-outline-secondary btn-sm report-btn invisible';
     reportBtn.style.margin = '0 1em';
     reportBtn.style.lineHeight = '10px';
     reportBtn.style.color = '#717171';
@@ -227,24 +234,20 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
 
     var layerDesc = document.createElement('span');
     layerDesc.innerHTML = data && data.layer_desc;
-    layerDesc.style.margin = '0 1em';
+    layerDesc.className = 'layer-description';
     layerDesc.style.fontSize = '1.2em';
 
     var dataInfo = document.createElement('div');
     dataInfo.style.display = 'inline-block';
-    dataInfo.className = 'float-right';
+    dataInfo.className = 'float-sm-right layer-data-info';
 
-    if(obj.overlay && !obj.group) {
-      dataInfo.style.transform = 'translateY(3px)';
-    } else {
-      dataInfo.style.transform = 'translateY(6px)';
-    }
+    dataInfo.style.transform = 'translateY(6px)';
 
     var dataType = document.createElement('span');
     dataType.innerHTML = 'NRT/RT';
     dataType.style.color = '#717171';
 
-    if(data && data.data.type === '') {
+    if(data && data.data.type !== 'NRT' && data.data.type !== 'RT') {
       dataType.classList.add('invisible');
     }
 
@@ -277,57 +280,63 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   },
 
   _createGroup: function(obj) {
-    var layerGroup = document.createElement('a');
-    layerGroup.href = '#' + obj.group;
-    layerGroup.setAttribute('data-toggle', 'collapse');
-    layerGroup.setAttribute('role', 'button');
-    layerGroup.setAttribute('aria-expanded', 'false');
-    layerGroup.setAttribute('aria-controls', obj.group)
+    if(obj.group) {
+      var layerGroup = document.createElement('a');
+      layerGroup.href = '#' + obj.group.replace(/\s/g, '');
+      layerGroup.setAttribute('data-toggle', 'collapse');
+      layerGroup.setAttribute('role', 'button');
+      layerGroup.setAttribute('aria-expanded', 'false');
+      layerGroup.setAttribute('aria-controls', obj.group)
 
-    var groupName = document.createElement('span');
-    groupName.innerHTML = obj.group;
-    groupName.style.margin = '0 1em';
-    groupName.style.fontSize = '1.2em';
-    groupName.style.fontWeight = 'bold';
-    groupName.style.display = 'inline-block';
-    groupName.style.width = '7em';
+      var groupName = document.createElement('span');
+      groupName.innerHTML = obj.group;
+      groupName.className = 'layer-group-name';
+      groupName.style.margin = '0 1em';
+      groupName.style.fontSize = '1.2em';
+      groupName.style.fontWeight = 'bold';
+      groupName.style.display = 'inline-block';
+      groupName.style.width = '12em';
 
-    var chevron = document.createElement('i');
-    chevron.className = 'fa fa-chevron-down';
-    chevron.setAttribute('aria-hidden', 'true');
-    chevron.style.margin = '1em';
-    var self = this;
-    layerGroup.addEventListener('click', function() {
-      var list = document.querySelector('#'+ obj.group);
-      if(chevron.className === 'fa fa-chevron-down') {
-        chevron.className = 'fa fa-chevron-up';
-      } else {
-        chevron.className = 'fa fa-chevron-down';
-      }
-    });
+      var chevron = document.createElement('i');
+      chevron.className = 'fa fa-chevron-down';
+      chevron.setAttribute('aria-hidden', 'true');
+      chevron.style.margin = '1em';
+      
+      layerGroup.addEventListener('click', function() {
+        if(chevron.className === 'fa fa-chevron-down') {
+          chevron.className = 'fa fa-chevron-up';
+        } else {
+          chevron.className = 'fa fa-chevron-down';
+        }
+      });
 
-    var elements = this._createLayerInfoElements(obj);
+      var elements = this._createLayerInfoElements(obj);
 
-    var titleHolder = document.createElement('div');
-    titleHolder.className = 'clearfix';
-    titleHolder.appendChild(layerGroup);
-    layerGroup.appendChild(chevron);
-    layerGroup.appendChild(elements.icon);
-    titleHolder.appendChild(elements.reportBtn);
-    titleHolder.appendChild(groupName);
-    titleHolder.appendChild(elements.layerDesc);
-    titleHolder.appendChild(elements.dataInfo);
-    
-    var container = obj.overlay ? this._overlaysList : this._baseLayersList;
-    container.appendChild(titleHolder);
-    container.appendChild(this._createSeperator());
-    return titleHolder;
+      var titleHolder = document.createElement('div');
+      titleHolder.className = 'clearfix layer-info-container';
+      titleHolder.appendChild(layerGroup);
+      layerGroup.appendChild(chevron);
+      layerGroup.appendChild(elements.icon);
+      titleHolder.appendChild(elements.reportBtn);
+      titleHolder.appendChild(groupName);
+      titleHolder.appendChild(elements.layerDesc);
+      titleHolder.appendChild(elements.dataInfo);
+      
+      var container = obj.overlay ? this._overlaysList : this._baseLayersList;
+      container.appendChild(titleHolder);
+      container.appendChild(this._createSeperator());
+      return titleHolder;
+    }
   },
 
   _createGroupHolder: function(obj) {
+    var groupName;
+    if(obj.group) {
+      groupName =  obj.group.replace(/\s/g, '');
+    }
     var groupHolder = document.createElement('div');
-    groupHolder.className = 'collapse';
-    groupHolder.setAttribute('id', obj.group);
+    groupHolder.className = 'layers-sub-list collapse';
+    groupHolder.setAttribute('id', groupName);
 
     var container = obj.overlay ? this._overlaysList : this._baseLayersList;
     container.appendChild(groupHolder);
@@ -377,7 +386,9 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       holder.appendChild(elements.icon);
       holder.appendChild(elements.reportBtn);
       name.style.margin = '0 1em';
-      name.style.width = '7em';
+      name.style.width = '12em';
+      name.className = 'layer-name';
+      label.className = 'label';
     }
     holder.appendChild(name);
     if(obj.overlay && obj.group) {
@@ -386,11 +397,12 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       input.style.marginLeft = '3.8em';
       name.style.marginLeft = '9.6em';
       name.style.color = '#717171';
+      name.className = 'layer-list-name';
       labelContainer.appendChild(this._createSeperator());
     }
     if(obj.overlay && !obj.group) {
       labelContainer.appendChild(elements.layerDesc);
-      labelContainer.className = 'clearfix';
+      labelContainer.className = 'clearfix layer-info-container';
       labelContainer.appendChild(elements.dataInfo);
       labelContainer.appendChild(this._createSeperator());
     }

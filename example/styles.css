@@ -31,7 +31,165 @@ z-index: 10; }
   cursor: pointer;
 }
 
+/*-- Styles new layers menu control --*/
 .leaflet-control-layers-menu {
-  width: 45vw;
+  width: 48vw;
   max-width: 100%;
+}
+
+
+/*-- Media queries for new layers menu control --*/
+@media (min-width: 375px) and (max-width: 415px) {
+  .leaflet-control-layers-menu .layer-data-info {
+    left: 16em !important;
+  }
+
+  .leaflet-control-layers-menu .report-btn {
+    right: -8em !important;
+  }
+}
+
+@media (max-width: 589px) {
+  .leaflet-control-layers-menu {
+    width: 74vw;
+    max-width: 100%;
+  }
+
+  .leaflet-control-layers-overlays {
+    max-height: 52vh !important;
+  }
+
+  .leaflet-control-layers-menu .layer-icon {
+    display: none !important;
+  }
+
+  .leaflet-control-layers-menu .layer-data-info {
+    position: relative;
+    left: 13em;
+    bottom: 1em;
+  }
+
+  .leaflet-control-layers-menu .label {
+    width: 100%;
+  }
+
+  .leaflet-control-layers-menu .layer-name,
+  .leaflet-control-layers-menu .layer-group-name {
+    width: 10.5em !important;
+    margin: 0 !important;
+    position: relative;
+    bottom: 1.5em;
+    left: 2.5em;
+  }
+
+  .leaflet-control-layers-menu .layer-group-name {
+    bottom: 2em;
+  }
+
+  .leaflet-control-layers-menu .layers-sub-list input.leaflet-control-layers-selector {
+    margin: 0.5em 0.9em 0.5em 1.8em !important;
+  }
+
+  .leaflet-control-layers-menu .layer-list-name {
+    margin-left: 1em !important;
+  }
+
+  .leaflet-control-layers-menu .report-btn {
+    position: relative;
+    right: -6em;
+  }
+
+  .leaflet-control-layers-menu .layer-description {
+    display: inline-block;
+    margin-left: 2.4em;
+    width: 80%;
+    position: relative;
+    bottom: 1em;
+  }
+}
+
+@media (min-width: 419px) and (max-width: 589px) {
+
+  .leaflet-control-layers-menu .layer-data-info {
+    position: inherit;
+    margin-left: 20em;
+  }
+
+  .leaflet-control-layers-menu .layer-name,
+  .leaflet-control-layers-menu .layer-group-name {
+    left: -8.5em;
+    bottom: 0;
+  }
+
+  .leaflet-control-layers-menu .layer-description {
+    bottom: 0;
+  }
+}
+
+@media (min-width: 590px) and (max-width: 991px) {
+  .leaflet-control-layers-menu {
+    width: 80vw;
+    max-width: 100%;
+  }
+
+  .leaflet-control-layers-menu .label {
+    width: 100%;
+  }
+
+  .leaflet-control-layers-menu .layer-name {
+    width: 16.5em !important;
+  }
+
+  .leaflet-control-layers-menu .report-btn {
+    float: right;
+  }
+
+  .leaflet-control-layers-menu .layer-description {
+    display: inline-block;
+    margin-left: 5.8em;
+  }
+
+  .leaflet-control-layers-menu .layer-list-name {
+    margin-left: 1em !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .leaflet-control-layers-menu {
+    width: 80vw;
+    max-width: 100%;
+  }
+
+  .leaflet-control-layers-menu .layer-name {
+    width: 12em !important;
+  }
+
+  .leaflet-control-layers-menu .layer-description {
+    display: inline-block;
+    margin-left: 0;
+  }
+}
+
+@media (min-width: 1279px) {
+  .leaflet-control-layers-menu {
+    width: 65vw;
+  }
+}
+
+@media (min-width: 1400px) {
+  .leaflet-control-layers-menu {
+    width: 60vw;
+  }
+}
+
+@media (min-width: 1920px) {
+  .leaflet-control-layers-menu {
+    width: 45vw;
+  }
+}
+
+@media (min-width: 2300px) {
+  .leaflet-control-layers-menu {
+    width: 36vw;
+  }
 }
