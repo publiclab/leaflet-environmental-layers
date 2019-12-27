@@ -115,16 +115,16 @@ var EonetFiresLayer = L.geoJSON.eonetFiresLayer();
 
 var baseMaps = {
   'Standard': baselayer1,
-  'Grey-scale': baselayer2,
-  'Streets': baselayer3,
-  'Dark': baselayer4,
+  // 'Grey-scale': baselayer2,
+  // 'Streets': baselayer3,
+  // 'Dark': baselayer4,
 };
 
 var overlayMaps = {
   // "PLpeople" : PLpeople,
   'Wisconsin Non-Metal': Wisconsin_NM,
   'Fractracker': Fractracker,
-  'FracTracker_mobile': FracTracker_mobile,
+  'FracTracker mobile': FracTracker_mobile,
   'PurpleAir': {
     category: 'group',
     layers: {
@@ -144,6 +144,14 @@ var overlayMaps = {
       'Petroleum': OpenInfraMap_Petroleum,
       'Water': OpenInfraMap_Water,
     }
+  },
+  'Indigenous Lands': {
+    category: 'group',
+    layers: {
+      'Territories': IndigenousLandsTerritories,
+      'Languages': IndigenousLandsLanguages,
+      'Treaties': IndigenousLandsTreaties,
+    },
   },
   'Justicemap': {
     category: 'group',
@@ -177,14 +185,8 @@ var overlayMaps = {
       'windrose (zoom in)': windrose,
     },
   },
-  'Indigenous Lands': {
-    category: 'group',
-    layers: {
-      'Territories': IndigenousLandsTerritories,
-      'Languages': IndigenousLandsLanguages,
-      'Treaties': IndigenousLandsTreaties,
-    },
-  },
+  'PFAsLayer': PFASTracker,
+  
   'Air Quality Index': AQICNLayer,
   'Open AQ ': OpenAqLayer,
   'Luftdaten': LuftdatenLayer,
