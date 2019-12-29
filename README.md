@@ -262,7 +262,7 @@ Add the following code after you have the map(an instance of L.Map) initialized:
     var embedControl = new L.control.embed(options);
     embedControl.addTo(map);
 
-The optional options object can be passed in with the any of the following properties:
+The optional options object can be passed in with any of the following properties:
 - position<String>
   The position defaults to 'topleft'.  Other possible values include 'topright', 'bottomleft' or 'bottomright'
 - hostname<String>
