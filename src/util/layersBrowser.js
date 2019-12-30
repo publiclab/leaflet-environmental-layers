@@ -3,10 +3,12 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     collapsed: true,
     position: 'topright',
     autoZIndex: true,
-    hideSingleBase: true
+    hideSingleBase: true,
+    overlays: {}
   },
 
   initialize: function(baseLayers, overlays, options) {
+    this.options.overlays = overlays;
     L.Util.setOptions(this, options);
 
     this._layerControlInputs = [];
@@ -128,12 +130,6 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       group: group
     });
 
-    if (this.options.sortLayers) {
-      this._layers.sort(L.Util.bind(function(a, b) {
-        return this.options.sortFunction(a.layer, b.layer, a.name, b.name);
-      }, this));
-    }
-
     if (this.options.autoZIndex && layer.setZIndex) {
       this._lastZIndex++;
       layer.setZIndex(this._lastZIndex);
@@ -184,7 +180,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     return this;
   },
 
-  _createSeperator: function() {
+  _createSeparator: function() {
     var separator = document.createElement('div');
     separator.className = 'leaflet-control-layers-separator';
 
@@ -329,10 +325,14 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       titleHolder.appendChild(groupName);
       titleHolder.appendChild(elements.layerDesc);
       titleHolder.appendChild(elements.dataInfo);
+
+      var separator = this._createSeparator();
+
+      this._hideOutOfBounds(obj, [titleHolder, separator]);
       
       var container = obj.overlay ? this._overlaysList : this._baseLayersList;
       container.appendChild(titleHolder);
-      container.appendChild(this._createSeperator());
+      container.appendChild(separator);
       return titleHolder;
     }
   },
@@ -382,6 +382,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     name.style.fontSize = '1.2em';
 
     var elements = this._createLayerInfoElements(obj);
+    var separator = this._createSeparator();
 
     // Helps from preventing layer control flicker when checkboxes are disabled
     // https://github.com/Leaflet/Leaflet/issues/2771
@@ -406,14 +407,16 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       name.style.marginLeft = '9.6em';
       name.style.color = '#717171';
       name.className = 'layer-list-name';
-      labelContainer.appendChild(this._createSeperator());
+      labelContainer.appendChild(separator);
     }
     if(obj.overlay && !obj.group) {
       labelContainer.appendChild(elements.layerDesc);
       labelContainer.className = 'clearfix layer-info-container';
       labelContainer.appendChild(elements.dataInfo);
-      labelContainer.appendChild(this._createSeperator());
+      labelContainer.appendChild(separator);
     }
+
+    this._hideOutOfBounds(obj, [labelContainer, separator]);
     
     var container = obj.overlay ? this._overlaysList : this._baseLayersList;
     container.appendChild(labelContainer);
@@ -421,6 +424,44 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     return labelContainer;
   },
 
+  _hideOutOfBounds: function(obj, elements) {
+    var self = this;
+    map.on('moveend', function() {
+      var layerData = require('../layerData.json');
+      var currentBounds = map.getBounds();
+      var currentZoom = map.getZoom();
+      var data;
+      var bounds;
+      for (let j in layerData) {
+        if((obj.group && obj.group.replace(/\s/g, '').toLowerCase() === j.toLowerCase()) ||
+          (obj.name.replace(/\s/g, '').toLowerCase() === j.toLowerCase())) {
+            data = layerData[j];
+        };
+      };
+      var layerName;
+      if(obj.name && !obj.group) {
+        layerName = self.options.overlays[obj.name];
+      } else {
+        layerName = self.options.overlays[obj.group].layers[obj.name];
+      }
+      if(data) {
+        bounds = L.latLngBounds(data.extents.bounds);
+        for(var i in elements) {
+          if((!bounds.intersects(currentBounds) && map.hasLayer(layerName)) ||
+           (currentZoom < data.extents.minZoom && map.hasLayer(layerName))) {
+            elements[i].style.display = 'none';
+              // Remove layer from map if active
+              map.removeLayer(layerName);
+          } else if(!bounds.intersects(currentBounds) || currentZoom < data.extents.minZoom) {
+            elements[i].style.display = 'none';
+          } else {
+            elements[i].style.display = 'block';
+          }
+        };
+        
+      };
+    })
+  }
 });
 
 L.control.layersBrowser = function(baseLayers, overlays, options) {

@@ -7,7 +7,15 @@
     },
     "description": "The World Air Quality Index project provides transparent and world-wide air quality information for more than 100 countries, covering more than 12,000 stations in 1000 major cities.",
     "layer_desc": "World-wide air quality information",
-    "icon": "#096"
+    "icon": "#096",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 3,
+      "maxZoom": 15
+    }
   },
   "eonetFires": {
     "url": "https://eonet.sci.gsfc.nasa.gov/",
@@ -17,7 +25,15 @@
     },
     "description": "EONET provides a curated source of continuously updated natural event metadata. EONET Events: Wildfires: Wildfires includes all nature of fire, including forest and plains fires, as well as urban and industrial fire events. Fires may be naturally caused or manmade.",
     "layer_desc": "All nature of fire events.",
-    "icon": "#ff421d"
+    "icon": "#ff421d",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 3,
+      "maxZoom": 15
+    }
   },
   "fractracker": {
     "url": "https://www.fractracker.org/",
@@ -27,7 +43,15 @@
     },
     "description": "FracTracker Alliance studies, maps, and communicates the risks of oil and gas development to protect our planet and support the renewable energy transformation.",
     "layer_desc": "Oil and gas development",
-    "icon": "#e8e800"
+    "icon": "#e8e800",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 5,
+      "maxZoom": 15
+    }
   },
   "fracTrackerMobile": {
     "url": "https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/FracTrackerMobileAppNPCAMesaVerdeNationalPark_051416/FeatureServer",
@@ -37,7 +61,15 @@
     },
     "description": "FracTracker used the mobile app to help volunteers document the rich biodiversity in and near Mesa Verde",
     "layer_desc": "User reports in NPCA-Mesa Verde National Park",
-    "icon": "#e4458b"
+    "icon": "#e4458b",
+    "extents": {
+      "bounds": [
+                  [51.536085601784755, -59.98535156250001],
+                  [27.800209937418252, -123.26660156250001]
+                ],
+      "minZoom": 5,
+      "maxZoom": 15
+    }
   },
   "indigenousLands": {
     "url": "https://native-land.ca/",
@@ -47,7 +79,15 @@
     },
     "description": "Native Land is a conglomeration of things: nations that still exist, nations that we only have records of for “first contact”, nations that have moved over time, and more.",
     "layer_desc": "Indigenous nations - Territories, Languages, Treaties",
-    "icon": "#532200"
+    "icon": "#532200",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 6,
+      "maxZoom": 15
+    }
   },
   "justiceMap": {
     "url": "http://www.justicemap.org/index.php?giAdvanced=0#instruction_div",
@@ -57,7 +97,15 @@
     },
     "description": "Visualize race and income data for your neighborhood, county, state, or the entire US",
     "layer_desc": "U.S race and income data",
-    "icon": "#f3a482"
+    "icon": "#f3a482",
+    "extents": {
+      "bounds": [
+                  [16.97274101999902, -172.880859375],
+                  [71.27259471233448, -38.05664062500001]
+                ],
+      "minZoom": 5,
+      "maxZoom": 15
+    }
   },
   "luftdaten": {
     "url": "https://maps.luftdaten.info",
@@ -67,7 +115,15 @@
     },
     "description": "building particulate matter sensors and visualizing the data in an overall picture.",
     "layer_desc": "Fine dust measurement",
-    "icon": "#4edd51"
+    "icon": "#4edd51",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 3,
+      "maxZoom": 15
+    }
   },
   "mapknitter": {
     "url": "https://mapknitter.org/",
@@ -77,7 +133,15 @@
     },
     "description": "MapKnitter can make maps from any image source, but it was designed for making maps with aerial photos from balloons and kites.",
     "layer_desc": "Map data from aerial photos from balloons and kites",
-    "icon": "#ca283b"
+    "icon": "#ca283b",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 10,
+      "maxZoom": 15
+    }
   },
   "odorreport": {
     "url": "https://odorlog.ushahidi.io/views/map",
@@ -88,7 +152,15 @@
     },
     "description": "Facilitates monitoring of bad odor events through the collection of data using a written odor log and an online map.",
     "layer_desc": "Bad odor events",
-    "icon": "#ff00ff"
+    "icon": "#ff00ff",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 8,
+      "maxZoom": 15
+    }
   },
   "openaq": {
     "url": "https://openaq.org/",
@@ -98,7 +170,15 @@
     },
     "description": "OpenAQ is a non-profit organization empowering communities around the globe to clean their air by harmonizing, sharing, and using open air quality data.",
     "layer_desc": "Air quality data",
-    "icon": "#912d25"
+    "icon": "#912d25",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 3,
+      "maxZoom": 15
+    }
   },
   "openInfraMap": {
     "url": "https://openinframap.org/about.html",
@@ -108,7 +188,15 @@
     },
     "description": "Open Infrastructure Map is a view of the world's hidden infrastructure mapped in the OpenStreetMap database.",
     "layer_desc": "World's hidden infrastructure",
-    "icon": "#b59f10"
+    "icon": "#b59f10",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 3,
+      "maxZoom": 15
+    }
   },
   "opensense": {
     "url": "https://opensensemap.org/",
@@ -119,7 +207,15 @@
     },
     "description": "openSenseMap is a platform for open sensor data at which everyone can participate in.",
     "layer_desc": "Sensor data from senseboxes",
-    "icon": ""
+    "icon": "",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 3,
+      "maxZoom": 15
+    }
   },
   "openWeatherMap": {
     "url": "https://openweathermap.org/guide",
@@ -129,7 +225,15 @@
     },
     "description": "OpenWeatherMap provides many kinds of weather maps including Precipitation, Clouds, Pressure, Temperature, Wind.",
     "layer_desc": "Weather information",
-    "icon": "#00a3fe"
+    "icon": "#00a3fe",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 3,
+      "maxZoom": 15
+    }
   },
   "osmlandfills,quarries": {
     "url": "https://www.openstreetmap.org/about",
@@ -139,7 +243,15 @@
     },
     "description": "A Landfill site (also known as a tip, dump, rubbish dump or dumping ground and historically as a midden) is a site for the disposal of waste materials by burial. A quarry is an area of land used for surface extraction (open-pit mining) of mineral or organic resources like rocks, gravel, sand, soil, clay, ore, coal or peat.",
     "layer_desc": "Land used for landfill and mine quarry",
-    "icon": "#008000"
+    "icon": "#008000",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 11,
+      "maxZoom": 15
+    }
   },
   "pfaslayer": {
     "url": "https://pfasproject.com/",
@@ -150,7 +262,15 @@
     },
     "description": "Northeastern’s PFAS Contamination Site Tracker one of the most comprehensive resources available for tracking PFAS pollution in the U.S.",
     "layer_desc": "PFAS pollution in the U.S.",
-    "icon": "#b52822"
+    "icon": "#b52822",
+    "extents": {
+      "bounds": [
+                  [16.97274101999902, -172.880859375],
+                  [71.27259471233448, -38.05664062500001]
+                ],
+      "minZoom": 5,
+      "maxZoom": 15
+    }
   },
   "purpleair": {
     "url": "https://www.purpleair.com",
@@ -161,7 +281,15 @@
     },
     "description": "An air quality monitoring network built on a new generation of \"Internet of Things\" sensors",
     "layer_desc": "Air quality data from PurpleAir sensors",
-    "icon": "#7c22b5"
+    "icon": "#7c22b5",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 3,
+      "maxZoom": 15
+    }
   },
   "skytruth": {
     "url": "https://alerts.skytruth.org/",
@@ -171,7 +299,15 @@
     },
     "description": "SkyTruth Alerts is a free service that provides daily updates of environmentally significant incidents by geographical area. ",
     "layer_desc": "Environmentally significant incidents",
-    "icon": "#f00"
+    "icon": "#f00",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 10,
+      "maxZoom": 15
+    }
   },
   "toxicRelease": {
     "url": "https://www.epa.gov/enviro/tri-search",
@@ -181,7 +317,15 @@
     },
     "description": "The Toxics Release Inventory (TRI) Search retrieves data from the TRI database in Envirofacts. The Toxics Release Inventory (TRI) tracks the management of over 650 toxic chemicals that pose a threat to human health and the environment.",
     "layer_desc": "Toxics Release Inventory",
-    "icon": "#6ccc00"
+    "icon": "#6ccc00",
+    "extents": {
+      "bounds": [
+                  [60.54377524118842, -21.708984375000004],
+                  [13.66733825965496, -148.27148437500003]
+                ],
+      "minZoom": 5,
+      "maxZoom": 15
+    }
   },
   "unearthing": {
     "url": "https://publiclab.org/unearthing-pvd",
@@ -191,7 +335,15 @@
     },
     "description": "A platform for historical data-driven analyses of industrial land use, story-mapping, and community organizing.",
     "layer_desc": "Industrial land use, story-mapping, and community organizing",
-    "icon": "#4f4fff"
+    "icon": "#4f4fff",
+    "extents": {
+      "bounds": [
+                  [42.2102, -72.0204],
+                  [41.2272, -70.9618]
+                ],
+      "minZoom": 6,
+      "maxZoom": 18
+    }
   },
   "wisconsinNon-metal": {
     "url": "https://services.arcgis.com/jDGuO8tYggdCCnUJ/ArcGIS/rest/services/Nonmetallic_and_Potential_frac_sand_mine_proposals_in_West_Central_Wisconsin/FeatureServer/info/itemInfo?f=pjson",
@@ -201,6 +353,14 @@
     },
     "description": "These are all <a href='https://dnr.wi.gov/topic/Mines/Deposit.html' target='_blank'>non-metallic registered parcels</a> across West Central Wisconsin along with potential frac sand mine proposals based on ownership or overlap with existing sand mine operators or landowners.",
     "layer_desc": "Sand mine operators or landowners",
-    "icon": "#739ccf"
+    "icon": "#739ccf",
+    "extents": {
+      "bounds": [
+                  [43.689721907017194, -93.12835693359376],
+                  [45.60250901510299, -89.54956054687501]
+                ],
+      "minZoom": 10,
+      "maxZoom": 15
+    }
   }
 }
