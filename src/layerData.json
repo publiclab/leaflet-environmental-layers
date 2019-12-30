@@ -73,7 +73,7 @@
     "url": "https://mapknitter.org/",
     "data": {
       "type": "community submissions",
-      "disclaimer": ""
+      "disclaimer": "Data from community submissions."
     },
     "description": "MapKnitter can make maps from any image source, but it was designed for making maps with aerial photos from balloons and kites.",
     "layer_desc": "Map data from aerial photos from balloons and kites",

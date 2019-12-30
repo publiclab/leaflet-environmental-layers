@@ -14,6 +14,18 @@ z-index: 10; }
   transform: translate(-50%, 0);
 }
 
+.leaflet-control-info a,
+.leaflet-control-info a:hover,
+.leaflet-control-info a:focus {
+  display: inherit;
+  color: #a2a2a2;
+  cursor: pointer;
+}
+
+.leaflet-control-info a:hover {
+  text-decoration: underline;
+}
+
 .leaflet-control-info-button {
   display: inline-block;
   padding: 0 12px;
@@ -37,6 +49,14 @@ z-index: 10; }
   max-width: 100%;
 }
 
+/* leaflet-control-info style for menu control */
+.info-modal {
+  margin: 0 !important;
+  top: 50%;
+  padding: 2em;
+  background-color: rgb(255, 255, 255);
+  transform: translate(-50%, -50%);
+}
 
 /*-- Media queries for new layers menu control --*/
 @media (min-width: 375px) and (max-width: 415px) {

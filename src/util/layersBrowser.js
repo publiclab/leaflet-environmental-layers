@@ -259,9 +259,17 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     infoIcon.style.fontSize = '1.2em';
     infoIcon.style.color = '#717171';
 
+    var infoModal;
     dataInfoBtn.addEventListener('click', function() {
-      var infoModal = new L.control.info({ text: data && data.data.disclaimer });
-      infoModal.addTo(map);
+      // Add only one instance of the modal for the map layer
+      if(!infoModal || !infoModal.options.mapHasControl) {
+        infoModal = new L.control.info({ 
+          text: data && data.data.disclaimer,
+          classname: 'info-modal'
+        });
+
+        infoModal.addTo(map);
+      }
     });
 
     dataInfo.appendChild(dataType);
