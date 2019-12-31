@@ -188,14 +188,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   },
 
   _createLayerInfoElements: function(obj) {
-    var layerData = require('../layerData.json');
-    var data;
-    for (let i in layerData) {
-      if((obj.group && obj.group.replace(/\s/g, '').toLowerCase() === i.toLowerCase()) ||
-        (obj.name.replace(/\s/g, '').toLowerCase() === i.toLowerCase())) {
-          data = layerData[i];
-      }
-    }
+    var data = this._getLayerData(obj);
     
     var icon = document.createElement('div');
     icon.className = 'rounded-circle layer-icon';
@@ -426,41 +419,51 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
 
   _hideOutOfBounds: function(obj, elements) {
     var self = this;
-    map.on('moveend', function() {
-      var layerData = require('../layerData.json');
-      var currentBounds = map.getBounds();
-      var currentZoom = map.getZoom();
-      var data;
-      var bounds;
-      for (let j in layerData) {
-        if((obj.group && obj.group.replace(/\s/g, '').toLowerCase() === j.toLowerCase()) ||
-          (obj.name.replace(/\s/g, '').toLowerCase() === j.toLowerCase())) {
-            data = layerData[j];
-        };
+    var data = this._getLayerData(obj);
+    var layerName;
+    if(obj.name && !obj.group) {
+      layerName = this.options.overlays[obj.name];
+    } else {
+      layerName = this.options.overlays[obj.group].layers[obj.name];
+    }
+    this._hideElements(data, layerName, elements); // Filter layer list on initialization
+    map.on('moveend', function() { // Update layer list on map movement
+      self._hideElements(data, layerName, elements, true);
+    });
+  },
+
+  _hideElements: function(data, layerName, elements, removeLayer) {
+    var removeFrmMap = removeLayer;
+    var currentBounds = map.getBounds();
+    var currentZoom = map.getZoom();
+    var bounds;
+    if(data) {
+      bounds = L.latLngBounds(data.extents.bounds);
+      for(var i in elements) {
+        if((!bounds.intersects(currentBounds) && map.hasLayer(layerName) && removeFrmMap) ||
+          (currentZoom < data.extents.minZoom && map.hasLayer(layerName) && removeFrmMap)) {
+          elements[i].style.display = 'none';
+            // Remove layer from map if active
+            map.removeLayer(layerName);
+        } else if(!bounds.intersects(currentBounds) || currentZoom < data.extents.minZoom) {
+          elements[i].style.display = 'none';
+        } else {
+          elements[i].style.display = 'block';
+        }
       };
-      var layerName;
-      if(obj.name && !obj.group) {
-        layerName = self.options.overlays[obj.name];
-      } else {
-        layerName = self.options.overlays[obj.group].layers[obj.name];
-      }
-      if(data) {
-        bounds = L.latLngBounds(data.extents.bounds);
-        for(var i in elements) {
-          if((!bounds.intersects(currentBounds) && map.hasLayer(layerName)) ||
-           (currentZoom < data.extents.minZoom && map.hasLayer(layerName))) {
-            elements[i].style.display = 'none';
-              // Remove layer from map if active
-              map.removeLayer(layerName);
-          } else if(!bounds.intersects(currentBounds) || currentZoom < data.extents.minZoom) {
-            elements[i].style.display = 'none';
-          } else {
-            elements[i].style.display = 'block';
-          }
-        };
-        
+    };
+  },
+
+  _getLayerData: function(obj) {
+    var layerData = require('../layerData.json');
+    var data;
+    for (let j in layerData) {
+      if((obj.group && obj.group.replace(/\s/g, '').toLowerCase() === j.toLowerCase()) ||
+        (obj.name.replace(/\s/g, '').toLowerCase() === j.toLowerCase())) {
+          data = layerData[j];
       };
-    })
+    };
+    return data;
   }
 });
 
