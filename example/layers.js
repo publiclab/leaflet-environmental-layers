@@ -263,3 +263,6 @@ var embedControl = new L.control.embed({
   // hostname: 'your domain name goes here'
 });
 embedControl.addTo(map);
+
+// Collapsible search control
+map.addControl(L.control.search());
