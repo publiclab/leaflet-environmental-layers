@@ -71,9 +71,9 @@ https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-li
 
 ## Quick Setup :
 
-### Installation Instructions: 
-1. Clone this repository to your local environment. 
-2. Run `npm install` to install all the necessary packages required. 
+### Installation Instructions:
+1. Clone this repository to your local environment.
+2. Run `npm install` to install all the necessary packages required.
 3. Open `examples/index.html` in your browser to look at the preview of the library.
 
 ### Instructions for a developer:
@@ -107,7 +107,7 @@ Click on a point or marker on the map to learn more about it .
 
 #### Add a legend
 
-In `src/legendCreation.js`, add `addLayerNameURLPair(layer_var, "img_url");`, where `layer_var` is consistent with the variable used in `example/index.html` and `img_url` is the source of the image to be used as the legend. 
+In `src/legendCreation.js`, add `addLayerNameURLPair(layer_var, "img_url");`, where `layer_var` is consistent with the variable used in `example/index.html` and `img_url` is the source of the image to be used as the legend.
 
 ### Spreadsheet-based layers
 
@@ -225,32 +225,45 @@ We're going to try spinning this out into its own library; see: https://github.c
 
 2.) Once you have initialized the map (an instance of L.Map), add the following code :
 
-     // Assuming your map instance is in a variable called map and an object with all the map layers is 
+     // Assuming your map instance is in a variable called map and an object with all the map layers is
     in a variable called allMapLayers
     var hash = new L.FullHash(map, allMapLayers);    
-    
-    
-  
+
+
+
  ## Add all LEL Layers at once:
- 
+
  	 L.LayerGroup.EnvironmentalLayers().addTo(map);
-	 
-## Add all layers except some layers: 
+
+## Add all layers except some layers:
 
 	 L.LayerGroup.EnvironmentalLayers({
             exclude: ['mapknitter', 'clouds'],
          }).addTo(map);
-	 
-## Add some layers only: 
+
+## Add some layers only:
 
 	 L.LayerGroup.EnvironmentalLayers({
             include: ['mapknitter', 'clouds'],
          }).addTo(map);
 
-## Turn on Leaflet Hash in the URL: 
+## Turn on Leaflet Hash in the URL:
 
 	 L.LayerGroup.EnvironmentalLayers({
             exclude: ['mapknitter', 'clouds'],
 	    hash: true,             // by default this is FALSE
          }).addTo(map);
-	
+
+## Add an embed control for embedding the map in other pages :
+
+Add the following code after you have the map(an instance of L.Map) initialized:
+
+    // Assuming your map instance is in a variable called map
+    var embedControl = new L.control.embed(options);
+    embedControl.addTo(map);
+
+The optional options object can be passed in with any of the following properties:
+- position<String>
+  The position defaults to 'topleft'.  Other possible values include 'topright', 'bottomleft' or 'bottomright'
+- hostname<String>
+  Defaults to 'publiclab.github.io'
