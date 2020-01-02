@@ -265,4 +265,11 @@ var embedControl = new L.control.embed({
 embedControl.addTo(map);
 
 // Collapsible search control
-map.addControl(L.control.search());
+new L.Control.GPlaceAutocomplete({
+  position: 'topleft',
+  collapsed_mode: true,
+	callback: function(place){
+		var loc = place.geometry.location;
+		map.setView( [loc.lat(), loc.lng()], 18);
+	}
+}).addTo(map);
