@@ -263,3 +263,13 @@ var embedControl = new L.control.embed({
   // hostname: 'your domain name goes here'
 });
 embedControl.addTo(map);
+
+// Collapsible search control
+new L.Control.GPlaceAutocomplete({
+  position: 'topleft',
+  collapsed_mode: true,
+	callback: function(place){
+		var loc = place.geometry.location;
+		map.setView( [loc.lat(), loc.lng()], 18);
+	}
+}).addTo(map);
