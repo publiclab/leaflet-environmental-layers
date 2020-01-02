@@ -20,7 +20,8 @@ module.exports = function(grunt) {
 
         jasmine: {
           src: ['dist/LeafletEnvironmentalLayers.js',
-                'src/util/embedControl.js'],
+                'src/util/embedControl.js',
+                'src/util/layersBrowser.js'],
           options: {
             specs: "spec/javascripts/*spec.js",
             vendor: [
