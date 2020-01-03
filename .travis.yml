@@ -1,11 +1,10 @@
 language: node_js
 node_js:
-  - '5'
+  - '10'
 before_install:
   - npm install -g grunt-cli
 before_script:
   - grunt build
 script: 
-  grunt babel
-script:
-  grunt jasmine
+  - grunt babel
+  - grunt jasmine
