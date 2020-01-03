@@ -84,8 +84,7 @@ module.exports = function(grunt) {
     /* Default (development): Watch files and build on change. */
     grunt.loadNpmTasks('grunt-babel');
     grunt.loadNpmTasks("grunt-contrib-jasmine");
-    grunt.registerTask('default', ['babel']);
-    grunt.registerTask("default", ["watch", "jasmine"]);
+    grunt.registerTask("default", ["watch", "babel", "jasmine"]);
     grunt.registerTask("test", ["jshint", "jasmine"]);
     grunt.registerTask('build', [
         'browserify:dist'
