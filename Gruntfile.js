@@ -18,9 +18,27 @@ module.exports = function(grunt) {
             }
         },
 
+        babel: {
+          options: {
+            sourceMap: true,
+            presets: ['@babel/preset-env'],
+            "plugins": [
+              "transform-object-rest-spread",
+              "transform-remove-strict-mode"
+            ]        
+          },
+          dist: {
+            files: {
+              "dist/util/layersBrowser.js": "src/util/layersBrowser.js",
+            }
+          }
+        },
+
         jasmine: {
           src: ['dist/LeafletEnvironmentalLayers.js',
-                'src/util/embedControl.js'],
+                'src/util/embedControl.js',
+                'dist/util/layersBrowser.js'
+              ],
           options: {
             specs: "spec/javascripts/*spec.js",
             vendor: [
@@ -64,7 +82,9 @@ module.exports = function(grunt) {
     */
 
     /* Default (development): Watch files and build on change. */
+    grunt.loadNpmTasks('grunt-babel');
     grunt.loadNpmTasks("grunt-contrib-jasmine");
+    grunt.registerTask('default', ['babel']);
     grunt.registerTask("default", ["watch", "jasmine"]);
     grunt.registerTask("test", ["jshint", "jasmine"]);
     grunt.registerTask('build', [
