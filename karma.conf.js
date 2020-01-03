@@ -28,19 +28,15 @@ module.exports = function(config) {
       "node_modules/leaflet/dist/leaflet.js",
       "node_modules/leaflet/dist/leaflet.css",
       "node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js",
-      "node_modules/leaflet.blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js",
+      // "node_modules/leaflet.blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js",
       "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-      "example/styles.css",
-      "node_modules/happen/happen.js",
-      "node_modules/prosthetic-hand/dist/prosthetic-hand.js",
       'lib/leaflet-fullUrlHash.js',
-      "src/**/*.js",
+      'src/util/embedControl.js',
+      'dist/util/layersBrowser.js',
+      "spec/javascripts/embedControl.spec.js",
       "spec/javascripts/layersBrowser.spec.js",
-      "dist/*.css",
-      "dist/*.js",
-      'src/**/*js',
       {
-        pattern: '/spec/javascripts/fixtures/*.html',
+        pattern: './spec/javascripts/fixtures/*.html',
         watched: true,
         included: false,
         served: true
@@ -50,9 +46,7 @@ module.exports = function(config) {
 
 
     // list of files / patterns to exclude
-    exclude: [
-      'src/legendCreation.js'
-    ],
+    exclude: [],
 
     proxies: {
 			'/spec/javascripts/fixtures/': '/base/spec/javascripts/fixtures/'
@@ -63,10 +57,7 @@ module.exports = function(config) {
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
       'spec/**/*.html': [],
-      'node_modules/jquery/dist/jquery.min.js': [ 'browserify' ],
-      'node_modules/leaflet/dist/leaflet.js': [ 'browserify' ],
       'src/**/*.js': [ 'browserify' ],
-      'spec/**/*.js': [ 'browserify' ]
     },
 
 
