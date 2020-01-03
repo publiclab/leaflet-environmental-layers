@@ -5,4 +5,6 @@ before_install:
   - npm install -g grunt-cli
 before_script:
   - grunt build
-script: grunt jasmine
+script: 
+  - grunt babel
+  - grunt jasmine
