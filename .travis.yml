@@ -6,5 +6,5 @@ before_install:
 before_script:
   - grunt build
 script: 
-  - grunt babel
+  - grunt transpile
   - grunt jasmine

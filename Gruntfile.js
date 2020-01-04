@@ -15,6 +15,12 @@ module.exports = function(grunt) {
             dist: {
                 src: ['node_modules/jquery/dist/jquery.min.js', 'node_modules/leaflet/dist/leaflet.js', 'src/leafletEnvironmentalLayers.js', 'src/util/*.js'],
                 dest: 'dist/LeafletEnvironmentalLayers.js'
+            },
+            babel: {
+              files: {
+                "dist/util/layersBrowser.js": "dist/util/layersBrowser_babel.js",
+                "dist/layerData.json": "src/layerData.json"
+              }
             }
         },
 
@@ -29,7 +35,7 @@ module.exports = function(grunt) {
           },
           dist: {
             files: {
-              "dist/util/layersBrowser.js": "src/util/layersBrowser.js",
+              "dist/util/layersBrowser_babel.js": "src/util/layersBrowser.js",
             }
           }
         },
@@ -85,6 +91,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-babel');
     grunt.loadNpmTasks("grunt-contrib-jasmine");
     grunt.registerTask("default", ["watch", "babel", "jasmine"]);
+    grunt.registerTask('transpile', [ 'babel', 'browserify:babel' ]);
     grunt.registerTask("test", ["jshint", "jasmine"]);
     grunt.registerTask('build', [
         'browserify:dist'

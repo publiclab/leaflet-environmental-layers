@@ -419,12 +419,13 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
 
   _hideOutOfBounds: function(obj, elements) {
     var self = this;
+    var map = this._map;
     var data = this._getLayerData(obj);
     var layerName;
     if(obj.name && !obj.group) {
-      layerName = this.options.overlays[obj.name];
+      layerName = this.options.overlays && this.options.overlays[obj.name];
     } else {
-      layerName = this.options.overlays[obj.group].layers[obj.name];
+      layerName = this.options.overlays && this.options.overlays[obj.group].layers[obj.name];
     }
     this._hideElements(data, layerName, elements); // Filter layer list on initialization
     map.on('moveend', function() { // Update layer list on map movement
@@ -433,6 +434,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   },
 
   _hideElements: function(data, layerName, elements, removeLayer) {
+    var map = this._map;
     var removeFrmMap = removeLayer;
     var currentBounds = map.getBounds();
     var currentZoom = map.getZoom();
