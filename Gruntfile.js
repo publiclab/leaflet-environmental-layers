@@ -18,10 +18,17 @@ module.exports = function(grunt) {
             },
             babel: {
               files: {
-                "dist/util/layersBrowser.js": "dist/util/layersBrowser_babel.js",
-                "dist/layerData.json": "src/layerData.json"
+                "dist/util/layersBrowser.js": "dist/util/layersBrowser_babel.js"
               }
             }
+        },
+
+        copy: {
+          dist: {
+            files: [
+              {src: 'src/layerData.json', dest: 'dist/layerData.json'},
+            ],
+          },
         },
 
         babel: {
@@ -35,7 +42,7 @@ module.exports = function(grunt) {
           },
           dist: {
             files: {
-              "dist/util/layersBrowser_babel.js": "src/util/layersBrowser.js",
+              "dist/util/layersBrowser_babel.js": "src/util/layersBrowser.js"
             }
           }
         },
@@ -90,8 +97,9 @@ module.exports = function(grunt) {
     /* Default (development): Watch files and build on change. */
     grunt.loadNpmTasks('grunt-babel');
     grunt.loadNpmTasks("grunt-contrib-jasmine");
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.registerTask("default", ["watch", "babel", "jasmine"]);
-    grunt.registerTask('transpile', [ 'babel', 'browserify:babel' ]);
+    grunt.registerTask('transpile', [ 'copy', 'babel', 'browserify:babel' ]);
     grunt.registerTask("test", ["jshint", "jasmine"]);
     grunt.registerTask('build', [
         'browserify:dist'
