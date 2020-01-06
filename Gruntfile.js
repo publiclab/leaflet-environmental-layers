@@ -26,7 +26,7 @@ module.exports = function(grunt) {
         copy: {
           dist: {
             files: [
-              {src: 'src/layerData.json', dest: 'dist/layerData.json'},
+              {src: 'spec/javascripts/fixtures/layerData.json', dest: 'dist/layerData.json'},
             ],
           },
         },
