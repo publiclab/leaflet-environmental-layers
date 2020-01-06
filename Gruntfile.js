@@ -15,12 +15,43 @@ module.exports = function(grunt) {
             dist: {
                 src: ['node_modules/jquery/dist/jquery.min.js', 'node_modules/leaflet/dist/leaflet.js', 'src/leafletEnvironmentalLayers.js', 'src/util/*.js'],
                 dest: 'dist/LeafletEnvironmentalLayers.js'
+            },
+            babel: {
+              files: {
+                "dist/util/layersBrowser.js": "dist/util/layersBrowser_babel.js"
+              }
             }
+        },
+
+        copy: {
+          dist: {
+            files: [
+              {src: 'spec/javascripts/fixtures/layerData.json', dest: 'dist/layerData.json'},
+            ],
+          },
+        },
+
+        babel: {
+          options: {
+            sourceMap: true,
+            presets: ['@babel/preset-env'],
+            "plugins": [
+              "transform-object-rest-spread",
+              "transform-remove-strict-mode"
+            ]        
+          },
+          dist: {
+            files: {
+              "dist/util/layersBrowser_babel.js": "src/util/layersBrowser.js"
+            }
+          }
         },
 
         jasmine: {
           src: ['dist/LeafletEnvironmentalLayers.js',
-                'src/util/embedControl.js'],
+                'src/util/embedControl.js',
+                'dist/util/layersBrowser.js'
+              ],
           options: {
             specs: "spec/javascripts/*spec.js",
             vendor: [
@@ -64,8 +95,11 @@ module.exports = function(grunt) {
     */
 
     /* Default (development): Watch files and build on change. */
+    grunt.loadNpmTasks('grunt-babel');
     grunt.loadNpmTasks("grunt-contrib-jasmine");
-    grunt.registerTask("default", ["watch", "jasmine"]);
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.registerTask("default", ["watch", "babel", "jasmine"]);
+    grunt.registerTask('transpile', [ 'copy', 'babel', 'browserify:babel' ]);
     grunt.registerTask("test", ["jshint", "jasmine"]);
     grunt.registerTask('build', [
         'browserify:dist'
