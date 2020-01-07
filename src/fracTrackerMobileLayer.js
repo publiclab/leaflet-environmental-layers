@@ -1,23 +1,101 @@
-fracTrackerMobileLayer = function(map) {
-  var FracTracker_mobile = L.esri.featureLayer({
-    url: 'https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/FracTrackerMobileAppNPCAMesaVerdeNationalPark_051416/FeatureServer/0/',
-    simplifyFactor: 1,
-  });
+L.GeoJSON.FractrackerMobileLayer = L.GeoJSON.extend(
+  {
+    options: { },
 
-  FracTracker_mobile.bindPopup(function(layer) {
-    return L.Util.template('<p><strong>Id : </strong>{OBJECTID}<br><strong>FT_MV_ID : </strong>{FT_MV_ID}<br><strong>Long : </strong>{Long}<br><strong>Lat :</strong> {Lat} <br> <strong>Caption : </strong>{caption} <br> <strong>issue :</strong> {issue} <br> <strong>facility :</strong> {facility} <br><strong> Location :</strong> {location} <br> <strong>URL :</strong> <a href={URL2}>{URL2}</a> <br> <img src={URL2} height="280" width="290"></p>', layer.feature.properties);
-  });
+    initialize: function(options) {
+      options = options || {};
+      L.Util.setOptions(this, options);
+      this._layers = {};
+    },
 
-  FracTracker_mobile.on('loading', function(e) {
-    if (typeof map.spin === 'function') {
-      map.spin(true);
-    }
-  });
-  FracTracker_mobile.on('load', function(e) {
-    if (typeof map.spin === 'function') {
-      map.spin(false);
-    }
-  });
+    onAdd: function(map) {
+      map.on('moveend', this.requestData, this);
+      this._map = map;
+      this.requestData();
+    },
 
-  return FracTracker_mobile;
+    onRemove: function(map) {
+      map.off('moveend', this.requestData, this);
+      if (typeof map.spin === 'function') {
+        map.spin(false);
+      }
+      this.clearLayers();
+      this._layers = {};
+    },
+
+    requestData: function() {
+      var self = this;
+
+      (function() {
+        var bounds = self._map.getBounds();
+        var northEast = bounds.getNorthEast();
+        var southWest = bounds.getSouthWest();
+        var left = southWest.lng;
+        var right = northEast.lng;
+        var top = northEast.lat;
+        var bottom = southWest.lat;
+        var polygon = left + ' ' + top + ',' + right + ' ' + top + ',' + right + ' ' + bottom + ',' + left + ' ' + bottom + ',' + left + ' ' + top;
+        
+        var $ = window.jQuery;
+        var fractrackerMobile_url = 'https://cors-anywhere.herokuapp.com/https://api.fractracker.org/v1/data/report?page=1&results_per_page=250&q={"filters":[{"name":"geometry","op":"intersects","val":"SRID=4326;POLYGON((' + polygon +'))"}],"order_by":[{"field":"report_date","direction":"desc"},{"field":"id","direction":"desc"}]}';
+
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(true);
+        }
+
+        $.getJSON(fractrackerMobile_url, function(data) {
+          console.log(data);
+          self.parseData(data);
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        });
+      })();
+    },
+
+    parseData: function(data) {
+      if (!!data) {
+        for (i = 0; i < data.features.length; i++) {
+          this.addMarker(data.features[i]);
+        }
+      }
+    },
+
+    getMarker: function(data) {
+      var coords = this.coordsToLatLng(data.geometry.geometries[0].coordinates);
+      var lat = coords.lat;
+      var lng = coords.lng;
+      var description = data.properties.description;
+      var date = new Date(data.properties.report_date).toUTCString();
+      var dateModified = new Date(data.properties.modified_on).toUTCString();
+      var organizationName = data.properties.created_by.organization_name ? data.properties.created_by.organization_name : '';
+      var imageUrl = data.properties.images[0] && data.properties.images[0].properties.square;
+      var marker;
+      if (!isNaN((lat)) && !isNaN((lng)) ) {
+        marker = new L.circleMarker([lat, lng], { radius: 5, color: '#e4458b'})
+        .bindPopup('<img src="'  + imageUrl + '" alt="User image" width="100%" /><br><strong>'+ description + '</strong><br>Lat : ' + lat + '<br>Lon : '+ lng + '<br>Reported on : ' + date + '<br>Modified on : ' + dateModified + '<br>' + organizationName);
+      }
+      return marker;
+    },
+
+    addMarker: function(data) {
+      var marker;
+      var key = data.id;
+      if (!this._layers[key]) {
+        marker = this.getMarker(data);
+        this._layers[key] = marker;
+        this.addLayer(marker);
+      }
+    },
+
+    coordsToLatLng: function(coords) {
+      return new L.LatLng(coords[1], coords[0]);
+    },
+
+  },
+);
+
+
+L.geoJSON.fractrackerMobileLayer = function(options) {
+  return new L.GeoJSON.FractrackerMobileLayer(options);
 };
