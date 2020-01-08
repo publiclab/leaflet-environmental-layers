@@ -59,14 +59,14 @@
       "type": "",
       "disclaimer": "Data from agency data sets to crowd-sourced data"
     },
-    "description": "FracTracker used the mobile app to help volunteers document the rich biodiversity in and near Mesa Verde",
-    "layer_desc": "User reports in NPCA-Mesa Verde National Park",
+    "description": "",
+    "layer_desc": "User reports",
     "icon": "#e4458b",
     "extents": {
       "bounds": [
-                  [51.536085601784755, -59.98535156250001],
-                  [27.800209937418252, -123.26660156250001]
-                ],
+        [-44.087585028245165, -148.88671875000003],
+        [76.63922560965888, 140.62500000000003]
+      ],
       "minZoom": 5,
       "maxZoom": 15
     }

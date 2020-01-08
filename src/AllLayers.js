@@ -10,10 +10,10 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       layers0: ['purpleLayer', 'toxicReleaseLayer', 'pfasLayer', 'aqicnLayer', 'osmLandfillMineQuarryLayer', 'Unearthing'],
       layers1: ['purpleairmarker', 'skytruth', 'fractracker', 'odorreport', 'mapknitter', 'openaq', 'luftdaten', 'opensense'],
       layers2: ['Power', 'Petroleum', 'Telecom', 'Water'],
-      layers3: ['wisconsin', 'fracTrackerMobile'],
+      layers3: ['wisconsin'],
       layers4: ['income', 'americanIndian', 'asian', 'black', 'multi', 'hispanic', 'nonWhite', 'white', 'plurality'],
       layers5: ['clouds', 'cloudsClassic', 'precipitation', 'precipitationClassic', 'rain', 'rainClassic', 'snow', 'pressure', 'pressureContour', 'temperature', 'wind', 'city'],
-      layers6: ['eonetFiresLayer'],
+      layers6: ['eonetFiresLayer', 'fracTrackerMobile'],
 
       OpenInfraMap_Power: L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png', {
         maxZoom: 18,

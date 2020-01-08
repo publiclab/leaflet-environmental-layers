@@ -42,7 +42,8 @@ module.exports = function(grunt) {
           },
           dist: {
             files: {
-              "dist/util/layersBrowser_babel.js": "src/util/layersBrowser.js"
+              "dist/util/layersBrowser_babel.js": "src/util/layersBrowser.js",
+              'dist/fracTrackerMobileLayer.js': 'src/fracTrackerMobileLayer.js'
             }
           }
         },
@@ -50,7 +51,8 @@ module.exports = function(grunt) {
         jasmine: {
           src: ['dist/LeafletEnvironmentalLayers.js',
                 'src/util/embedControl.js',
-                'dist/util/layersBrowser.js'
+                'dist/util/layersBrowser.js',
+                'dist/fracTrackerMobileLayer.js'
               ],
           options: {
             specs: "spec/javascripts/*spec.js",
