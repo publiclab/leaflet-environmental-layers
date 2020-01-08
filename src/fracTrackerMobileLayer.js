@@ -55,7 +55,7 @@ L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
 
     parseData: function(data) {
       if (!!data) {
-        for (i = 0; i < data.features.length; i++) {
+        for ( var i = 0; i < data.features.length; i++) {
           this.addMarker(data.features[i]);
         }
       }
