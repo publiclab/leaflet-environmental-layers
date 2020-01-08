@@ -149,11 +149,6 @@ We're going to try spinning this out into its own library; see: https://github.c
 	   <script src="../node_modules/leaflet-spin/example/spin/dist/spin.min.js"></script>  <!-- Compulsory to add -->
  	   <script src="../node_modules/leaflet-spin/example/leaflet.spin.min.js"></script>
 
-### To use Wind Rose Layer :
-
-            <script src="../src/windRoseLayer.js"></script>
-            <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet">
-
 ### To use Wisconsin Non-Metallic Layer :
 
             <script src="https://unpkg.com/esri-leaflet@2.2.3/dist/esri-leaflet.js"></script>
@@ -181,6 +176,9 @@ We're going to try spinning this out into its own library; see: https://github.c
         var city = L.OWM.current({intervall: 15, minZoom: 3});
 
 2.) WindRose (by openWeather)
+       <script src="../src/windRoseLayer.js"></script>
+       <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet">
+
 
         var windrose = L.OWM.current({intervall: 15, minZoom: 3, markerFunction: myWindroseMarker, popup: false, clusterSize:       50,imageLoadingBgUrl: 'https://openweathermap.org/img/w0/iwind.png' });
     windrose.on('owmlayeradd', windroseAdded, windrose);
