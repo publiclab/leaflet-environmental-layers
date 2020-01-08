@@ -22,57 +22,58 @@ https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-li
 
 | Layer Name                  | Color   |
 | --------------------------- | ------- |
-| Wisconsin Non-Metal         | N/A     |
-| FracTracker_mobile          | N/A     |
-| PurpleAirLayer-HeatMap      | #8b0000 |
-| PurpleAirLayer-Markers      | #800080 |
-| SkyTruth                    | #ff0000  |
-| Fractracker                 | #ffff00   |
-| PFASTracker                 | #00ff00  |
-| ToxicRelease                | #008000 |
-| OdorReport                  | #ff00ff   |
-| MapKnitter                  | #D50039 |
-| OpenInfraMap_Power          | #ffc0cb  |
-| OpenInfraMap_Telecom        | #0000ff  |
-| OpenInfraMap_Petroleum      | #a52a2a |
-| OpenInfraMap_Water          | #4B0082 |
-| Justicemap_income           | #006400 |
-| JusticeMap_americanIndian   | #800000 |
-| JusticeMap_asian            | #ffa500  |
-| JusticeMap_black            | #FFD700 |
-| JusticeMap_multi            | #ffc0cb  |
-| JusticeMap_hispanic         | #DCDCDC |
-| JusticeMap_nonWhite         | #808080 |
-| JusticeMap_white            | #a52a2a |
-| JusticeMap_plurality        | #800000 |
-| Clouds                      | #80dfff  |
-| clouds (classic)            | #b3f0ff  |
-| precipitation               | #00ff55  |
-| precipitation (classic)     | #00008b |
-| rain                        | #8080ff  |
-| rain (classic)              | #1a1aff  |
-| snow                        | #80ffe5  |
+| wisconsin                   | N/A     |
+| fracTrackerMobile           | N/A     |
+| purpleLayer                 | #8b0000 |
+| purpleairmarker             | #800080 |
+| skyTruth                    | #ff0000 |
+| fractracker                 | #ffff00 |
+| pfasLayer                   | #00ff00 |
+| toxicReleaseLayer           | #008000 |
+| odorreport                  | #ff00ff |
+| mapknitter                  | #D50039 |
+| Power                       | #ffc0cb |
+| Telecom                     | #0000ff |
+| Petroleum                   | #a52a2a |
+| Water                       | #4B0082 |
+| income                      | #006400 |
+| americanIndian              | #800000 |
+| asian                       | #ffa500 |
+| black                       | #FFD700 |
+| multi                       | #ffc0cb |
+| hispanic                    | #DCDCDC |
+| nonWhite                    | #808080 |
+| white                       | #a52a2a |
+| plurality                   | #800000 |
+| clouds                      | #80dfff |
+| cloudsClassic               | #b3f0ff |
+| precipitation               | #00ff55 |
+| precipitationClassic        | #00008b |
+| rain                        | #8080ff |
+| rainClassic                 | #1a1aff |
+| snow                        | #80ffe5 |
 | pressure                    | #e62e00 |
-| pressure contour (zoom in)  | #ff3300  |
-| temp                        | #ff3300  |
+| pressureContour             | #ff3300 |
+| temperature                 | #ff3300 |
 | wind                        | #00008b |
-| Cities (zoom in)            | #b3ffff   |
-| windrose (zoom in)          | #008000 |
-| Indigenous Lands Territories| #000000 |
-| Indigenous Lands Languages  | #000000 |
-| Indigenous Lands Treaties   | #000000 |
-| Air Quality Index           | #000000 |
-| Open AQ                     | #000000 |
-| Luftdaten Layer             | #000000 |
-| OpenSense                   | N/A     |
-| Landfills, Mines, Quarries   | N/A     |
+| city                        | #b3ffff |
+| windrose                    | #008000 |
+| Territories                 | #000000 |
+| Languages                   | #000000 |
+| Treaties                    | #000000 |
+| aqicnLayer                  | #000000 |
+| openaq                      | #000000 |
+| luftdaten                   | #000000 |
+| opensense                   | N/A     |
+| osmLandfillMineQuarryLayer  | N/A     |
+| eonetFiresLayer             | #78fffa |
 
 
 ## Quick Setup :
 
-### Installation Instructions: 
-1. Clone this repository to your local environment. 
-2. Run `npm install` to install all the necessary packages required. 
+### Installation Instructions:
+1. Clone this repository to your local environment.
+2. Run `npm install` to install all the necessary packages required.
 3. Open `examples/index.html` in your browser to look at the preview of the library.
 
 ### Instructions for a developer:
@@ -106,7 +107,7 @@ Click on a point or marker on the map to learn more about it .
 
 #### Add a legend
 
-In `src/legendCreation.js`, add `addLayerNameURLPair(layer_var, "img_url");`, where `layer_var` is consistent with the variable used in `example/index.html` and `img_url` is the source of the image to be used as the legend. 
+In `src/legendCreation.js`, add `addLayerNameURLPair(layer_var, "img_url");`, where `layer_var` is consistent with the variable used in `example/index.html` and `img_url` is the source of the image to be used as the legend.
 
 ### Spreadsheet-based layers
 
@@ -214,41 +215,55 @@ We're going to try spinning this out into its own library; see: https://github.c
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
     });   
 
-## Add Leaflet-FullHash for easy sharing of map :    
+## Add hash support for easy sharing of map :    
 
 ### Steps To add :
 
 1.) Add link :
 
-    <script src="../node_modules/leaflet-fullhash/leaflet-fullHash.js"></script>
+       <script src="../lib/leaflet-fullUrlHash.js"></script>
 
 2.) Once you have initialized the map (an instance of L.Map), add the following code :
 
-    // Assuming your map instance is in a variable called map
-    var hash = new L.Hash(map);    
-    
-    
-  
+     // Assuming your map instance is in a variable called map and an object with all the map layers is
+    in a variable called allMapLayers
+    var hash = new L.FullHash(map, allMapLayers);    
+
+
+
  ## Add all LEL Layers at once:
- 
+
  	 L.LayerGroup.EnvironmentalLayers().addTo(map);
-	 
-## Add all layers except some layers: 
+
+## Add all layers except some layers:
 
 	 L.LayerGroup.EnvironmentalLayers({
             exclude: ['mapknitter', 'clouds'],
          }).addTo(map);
-	 
-## Add some layers only: 
+
+## Add some layers only:
 
 	 L.LayerGroup.EnvironmentalLayers({
             include: ['mapknitter', 'clouds'],
          }).addTo(map);
 
-## Turn on Leaflet Hash in the URL: 
+## Turn on Leaflet Hash in the URL:
 
 	 L.LayerGroup.EnvironmentalLayers({
             exclude: ['mapknitter', 'clouds'],
 	    hash: true,             // by default this is FALSE
          }).addTo(map);
-	
+
+## Add an embed control for embedding the map in other pages :
+
+Add the following code after you have the map(an instance of L.Map) initialized:
+
+    // Assuming your map instance is in a variable called map
+    var embedControl = new L.control.embed(options);
+    embedControl.addTo(map);
+
+The optional options object can be passed in with any of the following properties:
+- position<String>
+  The position defaults to 'topleft'.  Other possible values include 'topright', 'bottomleft' or 'bottomright'
+- hostname<String>
+  Defaults to 'publiclab.github.io'

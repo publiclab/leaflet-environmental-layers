@@ -35,7 +35,13 @@
   <script src="https://unpkg.com/esri-leaflet@2.2.3/dist/esri-leaflet.js"></script>
   <script src="https://unpkg.com/esri-leaflet-renderers@2.0.6"></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OverlappingMarkerSpiderfier-Leaflet/0.2.6/oms.min.js"></script>
+
+  <script src="../lib/glify.js"></script>
+
+  <script src="../lib/leaflet-fullUrlHash.js"></script>
+
+  <link href="../node_modules\@fortawesome\fontawesome-free\css\all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css">
 
   </head>
@@ -63,10 +69,20 @@
             }
           ).addTo(map);
 
+      /* This is required, make this optional! */
+      // var oms = omsUtil(map, {
+      //   keepSpiderfied: true,
+      //   circleSpiralSwitchover: 0
+      // });
       L.LayerGroup.EnvironmentalLayers({
-        include: ['mapknitter', 'clouds'],
+        baseLayers: {
+          'Grey-scale': baselayer1
+        },
+        include: ['odorreport', 'asian', 'clouds', 'eonetFiresLayer', 'Unearthing'],
         // exclude: ['mapknitter', 'clouds'],
         hash: true,
+        embed: true,
+        // hostname: 'domain name goes here'
       }).addTo(map);
 
     </script>

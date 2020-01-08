@@ -25850,599 +25850,676 @@ exports.map = createMap;
 },{}],8:[function(require,module,exports){
 L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 
-    {
-        options: {
-        	hash: false,
-        	 // Source of Truth of Layers name .
-		    layers0: ["purpleLayer","toxicReleaseLayer","pfasLayer","aqicnLayer","osmLandfillMineQuarryLayer", "eonetFiresLayer"],
-		    layers1: ["purpleairmarker","skytruth","fractracker","odorreport","mapknitter","openaq","luftdaten","opensense"],
-	        layers2: ["Power","Petroleum","Telecom","Water"],
-	        layers3: ["wisconsin","fracTrackerMobile"],
-	        layers4: ["income","americanIndian","asian","black","multi","hispanic","nonWhite","white","plurality"],
-	        layers5: ["clouds","cloudsClassic","precipitation","precipitationClassic","rain","rainClassic","snow","pressure","pressureContour","temperature","wind","city"],
-       	
-		    OpenInfraMap_Power: L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png',{
-		        maxZoom: 18,
-		        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
-		    }),
-		    OpenInfraMap_Petroleum: L.tileLayer('https://tiles-{s}.openinframap.org/petroleum/{z}/{x}/{y}.png', {
-		      maxZoom: 18,
-		      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
-		    }),
-		    OpenInfraMap_Telecom: L.tileLayer('https://tiles-{s}.openinframap.org/telecoms/{z}/{x}/{y}.png', {
-		      maxZoom: 18,
-		      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
-		    }),
-		    OpenInfraMap_Water: L.tileLayer('https://tiles-{s}.openinframap.org/water/{z}/{x}/{y}.png',{
-		      maxZoom: 18,
-		      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
-		    }),
-        },
+  {
+    options: {
+      hash: false,
+      embed: false, // activates layers on map by default if true.
+      currentHash: location.hash,
+      // Source of Truth of Layers name .
+      // please put name of Layers carefully in the the appropriate layer group.
+      layers0: ['purpleLayer', 'toxicReleaseLayer', 'pfasLayer', 'aqicnLayer', 'osmLandfillMineQuarryLayer', 'Unearthing'],
+      layers1: ['purpleairmarker', 'skytruth', 'fractracker', 'odorreport', 'mapknitter', 'openaq', 'luftdaten', 'opensense'],
+      layers2: ['Power', 'Petroleum', 'Telecom', 'Water'],
+      layers3: ['wisconsin'],
+      layers4: ['income', 'americanIndian', 'asian', 'black', 'multi', 'hispanic', 'nonWhite', 'white', 'plurality'],
+      layers5: ['clouds', 'cloudsClassic', 'precipitation', 'precipitationClassic', 'rain', 'rainClassic', 'snow', 'pressure', 'pressureContour', 'temperature', 'wind', 'city'],
+      layers6: ['eonetFiresLayer', 'fracTrackerMobile'],
 
-        initialize: function (param) {
-        	param = param || {};
-        	if(!!param.hash) {
-        		this.options.hash = param.hash;
-        	}
-        	param.all =  [...this.options.layers0 , ...this.options.layers1 , ...this.options.layers2 , ...this.options.layers3 , ...this.options.layers4 , ...this.options.layers5];
-        	if(!param.include || !param.include.length) {
-        		param.include = param.all;
-        	}
-        	if(!!param.exclude && param.exclude.length > 0) {
-        		param.include =param.include.filter(function (a) {
-       			 return param.exclude.indexOf(a) == -1;
-    			});	
-        	}
-            
-            this.options.layers = param;
-        },
+      OpenInfraMap_Power: L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+      }),
+      OpenInfraMap_Petroleum: L.tileLayer('https://tiles-{s}.openinframap.org/petroleum/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+      }),
+      OpenInfraMap_Telecom: L.tileLayer('https://tiles-{s}.openinframap.org/telecoms/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+      }),
+      OpenInfraMap_Water: L.tileLayer('https://tiles-{s}.openinframap.org/water/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+      }),
+    },
 
-        onAdd: function (map) {
-           
-            this._map = map ;
-          
-		    var baselayer = L.tileLayer(
-		        "https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png",
-		        {
-		          attribution:
-		            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-		        }
-		      );
-		   
-		    this.overlayMaps = {};
-		    var baseMaps = {
-		      "Grey-scale": baselayer ,
-		    };
+    initialize: function(param) {
+      param = param || {};
+      if (!!param.hash) {
+        this.options.hash = param.hash;
+      }
+      if (!!param.baseLayers) {
+        this.options.baseLayers = param.baseLayers;
+      }
+      param.all = [...this.options.layers0, ...this.options.layers1, ...this.options.layers2, ...this.options.layers3, ...this.options.layers4, ...this.options.layers5, ...this.options.layers6];
+      if (!param.include || !param.include.length) {
+        param.include = param.all;
+      }
+      if (!!param.exclude && param.exclude.length > 0) {
+        param.include =param.include.filter(function(a) {
+          return param.exclude.indexOf(a) == -1;
+        });
+      }
 
-		    for(let layer of this.options.layers.include){
+      this.options.layers = param;
 
-		       if(this.options.layers0.includes(layer)) {
-	               this.overlayMaps[layer] = window["L"]["layerGroup"][layer]();
-	           }
-	           else if(this.options.layers1.includes(layer)) {
-	               this.overlayMaps[layer] = window["L"]["layerGroup"]["layerCode"](layer);
-	           }
-	           else if(this.options.layers2.includes(layer)){
-	              switch(layer) {
-	               	case "Power": 
-	               	this.overlayMaps[layer] = this.options.OpenInfraMap_Power;
-	               		break;
-	               	case "Petroleum": 
-	               	this.overlayMaps[layer] = this.options.OpenInfraMap_Petroleum;
-	               		break;
-	               	case "Telecom": 
-	               	this.overlayMaps[layer] =  this.options.OpenInfraMap_Telecom;
-	               		break;
-	               	case "Water": 
-	               	this.overlayMaps[layer] = this.options.OpenInfraMap_Water;
-	               		break;
-	              }
-	           }
-	           else if(this.options.layers3.includes(layer)){
-	               this.overlayMaps[layer] =  window[layer + "Layer"](map);
-	           }
-	           else if(this.options.layers4.includes(layer)){
-	               this.overlayMaps[layer] = window["L"]["tileLayer"]["provider"]('JusticeMap.'+layer);
-	           }
-	           else if(this.options.layers5.includes(layer)){
-	               let obj = {};
-	               if(layer === "clouds"){
-	                   obj = {showLegend: true, opacity: 0.5};
-	               }
-	               if(layer === "city"){
-	                   layer = "current";
-	                   obj = {intervall: 15, minZoom: 3};
-	               }
-	               this.overlayMaps[layer] = window["L"]["OWM"][layer](obj);
-	           }
+      if (!!param.embed) {
+        this.options.embed = param.embed;
+      }
+      if (!!param.hostname) {
+        this.options.hostname = param.hostname;
+      }
+    },
 
-	       }
+    onAdd: function(map) {
+      this._map = map;
+      this.overlayMaps = {};
+      var baseMaps = this.options.baseLayers;
 
-           L.control.layers(baseMaps,this.overlayMaps).addTo(map);
+      for (let layer of this.options.layers.include) {
+        if (this.options.layers0.includes(layer)) {
+          this.overlayMaps[layer] = window['L']['layerGroup'][layer]();
+        }
+        else if (this.options.layers1.includes(layer)) {
+          this.overlayMaps[layer] = window['L']['layerGroup']['layerCode'](layer);
+        }
+        else if (this.options.layers2.includes(layer)) {
+          switch (layer) {
+          case 'Power':
+            this.overlayMaps[layer] = this.options.OpenInfraMap_Power;
+            break;
+          case 'Petroleum':
+            this.overlayMaps[layer] = this.options.OpenInfraMap_Petroleum;
+            break;
+          case 'Telecom':
+            this.overlayMaps[layer] = this.options.OpenInfraMap_Telecom;
+            break;
+          case 'Water':
+            this.overlayMaps[layer] = this.options.OpenInfraMap_Water;
+            break;
+          }
+        }
+        else if (this.options.layers3.includes(layer)) {
+          this.overlayMaps[layer] = window[layer + 'Layer'](map);
+        }
+        else if (this.options.layers4.includes(layer)) {
+          this.overlayMaps[layer] = window['L']['tileLayer']['provider']('JusticeMap.'+layer);
+        }
+        else if (this.options.layers5.includes(layer)) {
+          let obj = {};
+          if (layer === 'clouds') {
+            obj = {showLegend: true, opacity: 0.5};
+          }
+          if (layer === 'city') {
+            layer = 'current';
+            obj = {intervall: 15, minZoom: 3};
+          }
+          this.overlayMaps[layer] = window['L']['OWM'][layer](obj);
+        }
+        else if (this.options.layers6.includes(layer)) {
+          this.overlayMaps[layer] = window['L']['geoJSON'][layer]();
+        }
+        else {
+          console.log('Incorrect Layer Name');
+        }
+      }
 
-		   if(this.options.hash)
-		     var hash = new L.Hash(map, this.overlayMaps);
-		          
-        },
+      if (this.options.embed) {
+        this.options.hostname ? (
+          L.control.embed({
+            hostname: this.options.hostname,
+          }).addTo(map)
+        ) : L.control.embed().addTo(map);
+      }
 
-        onRemove: function (map) {},
-    }
+      L.control.layers(baseMaps, this.overlayMaps).addTo(map);
+
+      var allMaps = Object.assign(baseMaps, this.overlayMaps);
+      if (this.options.hash) {
+        var hash = new L.FullHash(map, allMaps);
+        // Update map state from hash
+        hash.update(this.options.currentHash);
+      }
+    },
+
+    onRemove: function(map) {},
+  },
 );
 
 
-L.LayerGroup.EnvironmentalLayers = function (options) {
-    return new L.LayerGroup.environmentalLayers(options) ;
+L.LayerGroup.EnvironmentalLayers = function(options) {
+  return new L.LayerGroup.environmentalLayers(options);
 };
 
 },{}],9:[function(require,module,exports){
 L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
 
-    {
-        options: {
-            popupOnMouseover: true,
-            clearOutsideBounds: true,
-            tokenID: "566331c289f0aeacd78e0b18362b4bcfa5097572"
-        },
+  {
+    options: {
+      popupOnMouseover: true,
+      clearOutsideBounds: true,
+      tokenID: '566331c289f0aeacd78e0b18362b4bcfa5097572',
+    },
 
-        initialize: function (options) {
-            options = options || {};
-            L.Util.setOptions(this, options);
-            this._layers = {};
-        },
+    initialize: function(options) {
+      options = options || {};
+      L.Util.setOptions(this, options);
+      this._layers = {};
+    },
 
-        onAdd: function (map) {
-            map.on('moveend', this.requestRegionData, this);
-            this._map = map;
-            this.requestRegionData();
-        },
+    onAdd: function(map) {
+      map.on('moveend', this.requestRegionData, this);
+      this._map = map;
+      this.requestRegionData();
+    },
 
-        onRemove: function (map) {
-            map.off('moveend', this.requestRegionData, this);
-            this.clearLayers();
-            this._layers = {};
-        },
+    onRemove: function(map) {
+      map.off('moveend', this.requestRegionData, this);
+      this.clearLayers();
+      this._layers = {};
+    },
 
-        requestRegionData: function () {
-                var self = this ;
+    requestRegionData: function() {
+      var self = this;
 
-                (function() {
+      (function() {
+        var zoom = self._map.getZoom(); var northeast = self._map.getBounds().getNorthEast(); var southwest = self._map.getBounds().getSouthWest();
+        var $ = window.jQuery;
+        var AQI_url = 'https://api.waqi.info/map/bounds/?latlng=' + southwest.lat + ',' + southwest.lng + ',' + northeast.lat + ',' + northeast.lng + '&token=' + self.options.tokenID;
 
-                    var zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
-                    var $ = window.jQuery;
-                    var AQI_url = "https://api.waqi.info/map/bounds/?latlng=" + southwest.lat + "," + southwest.lng + "," + northeast.lat + "," + northeast.lng + "&token=" + self.options.tokenID;
-
-                    if(typeof self._map.spin === 'function'){
-                        self._map.spin(true) ;
-                    }
-                        $.getJSON(AQI_url , function(regionalData){
-
-                            self.parseData(regionalData) ;
-                            if(typeof self._map.spin === 'function'){
-                            self._map.spin(false) ;
-                            }
-                        });
-                })();
-        },
-
-        getMarker: function(data) {
-            var aqi = data.aqi;
-            var lat = data.lat;
-            var lon = data.lon;
-            var uid = data.uid;
-            var clName = "aqiSign ";
-            var aqiN;
-
-            if (isNaN(aqi))  { //If it is not a number
-                clName += "aqiNull";
-            }
-            else { //Parsing AQI to see what color to use
-                aqiN = parseInt(aqi, 10);
-                if (aqiN <= 50) {
-                    clName += "aqiGood";
-                }
-                else if (aqiN <= 100) {
-                    clName += "aqiMod";
-                }
-                else if (aqiN <= 150) {
-                    clName += "aqiSens";
-                }
-                else if (aqiN <= 200) {
-                    clName += "aqiUnhealth";
-                }
-                else if (aqiN <= 300) {
-                    clName += "aqiVUnhealth";
-                }
-                else {
-                    clName += "aqiHazard";
-                }
-            }
-
-            return L.marker([lat, lon], {icon: L.divIcon({className: clName, iconSize: [36,25], iconAnchor: [18, 40], popupAnchor: [0, -25], html: aqi})});
-
-        },
-
-        addMarker: function(data) {
-            var self = this;
-            var marker = this.getMarker(data);
-            var key = data.uid;
-            //Code provided by widget API
-            /* jshint ignore:start */
-            (function(w,d,t,f){  w[f]=w[f]||function(c,k,n){s=w[f],k=s['k']=(s['k']||(k?('&k='+k):''));s['c']=
-            c=(c  instanceof  Array)?c:[c];s['n']=n=n||0;Apa=d.createElement(t),e=d.getElementsByTagName(t)[0];
-            Apa.async=1;Apa.src='http://feed.aqicn.org/feed/'+(c[n].city)+'/'+(c[n].lang||'')+'/feed.v1.js?n='+n+k;
-            e.parentNode.insertBefore(Apa,e);  };  })(  window,document,'script','_aqiFeed'  );
-            /* jshint ignore:end */
-
-            marker.bindPopup( function() { //Fetch popup content only when clicked; else the quota will be reached
-                var el = document.createElement('div');
-                el.classList.add("city-container");
-                el.id = "city-aqi-container";
-
-                var stationURL = "https://api.waqi.info/feed/@" + data.uid + "/?token=" + self.options.tokenID;
-
-                $.getJSON(stationURL, function(stationData) {
-                    var labels = {
-			             pm25: "PM<sub>2.5</sub>",
-			             pm10: "PM<sub>10</sub>",
-			             o3: "Ozone",
-			             no2: "Nitrogen Dioxide",
-			             so2: "Sulphur Dioxide",
-			             co: "Carbon Monoxide",
-			             t: "Temperature",
-			             w: "Wind",
-			             r: "Rain (precipitation)",
-			             h: "Relative Humidity",
-			             d: "Dew",
-			             p: "Atmostpheric Pressure"
-		            };
-
-                    var strContent = "";
-                    var name = "<h2>" + stationData.data.city.name + "</h2><br> "; //Set the default content first
-
-                    for(var species in stationData.data.iaqi) {
-                        strContent += "<strong>" + labels[species] + "</strong>: " + stationData.data.iaqi[species].v + ";<br>";
-                    }
-                    strContent += "See <a href=" + stationData.data.city.url + ">AQICN - " + stationData.data.city.name + "</a> for more info. Data provided by aqicn.org.<br>From the <a href=https://github.com/publiclab/leaflet-environmental-layers/pull/79>AQICN Inventory</a> (<a href = https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515>info</a>)";
-                    el.innerHTML = name + strContent;
-
-                    var res = stationData.data.city.url.split("/");
-
-                    //Parse url to see what the city is called by the API; the majority of cities cannot be found.
-                    var cityName = res[res.length - 1];
-                    if(cityName.length <= 1) cityName = res[res.length - 2];
-                    //if city can be found, display is reset to include details
-                    _aqiFeed({ display: name + "%details <br>" + strContent, container:"city-aqi-container",  city: cityName  });
-                });
-                return el;
-            });
-
-
-            if (!this._layers[key]) {
-                this._layers[key] = marker;
-                this.addLayer(marker);
-            }
-
-        },
-
-        parseData: function(regionalData) {
-            if(!!regionalData) {
-
-                for(var i = 0; i < regionalData.data.length; i++) {
-
-                    //this.requestStationData(regionalData.data[i].uid);
-                    this.addMarker(regionalData.data[i]);
-                }
-
-                if(this.options.clearOutsideBounds) {
-                    this.clearOutsideBounds();
-                }
-            }
-
-        },
-
-        clearOutsideBounds: function () {
-            var bounds = this._map.getBounds(),
-                latLng,
-                key;
-
-            for (key in this._layers) {
-                if (this._layers.hasOwnProperty(key)) {
-                    latLng = this._layers[key].getLatLng();
-
-                    if (!bounds.contains(latLng)) {
-                        this.removeLayer(this._layers[key]);
-                        delete this._layers[key];
-                    }
-                }
-            }
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(true);
         }
-    }
+        $.getJSON(AQI_url, function(regionalData) {
+          self.parseData(regionalData);
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        });
+      })();
+    },
+
+    getMarker: function(data) {
+      var aqi = data.aqi;
+      var lat = data.lat;
+      var lon = data.lon;
+      var uid = data.uid;
+      var clName = 'aqiSign ';
+      var aqiN;
+
+      if (isNaN(aqi)) { // If it is not a number
+        clName += 'aqiNull';
+      }
+      else { // Parsing AQI to see what color to use
+        aqiN = parseInt(aqi, 10);
+        if (aqiN <= 50) {
+          clName += 'aqiGood';
+        }
+        else if (aqiN <= 100) {
+          clName += 'aqiMod';
+        }
+        else if (aqiN <= 150) {
+          clName += 'aqiSens';
+        }
+        else if (aqiN <= 200) {
+          clName += 'aqiUnhealth';
+        }
+        else if (aqiN <= 300) {
+          clName += 'aqiVUnhealth';
+        }
+        else {
+          clName += 'aqiHazard';
+        }
+      }
+
+      return L.marker([lat, lon], {icon: L.divIcon({className: clName, iconSize: [36, 25], iconAnchor: [18, 40], popupAnchor: [0, -25], html: aqi})});
+    },
+
+    addMarker: function(data) {
+      var self = this;
+      var marker = this.getMarker(data);
+      var key = data.uid;
+      // Code provided by widget API
+      /* jshint ignore:start */
+      (function(w, d, t, f) { w[f]=w[f]||function(c, k, n) { s=w[f], k=s['k']=(s['k']||(k?('&k='+k):'')); s['c']=
+            c=(c instanceof Array)?c:[c]; s['n']=n=n||0; Apa=d.createElement(t), e=d.getElementsByTagName(t)[0];
+      Apa.async=1; Apa.src='http://feed.aqicn.org/feed/'+(c[n].city)+'/'+(c[n].lang||'')+'/feed.v1.js?n='+n+k;
+      e.parentNode.insertBefore(Apa, e); }; })( window, document, 'script', '_aqiFeed' );
+      /* jshint ignore:end */
+
+      marker.bindPopup( function() { // Fetch popup content only when clicked; else the quota will be reached
+        var el = document.createElement('div');
+        el.classList.add('city-container');
+        el.id = 'city-aqi-container';
+
+        var stationURL = 'https://api.waqi.info/feed/@' + data.uid + '/?token=' + self.options.tokenID;
+
+        $.getJSON(stationURL, function(stationData) {
+          var labels = {
+            pm25: 'PM<sub>2.5</sub>',
+            pm10: 'PM<sub>10</sub>',
+            o3: 'Ozone',
+            no2: 'Nitrogen Dioxide',
+            so2: 'Sulphur Dioxide',
+            co: 'Carbon Monoxide',
+            t: 'Temperature',
+            w: 'Wind',
+            r: 'Rain (precipitation)',
+            h: 'Relative Humidity',
+            d: 'Dew',
+            p: 'Atmostpheric Pressure',
+          };
+
+          var strContent = '';
+          var name = '<h2>' + stationData.data.city.name + '</h2><br> '; // Set the default content first
+
+          for (var species in stationData.data.iaqi) {
+            strContent += '<strong>' + labels[species] + '</strong>: ' + stationData.data.iaqi[species].v + ';<br>';
+          }
+          strContent += 'See <a href=' + stationData.data.city.url + '>AQICN - ' + stationData.data.city.name + '</a> for more info. Data provided by aqicn.org.<br>From the <a href=https://github.com/publiclab/leaflet-environmental-layers/pull/79>AQICN Inventory</a> (<a href = https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515>info</a>)';
+          el.innerHTML = name + strContent;
+
+          var res = stationData.data.city.url.split('/');
+
+          // Parse url to see what the city is called by the API; the majority of cities cannot be found.
+          var cityName = res[res.length - 1];
+          if (cityName.length <= 1) cityName = res[res.length - 2];
+          // if city can be found, display is reset to include details
+          _aqiFeed({display: name + '%details <br>' + strContent, container: 'city-aqi-container', city: cityName});
+        });
+        return el;
+      });
+
+
+      if (!this._layers[key]) {
+        this._layers[key] = marker;
+        this.addLayer(marker);
+      }
+    },
+
+    parseData: function(regionalData) {
+      if (!!regionalData) {
+        for (var i = 0; i < regionalData.data.length; i++) {
+          // this.requestStationData(regionalData.data[i].uid);
+          this.addMarker(regionalData.data[i]);
+        }
+
+        if (this.options.clearOutsideBounds) {
+          this.clearOutsideBounds();
+        }
+      }
+    },
+
+    clearOutsideBounds: function() {
+      var bounds = this._map.getBounds();
+      var latLng;
+      var key;
+
+      for (key in this._layers) {
+        if (this._layers.hasOwnProperty(key)) {
+          latLng = this._layers[key].getLatLng();
+
+          if (!bounds.contains(latLng)) {
+            this.removeLayer(this._layers[key]);
+            delete this._layers[key];
+          }
+        }
+      }
+    },
+  },
 );
 
 L.layerGroup.aqicnLayer = function(options) {
-    return new L.LayerGroup.AQICNLayer(options);
+  return new L.LayerGroup.AQICNLayer(options);
 };
 
 },{}],10:[function(require,module,exports){
 L.Icon.EonetFiresIcon = L.Icon.extend({
-    options: {
-      iconUrl: 'https://image.flaticon.com/icons/svg/785/785116.svg',
-      iconSize:     [30, 20],
-      iconAnchor:   [20 , 0],
-      popupAnchor:  [-5, -5]
-    }
+  options: {
+    iconUrl: 'https://image.flaticon.com/icons/svg/785/785116.svg',
+    iconSize: [30, 20],
+    iconAnchor: [20, 0],
+    popupAnchor: [-5, -5],
+  },
 });
 
-L.icon.eonetFiresIcon = function () {
-    return new L.Icon.EonetFiresIcon();
+L.icon.eonetFiresIcon = function() {
+  return new L.Icon.EonetFiresIcon();
 };
 
 
 L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
-    {
-        options: {
-            attribution: '<div>Icon made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>'
-        },
-    
-        initialize: function (options) {
-            options = options || {};
-            L.Util.setOptions(this, options);
-            this._layers = {};
+  {
+    options: {
+      attribution: '<div>Icon made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>',
+    },
 
-        },
+    initialize: function(options) {
+      options = options || {};
+      L.Util.setOptions(this, options);
+      this._layers = {};
+    },
 
-        onAdd: function (map) {
-            map.on('moveend', this.requestData, this);
-            this._map = map;
-            this.requestData();
+    onAdd: function(map) {
+      map.on('moveend', this.requestData, this);
+      this._map = map;
+      this.requestData();
+    },
 
-        },
+    onRemove: function(map) {
+      map.off('moveend', this.requestData, this);
+      if (typeof map.spin === 'function') {
+        map.spin(false);
+      }
+      this.clearLayers();
+      this._layers = {};
+    },
 
-        onRemove: function (map) {
-            map.off('moveend', this.requestData, this);
-            if(typeof map.spin === 'function'){
-                map.spin(false) ;
-            }
-            this.clearLayers();
-            this._layers = {};
-        },
+    requestData: function() {
+      var self = this;
 
-        requestData: function () {
-            var self = this;
+      (function() {
+        var $ = window.jQuery;
+        var EonetFire_url = 'https://eonet.sci.gsfc.nasa.gov/api/v2.1/categories/8';
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(true);
+        }
 
-            (function() {
-                var $ = window.jQuery;
-                var EonetFire_url = "https://eonet.sci.gsfc.nasa.gov/api/v2.1/categories/8";
-                if(typeof self._map.spin === 'function'){
-                  self._map.spin(true) ;
-                }
-                
-                $.getJSON(EonetFire_url , function(data){
-                    self.parseData(data) ;
-                    if(typeof self._map.spin === 'function'){
-                      self._map.spin(false) ;
-                    }
-                }); 
-            })();
-        },
+        $.getJSON(EonetFire_url, function(data) {
+          self.parseData(data);
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        });
+      })();
+    },
 
-        parseData: function (data) {
-            if (!!data){
-                for (i = 0 ; i < data.events.length ; i++) {
-                    this.addMarker(data.events[i]) ;
-                }
-            }
-        },
+    parseData: function(data) {
+      if (!!data) {
+        for (i = 0; i < data.events.length; i++) {
+          this.addMarker(data.events[i]);
+        }
+      }
+    },
 
-        getMarker: function (data) {
-            var fireIcon = new L.icon.eonetFiresIcon();
-            var coords = this.coordsToLatLng(data.geometries[0].coordinates);
-              var lat = coords.lat;
-              var lng = coords.lng;
-              var title = data.title;
-              var date = new Date(data.geometries[0].date).toUTCString();
-              var source = data.sources && data.sources[0].url
-              var fire_marker ;
-              if (!isNaN((lat)) && !isNaN((lng)) ){
-                fire_marker = L.marker([lat , lng] , {icon: fireIcon}).bindPopup("<strong>Event : </strong>" + title + "<br>Lat : " + lat + "<br>Lon : "+ lng + "<br>Date : " + date + "<br><i><a href=" + source + ">source<a></i>") ;
-              }
-            return fire_marker ;
-        },
+    getMarker: function(data) {
+      var fireIcon = new L.icon.eonetFiresIcon();
+      var coords = this.coordsToLatLng(data.geometries[0].coordinates);
+      var lat = coords.lat;
+      var lng = coords.lng;
+      var title = data.title;
+      var date = new Date(data.geometries[0].date).toUTCString();
+      var source = data.sources && data.sources[0].url;
+      var fire_marker;
+      if (!isNaN((lat)) && !isNaN((lng)) ) {
+        fire_marker = L.marker([lat, lng], {icon: fireIcon}).bindPopup('<strong>Event : </strong>' + title + '<br>Lat : ' + lat + '<br>Lon : '+ lng + '<br>Date : ' + date + '<br><i><a href=' + source + '>source<a></i>');
+      }
+      return fire_marker;
+    },
 
-        addMarker: function (data) {
-            var marker;
-            var key = data.id ;
-            if (!this._layers[key]) {
-                marker = this.getMarker(data);
-                this._layers[key] = marker;
-                this.addLayer(marker);
-            }
-        },
+    addMarker: function(data) {
+      var marker;
+      var key = data.id;
+      if (!this._layers[key]) {
+        marker = this.getMarker(data);
+        this._layers[key] = marker;
+        this.addLayer(marker);
+      }
+    },
 
-        coordsToLatLng: function (coords) {
-            return new L.LatLng(coords[1], coords[0]);
-        },  
+    coordsToLatLng: function(coords) {
+      return new L.LatLng(coords[1], coords[0]);
+    },
 
-    }
+  },
 );
 
 
-
-L.geoJSON.eonetFiresLayer = function (options) {
-    return new L.GeoJSON.EonetFiresLayer(options);
+L.geoJSON.eonetFiresLayer = function(options) {
+  return new L.GeoJSON.EonetFiresLayer(options);
 };
 
 },{}],11:[function(require,module,exports){
-fracTrackerMobileLayer = function(map) {
-  var FracTracker_mobile  = L.esri.featureLayer({
-    url: 'https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/FracTrackerMobileAppNPCAMesaVerdeNationalPark_051416/FeatureServer/0/',
-    simplifyFactor: 1
-  }) ;
+L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
+  {
+    options: { },
 
-  FracTracker_mobile.bindPopup(function (layer) {
-    return L.Util.template('<p><strong>Id : </strong>{OBJECTID}<br><strong>FT_MV_ID : </strong>{FT_MV_ID}<br><strong>Long : </strong>{Long}<br><strong>Lat :</strong> {Lat} <br> <strong>Caption : </strong>{caption} <br> <strong>issue :</strong> {issue} <br> <strong>facility :</strong> {facility} <br><strong> Location :</strong> {location} <br> <strong>URL :</strong> <a href={URL2}>{URL2}</a> <br> <img src={URL2} height="280" width="290"></p>', layer.feature.properties);
-  });
+    initialize: function(options) {
+      options = options || {};
+      L.Util.setOptions(this, options);
+      this._layers = {};
+    },
 
-  FracTracker_mobile.on('loading', function(e){
-    if(typeof map.spin === 'function'){
-      map.spin(true) ;
-    }
-  });
-  FracTracker_mobile.on('load', function(e){
-    if(typeof map.spin === 'function'){
-      map.spin(false) ;
-    }
-  });
+    onAdd: function(map) {
+      map.on('moveend', this.requestData, this);
+      this._map = map;
+      this.requestData();
+    },
 
-  return FracTracker_mobile ;
+    onRemove: function(map) {
+      map.off('moveend', this.requestData, this);
+      if (typeof map.spin === 'function') {
+        map.spin(false);
+      }
+      this.clearLayers();
+      this._layers = {};
+    },
+
+    requestData: function() {
+      var self = this;
+
+      (function() {
+        var bounds = self._map.getBounds();
+        var northEast = bounds.getNorthEast();
+        var southWest = bounds.getSouthWest();
+        var left = southWest.lng;
+        var right = northEast.lng;
+        var top = northEast.lat;
+        var bottom = southWest.lat;
+        var polygon = left + ' ' + top + ',' + right + ' ' + top + ',' + right + ' ' + bottom + ',' + left + ' ' + bottom + ',' + left + ' ' + top;
+        
+        var $ = window.jQuery;
+        var fractrackerMobile_url = 'https://cors-anywhere.herokuapp.com/https://api.fractracker.org/v1/data/report?page=1&results_per_page=250&q={"filters":[{"name":"geometry","op":"intersects","val":"SRID=4326;POLYGON((' + polygon +'))"}],"order_by":[{"field":"report_date","direction":"desc"},{"field":"id","direction":"desc"}]}';
+
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(true);
+        }
+
+        return $.getJSON(fractrackerMobile_url);
+
+      })().done(function(data) {
+        self.parseData(data);
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(false);
+        }
+      });
+    },
+
+    parseData: function(data) {
+      if (!!data) {
+        for ( var i = 0; i < data.features.length; i++) {
+          this.addMarker(data.features[i]);
+        }
+      }
+    },
+
+    getMarker: function(data) {
+      var coords = this.coordsToLatLng(data.geometry.coordinates || data.geometry.geometries[0].coordinates);
+      var lat = coords.lat;
+      var lng = coords.lng;
+      var description = data.properties.description ? data.properties.description : '';
+      var date = new Date(data.properties.report_date).toUTCString();
+      var dateModified = new Date(data.properties.modified_on).toUTCString();
+      var organizationName = data.properties.created_by.organization_name ? data.properties.created_by.organization_name : '';
+      var imageUrl = data.properties.images[0] && data.properties.images[0].properties.square;
+      var imageElement = imageUrl ? '<img src="'  + imageUrl + '" alt="User image" width="100%" />' : '';
+      var marker;
+      if (!isNaN((lat)) && !isNaN((lng)) ) {
+        marker = new L.circleMarker([lat, lng], { radius: 5, color: '#e4458b'})
+        .bindPopup(imageElement + '<br><strong>'+ description + '</strong><br>Lat : ' + lat + '<br>Lon : '+ lng + '<br>Reported on : ' + date + '<br>Modified on : ' + dateModified + '<br>' + organizationName);
+      }
+      return marker;
+    },
+
+    addMarker: function(data) {
+      var marker;
+      var key = data.id;
+      if (!this._layers[key]) {
+        marker = this.getMarker(data);
+        this._layers[key] = marker;
+        this.addLayer(marker);
+      }
+    },
+
+    coordsToLatLng: function(coords) {
+      return new L.LatLng(coords[1], coords[0]);
+    },
+
+  },
+);
+
+
+L.geoJSON.fracTrackerMobile = function(options) {
+  return new L.GeoJSON.FracTrackerMobile(options);
 };
 
 },{}],12:[function(require,module,exports){
 L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
 
-    {
-        options: {
-            
-            popupOnMouseover: false,
-            clearOutsideBounds: false,
-            target: '_self',
-        },
+  {
+    options: {
 
-        initialize: function (name,options) {
-        
-            this.layer = name;
-            options = options || {};
-            L.Util.setOptions(this, options);
-            this._layers = {};
+      popupOnMouseover: false,
+      clearOutsideBounds: false,
+      target: '_self',
+    },
 
-        },
+    initialize: function(name, options) {
+      this.layer = name;
+      options = options || {};
+      L.Util.setOptions(this, options);
+      this._layers = {};
+    },
 
-        onAdd: function (map) {
-            map.on('moveend', this.requestData, this);
-            this._map = map;
-            this.requestData();
+    onAdd: function(map) {
+      map.on('moveend', this.requestData, this);
+      this._map = map;
+      this.requestData();
+    },
 
-        },
+    onRemove: function(map) {
+      map.off('moveend', this.requestData, this);
+      if (typeof map.spin === 'function') {
+        map.spin(false);
+      }
+      this.clearLayers();
+      this._layers = {};
+    },
 
-        onRemove: function (map) {
-            map.off('moveend', this.requestData, this);
-            if(typeof map.spin === 'function'){
-              map.spin(false) ;
-            }
-            this.clearLayers();
-            this._layers = {};
-        },
+    requestData: function() {
+      var self = this;
+      (function() {
+        var zoom = self._map.getZoom(); var origin = self._map.getCenter();
+        var $ = window.jQuery;
+        var ILL_url;
 
-        requestData: function () {
-                var self = this ;
-                (function() {
-                    var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
-                    var $ = window.jQuery;
-                    var ILL_url;
-       
-                    if(self.layer === "Territories" ){
-                        ILL_url = "https://native-land.ca/api/index.php?maps=territories&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
-                    }
-                    if (self.layer === "Languages"){
-                        ILL_url = "https://native-land.ca/api/index.php?maps=languages&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
-                    }
-                    if(self.layer === "Treaties" ){
-                         ILL_url = "https://native-land.ca/api/index.php?maps=treaties&position=" + parseInt(origin.lat) + "," + parseInt(origin.lng);
-                    }
-
-                    if(typeof self._map.spin === 'function'){
-                        self._map.spin(true) ;
-                    }
-                    $.getJSON(ILL_url , function(data){
-                        self.parseData(data) ;
-                        if(typeof self._map.spin === 'function'){
-                        self._map.spin(false) ;
-                        }
-                    });
-
-                })();
-        },
-
-
-        getPoly: function (data) {
-              var coords = data.geometry.coordinates;
-
-              for(var j = 0; j < coords[0].length; j++) {
-                var temp = coords[0][j][1];
-                coords[0][j][1] = coords[0][j][0];
-                coords[0][j][0] = temp;
-              }
-
-
-              var nme = data.properties.Name;
-              var frNme = data.properties.FrenchName;
-              var desc = data.properties.description;
-              var frDesc = data.properties.FrenchDescription;
-              var clr = data.properties.color;
-              var key = data.id;
-              var ill_poly ;
-               if (!isNaN((coords[0][0][0]) && !isNaN((coords[0][0][1]))) ){
-                
-              	if(this.layer === "Territories"){
-              		ill_poly = L.polygon(coords, {color: clr}).bindPopup("<strong>Name : </strong>" + nme + "<br><strong>Description: </strong> <a href=" + desc + ">Native Lands - " + nme + "</a><br><i>From the <a href='https://github.com/publiclab/leaflet-environmental-layers/pull/77'>Indigenous Territories Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>") ;
-              	}
-                if(this.layer === "Languages") {
-                    ill_poly = L.polygon(coords, {color: clr}).bindPopup("<strong>Name : </strong>" + nme + "<br><strong>Description: </strong> <a href=" + desc + ">Native Lands - " + nme + "</a><br><i>From the <a href='https://github.com/publiclab/leaflet-environmental-layers/pull/76'>Indigenous Languages Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>") ;
-                }
-                if(this.layer === "Treaties"){ 
-                 	ill_poly = L.polygon(coords, {color: clr}).bindPopup("<strong>Name : </strong>" + nme + "<br><strong>Description: </strong> <a href=" + desc + ">Native Lands - " + nme + "</a><br><i>From the <a href='https://github.com/publiclab/leaflet-environmental-layers/pull/78'>Indigenous Treaties Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>") ;
-                }
-
-              }
-            return ill_poly ;
-        },
-
-        addPoly: function (data) {
-            var poly = this.getPoly(data), key = data.id ;
-
-            if (!this._layers[key]) {
-                this._layers[key] = poly;
-                this.addLayer(poly);
-
-            }
-        },
-
-        parseData: function (data) {
-
-        if (!!data){
-           for (var i = 0 ; i < data.length ; i++) {
-
-            this.addPoly(data[i]) ;
-
-           }
-             if (this.options.clearOutsideBounds) {
-                this.clearOutsideBounds();
-            }
-          }
-        },
-
-        clearOutsideBounds: function () {
-            var bounds = this._map.getBounds(),
-                polyBounds,
-                key;
-
-            for (key in this._layers) {
-                if (this._layers.hasOwnProperty(key)) {
-                    polyBounds = this._layers[key].getBounds();
-
-                    if (!bounds.intersects(polyBounds)) {
-                        this.removeLayer(this._layers[key]);
-                        delete this._layers[key];
-                    }
-                }
-            }
+        if (self.layer === 'Territories' ) {
+          ILL_url = 'https://native-land.ca/api/index.php?maps=territories&position=' + parseInt(origin.lat) + ',' + parseInt(origin.lng);
         }
-    }
+        if (self.layer === 'Languages') {
+          ILL_url = 'https://native-land.ca/api/index.php?maps=languages&position=' + parseInt(origin.lat) + ',' + parseInt(origin.lng);
+        }
+        if (self.layer === 'Treaties' ) {
+          ILL_url = 'https://native-land.ca/api/index.php?maps=treaties&position=' + parseInt(origin.lat) + ',' + parseInt(origin.lng);
+        }
+
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(true);
+        }
+        $.getJSON(ILL_url, function(data) {
+          self.parseData(data);
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        });
+      })();
+    },
+
+
+    getPoly: function(data) {
+      var coords = data.geometry.coordinates;
+
+      for (var j = 0; j < coords[0].length; j++) {
+        var temp = coords[0][j][1];
+        coords[0][j][1] = coords[0][j][0];
+        coords[0][j][0] = temp;
+      }
+
+
+      var nme = data.properties.Name;
+      var frNme = data.properties.FrenchName;
+      var desc = data.properties.description;
+      var frDesc = data.properties.FrenchDescription;
+      var clr = data.properties.color;
+      var key = data.id;
+      var ill_poly;
+      if (!isNaN((coords[0][0][0]) && !isNaN((coords[0][0][1]))) ) {
+        if (this.layer === 'Territories') {
+          ill_poly = L.polygon(coords, {color: clr}).bindPopup('<strong>Name : </strong>' + nme + '<br><strong>Description: </strong> <a href=' + desc + '>Native Lands - ' + nme + '</a><br><i>From the <a href=\'https://github.com/publiclab/leaflet-environmental-layers/pull/77\'>Indigenous Territories Inventory</a> (<a href=\'https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515\'>info<a>)</i>');
+        }
+        if (this.layer === 'Languages') {
+          ill_poly = L.polygon(coords, {color: clr}).bindPopup('<strong>Name : </strong>' + nme + '<br><strong>Description: </strong> <a href=' + desc + '>Native Lands - ' + nme + '</a><br><i>From the <a href=\'https://github.com/publiclab/leaflet-environmental-layers/pull/76\'>Indigenous Languages Inventory</a> (<a href=\'https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515\'>info<a>)</i>');
+        }
+        if (this.layer === 'Treaties') {
+          ill_poly = L.polygon(coords, {color: clr}).bindPopup('<strong>Name : </strong>' + nme + '<br><strong>Description: </strong> <a href=' + desc + '>Native Lands - ' + nme + '</a><br><i>From the <a href=\'https://github.com/publiclab/leaflet-environmental-layers/pull/78\'>Indigenous Treaties Inventory</a> (<a href=\'https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515\'>info<a>)</i>');
+        }
+      }
+      return ill_poly;
+    },
+
+    addPoly: function(data) {
+      var poly = this.getPoly(data); var key = data.id;
+
+      if (!this._layers[key]) {
+        this._layers[key] = poly;
+        this.addLayer(poly);
+      }
+    },
+
+    parseData: function(data) {
+      if (!!data) {
+        for (var i = 0; i < data.length; i++) {
+          this.addPoly(data[i]);
+        }
+        if (this.options.clearOutsideBounds) {
+          this.clearOutsideBounds();
+        }
+      }
+    },
+
+    clearOutsideBounds: function() {
+      var bounds = this._map.getBounds();
+      var polyBounds;
+      var key;
+
+      for (key in this._layers) {
+        if (this._layers.hasOwnProperty(key)) {
+          polyBounds = this._layers[key].getBounds();
+
+          if (!bounds.intersects(polyBounds)) {
+            this.removeLayer(this._layers[key]);
+            delete this._layers[key];
+          }
+        }
+      }
+    },
+  },
 );
 
-L.layerGroup.indigenousLayers = function (name,options) {
-    return new L.LayerGroup.IndigenousLayers(name,options);
+L.layerGroup.indigenousLayers = function(name, options) {
+  return new L.LayerGroup.IndigenousLayers(name, options);
 };
+
 },{}],13:[function(require,module,exports){
 module.exports={
    "wisconsin": {
@@ -26456,6 +26533,20 @@ module.exports={
                   ],
          "minZoom": 10,
          "maxZoom": 15
+       }
+    },
+
+   "unearthing": {
+      "name": "Unearthing Providence",
+      "url": "https://publiclab.org/unearthing-pvd",
+      "api_url": "",
+      "extents": {
+        "bounds": [
+                    [42.2102, -72.0204],
+                    [41.2272, -70.9618]
+                  ],
+         "minZoom": 6,
+         "maxZoom": 18
        }
     },
 
@@ -26581,508 +26672,872 @@ module.exports={
     },
 
 }
+
 },{}],14:[function(require,module,exports){
-require('jquery') ;
-require('leaflet') ;
+module.exports={
+  "airQualityIndex": {
+    "url": "http://aqicn.org/json-api/doc/",
+    "data": {
+      "type": "RT",
+      "disclaimer": "Data consistency is verified, in real-time, with the neighbor stations, allowing to automatically detect defective monitoring stations, and remove them, if needed, from the map."
+    },
+    "description": "The World Air Quality Index project provides transparent and world-wide air quality information for more than 100 countries, covering more than 12,000 stations in 1000 major cities.",
+    "layer_desc": "World-wide air quality information",
+    "icon": "#096",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 3,
+      "maxZoom": 15
+    }
+  },
+  "eonetFires": {
+    "url": "https://eonet.sci.gsfc.nasa.gov/",
+    "data": {
+      "type": "NRT",
+      "disclaimer": "Spatial and temporal extents of natural events represented in EONET are based on multiple sources, and often these representations are approximations at best."
+    },
+    "description": "EONET provides a curated source of continuously updated natural event metadata. EONET Events: Wildfires: Wildfires includes all nature of fire, including forest and plains fires, as well as urban and industrial fire events. Fires may be naturally caused or manmade.",
+    "layer_desc": "All nature of fire events.",
+    "icon": "#ff421d",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 3,
+      "maxZoom": 15
+    }
+  },
+  "fractracker": {
+    "url": "https://www.fractracker.org/",
+    "data": {
+      "type": "",
+      "disclaimer": "Data from agency data sets to crowd-sourced data"
+    },
+    "description": "FracTracker Alliance studies, maps, and communicates the risks of oil and gas development to protect our planet and support the renewable energy transformation.",
+    "layer_desc": "Oil and gas development",
+    "icon": "#e8e800",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 5,
+      "maxZoom": 15
+    }
+  },
+  "fracTrackerMobile": {
+    "url": "https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/FracTrackerMobileAppNPCAMesaVerdeNationalPark_051416/FeatureServer",
+    "data": {
+      "type": "",
+      "disclaimer": "Data from agency data sets to crowd-sourced data"
+    },
+    "description": "",
+    "layer_desc": "User reports",
+    "icon": "#e4458b",
+    "extents": {
+      "bounds": [
+        [-44.087585028245165, -148.88671875000003],
+        [76.63922560965888, 140.62500000000003]
+      ],
+      "minZoom": 5,
+      "maxZoom": 15
+    }
+  },
+  "indigenousLands": {
+    "url": "https://native-land.ca/",
+    "data": {
+      "type": "Historical data",
+      "disclaimer": "This map does not represent or intend to represent official or legal boundaries of any Indigenous nations. To learn about definitive boundaries, contact the nations in question. Map sources: https://native-land.ca/resources/"
+    },
+    "description": "Native Land is a conglomeration of things: nations that still exist, nations that we only have records of for “first contact”, nations that have moved over time, and more.",
+    "layer_desc": "Indigenous nations - Territories, Languages, Treaties",
+    "icon": "#532200",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 6,
+      "maxZoom": 15
+    }
+  },
+  "justiceMap": {
+    "url": "http://www.justicemap.org/index.php?giAdvanced=0#instruction_div",
+    "data": {
+      "type": "",
+      "disclaimer": "Our information comes from the Census Bureau - the 2010 Census and the latest American Community Survey (five year summary)."
+    },
+    "description": "Visualize race and income data for your neighborhood, county, state, or the entire US",
+    "layer_desc": "U.S race and income data",
+    "icon": "#f3a482",
+    "extents": {
+      "bounds": [
+                  [16.97274101999902, -172.880859375],
+                  [71.27259471233448, -38.05664062500001]
+                ],
+      "minZoom": 5,
+      "maxZoom": 15
+    }
+  },
+  "luftdaten": {
+    "url": "https://maps.luftdaten.info",
+    "data": {
+      "type": "",
+      "disclaimer": "At the moment we are developing a standard that will complement the official measurement results of LUBW. With our work we want to obtain a well-founded, empirically determined data set. It is primarily a picture of the overall situation. However, cooperation with various experts aims to achieve the greatest possible approximation of measurement results that are recorded using other measurement methods."
+    },
+    "description": "building particulate matter sensors and visualizing the data in an overall picture.",
+    "layer_desc": "Fine dust measurement",
+    "icon": "#4edd51",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 3,
+      "maxZoom": 15
+    }
+  },
+  "mapknitter": {
+    "url": "https://mapknitter.org/",
+    "data": {
+      "type": "community submissions",
+      "disclaimer": "Data from community submissions."
+    },
+    "description": "MapKnitter can make maps from any image source, but it was designed for making maps with aerial photos from balloons and kites.",
+    "layer_desc": "Map data from aerial photos from balloons and kites",
+    "icon": "#ca283b",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 10,
+      "maxZoom": 15
+    }
+  },
+  "odorreport": {
+    "url": "https://odorlog.ushahidi.io/views/map",
+    "report_url": "http://www.odorcomplaint.com/",
+    "data": {
+      "type": "",
+      "disclaimer": "Data based on the the <a href=\"http://www.odorcomplaint.com/\">Odor Complaint Form</a> plus a couple of logs found online"
+    },
+    "description": "Facilitates monitoring of bad odor events through the collection of data using a written odor log and an online map.",
+    "layer_desc": "Bad odor events",
+    "icon": "#ff00ff",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 8,
+      "maxZoom": 15
+    }
+  },
+  "openaq": {
+    "url": "https://openaq.org/",
+    "data": {
+      "type": "RT",
+      "disclaimer": "OpenAQ-aggregate data are gathered in real-time from government agencies and no guarantees can be made for their accuracy. All quality control measures should be done by the user or by contacting the host source."
+    },
+    "description": "OpenAQ is a non-profit organization empowering communities around the globe to clean their air by harmonizing, sharing, and using open air quality data.",
+    "layer_desc": "Air quality data",
+    "icon": "#912d25",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 3,
+      "maxZoom": 15
+    }
+  },
+  "openInfraMap": {
+    "url": "https://openinframap.org/about.html",
+    "data": {
+      "type": "",
+      "disclaimer": "All the data currently displayed on OpenInfraMap is sourced directly from OpenStreetMap."
+    },
+    "description": "Open Infrastructure Map is a view of the world's hidden infrastructure mapped in the OpenStreetMap database.",
+    "layer_desc": "World's hidden infrastructure",
+    "icon": "#b59f10",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 3,
+      "maxZoom": 15
+    }
+  },
+  "opensense": {
+    "url": "https://opensensemap.org/",
+    "report_url": "https://opensensemap.org/register",
+    "data": {
+      "type": "",
+      "disclaimer": "Data collected from senseBoxes"
+    },
+    "description": "openSenseMap is a platform for open sensor data at which everyone can participate in.",
+    "layer_desc": "Sensor data from senseboxes",
+    "icon": "",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 3,
+      "maxZoom": 15
+    }
+  },
+  "openWeatherMap": {
+    "url": "https://openweathermap.org/guide",
+    "data": {
+      "type": "RT",
+      "disclaimer": "data from professional and private weather stations"
+    },
+    "description": "OpenWeatherMap provides many kinds of weather maps including Precipitation, Clouds, Pressure, Temperature, Wind.",
+    "layer_desc": "Weather information",
+    "icon": "#00a3fe",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 3,
+      "maxZoom": 15
+    }
+  },
+  "osmlandfills,quarries": {
+    "url": "https://www.openstreetmap.org/about",
+    "data": {
+      "type": "",
+      "disclaimer": "OpenStreetMap emphasizes local knowledge. Contributors use aerial imagery, GPS devices, and low-tech field maps to verify that OSM is accurate and up to date. Our contributors include enthusiast mappers, GIS professionals, engineers running the OSM servers, humanitarians mapping disaster-affected areas, and many more."
+    },
+    "description": "A Landfill site (also known as a tip, dump, rubbish dump or dumping ground and historically as a midden) is a site for the disposal of waste materials by burial. A quarry is an area of land used for surface extraction (open-pit mining) of mineral or organic resources like rocks, gravel, sand, soil, clay, ore, coal or peat.",
+    "layer_desc": "Land used for landfill and mine quarry",
+    "icon": "#008000",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 11,
+      "maxZoom": 15
+    }
+  },
+  "pfaslayer": {
+    "url": "https://pfasproject.com/",
+    "report_url": "mailto:pfasproject@gmail.com",
+    "data": {
+      "type": "",
+      "disclaimer": "All locations represent the general area of a contamination site or public water detection. Locations were mapped using the best available data preserved in official records, including data provided by tests of public drinking water systems, the Safe Drinking Water Information System, the Department of Defense report “Addressing Perfluorooctane Sulfonate (PFOS) and Perfluorooctanoic Acid (PFOA),” and the Northeastern University Social Science Environmental Health Research Institute. Levels listed are for the range of the total of all PFAS detected at the time of the tests and do not reflect whether a water system is treating the water to reduce levels.Data on contaminated industrial and military sites was current as of October 2019."
+    },
+    "description": "Northeastern’s PFAS Contamination Site Tracker one of the most comprehensive resources available for tracking PFAS pollution in the U.S.",
+    "layer_desc": "PFAS pollution in the U.S.",
+    "icon": "#b52822",
+    "extents": {
+      "bounds": [
+                  [16.97274101999902, -172.880859375],
+                  [71.27259471233448, -38.05664062500001]
+                ],
+      "minZoom": 5,
+      "maxZoom": 15
+    }
+  },
+  "purpleair": {
+    "url": "https://www.purpleair.com",
+    "report_url": "https://www.purpleair.com/register",
+    "data": {
+      "type": "RT",
+      "disclaimer": "Every icon on the PurpleAir map represents a public PurpleAir sensor and the color indicates the real time PM2.5 reading on the US EPA Air Quality Index scale."
+    },
+    "description": "An air quality monitoring network built on a new generation of \"Internet of Things\" sensors",
+    "layer_desc": "Air quality data from PurpleAir sensors",
+    "icon": "#7c22b5",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 3,
+      "maxZoom": 15
+    }
+  },
+  "skytruth": {
+    "url": "https://alerts.skytruth.org/",
+    "data": {
+      "type": "",
+      "disclaimer": "SkyTruth’s Alerts application reads environmental incidents from multiple websites"
+    },
+    "description": "SkyTruth Alerts is a free service that provides daily updates of environmentally significant incidents by geographical area. ",
+    "layer_desc": "Environmentally significant incidents",
+    "icon": "#f00",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 10,
+      "maxZoom": 15
+    }
+  },
+  "toxicRelease": {
+    "url": "https://www.epa.gov/enviro/tri-search",
+    "data": {
+      "type": "Historical data",
+      "disclaimer": "The information submitted by facilities to the EPA and states is complied annually as the Toxics Release Inventory or TRI, and is stored in a publicly accessible database."
+    },
+    "description": "The Toxics Release Inventory (TRI) Search retrieves data from the TRI database in Envirofacts. The Toxics Release Inventory (TRI) tracks the management of over 650 toxic chemicals that pose a threat to human health and the environment.",
+    "layer_desc": "Toxics Release Inventory",
+    "icon": "#6ccc00",
+    "extents": {
+      "bounds": [
+                  [60.54377524118842, -21.708984375000004],
+                  [13.66733825965496, -148.27148437500003]
+                ],
+      "minZoom": 5,
+      "maxZoom": 15
+    }
+  },
+  "unearthing": {
+    "url": "https://publiclab.org/unearthing-pvd",
+    "data": {
+      "type": "Historical data",
+      "disclaimer": "Social scientists and computer scientists at Brown University have assembled a unique database that contains information on every manufacturing facility that operated in Rhode Island since the early 1950s. The database also contains information on other environmentally risky land uses such as gas stations, dry cleaners, and auto repair shops as far back as 1936. We have also collected information on “green” land uses such as urban parks, playgrounds, schools and community gardens dating back to 1915."
+    },
+    "description": "A platform for historical data-driven analyses of industrial land use, story-mapping, and community organizing.",
+    "layer_desc": "Industrial land use, story-mapping, and community organizing",
+    "icon": "#4f4fff",
+    "extents": {
+      "bounds": [
+                  [42.2102, -72.0204],
+                  [41.2272, -70.9618]
+                ],
+      "minZoom": 6,
+      "maxZoom": 18
+    }
+  },
+  "wisconsinNon-metal": {
+    "url": "https://services.arcgis.com/jDGuO8tYggdCCnUJ/ArcGIS/rest/services/Nonmetallic_and_Potential_frac_sand_mine_proposals_in_West_Central_Wisconsin/FeatureServer/info/itemInfo?f=pjson",
+    "data": {
+      "type": "",
+      "disclaimer": "The information shown on this map was obtained from Wisconsin’s counties and cities in 2017 and thus may not be the most current, comprehensive data available. Source data for parcel polygons was collected between January–July of 2017. However, the tax roll year for most records is 2016, as the assessment cycle lags a year behind. To ensure the most current, comprehensive parcel data, consult the local government’s land information websites first, or contact the city or county land information office directly. The next release of the statewide parcel layer, V4, is tentatively scheduled for July 31, 2018."
+    },
+    "description": "These are all <a href='https://dnr.wi.gov/topic/Mines/Deposit.html' target='_blank'>non-metallic registered parcels</a> across West Central Wisconsin along with potential frac sand mine proposals based on ownership or overlap with existing sand mine operators or landowners.",
+    "layer_desc": "Sand mine operators or landowners",
+    "icon": "#739ccf",
+    "extents": {
+      "bounds": [
+                  [43.689721907017194, -93.12835693359376],
+                  [45.60250901510299, -89.54956054687501]
+                ],
+      "minZoom": 10,
+      "maxZoom": 15
+    }
+  }
+}
+
+},{}],15:[function(require,module,exports){
+require('jquery');
+require('leaflet');
 
 L.LayerGroup.LayerCode = L.LayerGroup.extend(
 
-    {
-        options: {
-            popupOnMouseover: false,
-            clearOutsideBounds: true,
-            target: '_self',
-        },
+  {
+    options: {
+      popupOnMouseover: false,
+      clearOutsideBounds: true,
+      target: '_self',
+    },
 
-        initialize: function (name,options) {
-            this.layer = name;
-            options = options || {};
-            L.Util.setOptions(this, options);
-            this._layers = {};
-        },
+    initialize: function(name, options) {
+      this.layer = name;
+      options = options || {};
+      L.Util.setOptions(this, options);
+      this._layers = {};
+    },
 
-        onAdd: function (map) {
-            map.on('moveend', this.requestData, this);
-            this._map = map;
-            this.requestData();
-        },
+    onAdd: function(map) {
+      map.on('moveend', this.requestData, this);
+      this._map = map;
+      this.requestData();
+    },
 
-        onRemove: function (map) {
-            map.off('moveend', this.requestData, this);
-            if(typeof map.spin === 'function'){
-              map.spin(false) ;
+    onRemove: function(map) {
+      map.off('moveend', this.requestData, this);
+      if (typeof map.spin === 'function') {
+        map.spin(false);
+      }
+      this.clearLayers();
+      map.closePopup();
+      // oms.clearMarkers();
+      this._layers = {};
+    },
+
+    populatePopUp: function(e) {
+      if (this.layer == 'opensense') {
+        if (e) {
+          var popup = e.target.getPopup();
+          var $ = window.jQuery;
+          var url = 'https://api.opensensemap.org/boxes/' + e.target.options.boxId;
+          $.getJSON(url, function(data) {
+            var popUpContent = '';
+            if (data.name && data.grouptag) {
+              popUpContent += '<h3>' + data.name + ',' + data.grouptag + '</h3>';
             }
-            this.clearLayers();
-            map.closePopup();
-            oms.clearMarkers();
-            this._layers = {};
-        },
-
-        populatePopUp: function (e) {
-        	if(this.layer == "opensense"){
-		    if (e) {
-		      var popup = e.target.getPopup();
-		      var $ = window.jQuery;
-		      var url = "https://api.opensensemap.org/boxes/" + e.target.options.boxId;
-		      $.getJSON(url, function (data) {
-		        var popUpContent = "";
-		        if (data.name && data.grouptag) {
-		          popUpContent += "<h3>" + data.name + "," + data.grouptag + "</h3>";
-		        }
-		        else if (data.name) {
-		          popUpContent += "<h3>" + data.name + "</h3>";
-		        }
-		        for (var i in data.sensors) {
-		          if (data.sensors[i].lastMeasurement) {
-		            popUpContent += "<span><b>" + data.sensors[i].title + ": </b>" +
-		              data.sensors[i].lastMeasurement.value +
-		              data.sensors[i].unit + "</span><br>";
-		          }
-		        }
-		        if (data.lastMeasurementAt) {
-		          popUpContent += "<br><small>Measured at <i>" + data.lastMeasurementAt + "</i>";
-		        }
-		        popup.setContent(popUpContent);
-		      });
-		    }
-		}
-        },
-
-
-        requestData: function () {
-           var self = this;
-           var info = require("./info.json");
-                (function() {
-                    var zoom;
-                    var Layer_URL;
-                    var $ = window.jQuery;
-
-                    if (self.layer === "fractracker"){
-                        Layer_URL = info.fractracker.api_url; ;
-                    }
-                    if(self.layer === "skytruth"){
-                        zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
-                        Layer_URL = info.skytruth.api_url + "?n=100&l="+(southwest.lat)+","+(southwest.lng)+","+(northeast.lat)+","+(northeast.lng) ;
-                    }
-                    if(self.layer === "odorreport"){
-                        zoom = self._map.getZoom(), origin = self._map.getCenter() ;
-                        Layer_URL =  info.odorreport.api_url ;
-                    }
-                    if(self.layer === "mapknitter"){
-                        zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast() , southwest = self._map.getBounds().getSouthWest() ;
-                        Layer_URL = info.mapknitter.api_url + "?minlon="+(southwest.lng)+"&minlat="+(southwest.lat)+"&maxlon="+(northeast.lng)+"&maxlat="+(northeast.lat);
-                    }
-                    if(self.layer === "luftdaten"){
-                        Layer_URL = "https://maps.luftdaten.info/data/v2/data.dust.min.json";
-                    }
-                    if(self.layer === "openaq"){
-                        Layer_URL = "https://api.openaq.org/v1/latest?limit=5000";
-                    }
-                    if(self.layer === "opensense"){
-      					Layer_URL = "https://api.opensensemap.org/boxes";
-
-                    }
-                    if(self.layer == "purpleairmarker"){
-                        zoom = self._map.getZoom(), northwest = self._map.getBounds().getNorthWest() , southeast = self._map.getBounds().getSouthEast() ;
-                        if(zoom < info.purpleairmarker.extents.minZoom){
-                          return;
-                        }
-                        Layer_URL = info.purpleairmarker.api_url + "?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat="+(northwest.lat)+"&selat="+(southeast.lat)+"&nwlng="+(northwest.lng)+"&selng="+(southeast.lng) ;
-                    }
-                    
-
-                    if(typeof self._map.spin === 'function'){
-                        self._map.spin(true) ;
-                    }
-                    $.getJSON(Layer_URL , function(data){
-                    if(self.layer == "fractracker")
-                        self.parseData(data.feed.entry);
-                    if(self.layer == "openaq")
-                        self.parseData(data.results) ;
-                    else
-                        self.parseData(data) ;
-                    if(typeof self._map.spin === 'function'){
-                        self._map.spin(false) ;
-                    }
-                    });
-                })();
-
-
-        },
-
-        getMarker: function(data) {
-            if(this.layer == "fractracker"){
-                var redDotIcon = new L.icon.fracTrackerIcon();
-                var props = ["timestamp", "name", "summary", "website", "contact", "email", "phone", "streetaddress", "city", "state", "zipcode", "latitude", "longitude", "category"];
-                var item = {};
-                props.forEach(function(element) {
-                    item[element] = data["gsx$" + element]["$t"];
-                });
-                item["updated"] = data.updated.$t;
-                item["use"] = (data.gsx$useformap.$t.replace(/\s+/g, '').toLowerCase() === "use");
-                item["latitude"] = item["latitude"].replace(/[^\d.-]/g, "");
-                item["latitude"] = item["latitude"].replace(/[^\d.-]/g, "");
-                var fracTracker;
-                fracTracker = L.marker([item["latitude"], item["longitude"]], {
-                    icon: redDotIcon
-                }).bindPopup(this.generatePopup(item));
-                return fracTracker;
-           }
-
-           if(this.layer == "skytruth"){
-                var redDotIcon =new L.icon.skyTruthIcon();
-                var lat = data.lat ;
-                var lng = data.lng;
-                var title = data.title ;
-                var url = data.link ;
-                var skymarker ;
-                if (!isNaN(lat) && !isNaN(lng) ){
-                  skymarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(
-                  	"<a href="+url+">" +title + "</a><br>" + 
-                  	"<br><strong> lat: " + lat + 
-                  	"</strong><br><strong> lon: " + lng + 
-                  	"</strong> <br><br>Data provided by <a href='http://alerts.skytruth.org/'>alerts.skytruth.org/</a>") ;
-                }
-                return skymarker;
-           }
-
-           if(this.layer == "odorreport"){
-                var redDotIcon =new L.icon.odorReportIcon() ;
-                var lat = data.values["bcc29002-c4d3-4c2c-92c7-1c9032c3b0fd"][0].lat ;
-                var lng = data.values["bcc29002-c4d3-4c2c-92c7-1c9032c3b0fd"][0].lon ;
-                var title = data.title ;
-                var url = data.url ;
-                var odormarker ;
-                if (!isNaN(lat) && !isNaN(lng) ){
-                  odormarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(title + 
-                  	"<br><a href="+url+">" + url +"</a>" + 
-                  	"<br><strong> lat: " + lat + 
-                  	"</strong><br><strong> lon: " + lng + 
-                  	"</strong><br><br>Data provided by <a href='https://odorlog.ushahidi.io'>https://odorlog.ushahidi.io</a>") ;
-                }
-                oms.addMarker(odormarker);
-                return odormarker;
-           }
-
-           if(this.layer == "mapknitter"){
-                var redDotIcon =new L.icon.mapKnitterIcon();
-                var lat = data.lat ;
-                var lng = data.lon;
-                var title = data.name ;
-                var location = data.location ;
-                var author = data.author ;
-                var url = "https://publiclab.org/profile/" + author ;
-                var map_page = "https://mapknitter.org/maps/"+ title ;
-                var image_url ;
-                if(data.image_urls.length > 0){
-                  image_url = data.image_urls[0] ;
-                }
-                var mapknitter ;
-                if (!isNaN(lat) && !isNaN(lng) ){
-                  if(image_url !== undefined){
-                    mapknitter = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(
-                      "<strong>Title : </strong>"+ "<a href=" + map_page + ">" + title + "</a>" + 
-                      "<br><strong>Author :</strong> " + "<a href="+url+">"  +  author +"</a>" + 
-                      "<br><strong>Location : </strong>" + location  + 
-                      "<br><strong> Lat : </strong>" + lat + "  ,  <strong> Lon : </strong>" + lng +
-                      "<br><a href=" + image_url + "><img src="+image_url+" style='height: 202px ; width: 245px;'></a>"+
-                      "<br><i>For more info on <a href='https://github.com/publiclab/leaflet-environmental-layers/issues/10'>MapKnitter Layer</a>, visit <a href='https://mapknitter.org/'>here<a></i>"
-                    ) ;
-                    oms.addMarker(mapknitter);
-                  }
-                  else{
-                    mapknitter = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup(
-                      "<strong>Title : </strong>"+ "<a href=" + map_page + ">" + title + "</a>" + 
-                      "<br><strong>Author :</strong> " + "<a href="+url+">"  +  author +"</a>" + 
-                      "<br><strong>Location : </strong>" + location  + 
-                      "<br><strong> Lat : </strong>" + lat + "  ,  <strong> Lon : </strong>" + lng +
-                      "<br><i>For more info on <a href='https://github.com/publiclab/leaflet-environmental-layers/issues/10'>MapKnitter Layer</a>, visit <a href='https://mapknitter.org/'>here<a></i>"
-                    ) ;
-                    oms.addMarker(mapknitter);
-                  }
-                }
-              return mapknitter ;
-             }
-
-             if(this.layer == "luftdaten")
-             {
-             	var greenIcon = new L.icon.luftdatenIcon();
-      			var country = data.location.country;
-      			var lng = data.location.longitude;
-      			var lat = data.location.latitude;
-      			var sensorID = data.sensor.id;
-      			var popupContent = "";
-			    if(country){
-			        popupContent += "<h3>Country: " + country + "</h3>";
-			      }
-			    if(sensorID){
-			        popupContent += "<h4><b>Sensor ID: </b>" + sensorID + "</h4>";
-			      }
-			    if(data.sensordatavalues.length > 0){
-			      for(let i in data.sensordatavalues){
-			          popupContent += "<b>" + data.sensordatavalues[i].value_type + "</b>: " + data.sensordatavalues[i].value + "<br/>";
-			        }
-			      }
-
-			      return L.marker([lat,lng], { icon: greenIcon }).bindPopup(popupContent);	
-			 }
-
-			 if(this.layer == "openaq")
-			 {
-			 	var redDotIcon = new L.icon.openaqIcon();
-                var distance = data.distance;
-                var lat = data.coordinates.latitude;
-                var lon = data.coordinates.longitude;
-                var  contentData = "";
-                var labels = {
-                    pm25: "PM<sub>2.5</sub>",
-                    pm10: "PM<sub>10</sub>",
-                    o3: "Ozone",
-                    no2: "Nitrogen Dioxide",
-                    so2: "Sulphur Dioxide",
-                    co: "Carbon Monoxide",
-                    };
-                for(var i = 0; i < data.measurements.length; i++) {
-                    contentData+="<strong>"+labels[data.measurements[i].parameter]+" : </strong>"+data.measurements[i].value+" "+data.measurements[i].unit+"<br>";
-                }
-                return L.marker([lat, lon], {icon: redDotIcon}).bindPopup(
-                    "<h3>"+data.location+", "+data.country+"</h3><br>"+
-                    "<strong>distance: "+"</strong>"+data.distance+"<br>"+contentData
-                    );
-			 }
-
-			 if(this.layer == "opensense")
-			 {
-			 	var blackCube = new L.icon.openSenseIcon();
-			    var lat = data.currentLocation.coordinates[1];
-			    var lng = data.currentLocation.coordinates[0];
-			    var loadingText = "Loading ...";
-			    return L.marker([lat, lng], { icon: blackCube, boxId: data._id }).bindPopup(loadingText);
-			 }
-
-             if(this.layer == "purpleairmarker")
-             {
-                var redDotIcon =new L.icon.purpleAirMarkerIcon();
-                var lat = data[25] ;  
-                var lng = data[26] ;  
-                var value = parseFloat(data[16]) ;  
-                var Label = data[24] ;  
-                var temp_f = data[21] ;  
-                var humidity = data[20] ; 
-                var pressure = data[22] ; 
-                var purpleAirMarker ;
-                if(lat!=null && lng!=null){
-                purpleAirMarker = L.marker([lat , lng] , {icon: redDotIcon}).bindPopup("<i style='color: purple ; size : 20px'>Label : " + Label + "</i><br><br> <strong>PM2.5 Value : " + value +"</strong><br><strong> Lat: " + lat + "</strong><br><strong> Lon: " + lng + "<br>Temp (F) : "+temp_f+"<br>Humidity : " + humidity + "<br>Pressure : " + pressure +"<br><br> <i>Data provided by <a href='www.purpleair.com'>www.purpleair.com</a></i>") ;
-                }
-                return purpleAirMarker ;
-                }
-        },
-
-        generatePopup: function(item) {
-            if(this.layer == "fractracker"){
-                var content = "<strong>" + item["name"] + "</strong> ";
-                if(item["website"]) content += "(<a href=" + item["website"] + ">website</a>" + ")";
-                content += "<hr>";
-                if(!!item["Descrition"]) content += "Description: <i>" + item["summary"] + "</i><br>";
-                if(!!item["contact"]) content += "<strong>Contact: " + item["contact"] + "<br></strong>";
-                var generics = ["phone", "email", "street", "city", "state", "zipcode", "timestamp", "latitude", "longitude"];
-                for (var i = 0; i < generics.length; i++) {
-                    var key = generics[i];
-                    if (!!item[generics[i]]) {
-                        itemContent = item[generics[i]];
-                        key = key.charAt(0).toUpperCase() + key.slice(1);
-                        content += key + ": " + itemContent + "<br>";
-                    }
-                }
-                content += "<hr>Data last updated " + item["updated"] + "<br>";
-                content += "<i>Data provided by <a href='http://fractracker.org/'>http://fractracker.org/</a></i>";
-                return content;
+            else if (data.name) {
+              popUpContent += '<h3>' + data.name + '</h3>';
             }
-        },
+            for (var i in data.sensors) {
+              if (data.sensors[i].lastMeasurement) {
+                popUpContent += '<span><b>' + data.sensors[i].title + ': </b>' +
+                  data.sensors[i].lastMeasurement.value +
+                  data.sensors[i].unit + '</span><br>';
+              }
+            }
+            if (data.lastMeasurementAt) {
+              popUpContent += '<br><small>Measured at <i>' + data.lastMeasurementAt + '</i>';
+            }
+            popup.setContent(popUpContent);
+          });
+        }
+      }
+    },
 
-        addMarker: function (data) {
-            if(this.layer == "fractracker"){
-            var key = data.gsx$name.$t;
-            if (!this._layers[key]) {
-                var marker = this.getMarker(data);
-                this._layers[key] = marker;
-                this.addLayer(marker);
-            }
-            }
-            if(this.layer == "purpleairmarker"){
-            var marker = this.getMarker(data) ;
-            if(marker != null){
-            key = data[0] ;  // ID
-            if (!this._layers[key]) {
-                this._layers[key] = marker;
-                this.addLayer(marker);
-            }
-            }
-            }
-            else{
-            var marker = this.getMarker(data),
-            key = data.id;
-            if (!this._layers[key]) {
-                this._layers[key] = marker;
-                this.addLayer(marker);
-            }
-            }
-        },
 
-        addMarker1: function (data, i) {
-            if(this.layer == "luftdaten" || this.layer == "openaq"){
-            var self = this;
-            var marker = this.getMarker(data);
-            var key = i;  
-            if (!this._layers[key]) {
+    requestData: function() {
+      var self = this;
+      var info = require('./info.json');
+      (function() {
+        var zoom;
+        var Layer_URL;
+        var $ = window.jQuery;
+
+        if (self.layer === 'fractracker') {
+          Layer_URL = info.fractracker.api_url; ;
+        }
+        if (self.layer === 'skytruth') {
+          zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast(), southwest = self._map.getBounds().getSouthWest();
+          Layer_URL = info.skytruth.api_url + '?n=100&l='+(southwest.lat)+','+(southwest.lng)+','+(northeast.lat)+','+(northeast.lng);
+        }
+        if (self.layer === 'odorreport') {
+          zoom = self._map.getZoom(), origin = self._map.getCenter();
+          Layer_URL = info.odorreport.api_url;
+        }
+        if (self.layer === 'mapknitter') {
+          zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast(), southwest = self._map.getBounds().getSouthWest();
+          Layer_URL = info.mapknitter.api_url + '?minlon='+(southwest.lng)+'&minlat='+(southwest.lat)+'&maxlon='+(northeast.lng)+'&maxlat='+(northeast.lat);
+        }
+        if (self.layer === 'luftdaten') {
+          Layer_URL = 'https://maps.luftdaten.info/data/v2/data.dust.min.json';
+        }
+        if (self.layer === 'openaq') {
+          Layer_URL = 'https://api.openaq.org/v1/latest?limit=5000';
+        }
+        if (self.layer === 'opensense') {
+          Layer_URL = 'https://api.opensensemap.org/boxes';
+        }
+        if (self.layer == 'purpleairmarker') {
+          zoom = self._map.getZoom(), northwest = self._map.getBounds().getNorthWest(), southeast = self._map.getBounds().getSouthEast();
+          if (zoom < info.purpleairmarker.extents.minZoom) {
+            return;
+          }
+          Layer_URL = info.purpleairmarker.api_url + '?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat='+(northwest.lat)+'&selat='+(southeast.lat)+'&nwlng='+(northwest.lng)+'&selng='+(southeast.lng);
+        }
+
+
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(true);
+        }
+        $.getJSON(Layer_URL, function(data) {
+          if (self.layer == 'fractracker')
+          { self.parseData(data.feed.entry); }
+          if (self.layer == 'openaq')
+          { self.parseData(data.results); }
+          else
+          { self.parseData(data); }
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        });
+      })();
+    },
+
+    getMarker: function(data) {
+      if (this.layer == 'fractracker') {
+        var redDotIcon = new L.icon.fracTrackerIcon();
+        var props = ['timestamp', 'name', 'summary', 'website', 'contact', 'email', 'phone', 'streetaddress', 'city', 'state', 'zipcode', 'latitude', 'longitude', 'category'];
+        var item = {};
+        props.forEach(function(element) {
+          item[element] = data['gsx$' + element]['$t'];
+        });
+        item['updated'] = data.updated.$t;
+        item['use'] = (data.gsx$useformap.$t.replace(/\s+/g, '').toLowerCase() === 'use');
+        item['latitude'] = item['latitude'].replace(/[^\d.-]/g, '');
+        item['latitude'] = item['latitude'].replace(/[^\d.-]/g, '');
+        var fracTracker;
+        fracTracker = L.marker([item['latitude'], item['longitude']], {
+          icon: redDotIcon,
+        }).bindPopup(this.generatePopup(item));
+        return fracTracker;
+      }
+
+      if (this.layer == 'skytruth') {
+        var redDotIcon =new L.icon.skyTruthIcon();
+        var lat = data.lat;
+        var lng = data.lng;
+        var title = data.title;
+        var url = data.link;
+        var skymarker;
+        if (!isNaN(lat) && !isNaN(lng) ) {
+          skymarker = L.marker([lat, lng], {icon: redDotIcon}).bindPopup(
+            '<a href='+url+'>' +title + '</a><br>' +
+                  '<br><strong> lat: ' + lat +
+                  '</strong><br><strong> lon: ' + lng +
+                  '</strong> <br><br>Data provided by <a href=\'http://alerts.skytruth.org/\'>alerts.skytruth.org/</a>');
+        }
+        return skymarker;
+      }
+
+      if (this.layer == 'odorreport') {
+        var redDotIcon =new L.icon.odorReportIcon();
+        var lat = data.values['bcc29002-c4d3-4c2c-92c7-1c9032c3b0fd'][0].lat;
+        var lng = data.values['bcc29002-c4d3-4c2c-92c7-1c9032c3b0fd'][0].lon;
+        var title = data.title;
+        var url = data.url;
+        var odormarker;
+        if (!isNaN(lat) && !isNaN(lng) ) {
+          odormarker = L.marker([lat, lng], {icon: redDotIcon}).bindPopup(title +
+                  '<br><a href='+url+'>' + url +'</a>' +
+                  '<br><strong> lat: ' + lat +
+                  '</strong><br><strong> lon: ' + lng +
+                  '</strong><br><br>Data provided by <a href=\'https://odorlog.ushahidi.io\'>https://odorlog.ushahidi.io</a>');
+        }
+        // oms.addMarker(odormarker);
+        return odormarker;
+      }
+
+      if (this.layer == 'mapknitter') {
+        var redDotIcon =new L.icon.mapKnitterIcon();
+        var lat = data.lat;
+        var lng = data.lon;
+        var title = data.name;
+        var location = data.location;
+        var author = data.author;
+        var url = 'https://publiclab.org/profile/' + author;
+        var map_page = 'https://mapknitter.org/maps/'+ title;
+        var image_url;
+        if (data.image_urls.length > 0) {
+          image_url = data.image_urls[0];
+        }
+        var mapknitter;
+        if (!isNaN(lat) && !isNaN(lng) ) {
+          if (image_url !== undefined) {
+            mapknitter = L.marker([lat, lng], {icon: redDotIcon}).bindPopup(
+              '<strong>Title : </strong>'+ '<a href=' + map_page + '>' + title + '</a>' +
+                      '<br><strong>Author :</strong> ' + '<a href='+url+'>' + author +'</a>' +
+                      '<br><strong>Location : </strong>' + location +
+                      '<br><strong> Lat : </strong>' + lat + '  ,  <strong> Lon : </strong>' + lng +
+                      '<br><a href=' + image_url + '><img src='+image_url+' style=\'height: 202px ; width: 245px;\'></a>'+
+                      '<br><i>For more info on <a href=\'https://github.com/publiclab/leaflet-environmental-layers/issues/10\'>MapKnitter Layer</a>, visit <a href=\'https://mapknitter.org/\'>here<a></i>',
+            );
+            // oms.addMarker(mapknitter);
+          }
+          else {
+            mapknitter = L.marker([lat, lng], {icon: redDotIcon}).bindPopup(
+              '<strong>Title : </strong>'+ '<a href=' + map_page + '>' + title + '</a>' +
+                      '<br><strong>Author :</strong> ' + '<a href='+url+'>' + author +'</a>' +
+                      '<br><strong>Location : </strong>' + location +
+                      '<br><strong> Lat : </strong>' + lat + '  ,  <strong> Lon : </strong>' + lng +
+                      '<br><i>For more info on <a href=\'https://github.com/publiclab/leaflet-environmental-layers/issues/10\'>MapKnitter Layer</a>, visit <a href=\'https://mapknitter.org/\'>here<a></i>',
+            );
+            // oms.addMarker(mapknitter);
+          }
+        }
+        return mapknitter;
+      }
+
+      if (this.layer == 'luftdaten')
+      {
+        var greenIcon = new L.icon.luftdatenIcon();
+        var country = data.location.country;
+        var lng = data.location.longitude;
+        var lat = data.location.latitude;
+        var sensorID = data.sensor.id;
+        var popupContent = '';
+        if (country) {
+          popupContent += '<h3>Country: ' + country + '</h3>';
+        }
+        if (sensorID) {
+          popupContent += '<h4><b>Sensor ID: </b>' + sensorID + '</h4>';
+        }
+        if (data.sensordatavalues.length > 0) {
+          for (const i in data.sensordatavalues) {
+            popupContent += '<b>' + data.sensordatavalues[i].value_type + '</b>: ' + data.sensordatavalues[i].value + '<br/>';
+          }
+        }
+
+        return L.marker([lat, lng], {icon: greenIcon}).bindPopup(popupContent);
+      }
+
+      if (this.layer == 'openaq')
+      {
+        var redDotIcon = new L.icon.openaqIcon();
+        var distance = data.distance;
+        var lat = data.coordinates.latitude;
+        var lon = data.coordinates.longitude;
+        var contentData = '';
+        var labels = {
+          pm25: 'PM<sub>2.5</sub>',
+          pm10: 'PM<sub>10</sub>',
+          o3: 'Ozone',
+          no2: 'Nitrogen Dioxide',
+          so2: 'Sulphur Dioxide',
+          co: 'Carbon Monoxide',
+        };
+        for (var i = 0; i < data.measurements.length; i++) {
+          contentData+='<strong>'+labels[data.measurements[i].parameter]+' : </strong>'+data.measurements[i].value+' '+data.measurements[i].unit+'<br>';
+        }
+        return L.marker([lat, lon], {icon: redDotIcon}).bindPopup(
+          '<h3>'+data.location+', '+data.country+'</h3><br>'+
+                    '<strong>distance: '+'</strong>'+data.distance+'<br>'+contentData,
+        );
+      }
+
+      if (this.layer == 'opensense')
+      {
+        var blackCube = new L.icon.openSenseIcon();
+        var lat = data.currentLocation.coordinates[1];
+        var lng = data.currentLocation.coordinates[0];
+        var loadingText = 'Loading ...';
+        return L.marker([lat, lng], {icon: blackCube, boxId: data._id}).bindPopup(loadingText);
+      }
+
+      if (this.layer == 'purpleairmarker')
+      {
+        var redDotIcon =new L.icon.purpleAirMarkerIcon();
+        var lat = data[25];
+        var lng = data[26];
+        var value = parseFloat(data[16]);
+        var Label = data[24];
+        var temp_f = data[21];
+        var humidity = data[20];
+        var pressure = data[22];
+        var purpleAirMarker;
+        if (lat!=null && lng!=null) {
+          purpleAirMarker = L.marker([lat, lng], {icon: redDotIcon}).bindPopup('<i style=\'color: purple ; size : 20px\'>Label : ' + Label + '</i><br><br> <strong>PM2.5 Value : ' + value +'</strong><br><strong> Lat: ' + lat + '</strong><br><strong> Lon: ' + lng + '<br>Temp (F) : '+temp_f+'<br>Humidity : ' + humidity + '<br>Pressure : ' + pressure +'<br><br> <i>Data provided by <a href=\'www.purpleair.com\'>www.purpleair.com</a></i>');
+        }
+        return purpleAirMarker;
+      }
+    },
+
+    generatePopup: function(item) {
+      if (this.layer == 'fractracker') {
+        var content = '<strong>' + item['name'] + '</strong> ';
+        if (item['website']) content += '(<a href=' + item['website'] + '>website</a>' + ')';
+        content += '<hr>';
+        if (!!item['Descrition']) content += 'Description: <i>' + item['summary'] + '</i><br>';
+        if (!!item['contact']) content += '<strong>Contact: ' + item['contact'] + '<br></strong>';
+        var generics = ['phone', 'email', 'street', 'city', 'state', 'zipcode', 'timestamp', 'latitude', 'longitude'];
+        for (var i = 0; i < generics.length; i++) {
+          var key = generics[i];
+          if (!!item[generics[i]]) {
+            itemContent = item[generics[i]];
+            key = key.charAt(0).toUpperCase() + key.slice(1);
+            content += key + ': ' + itemContent + '<br>';
+          }
+        }
+        content += '<hr>Data last updated ' + item['updated'] + '<br>';
+        content += '<i>Data provided by <a href=\'http://fractracker.org/\'>http://fractracker.org/</a></i>';
+        return content;
+      }
+    },
+
+    addMarker: function(data) {
+      if (this.layer == 'fractracker') {
+        var key = data.gsx$name.$t;
+        if (!this._layers[key]) {
+          var marker = this.getMarker(data);
+          this._layers[key] = marker;
+          this.addLayer(marker);
+        }
+      }
+      if (this.layer == 'purpleairmarker') {
+        var marker = this.getMarker(data);
+        if (marker != null) {
+          key = data[0]; // ID
+          if (!this._layers[key]) {
             this._layers[key] = marker;
             this.addLayer(marker);
-            }
-            }
-            else{
-            var marker = this.getMarker(data);
-            var key = i;
-            if (!this._layers[key]) {
-              this._layers[key] = marker;
-              marker.on('click', this.populatePopUp);
-              this.addLayer(marker);
-            }
-            }
-        },
+          }
+        }
+      }
+      else {
+        var marker = this.getMarker(data);
+        var key = data.id;
+        if (!this._layers[key]) {
+          this._layers[key] = marker;
+          this.addLayer(marker);
+        }
+      }
+    },
 
-        parseData: function (data) {
-            if(this.layer == "fractracker"){
-                for (i = 1 ; i < data.length ; i++) {
-                 this.addMarker(data[i]) ;
-                }
-            }
-            if(this.layer == "skytruth"){
-                if (!!data.feed){
-                for (i = 0 ; i < data.feed.length ; i++) {
-                this.addMarker(data.feed[i]) ;
-                }
-                if (this.options.clearOutsideBounds) {
-                this.clearOutsideBounds();
-                }
-                }
-            }
-            if(this.layer == "odorreport"){
-                if (data.total_count != 0 ){
-                for (i = 0 ; i < data.total_count ; i++) {
-                this.addMarker(data.results[i]) ;
-                }
-                if (this.options.clearOutsideBounds) {
-                this.clearOutsideBounds();
-                }
-                }
-            }
-            if(this.layer == "mapknitter"){
-                for (i = 0 ; i < data.length ; i++) {
-                this.addMarker(data[i]) ;
-                }
-                if (this.options.clearOutsideBounds) {
-                this.clearOutsideBounds();
-                }
-            }
-            if(this.layer == "luftdaten" || this.layer == "opensense"){
-            	for (var i = 0; i < data.length; i++) {
-                this.addMarker1(data[i],i);
-                }
-            }
-            if(this.layer == "openaq"){
-            	if(!!data) {
-                for(var i = 0; i <data.length; i++) {
-                if(!!data[i].coordinates){
-                this.addMarker1(data[i],i);
-                }
-                }
-                if(this.options.clearOutsideBounds) {
-                    this.clearOutsideBounds();
-                }
-                }
-            }
-            if(this.layer == "purpleairmarker"){
-                for (i = 0 ; i < data.data.length ; i++) {
-                this.addMarker(data.data[i]) ;
-                }
-            }
-        },
+    addMarker1: function(data, i) {
+      if (this.layer == 'luftdaten' || this.layer == 'openaq') {
+        var self = this;
+        var marker = this.getMarker(data);
+        var key = i;
+        if (!this._layers[key]) {
+          this._layers[key] = marker;
+          this.addLayer(marker);
+        }
+      }
+      else {
+        var marker = this.getMarker(data);
+        var key = i;
+        if (!this._layers[key]) {
+          this._layers[key] = marker;
+          marker.on('click', this.populatePopUp);
+          this.addLayer(marker);
+        }
+      }
+    },
 
-        clearOutsideBounds: function () {
-            var bounds = this._map.getBounds(),
-            latLng,
-            key;
-            for (key in this._layers) {
-                if (this._layers.hasOwnProperty(key)) {
-                    latLng = this._layers[key].getLatLng();
-                if (!bounds.contains(latLng)) {
+    parseData: function(data) {
+      if (this.layer == 'fractracker') {
+        for (i = 1; i < data.length; i++) {
+          this.addMarker(data[i]);
+        }
+      }
+      if (this.layer == 'skytruth') {
+        if (!!data.feed) {
+          for (i = 0; i < data.feed.length; i++) {
+            this.addMarker(data.feed[i]);
+          }
+          if (this.options.clearOutsideBounds) {
+            this.clearOutsideBounds();
+          }
+        }
+      }
+      if (this.layer == 'odorreport') {
+        if (data.total_count != 0 ) {
+          for (i = 0; i < data.total_count; i++) {
+            this.addMarker(data.results[i]);
+          }
+          if (this.options.clearOutsideBounds) {
+            this.clearOutsideBounds();
+          }
+        }
+      }
+      if (this.layer == 'mapknitter') {
+        for (i = 0; i < data.length; i++) {
+          this.addMarker(data[i]);
+        }
+        if (this.options.clearOutsideBounds) {
+          this.clearOutsideBounds();
+        }
+      }
+      if (this.layer == 'luftdaten' || this.layer == 'opensense') {
+        for (var i = 0; i < data.length; i++) {
+          this.addMarker1(data[i], i);
+        }
+      }
+      if (this.layer == 'openaq') {
+        if (!!data) {
+          for (var i = 0; i <data.length; i++) {
+            if (!!data[i].coordinates) {
+              this.addMarker1(data[i], i);
+            }
+          }
+          if (this.options.clearOutsideBounds) {
+            this.clearOutsideBounds();
+          }
+        }
+      }
+      if (this.layer == 'purpleairmarker') {
+        for (i = 0; i < data.data.length; i++) {
+          this.addMarker(data.data[i]);
+        }
+      }
+    },
+
+    clearOutsideBounds: function() {
+      var bounds = this._map.getBounds();
+      var latLng;
+      var key;
+      for (key in this._layers) {
+        if (this._layers.hasOwnProperty(key)) {
+          latLng = this._layers[key].getLatLng();
+          if (!bounds.contains(latLng)) {
             this.removeLayer(this._layers[key]);
             delete this._layers[key];
           }
         }
       }
-    }
-  }
+    },
+  },
 );
 
 
-L.layerGroup.layerCode = function (name,options) {
-    return new L.LayerGroup.LayerCode(name,options) ;
+L.layerGroup.layerCode = function(name, options) {
+  return new L.LayerGroup.LayerCode(name, options);
 };
 
 
 L.Icon.FracTrackerIcon = L.Icon.extend({
-   options: {
+  options: {
     iconUrl: 'https://www.clker.com/cliparts/2/3/f/a/11970909781608045989gramzon_Barrel.svg.med.png',
-    iconSize:     [30, 20],
-    iconAnchor:   [20 , 0],
-    popupAnchor:  [-5, -5]
-  }
+    iconSize: [30, 20],
+    iconAnchor: [20, 0],
+    popupAnchor: [-5, -5],
+  },
 });
 
-L.icon.fracTrackerIcon = function () {
-    return new L.Icon.FracTrackerIcon();
+L.icon.fracTrackerIcon = function() {
+  return new L.Icon.FracTrackerIcon();
 };
 
 L.Icon.SkyTruthIcon = L.Icon.extend({
   options: {
     iconUrl: 'https://www.clker.com/cliparts/T/G/b/7/r/A/red-dot.svg',
-    iconSize:     [30, 20],
-    iconAnchor:   [20 , 0],
-    popupAnchor:  [-5, -5]
-  }
+    iconSize: [30, 20],
+    iconAnchor: [20, 0],
+    popupAnchor: [-5, -5],
+  },
 });
 
-L.icon.skyTruthIcon = function () {
+L.icon.skyTruthIcon = function() {
   return new L.Icon.SkyTruthIcon();
 };
 
 L.Icon.OdorReportIcon = L.Icon.extend({
-    options: {
-      iconUrl: 'https://www.clker.com/cliparts/T/3/6/T/S/8/ink-splash-md.png',
-      iconSize:     [30, 20],
-      iconAnchor:   [20 , 0],
-      popupAnchor:  [-5, -5]
-    }
+  options: {
+    iconUrl: 'https://www.clker.com/cliparts/T/3/6/T/S/8/ink-splash-md.png',
+    iconSize: [30, 20],
+  },
 });
 
-L.icon.odorReportIcon = function () {
-    return new L.Icon.OdorReportIcon();
+L.icon.odorReportIcon = function() {
+  return new L.Icon.OdorReportIcon();
 };
 
 L.Icon.MapKnitterIcon = L.Icon.extend({
-    options: {
-      iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-      iconSize: [12, 21],
-      iconAnchor: [6, 21],
-      popupAnchor: [1, -34],
-      shadowSize: [20, 20]
-    }
+  options: {
+    iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [12, 21],
+    iconAnchor: [6, 21],
+    popupAnchor: [1, -34],
+    shadowSize: [20, 20],
+  },
 });
 
-L.icon.mapKnitterIcon = function () {
-    return new L.Icon.MapKnitterIcon();
+L.icon.mapKnitterIcon = function() {
+  return new L.Icon.MapKnitterIcon();
 };
 
 L.Icon.LuftdatenIcon = L.Icon.extend({
@@ -27090,26 +27545,26 @@ L.Icon.LuftdatenIcon = L.Icon.extend({
     iconUrl: 'http://www.myiconfinder.com/uploads/iconsets/256-256-82a679a558f2fe4c3964c4123343f844.png',
     iconSize: [15, 30],
     iconAnchor: [6, 21],
-    popupAnchor: [1, -34]
-  }
+    popupAnchor: [1, -34],
+  },
 });
 
-L.icon.luftdatenIcon = function () {
+L.icon.luftdatenIcon = function() {
   return new L.Icon.LuftdatenIcon();
 };
 
 L.Icon.OpenAqIcon = L.Icon.extend({
   options: {
-     iconUrl: 'https://i.stack.imgur.com/6cDGi.png',
-     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-     iconSize: [12, 21],
-     iconAnchor: [6, 21],
-     popupAnchor: [1, -34],
-     shadowSize: [20, 20]
-  }
+    iconUrl: 'https://i.stack.imgur.com/6cDGi.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [12, 21],
+    iconAnchor: [6, 21],
+    popupAnchor: [1, -34],
+    shadowSize: [20, 20],
+  },
 });
 
-L.icon.openaqIcon = function () {
+L.icon.openaqIcon = function() {
   return new L.Icon.OpenAqIcon();
 };
 
@@ -27117,259 +27572,259 @@ L.Icon.OpenSenseIcon = L.Icon.extend({
   options: {
     iconUrl: 'https://banner2.kisspng.com/20180409/qcw/kisspng-computer-icons-font-awesome-computer-software-user-cubes-5acb63cb589078.9265215315232787953628.jpg',
     iconSize: [10, 10],
-    popupAnchor: [1, -34]
-  }
+    popupAnchor: [1, -34],
+  },
 });
 
-L.icon.openSenseIcon = function () {
+L.icon.openSenseIcon = function() {
   return new L.Icon.OpenSenseIcon();
 };
 
 L.Icon.PurpleAirMarkerIcon = L.Icon.extend({
-   options: {
+  options: {
     iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Location_dot_purple.svg/768px-Location_dot_purple.svg.png',
-    iconSize:     [11 , 10],
-    iconAnchor:   [20 , 0],
-    popupAnchor:  [-5, -5]
-  }
+    iconSize: [11, 10],
+    iconAnchor: [20, 0],
+    popupAnchor: [-5, -5],
+  },
 });
 
-L.icon.purpleAirMarkerIcon = function () {
-    return new L.Icon.PurpleAirMarkerIcon();
+L.icon.purpleAirMarkerIcon = function() {
+  return new L.Icon.PurpleAirMarkerIcon();
 };
-},{"./info.json":13,"jquery":2,"leaflet":6}],15:[function(require,module,exports){
-require('jquery') ;
-require('leaflet') ;
 
-require('./AllLayers.js') ;
-require('./purpleLayer.js') ;
-require('./toxicReleaseLayer.js') ;
-require('leaflet-providers') ;
-require('./openWeatherMapLayer.js') ;
+},{"./info.json":13,"jquery":2,"leaflet":6}],16:[function(require,module,exports){
+require('jquery');
+require('leaflet');
+
+require('./purpleLayer.js');
+require('./toxicReleaseLayer.js');
+require('leaflet-providers');
+require('./openWeatherMapLayer.js');
 require('./aqicnLayer.js');
 require('./osmLandfillMineQuarryLayer.js');
 require('./wisconsinLayer.js');
 require('./fracTrackerMobileLayer.js');
 require('./pfasLayer.js');
+require('./unearthing.js');
 require('./indigenousLayers.js');
-//require('./PLpeopleLayer.js');
-require('./layercode.js')
-require('./eonetFiresLayer')
+// require('./PLpeopleLayer.js');
+require('./layercode.js');
+require('./eonetFiresLayer');
+require('./AllLayers.js');
 
-},{"./AllLayers.js":8,"./aqicnLayer.js":9,"./eonetFiresLayer":10,"./fracTrackerMobileLayer.js":11,"./indigenousLayers.js":12,"./layercode.js":14,"./openWeatherMapLayer.js":16,"./osmLandfillMineQuarryLayer.js":17,"./pfasLayer.js":18,"./purpleLayer.js":19,"./toxicReleaseLayer.js":20,"./wisconsinLayer.js":25,"jquery":2,"leaflet":6,"leaflet-providers":5}],16:[function(require,module,exports){
+},{"./AllLayers.js":8,"./aqicnLayer.js":9,"./eonetFiresLayer":10,"./fracTrackerMobileLayer.js":11,"./indigenousLayers.js":12,"./layercode.js":15,"./openWeatherMapLayer.js":17,"./osmLandfillMineQuarryLayer.js":18,"./pfasLayer.js":19,"./purpleLayer.js":20,"./toxicReleaseLayer.js":21,"./unearthing.js":22,"./wisconsinLayer.js":30,"jquery":2,"leaflet":6,"leaflet-providers":5}],17:[function(require,module,exports){
 L.OWM = L.TileLayer.extend({
-	options: {
-		appId: '4c6704566155a7d0d5d2f107c5156d6e', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
-		baseUrl: "https://{s}.tile.openweathermap.org/map/{layername}/{z}/{x}/{y}.png",
-		maxZoom: 18,
-		showLegend: true,
-		legendImagePath: null,
-		legendPosition: 'bottomleft',
-		attribution: 'Weather from <a href="https://openweathermap.org/" alt="World Map and worldwide Weather Forecast online">OpenWeatherMap</a>'
-	},
+  options: {
+    appId: '4c6704566155a7d0d5d2f107c5156d6e', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
+    baseUrl: 'https://{s}.tile.openweathermap.org/map/{layername}/{z}/{x}/{y}.png',
+    maxZoom: 18,
+    showLegend: true,
+    legendImagePath: null,
+    legendPosition: 'bottomleft',
+    attribution: 'Weather from <a href="https://openweathermap.org/" alt="World Map and worldwide Weather Forecast online">OpenWeatherMap</a>',
+  },
 
-	initialize: function (options) {
-		L.Util.setOptions(this, options);
-		var tileurl = this.options.baseUrl.replace('{layername}', this._owmLayerName);
-		tileurl = tileurl + '?appid=' + this.options.appId;
+  initialize: function(options) {
+    L.Util.setOptions(this, options);
+    var tileurl = this.options.baseUrl.replace('{layername}', this._owmLayerName);
+    tileurl = tileurl + '?appid=' + this.options.appId;
 
-		this._map = null;
-		this._legendControl = null;
-		this._legendId = null;
-		this._owmtileurl = tileurl;
-		L.TileLayer.prototype.initialize.call(this, this._owmtileurl, options);
-	},
+    this._map = null;
+    this._legendControl = null;
+    this._legendId = null;
+    this._owmtileurl = tileurl;
+    L.TileLayer.prototype.initialize.call(this, this._owmtileurl, options);
+  },
 
-	onAdd: function(map) {
-		this._map = map;
-		if (this.options.showLegend && this.options.legendImagePath != null) {
-			this._legendControl = this._getLegendControl();
-			this._legendId = this._legendControl.addLegend(this.options.legendImagePath);
-		}
-		L.TileLayer.prototype.onAdd.call(this, map);
-	},
+  onAdd: function(map) {
+    this._map = map;
+    if (this.options.showLegend && this.options.legendImagePath != null) {
+      this._legendControl = this._getLegendControl();
+      this._legendId = this._legendControl.addLegend(this.options.legendImagePath);
+    }
+    L.TileLayer.prototype.onAdd.call(this, map);
+  },
 
-	onRemove: function(map) {
-		if (this._legendControl != null) {
-			this._legendControl.removeLegend(this._legendId);
-			this._legendControl = null;
-			this._legendId = null;
-		}
-		L.TileLayer.prototype.onRemove.call(this, map);
-		this._map = null;
-	},
+  onRemove: function(map) {
+    if (this._legendControl != null) {
+      this._legendControl.removeLegend(this._legendId);
+      this._legendControl = null;
+      this._legendId = null;
+    }
+    L.TileLayer.prototype.onRemove.call(this, map);
+    this._map = null;
+  },
 
-	_getLegendControl: function() {
-		if (typeof this._map._owm_legendcontrol == 'undefined' || !this._map._owm_legendcontrol) {
-			this._map._owm_legendcontrol = new L.OWM.LegendControl({position: this.options.legendPosition});
-			this._map.addControl(this._map._owm_legendcontrol);
-		}
-		return this._map._owm_legendcontrol;
-	}
+  _getLegendControl: function() {
+    if (typeof this._map._owm_legendcontrol == 'undefined' || !this._map._owm_legendcontrol) {
+      this._map._owm_legendcontrol = new L.OWM.LegendControl({position: this.options.legendPosition});
+      this._map.addControl(this._map._owm_legendcontrol);
+    }
+    return this._map._owm_legendcontrol;
+  },
 });
 
-(function () {
+(function() {
+  L.OWM.Precipitation = L.OWM.extend({
+    _owmLayerName: 'precipitation',
+  });
+  L.OWM.precipitation = function(options) { return new L.OWM.Precipitation(options); };
 
-	L.OWM.Precipitation = L.OWM.extend({
-		_owmLayerName: 'precipitation'
-	});
-	L.OWM.precipitation = function (options) { return new L.OWM.Precipitation(options); };
+  L.OWM.PrecipitationClassic = L.OWM.extend({
+    _owmLayerName: 'precipitation_cls',
+  });
+  L.OWM.precipitationClassic = function(options) {
+    var layer = new L.OWM.PrecipitationClassic(options);
+    if (layer.options.legendImagePath == null) {
+      layer.options.legendImagePath = 'https://openweathermap.org/img/a/PR.png';
+    }
+    return layer;
+  };
 
-	L.OWM.PrecipitationClassic = L.OWM.extend({
-		_owmLayerName: 'precipitation_cls'
-	});
-	L.OWM.precipitationClassic = function (options) {
-		var layer = new L.OWM.PrecipitationClassic(options);
-		if (layer.options.legendImagePath == null) {
-			layer.options.legendImagePath = 'https://openweathermap.org/img/a/PR.png';
-		}
-		return layer;
-	};
+  L.OWM.Rain = L.OWM.extend({
+    _owmLayerName: 'rain',
+  });
+  L.OWM.rain = function(options) { return new L.OWM.Rain(options); };
 
-	L.OWM.Rain = L.OWM.extend({
-		_owmLayerName: 'rain'
-	});
-	L.OWM.rain = function (options) { return new L.OWM.Rain(options); };
+  L.OWM.RainClassic = L.OWM.extend({
+    _owmLayerName: 'rain_cls',
+  });
+  L.OWM.rainClassic = function(options) {
+    var layer = new L.OWM.RainClassic(options);
+    if (layer.options.legendImagePath == null) {
+      layer.options.legendImagePath = 'https://openweathermap.org/img/a/RN.png';
+    }
+    return layer;
+  };
 
-	L.OWM.RainClassic = L.OWM.extend({
-		_owmLayerName: 'rain_cls'
-	});
-	L.OWM.rainClassic = function (options) {
-		var layer = new L.OWM.RainClassic(options);
-		if (layer.options.legendImagePath == null) {
-			layer.options.legendImagePath = 'https://openweathermap.org/img/a/RN.png';
-		}
-		return layer;
-	};
+  L.OWM.Snow = L.OWM.extend({
+    _owmLayerName: 'snow',
+  });
+  L.OWM.snow = function(options) {
+    var layer = new L.OWM.Snow(options);
+    if (layer.options.legendImagePath == null) {
+      layer.options.legendImagePath = 'https://openweathermap.org/img/a/SN.png';
+    }
+    return layer;
+  };
 
-	L.OWM.Snow = L.OWM.extend({
-		_owmLayerName: 'snow'
-	});
-	L.OWM.snow = function (options) {
-		var layer = new L.OWM.Snow(options);
-		if (layer.options.legendImagePath == null) {
-			layer.options.legendImagePath = 'https://openweathermap.org/img/a/SN.png';
-		}
-		return layer;
-	};
+  L.OWM.Clouds = L.OWM.extend({
+    _owmLayerName: 'clouds',
+  });
+  L.OWM.clouds = function(options) { return new L.OWM.Clouds(options); };
 
-	L.OWM.Clouds = L.OWM.extend({
-		_owmLayerName: 'clouds'
-	});
-	L.OWM.clouds = function (options) { return new L.OWM.Clouds(options); };
+  L.OWM.CloudsClassic = L.OWM.extend({
+    _owmLayerName: 'clouds_cls',
+  });
+  L.OWM.cloudsClassic = function(options) {
+    var layer = new L.OWM.CloudsClassic(options);
+    if (layer.options.legendImagePath == null) {
+      layer.options.legendImagePath = 'https://openweathermap.org/img/a/NT.png';
+    }
+    return layer;
+  };
 
-	L.OWM.CloudsClassic = L.OWM.extend({
-		_owmLayerName: 'clouds_cls'
-	});
-	L.OWM.cloudsClassic = function (options) {
-		var layer = new L.OWM.CloudsClassic(options);
-		if (layer.options.legendImagePath == null) {
-			layer.options.legendImagePath = 'https://openweathermap.org/img/a/NT.png';
-		}
-		return layer;
-	};
+  L.OWM.Pressure = L.OWM.extend({
+    _owmLayerName: 'pressure',
+  });
+  L.OWM.pressure = function(options) {
+    var layer = new L.OWM.Pressure(options);
+    if (layer.options.legendImagePath == null) {
+      layer.options.legendImagePath = 'https://openweathermap.org/img/a/PN.png';
+    }
+    return layer;
+  };
 
-	L.OWM.Pressure = L.OWM.extend({
-		_owmLayerName: 'pressure'
-	});
-	L.OWM.pressure = function (options) {
-		var layer = new L.OWM.Pressure(options);
-		if (layer.options.legendImagePath == null) {
-			layer.options.legendImagePath = 'https://openweathermap.org/img/a/PN.png';
-		}
-		return layer;
-	};
+  L.OWM.PressureContour = L.OWM.extend({
+    _owmLayerName: 'pressure_cntr',
+  });
+  L.OWM.pressureContour = function(options) { return new L.OWM.PressureContour(options); };
 
-	L.OWM.PressureContour = L.OWM.extend({
-		_owmLayerName: 'pressure_cntr'
-	});
-	L.OWM.pressureContour = function (options) { return new L.OWM.PressureContour(options); };
+  L.OWM.Temperature = L.OWM.extend({
+    _owmLayerName: 'temp',
+  });
+  L.OWM.temperature = function(options) {
+    var layer = new L.OWM.Temperature(options);
+    if (layer.options.legendImagePath == null) {
+      layer.options.legendImagePath = 'https://openweathermap.org/img/a/TT.png';
+    }
+    return layer;
+  };
 
-	L.OWM.Temperature = L.OWM.extend({
-		_owmLayerName: 'temp'
-	});
-	L.OWM.temperature = function (options) {
-		var layer = new L.OWM.Temperature(options);
-		if (layer.options.legendImagePath == null) {
-			layer.options.legendImagePath = 'https://openweathermap.org/img/a/TT.png';
-		}
-		return layer;
-	};
-
-	L.OWM.Wind = L.OWM.extend({
-		_owmLayerName: 'wind'
-	});
-	L.OWM.wind = function (options) {
-		var layer = new L.OWM.Wind(options);
-		if (layer.options.legendImagePath == null) {
-			layer.options.legendImagePath = 'https://openweathermap.org/img/a/UV.png';
-		}
-		return layer;
-	};
-
+  L.OWM.Wind = L.OWM.extend({
+    _owmLayerName: 'wind',
+  });
+  L.OWM.wind = function(options) {
+    var layer = new L.OWM.Wind(options);
+    if (layer.options.legendImagePath == null) {
+      layer.options.legendImagePath = 'https://openweathermap.org/img/a/UV.png';
+    }
+    return layer;
+  };
 }());
 
 L.OWM.LegendControl = L.Control.extend({
-	options: {
-		position: "bottomleft"
-	},
+  options: {
+    position: 'bottomleft',
+  },
 
-	initialize: function(options) {
-		L.Util.setOptions(this, options);
-		this._container = L.DomUtil.create('div', 'owm-legend-container');
-		this._container.style.display = 'none';
-		this._legendCounter = 0;
-		this._legendContainer = [];
-	},
+  initialize: function(options) {
+    L.Util.setOptions(this, options);
+    this._container = L.DomUtil.create('div', 'owm-legend-container');
+    this._container.style.display = 'none';
+    this._legendCounter = 0;
+    this._legendContainer = [];
+  },
 
-	onAdd: function(map) {
-		return this._container;
-	},
+  onAdd: function(map) {
+    return this._container;
+  },
 
-	addLegend: function(legendImagePath) {
-		var legendId = this._legendCounter++;
-		this._legendContainer[legendId] = legendImagePath;
-		this._redrawLegend();
-		this._container.style.display = 'block';
-		return legendId;
-	},
+  addLegend: function(legendImagePath) {
+    var legendId = this._legendCounter++;
+    this._legendContainer[legendId] = legendImagePath;
+    this._redrawLegend();
+    this._container.style.display = 'block';
+    return legendId;
+  },
 
-	removeLegend: function(legendId) {
-		if (typeof this._legendContainer[legendId] != 'undefined') {
-			delete this._legendContainer[legendId];
-		}
-		// reset counter if no legend is in collection
-		var containerEmpty = true;
-		for (var idx in this._legendContainer) {
-			containerEmpty = false;
-			break;
-		}
-		if (containerEmpty) {
-			this._legendCounter = 0;
-			this._container.style.display = 'none';
-		}
-		this._redrawLegend();
-	},
+  removeLegend: function(legendId) {
+    if (typeof this._legendContainer[legendId] != 'undefined') {
+      delete this._legendContainer[legendId];
+    }
+    // reset counter if no legend is in collection
+    var containerEmpty = true;
+    for (var idx in this._legendContainer) {
+      containerEmpty = false;
+      break;
+    }
+    if (containerEmpty) {
+      this._legendCounter = 0;
+      this._container.style.display = 'none';
+    }
+    this._redrawLegend();
+  },
 
-	_redrawLegend: function() {
-		this._container.innerHTML = ''; // clear container
-		var isLeft = this.options.position.indexOf('left') !== -1;
-		var cssFloat = isLeft ? 'left' : 'right';
-		for (var idx in this._legendContainer) {
-			if (isNaN(idx)) {
-				continue;
-			}
-			var imgPath = this._legendContainer[idx];
-			var item = L.DomUtil.create('div', 'owm-legend-item', this._container);
-			item.style.cssFloat = cssFloat;
-			if (isLeft) {
-				item.style.marginRight = '10px';
-			} else {
-				item.style.marginLeft = '10px';
-			}
-			item.innerHTML = '<img src="' + imgPath + '" border="0" />';
-		}
-	}
+  _redrawLegend: function() {
+    this._container.innerHTML = ''; // clear container
+    var isLeft = this.options.position.indexOf('left') !== -1;
+    var cssFloat = isLeft ? 'left' : 'right';
+    for (var idx in this._legendContainer) {
+      if (isNaN(idx)) {
+        continue;
+      }
+      var imgPath = this._legendContainer[idx];
+      var item = L.DomUtil.create('div', 'owm-legend-item', this._container);
+      item.style.cssFloat = cssFloat;
+      if (isLeft) {
+        item.style.marginRight = '10px';
+      } else {
+        item.style.marginLeft = '10px';
+      }
+      item.innerHTML = '<img src="' + imgPath + '" border="0" />';
+    }
+  },
 });
 
 /**
@@ -27377,594 +27832,593 @@ L.OWM.LegendControl = L.Control.extend({
  */
 L.OWM.Current = L.Layer.extend({
 
-	options: {
-		appId: '4c6704566155a7d0d5d2f107c5156d6e', // get your free Application ID at www.openweathermap.org
-		type: 'city', // available types: 'city'. 'station' is not supported any more
-		lang: 'en', // available: 'en', 'de', 'ru', 'fr', 'nl', 'es', 'ca' (not every language is finished yet)
-		minZoom: 7,
-		interval: 0, // interval for rereading city data in minutes
-		progressControl: true, // available: true, false
-		imageLoadingUrl: 'owmloading.gif', // URL of loading image relative to HTML document
-		imageLoadingBgUrl: null, // URL of background image for progress control
-		temperatureUnit: 'C', // available: 'K' (Kelvin), 'C' (Celsius), 'F' (Fahrenheit)
-		temperatureDigits: 1,
-		speedUnit: 'ms', // available: 'ms' (m/s), 'kmh' (km/h), 'mph' (mph)
-		speedDigits: 0,
-		popup: true, // available: true, false
-		keepPopup: true, // available: true, false
-		showOwmStationLink: true, // available: true, false
-		showWindSpeed: 'both', // available: 'speed', 'beaufort', 'both'
-		showWindDirection: 'both', // available: 'deg', 'desc', 'both'
-		showTimestamp: true, // available: true, false
-		showTempMinMax: true, // available: true, false
-		useLocalTime: true, // available: true, false
-		clusterSize: 150,
-		imageUrlCity: 'https://openweathermap.org/img/w/{icon}.png',
-		imageWidth: 50,
-		imageHeight: 50,
-		imageUrlStation: 'https://openweathermap.org/img/s/istation.png',
-		imageWidthStation: 25,
-		imageHeightStation: 25,
-		imageUrlPlane: 'https://openweathermap.org/img/s/iplane.png',
-		imageWidthPlane: 25,
-		imageHeightPlane: 25,
-		markerFunction: null, // user defined function for marker creation
-		popupFunction: null, // user defined function for popup creation
-		caching: true, // use caching of current weather data
-		cacheMaxAge: 15, // maximum age of cache content in minutes before it gets invalidated
-		keepOnMinZoom: false // keep or remove markers when zoom < minZoom
-	},
+  options: {
+    appId: '4c6704566155a7d0d5d2f107c5156d6e', // get your free Application ID at www.openweathermap.org
+    type: 'city', // available types: 'city'. 'station' is not supported any more
+    lang: 'en', // available: 'en', 'de', 'ru', 'fr', 'nl', 'es', 'ca' (not every language is finished yet)
+    minZoom: 7,
+    interval: 0, // interval for rereading city data in minutes
+    progressControl: true, // available: true, false
+    imageLoadingUrl: 'owmloading.gif', // URL of loading image relative to HTML document
+    imageLoadingBgUrl: null, // URL of background image for progress control
+    temperatureUnit: 'C', // available: 'K' (Kelvin), 'C' (Celsius), 'F' (Fahrenheit)
+    temperatureDigits: 1,
+    speedUnit: 'ms', // available: 'ms' (m/s), 'kmh' (km/h), 'mph' (mph)
+    speedDigits: 0,
+    popup: true, // available: true, false
+    keepPopup: true, // available: true, false
+    showOwmStationLink: true, // available: true, false
+    showWindSpeed: 'both', // available: 'speed', 'beaufort', 'both'
+    showWindDirection: 'both', // available: 'deg', 'desc', 'both'
+    showTimestamp: true, // available: true, false
+    showTempMinMax: true, // available: true, false
+    useLocalTime: true, // available: true, false
+    clusterSize: 150,
+    imageUrlCity: 'https://openweathermap.org/img/w/{icon}.png',
+    imageWidth: 50,
+    imageHeight: 50,
+    imageUrlStation: 'https://openweathermap.org/img/s/istation.png',
+    imageWidthStation: 25,
+    imageHeightStation: 25,
+    imageUrlPlane: 'https://openweathermap.org/img/s/iplane.png',
+    imageWidthPlane: 25,
+    imageHeightPlane: 25,
+    markerFunction: null, // user defined function for marker creation
+    popupFunction: null, // user defined function for popup creation
+    caching: true, // use caching of current weather data
+    cacheMaxAge: 15, // maximum age of cache content in minutes before it gets invalidated
+    keepOnMinZoom: false, // keep or remove markers when zoom < minZoom
+  },
 
-	initialize: function(options) {
-		L.setOptions(this, options);
-		this._layer = L.layerGroup();
-		this._timeoutId = null;
-		this._requests = {};
-		this._markers = [];
-		this._markedMarker = null;
-		this._map = null;
-		this._urlTemplate = 'https://api.openweathermap.org/data/2.5/box/{type}?{appId}cnt=300&format=json&units=metric&bbox={minlon},{minlat},{maxlon},{maxlat},10';
-		this._directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N'];
-		this._msbft = [0.3, 1.6, 3.4, 5.5, 8.0, 10.8, 13.9, 17.2, 20.8, 24.5, 28.5, 32.7, 37.0, 41.5, 46.2, 51.0, 56.1, 61.3]; // Beaufort scala
-		this._tempUnits = { K: 'K', C: '°C', F: 'F'};
-		this._progressCtrl = null;
-		if (this.options.progressControl) {
-			var bgIcon;
-			if (this.options.imageLoadingBgUrl) {
-				bgIcon = this.options.imageLoadingBgUrl;
-			} else {
-				bgIcon = this.options.imageUrlCity.replace('{icon}', '10d');
-				if (this.options.type != 'city') {
-					bgIcon = this.options.imageUrlStation;
-				}
-			}
-			this._progressCtrl = L.OWM.progressControl({
-					type: this.options.type,
-					bgImage: bgIcon,
-					imageLoadingUrl: this.options.imageLoadingUrl,
-					owmInstance: this
-			});
-		}
-		this._cache = L.OWM.currentCache({ maxAge: this.options.cacheMaxAge });
-	},
+  initialize: function(options) {
+    L.setOptions(this, options);
+    this._layer = L.layerGroup();
+    this._timeoutId = null;
+    this._requests = {};
+    this._markers = [];
+    this._markedMarker = null;
+    this._map = null;
+    this._urlTemplate = 'https://api.openweathermap.org/data/2.5/box/{type}?{appId}cnt=300&format=json&units=metric&bbox={minlon},{minlat},{maxlon},{maxlat},10';
+    this._directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N'];
+    this._msbft = [0.3, 1.6, 3.4, 5.5, 8.0, 10.8, 13.9, 17.2, 20.8, 24.5, 28.5, 32.7, 37.0, 41.5, 46.2, 51.0, 56.1, 61.3]; // Beaufort scala
+    this._tempUnits = {K: 'K', C: '°C', F: 'F'};
+    this._progressCtrl = null;
+    if (this.options.progressControl) {
+      var bgIcon;
+      if (this.options.imageLoadingBgUrl) {
+        bgIcon = this.options.imageLoadingBgUrl;
+      } else {
+        bgIcon = this.options.imageUrlCity.replace('{icon}', '10d');
+        if (this.options.type != 'city') {
+          bgIcon = this.options.imageUrlStation;
+        }
+      }
+      this._progressCtrl = L.OWM.progressControl({
+        type: this.options.type,
+        bgImage: bgIcon,
+        imageLoadingUrl: this.options.imageLoadingUrl,
+        owmInstance: this,
+      });
+    }
+    this._cache = L.OWM.currentCache({maxAge: this.options.cacheMaxAge});
+  },
 
-	onAdd: function(map) {
-		this._map = map;
-		this._map.addLayer(this._layer);
-		this._map.on('moveend', this.update, this);
-		// add progress control
-		if (this._progressCtrl != null) {
-			this._map.addControl(this._progressCtrl);
-		}
-		this.update();
-	},
+  onAdd: function(map) {
+    this._map = map;
+    this._map.addLayer(this._layer);
+    this._map.on('moveend', this.update, this);
+    // add progress control
+    if (this._progressCtrl != null) {
+      this._map.addControl(this._progressCtrl);
+    }
+    this.update();
+  },
 
-	onRemove: function(map) {
-		// clear timeout
-		if (this._timeoutId !== null) {
-			window.clearTimeout(this._timeoutId);
-			this._timeoutId = null;
-		}
-		// remove progress control
-		if (this._progressCtrl != null) {
-			this._map.removeControl(this._progressCtrl);
-		}
-		// remove layer and markers
-		this._map.off('moveend', this.update, this);
-		this._map.removeLayer(this._layer);
-		this._layer.clearLayers();
-		this._map = null;
-		this._cache.clear();
-	},
+  onRemove: function(map) {
+    // clear timeout
+    if (this._timeoutId !== null) {
+      window.clearTimeout(this._timeoutId);
+      this._timeoutId = null;
+    }
+    // remove progress control
+    if (this._progressCtrl != null) {
+      this._map.removeControl(this._progressCtrl);
+    }
+    // remove layer and markers
+    this._map.off('moveend', this.update, this);
+    this._map.removeLayer(this._layer);
+    this._layer.clearLayers();
+    this._map = null;
+    this._cache.clear();
+  },
 
-	getAttribution: function() {
-		return 'Weather from <a href="https://openweathermap.org/" ' +
-		'alt="World Map and worldwide Weather Forecast online">OpenWeatherMap</a>';
-	},
+  getAttribution: function() {
+    return 'Weather from <a href="https://openweathermap.org/" ' +
+    'alt="World Map and worldwide Weather Forecast online">OpenWeatherMap</a>';
+  },
 
-	update: function() {
-		// clear existing timeout
-		if (this._timeoutId) {
-			window.clearTimeout(this._timeoutId);
-			this._timeoutId = null;
-		}
+  update: function() {
+    // clear existing timeout
+    if (this._timeoutId) {
+      window.clearTimeout(this._timeoutId);
+      this._timeoutId = null;
+    }
 
-		var _this = this;
+    var _this = this;
 
-		// clear requests for all types
-		for (var typ in this._requests) {
-			var request = this._requests[typ];
-			this.fire('owmloadingend', {type: typ});
-			request.abort();
-		}
-		this._requests = {};
+    // clear requests for all types
+    for (var typ in this._requests) {
+      var request = this._requests[typ];
+      this.fire('owmloadingend', {type: typ});
+      request.abort();
+    }
+    this._requests = {};
 
-		if (this._map.getZoom() < this.options.minZoom) {
-			this.fire('owmloadingend', {type: _this.options.type});
-			if (!this.options.keepOnMinZoom) {
-				this._layer.clearLayers();
-			}
-			return;
-		}
+    if (this._map.getZoom() < this.options.minZoom) {
+      this.fire('owmloadingend', {type: _this.options.type});
+      if (!this.options.keepOnMinZoom) {
+        this._layer.clearLayers();
+      }
+      return;
+    }
 
-		// try to get cached data first
-		var bounds = this._map.getBounds();
-		var data = null;
-		if (this.options.caching) {
-			data = this._cache.get(bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth());
-		}
-		if (data !== null) {
-			// using cached data
-			this._processRequestedData(this, data);
-		} else {
-			// fetch new data from OWM
-			this.fire('owmloadingstart', {type: _this.options.type});
-			var url = this._urlTemplate
-						.replace('{appId}', this.options.appId ? 'APPID=' + this.options.appId + '&' : '')
-						.replace('{type}', this.options.type)
-						.replace('{minlon}', bounds.getWest())
-						.replace('{minlat}', bounds.getSouth())
-						.replace('{maxlon}', bounds.getEast())
-						.replace('{maxlat}', bounds.getNorth())
-						;
-			this._requests[this.options.type] = L.OWM.Utils.jsonp(url, function(data) {
-				delete _this._requests[_this.options.type];
+    // try to get cached data first
+    var bounds = this._map.getBounds();
+    var data = null;
+    if (this.options.caching) {
+      data = this._cache.get(bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth());
+    }
+    if (data !== null) {
+      // using cached data
+      this._processRequestedData(this, data);
+    } else {
+      // fetch new data from OWM
+      this.fire('owmloadingstart', {type: _this.options.type});
+      var url = this._urlTemplate
+        .replace('{appId}', this.options.appId ? 'APPID=' + this.options.appId + '&' : '')
+        .replace('{type}', this.options.type)
+        .replace('{minlon}', bounds.getWest())
+        .replace('{minlat}', bounds.getSouth())
+        .replace('{maxlon}', bounds.getEast())
+        .replace('{maxlat}', bounds.getNorth())
+          ;
+      this._requests[this.options.type] = L.OWM.Utils.jsonp(url, function(data) {
+        delete _this._requests[_this.options.type];
 
-				if (!_this._map) {
-					// Nothing to do if layer is gone but this request is still active
-					return;
-				}
+        if (!_this._map) {
+          // Nothing to do if layer is gone but this request is still active
+          return;
+        }
 
-				if (_this.options.caching) {
-					_this._cache.set(data, _this._map.getBounds());
-				}
-				_this._processRequestedData(_this, typeof data.list == 'undefined' ? [[]] : data.list);
-				_this.fire('owmloadingend', {type: _this.options.type});
-			});
-		}
-		if (this.options.interval && this.options.interval > 0) {
-			this._timeoutId = window.setTimeout(function() {_this.update();}, 60000*this.options.interval);
-		}
-	},
+        if (_this.options.caching) {
+          _this._cache.set(data, _this._map.getBounds());
+        }
+        _this._processRequestedData(_this, typeof data.list == 'undefined' ? [[]] : data.list);
+        _this.fire('owmloadingend', {type: _this.options.type});
+      });
+    }
+    if (this.options.interval && this.options.interval > 0) {
+      this._timeoutId = window.setTimeout(function() { _this.update(); }, 60000*this.options.interval);
+    }
+  },
 
-	_processRequestedData: function(_this, data) {
+  _processRequestedData: function(_this, data) {
+    // read all cities
+    var stations = {};
+    for (var i in data) {
+      var stat = data[i];
+      if (!_this._map) { // maybe layer is gone while we are looping here
+        return;
+      }
+      // only use cities having a minimum distance of some pixels on the map
+      var pt = _this._map.latLngToLayerPoint(new L.LatLng(stat.coord.Lat, stat.coord.Lon));
+      var key = '' + (Math.round(pt.x/_this.options.clusterSize)) + '_' + (Math.round(pt.y/_this.options.clusterSize));
+      if (!stations[key] || parseInt(stations[key].rang) < parseInt(stat.rang)) {
+        stations[key] = stat;
+      }
+    }
 
-		// read all cities
-		var stations = {};
-		for (var i in data) {
-			var stat = data[i];
-			if (!_this._map) { // maybe layer is gone while we are looping here
-				return;
-			}
-			// only use cities having a minimum distance of some pixels on the map
-			var pt = _this._map.latLngToLayerPoint(new L.LatLng(stat.coord.Lat, stat.coord.Lon));
-			var key = '' + (Math.round(pt.x/_this.options.clusterSize)) + "_" + (Math.round(pt.y/_this.options.clusterSize));
-			if (!stations[key] || parseInt(stations[key].rang) < parseInt(stat.rang)) {
-				stations[key] = stat;
-			}
-		}
+    // hide LayerGroup from map and remove old markers
+    var markerWithPopup = null;
+    if (_this.options.keepPopup) {
+      markerWithPopup = _this._getMarkerWithPopup(_this._markers);
+    }
+    if (_this._map && _this._map.hasLayer(_this._layer)) {
+      _this._map.removeLayer(_this._layer);
+    }
+    _this._layer.clearLayers();
 
-		// hide LayerGroup from map and remove old markers
-		var markerWithPopup = null;
-		if (_this.options.keepPopup) {
-			markerWithPopup = _this._getMarkerWithPopup(_this._markers);
-		}
-		if (_this._map && _this._map.hasLayer(_this._layer)) {
-			_this._map.removeLayer(_this._layer);
-		}
-		_this._layer.clearLayers();
+    // add the cities as markers to the LayerGroup
+    _this._markers = [];
+    for (var key in stations) {
+      var marker;
+      if (_this.options.markerFunction != null && typeof _this.options.markerFunction == 'function') {
+        marker = _this.options.markerFunction.call(_this, stations[key]);
+      } else {
+        marker = _this._createMarker(stations[key]);
+      }
+      marker.options.owmId = stations[key].id;
+      _this._layer.addLayer(marker);
+      _this._markers.push(marker);
+      if (_this.options.popup) {
+        if (_this.options.popupFunction != null && typeof _this.options.popupFunction == 'function') {
+          marker.bindPopup(_this.options.popupFunction.call(_this, stations[key]));
+        } else {
+          marker.bindPopup(_this._createPopup(stations[key]));
+        }
+      }
+      if (markerWithPopup != null &&
+        typeof markerWithPopup.options.owmId != 'undefined'&&
+        markerWithPopup.options.owmId == marker.options.owmId) {
+        markerWithPopup = marker;
+      }
+    }
 
-		// add the cities as markers to the LayerGroup
-		_this._markers = [];
-		for (var key in stations) {
-			var marker;
-			if (_this.options.markerFunction != null && typeof _this.options.markerFunction == 'function') {
-				marker = _this.options.markerFunction.call(_this, stations[key]);
-			} else {
-				marker = _this._createMarker(stations[key]);
-			}
-			marker.options.owmId = stations[key].id;
-			_this._layer.addLayer(marker);
-			_this._markers.push(marker);
-			if (_this.options.popup) {
-				if (_this.options.popupFunction != null && typeof _this.options.popupFunction == 'function') {
-					marker.bindPopup(_this.options.popupFunction.call(_this, stations[key]));
-				} else {
-					marker.bindPopup(_this._createPopup(stations[key]));
-				}
-			}
-			if (markerWithPopup != null && 
-				typeof markerWithPopup.options.owmId != 'undefined'&& 
-				markerWithPopup.options.owmId == marker.options.owmId) {
-				markerWithPopup = marker;
-			}
-		}
+    // add the LayerGroup to the map
+    _this._map && _this._map.addLayer(_this._layer);
+    if (markerWithPopup != null) {
+      markerWithPopup.openPopup();
+    }
+    _this.fire('owmlayeradd', {markers: _this._markers});
+  },
 
-		// add the LayerGroup to the map
-		_this._map && _this._map.addLayer(_this._layer);
-		if (markerWithPopup != null) {
-			markerWithPopup.openPopup();
-		}
-		_this.fire('owmlayeradd', {markers: _this._markers});
-	},
+  _getMarkerWithPopup: function(markers) {
+    var marker = null;
+    for (var idx in markers) {
+      var m = markers[idx];
+      if (m._popup && m._map && m._map.hasLayer(m._popup)) {
+        marker = m;
+        break;
+      }
+    }
+    return marker;
+  },
 
-	_getMarkerWithPopup: function(markers) {
-		var marker = null;
-		for (var idx in markers) {
-			var m = markers[idx];
-			if (m._popup && m._map && m._map.hasLayer(m._popup)) {
-				marker = m;
-				break;
-			}
-		}
-		return marker;
-	},
+  _createPopup: function(station) {
+    var showLink = typeof station.id != 'undefined' && this.options.showOwmStationLink;
+    var txt = '<div class="owm-popup-name">';
+    if (showLink) {
+      var typ = 'station';
+      if (typeof station.weather != 'undefined') {
+        typ = 'city';
+      }
+      txt += '<a href="https://openweathermap.org/' + typ + '/' + station.id + '" target="_blank" title="' +
+      this.i18n('owmlinktitle', 'Details at OpenWeatherMap') + '">';
+    }
+    txt += station.name;
+    if (showLink) {
+      txt += '</a>';
+    }
+    txt += '</div>';
+    if (typeof station.weather != 'undefined' && typeof station.weather[0] != 'undefined') {
+      if (typeof station.weather[0].description != 'undefined' && typeof station.weather[0].id != 'undefined') {
+        txt += '<div class="owm-popup-description">' +
+        this.i18n('id'+station.weather[0].id, station.weather[0].description +
+        ' (' + station.weather[0].id + ')') + '</div>';
+      }
+    }
+    var imgData = this._getImageData(station);
+    txt += '<div class="owm-popup-main"><img src="' + imgData.url + '" width="' + imgData.width +
+    '" height="' + imgData.height + '" border="0" />';
+    if (typeof station.main != 'undefined' && typeof station.main.temp != 'undefined') {
+      txt += '<span class="owm-popup-temp">' + this._temperatureConvert(station.main.temp) +
+    '&nbsp;' + this._displayTemperatureUnit() + '</span>';
+    }
+    txt += '</div>';
+    txt += '<div class="owm-popup-details">';
+    if (typeof station.main != 'undefined') {
+      if (typeof station.main.humidity != 'undefined') {
+        txt += '<div class="owm-popup-detail">' +
+      this.i18n('humidity', 'Humidity') + ': ' +
+      station.main.humidity + '&nbsp;%</div>';
+      }
+      if (typeof station.main.pressure != 'undefined') {
+        txt += '<div class="owm-popup-detail">' +
+        this.i18n('pressure', 'Pressure')+
+        ': ' + station.main.pressure + '&nbsp;hPa</div>';
+      }
+      if (this.options.showTempMinMax) {
+        if (typeof station.main.temp_max != 'undefined' && typeof station.main.temp_min != 'undefined') {
+          txt += '<div class="owm-popup-detail">' +
+          this.i18n('temp_minmax', 'Temp. min/max') +
+          ': ' +
+          this._temperatureConvert(station.main.temp_min) +
+          '&nbsp;/&nbsp;' +
+          this._temperatureConvert(station.main.temp_max) +
+          '&nbsp;' + this._displayTemperatureUnit() + '</div>';
+        }
+      }
+    }
+    if (station.rain != null && typeof station.rain != 'undefined' && typeof station.rain['1h'] != 'undefined') {
+      txt += '<div class="owm-popup-detail">' +
+      this.i18n('rain_1h', 'Rain (1h)') +
+       ': ' + station.rain['1h'] + '&nbsp;ml</div>';
+    }
+    if (typeof station.wind != 'undefined') {
+      if (typeof station.wind.speed != 'undefined') {
+        txt += '<div class="owm-popup-detail">';
+        if (this.options.showWindSpeed == 'beaufort' || this.options.showWindSpeed == 'both') {
+          txt += this.i18n('windforce', 'Wind Force') +
+          ': ' + this._windMsToBft(station.wind.speed);
+          if (this.options.showWindSpeed == 'both') {
+            txt += '&nbsp;(' + this._convertSpeed(station.wind.speed) + '&nbsp;' +
+            this._displaySpeedUnit() + ')';
+          }
+        } else {
+          txt += this.i18n('wind', 'Wind') + ': ' +
+          this._convertSpeed(station.wind.speed) + '&nbsp;' +
+          this._displaySpeedUnit();
+        }
+        txt += '</div>';
+      }
+      if (typeof station.wind.gust != 'undefined') {
+        txt += '<div class="owm-popup-detail">';
+        if (this.options.showWindSpeed == 'beaufort' || this.options.showWindSpeed == 'both') {
+          txt += this.i18n('gust', 'Gust') +
+          ': ' + this._windMsToBft(station.wind.gust);
+          if (this.options.showWindSpeed == 'both') {
+            txt += '&nbsp;(' + this._convertSpeed(station.wind.gust) + '&nbsp;' +
+            this._displaySpeedUnit() + ')';
+          }
+        } else {
+          txt += this.i18n('gust', 'Gust') + ': ' +
+          this._convertSpeed(station.wind.gust) + '&nbsp;' +
+          this._displaySpeedUnit();
+        }
+        txt += '</div>';
+      }
+      if (typeof station.wind.deg != 'undefined') {
+        txt += '<div class="owm-popup-detail">';
+        txt += this.i18n('direction', 'Windrichtung') + ': ';
+        if (this.options.showWindDirection == 'desc' || this.options.showWindDirection == 'both') {
+          txt += this._directions[(station.wind.deg/22.5).toFixed(0)];
+          if (this.options.showWindDirection == 'both') {
+            txt += '&nbsp;(' + station.wind.deg + '°)';
+          }
+        } else {
+          txt += station.wind.deg + '°';
+        }
+        txt += '</div>';
+      }
+    }
+    if (typeof station.dt != 'undefined' && this.options.showTimestamp) {
+      txt += '<div class="owm-popup-timestamp">';
+      txt += '(' + this._convertTimestamp(station.dt) + ')';
+      txt += '</div>';
+    }
+    txt += '</div>';
+    return txt;
+  },
 
-	_createPopup: function(station) {
-		var showLink = typeof station.id != 'undefined' && this.options.showOwmStationLink;
-		var txt = '<div class="owm-popup-name">';
-		if (showLink) {
-			var typ = 'station';
-			if (typeof station.weather != 'undefined') {
-				typ = 'city';
-			}
-			txt += '<a href="https://openweathermap.org/' + typ + '/' + station.id + '" target="_blank" title="' + 
-			this.i18n('owmlinktitle', 'Details at OpenWeatherMap') + '">';
-		}
-		txt += station.name;
-		if (showLink) {
-			txt += '</a>';
-		}
-		txt += '</div>';
-		if (typeof station.weather != 'undefined' && typeof station.weather[0] != 'undefined') {
-			if (typeof station.weather[0].description != 'undefined' && typeof station.weather[0].id != 'undefined') {
-				txt += '<div class="owm-popup-description">' + 
-				this.i18n('id'+station.weather[0].id, station.weather[0].description + 
-				' (' + station.weather[0].id + ')') + '</div>';
-			}
-		}
-		var imgData = this._getImageData(station);
-		txt += '<div class="owm-popup-main"><img src="' + imgData.url + '" width="' + imgData.width + 
-		'" height="' + imgData.height + '" border="0" />';
-		if (typeof station.main != 'undefined' && typeof station.main.temp != 'undefined') {
-			txt += '<span class="owm-popup-temp">' + this._temperatureConvert(station.main.temp) + 
-			'&nbsp;' + this._displayTemperatureUnit() + '</span>';
-		}
-		txt += '</div>';
-		txt += '<div class="owm-popup-details">';
-		if (typeof station.main != 'undefined') {
-			if (typeof station.main.humidity != 'undefined') {
-				txt += '<div class="owm-popup-detail">' + 
-				this.i18n('humidity', 'Humidity') + ': ' + 
-				station.main.humidity + '&nbsp;%</div>';
-			}
-			if (typeof station.main.pressure != 'undefined') {
-				txt += '<div class="owm-popup-detail">' + 
-				this.i18n('pressure', 'Pressure')+ 
-				': ' + station.main.pressure + '&nbsp;hPa</div>';
-			}
-			if (this.options.showTempMinMax) {
-				if (typeof station.main.temp_max != 'undefined' && typeof station.main.temp_min != 'undefined') {
-					txt += '<div class="owm-popup-detail">' + 
-					this.i18n('temp_minmax', 'Temp. min/max') + 
-					': ' + 
-					this._temperatureConvert(station.main.temp_min) + 
-					'&nbsp;/&nbsp;' + 
-					this._temperatureConvert(station.main.temp_max) + 
-					'&nbsp;' + this._displayTemperatureUnit() + '</div>';
-				}
-			}
-		}
-		if (station.rain != null && typeof station.rain != 'undefined' && typeof station.rain['1h'] != 'undefined') {
-			txt += '<div class="owm-popup-detail">' + 
-			this.i18n('rain_1h', 'Rain (1h)') +
-			 ': ' + station.rain['1h'] + '&nbsp;ml</div>';
-		}
-		if (typeof station.wind != 'undefined') {
-			if (typeof station.wind.speed != 'undefined') {
-				txt += '<div class="owm-popup-detail">';
-				if (this.options.showWindSpeed == 'beaufort' || this.options.showWindSpeed == 'both') {
-					txt += this.i18n('windforce', 'Wind Force') + 
-					': ' + this._windMsToBft(station.wind.speed);
-					if (this.options.showWindSpeed == 'both') {
-						txt += '&nbsp;(' + this._convertSpeed(station.wind.speed) + '&nbsp;' + 
-						this._displaySpeedUnit() + ')';
-					}
-				} else {
-					txt += this.i18n('wind', 'Wind') + ': ' + 
-					this._convertSpeed(station.wind.speed) + '&nbsp;' + 
-					this._displaySpeedUnit();
-				}
-				txt += '</div>';
-			}
-			if (typeof station.wind.gust != 'undefined') {
-				txt += '<div class="owm-popup-detail">';
-				if (this.options.showWindSpeed == 'beaufort' || this.options.showWindSpeed == 'both') {
-					txt += this.i18n('gust', 'Gust') + 
-					': ' + this._windMsToBft(station.wind.gust);
-					if (this.options.showWindSpeed == 'both') {
-						txt += '&nbsp;(' + this._convertSpeed(station.wind.gust) + '&nbsp;' + 
-						this._displaySpeedUnit() + ')';
-					}
-				} else {
-					txt += this.i18n('gust', 'Gust') + ': ' + 
-					this._convertSpeed(station.wind.gust) + '&nbsp;' + 
-					this._displaySpeedUnit();
-				}
-				txt += '</div>';
-			}
-			if (typeof station.wind.deg != 'undefined') {
-				txt += '<div class="owm-popup-detail">';
-				txt += this.i18n('direction', 'Windrichtung') + ': ';
-				if (this.options.showWindDirection == 'desc' || this.options.showWindDirection == 'both') {
-					txt += this._directions[(station.wind.deg/22.5).toFixed(0)];
-					if (this.options.showWindDirection == 'both') {
-						txt += '&nbsp;(' + station.wind.deg + '°)';
-					}
-				} else {
-					txt += station.wind.deg + '°';
-				}
-				txt += '</div>';
-			}
-		}
-		if (typeof station.dt != 'undefined' && this.options.showTimestamp) {
-			txt += '<div class="owm-popup-timestamp">';
-			txt += '(' + this._convertTimestamp(station.dt) + ')';
-			txt += '</div>';
-		}
-		txt += '</div>';
-		return txt;
-	},
+  _getImageData: function(station) {
+    var imageUrl;
+    var imageWidth = this.options.imageWidth;
+    var imageHeight = this.options.imageHeight;
+    var imageUrlTemplate = this.options.imageUrlCity;
+    if (station.weather && station.weather[0] && station.weather[0].icon) {
+      imageUrl = imageUrlTemplate.replace('{icon}', station.weather[0].icon);
+    } else if (station.type && station.type == 1) {
+      imageUrl = this.options.imageUrlPlane;
+      imageWidth = this.options.imageWidthPlane;
+      imageHeight = this.options.imageWidthPLane;
+    } else {
+      imageUrl = this.options.imageUrlStation;
+      imageWidth = this.options.imageWidthStation;
+      imageHeight = this.options.imageWidthStation;
+    }
+    return {url: imageUrl, width: imageWidth, height: imageHeight};
+  },
 
-	_getImageData: function(station) {
-		var imageUrl;
-		var imageWidth = this.options.imageWidth;
-		var imageHeight = this.options.imageHeight;
-		var imageUrlTemplate = this.options.imageUrlCity;
-		if (station.weather && station.weather[0] && station.weather[0].icon) {
-			imageUrl = imageUrlTemplate.replace('{icon}', station.weather[0].icon);
-		} else if (station.type && station.type == 1) {
-			imageUrl = this.options.imageUrlPlane;
-			imageWidth = this.options.imageWidthPlane;
-			imageHeight = this.options.imageWidthPLane;
-		} else {
-			imageUrl = this.options.imageUrlStation;
-			imageWidth = this.options.imageWidthStation;
-			imageHeight = this.options.imageWidthStation;
-		}
-		return {url: imageUrl, width: imageWidth, height: imageHeight};
-	},
+  _createMarker: function(station) {
+    var imageData = this._getImageData(station);
+    var icon = L.divIcon({
+      className: '',
+      iconAnchor: new L.Point(25, imageData.height/2),
+      popupAnchor: new L.Point(0, -10),
+      html: this._icondivtext(station, imageData.url, imageData.width, imageData.height),
+    });
+    var marker = L.marker([station.coord.Lat, station.coord.Lon], {icon: icon});
+    return marker;
+  },
 
-	_createMarker: function(station) {
-		var imageData = this._getImageData(station);
-		var icon = L.divIcon({
-						className: '',
-						iconAnchor: new L.Point(25, imageData.height/2),
-						popupAnchor: new L.Point(0, -10),
-						html: this._icondivtext(station, imageData.url, imageData.width, imageData.height)
-					});
-		var marker = L.marker([station.coord.Lat, station.coord.Lon], {icon: icon});
-		return marker;
-	},
+  _icondivtext: function(station, imageurl, width, height) {
+    var txt = '';
+    txt += '<div class="owm-icondiv">' +
+    '<img src="' + imageurl + '" border="0" width="' + width + '" height="' + height + '" />';
+    if (typeof station.main != 'undefined' && typeof station.main.temp != 'undefined') {
+      txt += '<div class="owm-icondiv-temp">' + this._temperatureConvert(station.main.temp) +
+      '&nbsp;' + this._displayTemperatureUnit() + '</div>';
+    }
+    txt += '</div>';
+    return txt;
+  },
 
-	_icondivtext: function(station, imageurl, width, height) {
-		var txt = '';
-		txt += '<div class="owm-icondiv">' + 
-		'<img src="' + imageurl + '" border="0" width="' + width + '" height="' + height + '" />';
-		if (typeof station.main != 'undefined' && typeof station.main.temp != 'undefined') {
-			txt += '<div class="owm-icondiv-temp">' + this._temperatureConvert(station.main.temp) + 
-			'&nbsp;' + this._displayTemperatureUnit() + '</div>';
-		}
-		txt += '</div>';
-		return txt;
-	},
+  _temperatureConvert: function(tempC) {
+    var temp = tempC;
+    switch (this.options.temperatureUnit) {
+    case 'K':
+      temp = (tempC + 273.15);
+      break;
+    case 'C':
+      break;
+    case 'F':
+      temp = ((tempC + 273.15)*1.8-459.67);
+      break;
+    }
+    return temp.toFixed(this.options.temperatureDigits);
+  },
 
-	_temperatureConvert: function(tempC) {
-		var temp = tempC;
-		switch (this.options.temperatureUnit) {
-			case 'K':
-				temp = (tempC + 273.15);
-				break;
-			case 'C':
-				break;
-			case 'F':
-				temp = ((tempC + 273.15)*1.8-459.67);
-				break;
-		}
-		return temp.toFixed(this.options.temperatureDigits);
-	},
+  _displayTemperatureUnit: function() {
+    var unit = this._tempUnits['K'];
+    if (typeof this._tempUnits[this.options.temperatureUnit] != 'undefined') {
+      unit = this._tempUnits[this.options.temperatureUnit];
+    }
+    return unit;
+  },
 
-	_displayTemperatureUnit: function() {
-		var unit = this._tempUnits['K'];
-		if (typeof this._tempUnits[this.options.temperatureUnit] != 'undefined') {
-			unit = this._tempUnits[this.options.temperatureUnit];
-		}
-		return unit;
-	},
+  _windMsToBft: function(ms) {
+    var bft = 18;
+    for (var key in this._msbft) {
+      if (ms < this._msbft[key]) {
+        bft = key;
+        break;
+      }
+    }
+    return bft;
+  },
 
-	_windMsToBft: function(ms) {
-		var bft = 18;
-		for (var key in this._msbft) {
-			if (ms < this._msbft[key]) {
-				bft = key;
-				break;
-			}
-		}
-		return bft;
-	},
+  _displaySpeedUnit: function() {
+    var unit = 'm/s';
+    switch (this.options.speedUnit) {
+    case 'kmh':
+      unit = 'km/h';
+      break;
+    case 'mph':
+      unit = 'mph';
+      break;
+    }
+    return unit;
+  },
 
-	_displaySpeedUnit: function() {
-		var unit = 'm/s';
-		switch (this.options.speedUnit) {
-			case 'kmh':
-				unit = 'km/h';
-				break;
-			case 'mph':
-				unit = 'mph';
-				break;
-		}
-		return unit;
-	},
+  _convertSpeed: function(speed) {
+    var sp = speed;
+    switch (this.options.speedUnit) {
+    case 'kmh':
+      sp = 3.6*sp;
+      break;
+    case 'mph':
+      sp = 2.236*sp;
+      break;
+    }
+    return sp.toFixed(this.options.speedDigits);
+  },
 
-	_convertSpeed: function(speed) {
-		var sp = speed;
-		switch (this.options.speedUnit) {
-			case 'kmh':
-				sp = 3.6*sp;
-				break;
-			case 'mph':
-				sp = 2.236*sp;
-				break;
-		}
-		return sp.toFixed(this.options.speedDigits);
-	},
+  _convertTimestamp: function(tstmp) {
+    if (this.options.useLocalTime) {
+      return (new Date(tstmp*1000));
+    } else {
+      return (new Date(tstmp*1000)).toUTCString();
+    }
+  },
 
-	_convertTimestamp: function(tstmp) {
-		if (this.options.useLocalTime) {
-			return (new Date(tstmp*1000));
-		} else {
-			return (new Date(tstmp*1000)).toUTCString();
-		}
-	},
-
-	i18n: function(key, fallback) {
-		var lang = this.options.lang;
-		if (typeof L.OWM.Utils.i18n != 'undefined' && 
-		typeof L.OWM.Utils.i18n[lang] != 'undefined' && 
-		typeof L.OWM.Utils.i18n[lang][key] != 'undefined') {
-			return  L.OWM.Utils.i18n[lang][key];
-		}
-		return fallback;
-	}
+  i18n: function(key, fallback) {
+    var lang = this.options.lang;
+    if (typeof L.OWM.Utils.i18n != 'undefined' &&
+    typeof L.OWM.Utils.i18n[lang] != 'undefined' &&
+    typeof L.OWM.Utils.i18n[lang][key] != 'undefined') {
+      return L.OWM.Utils.i18n[lang][key];
+    }
+    return fallback;
+  },
 
 });
 L.OWM.current = function(options) { return new L.OWM.Current(options); };
 
 L.OWM.ProgressControl = L.Control.extend({
 
-	options: {
-		position: "topleft",
-		type: 'city',
-		bgImage: null // bgImage is set in L.OWM.Current when creating this ProgressControll instance
-	},
+  options: {
+    position: 'topleft',
+    type: 'city',
+    bgImage: null, // bgImage is set in L.OWM.Current when creating this ProgressControll instance
+  },
 
-	initialize: function(options) {
-		L.Util.setOptions(this, options);
-		this._container = L.DomUtil.create('div', 'leaflet-control-layers');
-		if (this.options.bgImage != null) {
-			this._container.style.backgroundImage ='url(' + this.options.bgImage + ')';
-			this._container.style.backgroundRepeat = 'no-repeat';
-			this._container.style.backgroundPosition = 'center center';
-		}
-		L.DomEvent.disableClickPropagation(this._container);
-		this._container.innerHTML = '<img src="' + this.options.imageLoadingUrl + '" width="50" height="50" />';
-	},
+  initialize: function(options) {
+    L.Util.setOptions(this, options);
+    this._container = L.DomUtil.create('div', 'leaflet-control-layers');
+    if (this.options.bgImage != null) {
+      this._container.style.backgroundImage ='url(' + this.options.bgImage + ')';
+      this._container.style.backgroundRepeat = 'no-repeat';
+      this._container.style.backgroundPosition = 'center center';
+    }
+    L.DomEvent.disableClickPropagation(this._container);
+    this._container.innerHTML = '<img src="' + this.options.imageLoadingUrl + '" width="50" height="50" />';
+  },
 
-	onAdd: function(map) {
-		this._map = map;
-		this.options.owmInstance.on('owmloadingstart', this._activate, this);
-		this.options.owmInstance.on('owmloadingend', this._deactivate, this);
-		return this._container;
-	},
+  onAdd: function(map) {
+    this._map = map;
+    this.options.owmInstance.on('owmloadingstart', this._activate, this);
+    this.options.owmInstance.on('owmloadingend', this._deactivate, this);
+    return this._container;
+  },
 
-	_activate: function(e) {
-		if (e.target.options.type == this.options.type) {
-			this._container.style.display = 'block';
-		}
-	},
+  _activate: function(e) {
+    if (e.target.options.type == this.options.type) {
+      this._container.style.display = 'block';
+    }
+  },
 
-	_deactivate: function(e) {
-		if (e.target.options.type == this.options.type) {
-			this._container.style.display = 'none';
-		}
-	},
+  _deactivate: function(e) {
+    if (e.target.options.type == this.options.type) {
+      this._container.style.display = 'none';
+    }
+  },
 
-	onRemove: function(map) {
-		this.options.owmInstance.off('owmloadingstart', this._activate, this);
-		this.options.owmInstance.off('owmloadingend', this._deactivate, this);
-		this._container.style.display = 'none';
-		this._map = null;
-	}
+  onRemove: function(map) {
+    this.options.owmInstance.off('owmloadingstart', this._activate, this);
+    this.options.owmInstance.off('owmloadingend', this._deactivate, this);
+    this._container.style.display = 'none';
+    this._map = null;
+  },
 
 });
 L.OWM.progressControl = function(options) { return new L.OWM.ProgressControl(options); };
 
 L.OWM.CurrentCache = L.Class.extend({
 
-	options: {
-		maxAge: 15 // age in minutes before cache data is invalidated
-	},
+  options: {
+    maxAge: 15, // age in minutes before cache data is invalidated
+  },
 
-	initialize: function(options) {
-		L.Util.setOptions(this, options);
-		this.clear();
-	},
+  initialize: function(options) {
+    L.Util.setOptions(this, options);
+    this.clear();
+  },
 
-	clear: function() {
-		this._cachedData = null;
-		this._cachedTime = 0;
-		this._cachedBBox = {minLon: 181, minLat: 91, maxLon: -181, maxLat: -91};
-	},
+  clear: function() {
+    this._cachedData = null;
+    this._cachedTime = 0;
+    this._cachedBBox = {minLon: 181, minLat: 91, maxLon: -181, maxLat: -91};
+  },
 
-	get: function(minLon, minLat, maxLon, maxLat) {
-		if (this._cachedData == null) {
-			// no cached data available
-			return null;
-		}
-		if ((new Date()).getTime() - this._cachedTime > 60000*this.options.maxAge) {
-			// cached data is too old
-			this.clear();
-			return null;
-		}
-		if (minLon <= this._cachedBBox.minLon || minLat <= this._cachedBBox.minLat
-				|| maxLon >= this._cachedBBox.maxLon || maxLat >= this._cachedBBox.maxLat) {
-			// new area is outside of cached area
-			this.clear();
-			return null;
-		}
+  get: function(minLon, minLat, maxLon, maxLat) {
+    if (this._cachedData == null) {
+      // no cached data available
+      return null;
+    }
+    if ((new Date()).getTime() - this._cachedTime > 60000*this.options.maxAge) {
+      // cached data is too old
+      this.clear();
+      return null;
+    }
+    if (minLon <= this._cachedBBox.minLon || minLat <= this._cachedBBox.minLat ||
+        maxLon >= this._cachedBBox.maxLon || maxLat >= this._cachedBBox.maxLat) {
+      // new area is outside of cached area
+      this.clear();
+      return null;
+    }
 
-		// clip cached data to bounds
-		var clippedStations = [];
-		var cnt = 0;
-		for (var k in this._cachedData.list) {
-			var station = this._cachedData.list[k];
-			if (station.coord.Lon >= minLon && station.coord.Lon <= maxLon
-					&& station.coord.Lat >= minLat && station.coord.Lat <= maxLat) {
-				clippedStations[k] = station;
-				cnt++;
-			}
-		}
-		return clippedStations;
-	},
+    // clip cached data to bounds
+    var clippedStations = [];
+    var cnt = 0;
+    for (var k in this._cachedData.list) {
+      var station = this._cachedData.list[k];
+      if (station.coord.Lon >= minLon && station.coord.Lon <= maxLon &&
+          station.coord.Lat >= minLat && station.coord.Lat <= maxLat) {
+        clippedStations[k] = station;
+        cnt++;
+      }
+    }
+    return clippedStations;
+  },
 
-	set: function(data, bounds) {
-		this._cachedData = data;
-		this._cachedBBox.minLon = bounds.getWest();
-		this._cachedBBox.minLat = bounds.getSouth();
-		this._cachedBBox.maxLon = bounds.getEast();
-		this._cachedBBox.maxLat = bounds.getNorth();
-		this._cachedTime = (new Date()).getTime();
-	}
+  set: function(data, bounds) {
+    this._cachedData = data;
+    this._cachedBBox.minLon = bounds.getWest();
+    this._cachedBBox.minLat = bounds.getSouth();
+    this._cachedBBox.maxLon = bounds.getEast();
+    this._cachedBBox.maxLat = bounds.getNorth();
+    this._cachedTime = (new Date()).getTime();
+  },
 
 });
 L.OWM.currentCache = function(options) { return new L.OWM.CurrentCache(options); };
@@ -27972,775 +28426,773 @@ L.OWM.currentCache = function(options) { return new L.OWM.CurrentCache(options);
 
 L.OWM.Utils = {
 
-	callbacks: {},
-	callbackCounter: 0,
+  callbacks: {},
+  callbackCounter: 0,
 
-	jsonp: function(url, callbackFn) {
-		var _this = this;
-		var elem = document.createElement('script');
-		var counter = this.callbackCounter++;
-		var callback = 'L.OWM.Utils.callbacks[' + counter + ']';
-		var abort = function() {
-			if (elem.parentNode) {
-				return elem.parentNode.removeChild(elem);
-			}
-		};
+  jsonp: function(url, callbackFn) {
+    var _this = this;
+    var elem = document.createElement('script');
+    var counter = this.callbackCounter++;
+    var callback = 'L.OWM.Utils.callbacks[' + counter + ']';
+    var abort = function() {
+      if (elem.parentNode) {
+        return elem.parentNode.removeChild(elem);
+      }
+    };
 
-		this.callbacks[counter] = function(data) {
-			delete _this.callbacks[counter];
-			return callbackFn(data);
-		};
+    this.callbacks[counter] = function(data) {
+      delete _this.callbacks[counter];
+      return callbackFn(data);
+    };
 
-		elem.src = '' + url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callback;
-		elem.type = 'text/javascript';
-		document.getElementsByTagName('body')[0].appendChild(elem);
-		return { abort: abort };
-	},
+    elem.src = '' + url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callback;
+    elem.type = 'text/javascript';
+    document.getElementsByTagName('body')[0].appendChild(elem);
+    return {abort: abort};
+  },
 
-	i18n: {
-		en: {
-			owmlinktitle: 'Details at OpenWeatherMap', 
-			temperature: 'Temperature', 
-			temp_minmax: 'Temp. min/max', 
-			wind: 'Wind', 
-			gust: 'Gust', 
-			windforce: 'Wind Force', 
-			direction: 'Direction', 
-			rain_1h: 'Rain', 
-			humidity: 'Humidity', 
-			pressure: 'Pressure',
+  i18n: {
+    en: {
+      owmlinktitle: 'Details at OpenWeatherMap',
+      temperature: 'Temperature',
+      temp_minmax: 'Temp. min/max',
+      wind: 'Wind',
+      gust: 'Gust',
+      windforce: 'Wind Force',
+      direction: 'Direction',
+      rain_1h: 'Rain',
+      humidity: 'Humidity',
+      pressure: 'Pressure',
 
-			// weather conditions, see https://openweathermap.org/weather-conditions
-			id200: 'Thunderstorm with Light Rain',
-			id201: 'Thunderstorm with Rain',
-			id202: 'Thunderstorm with Heavy Rain', 
-			id210: 'Light Thunderstorm', 
-			id211: 'Thunderstorm', 
-			id212: 'Heavy Thunderstorm', 
-			id221: 'Ragged Thunderstorm', 
-			id230: 'Thunderstorm with Light Drizzle', 
-			id231: 'Thunderstorm with Drizzle', 
-			id232: 'Thunderstorm with Heavy Drizzle',
+      // weather conditions, see https://openweathermap.org/weather-conditions
+      id200: 'Thunderstorm with Light Rain',
+      id201: 'Thunderstorm with Rain',
+      id202: 'Thunderstorm with Heavy Rain',
+      id210: 'Light Thunderstorm',
+      id211: 'Thunderstorm',
+      id212: 'Heavy Thunderstorm',
+      id221: 'Ragged Thunderstorm',
+      id230: 'Thunderstorm with Light Drizzle',
+      id231: 'Thunderstorm with Drizzle',
+      id232: 'Thunderstorm with Heavy Drizzle',
 
-			id300: 'Light Intensity Drizzle', 
-			id301: 'Drizzle', 
-			id302: 'Heavy Intensity Drizzle', 
-			id310: 'Light Intensity Drizzle Rain', 
-			id311: 'Drizzle Rain', 
-			id312: 'Heavy Intensity Drizzle Rain', 
-			id321: 'Shower Drizzle',
+      id300: 'Light Intensity Drizzle',
+      id301: 'Drizzle',
+      id302: 'Heavy Intensity Drizzle',
+      id310: 'Light Intensity Drizzle Rain',
+      id311: 'Drizzle Rain',
+      id312: 'Heavy Intensity Drizzle Rain',
+      id321: 'Shower Drizzle',
 
-			id500: 'Light Rain', 
-			id501: 'Moderate Rain', 
-			id502: 'Heavy Intensity Rain', 
-			id503: 'Very Heavy Rain', 
-			id504: 'Extreme Rain', 
-			id511: 'Freezing Rain', 
-			id520: 'Light Intensity Shower Rain', 
-			id521: 'Shower Rain', 
-			id522: 'Heavy Intensity Shower Rain',
+      id500: 'Light Rain',
+      id501: 'Moderate Rain',
+      id502: 'Heavy Intensity Rain',
+      id503: 'Very Heavy Rain',
+      id504: 'Extreme Rain',
+      id511: 'Freezing Rain',
+      id520: 'Light Intensity Shower Rain',
+      id521: 'Shower Rain',
+      id522: 'Heavy Intensity Shower Rain',
 
-			id600: 'Light Snow', 
-			id601: 'Snow', 
-			id602: 'Heavy Snow', 
-			id611: 'Sleet', 
-			id621: 'Shower Snow', 
-			id622: 'Heavy Shower Snow',
+      id600: 'Light Snow',
+      id601: 'Snow',
+      id602: 'Heavy Snow',
+      id611: 'Sleet',
+      id621: 'Shower Snow',
+      id622: 'Heavy Shower Snow',
 
-			id701: 'Mist', 
-			id711: 'Smoke', 
-			id721: 'Haze', 
-			id731: 'Sand/Dust Whirls', 
-			id741: 'Fog', 
-			id751: 'Sand',
+      id701: 'Mist',
+      id711: 'Smoke',
+      id721: 'Haze',
+      id731: 'Sand/Dust Whirls',
+      id741: 'Fog',
+      id751: 'Sand',
 
-			id800: 'Sky is Clear', 
-			id801: 'Few Clouds', 
-			id802: 'Scattered Clouds', 
-			id803: 'Broken Clouds', 
-			id804: 'Overcast Clouds',
+      id800: 'Sky is Clear',
+      id801: 'Few Clouds',
+      id802: 'Scattered Clouds',
+      id803: 'Broken Clouds',
+      id804: 'Overcast Clouds',
 
-			id900: 'Tornado', 
-			id901: 'Tropical Storm', 
-			id902: 'Hurricane', 
-			id903: 'Cold', 
-			id904: 'Hot', 
-			id905: 'Windy', 
-			id906: 'Hail'
-		},
-		
-		it: {
-			owmlinktitle: 'Dettagli su OpenWeatherMap', 
-			temperature: 'Temperatura',
-			temp_minmax: 'Temp. min / max ', 
-			wind: 'Vento', gust: 'Raffica', 
-			windforce: 'Forza del vento', 
-			direction: 'Direzione', 
-			rain_1h: 'Pioggia', 
-			humidity: 'Umidità', 
-			pressure: 'Pressione', 
-			
-			// condizioni meteorologiche, consultare https://openweathermap.org/weather-conditions 
-			// Temporale
-			id200: 'Tempesta con pioggia debole', 
-			id201: 'Tempesta di pioggia', 
-			id202: 'Tempesta con forti piogge', 
-			id210: 'Tempesta debole', 
-			id211: 'Tempesta', 
-			id212: 'Tempesta forte', 
-			id221: 'Tempesta irregolare', 
-			id230: 'Tempesta con deboli acquerugi', 
-			id231: 'Tempesta con pioviggine', 
-			id232: 'Tempesta con forte pioviggine', 
-			
-			// Pioggerella
-			id300: 'Debole pioviggine', 
-			id301: 'Pioggerella', 
-			id302: 'Forti acquerugi', 
-			id310: 'Pioggia / leggera pioggerellina', 
-			id311: 'Pioggia / pioviggine', 
-			id312: 'Pioggia / pioviggine forte', 
-			id321: 'Pioviggine intensa',
-			
-			// Pioggia
-			id500: 'Debole pioggia', 
-			id501: 'Pioggia moderata', 
-			id502: 'Pioggia forte', 
-			id503: 'Pioggia molto forte', 
-			id504: 'Pioggia estrema', 
-			id511: 'Grandine', 
-			id520: 'Pioggia leggera', 
-			id521: 'Pioggia', 
-			id522: 'Pioggia forte', 
-			id531: 'pioggia irregolare', 
-			
-			// neve 
-			id600: 'Neve Debole', 
-			id601: 'Neve', 
-			id602: 'Forte nevicata', 
-			id611: 'Nevischio', 
-			id612: 'Nevischio moderato', 
-			id615: 'Debole pioggia e neve', 
-			id616: 'Pioggia e neve', 
-			id620: 'Nevischio Leggero', 
-			id621: 'Neve moderata', 
-			id622: 'Forte nevicata', 
-			
-			// atmosfera
-			id701: 'Bruma', 
-			id711: 'Fumo', 
-			id721: 'Foschia', 
-			id731: 'Vortici di sabbia/polvere', 
-			id741: 'Nebbia', 
-			id751: 'Sabbia', 
-			id761: 'Polvere', 
-			id762: 'Cenere vulcanica', 
-			id771: 'Tempesta', 
-			id781: 'Tornado', 
-			
-			// Nuvole
-			id800: 'Cielo sereno', 
-			id801: 'Alcune nuvole', 
-			id802: 'Nuvole sparse', 
-			id803: 'Tempo nuvoloso', 
-			id804: 'Nuvoloso',
-			
-			// Estremo
-			id900: 'Tornado', 
-			id901: 'Tempesta tropicale', 
-			id902: 'Uragano', 
-			id903: 'Molto freddo', 
-			id904: 'Molto caldo', 
-			id905: 'Ventoso', 
-			id906: 'Forte grandine',
-			
-			// aggiuntivo
-			id951: 'Calmo', 
-			id952: 'Brezza leggera', 
-			id953: 'Brezza sostenuta', 
-			id954: 'Brezza moderata', 
-			id955: 'Brezza fresca', 
-			id956: 'Brezza forte', 
-			id957: 'Vento forte, vicino a burrasca', 
-			id958: 'Burrasca',
-			id959: 'Forte burrasca', 
-			id960: 'Tempesta', 
-			id961: 'Tempesta violenta', 
-			id962: 'Uragano'
-		},
-		
-		de: {
-			owmlinktitle: 'Details bei OpenWeatherMap', 
-			temperature: 'Temperatur', 
-			temp_minmax: 'Temp. min/max', 
-			wind: 'Wind', 
-			gust: 'Windböen', 
-			windforce: 'Windstärke', 
-			direction: 'Windrichtung', 
-			rain_1h: 'Regen', 
-			humidity: 'Luftfeuchtigkeit', 
-			pressure: 'Luftdruck',
+      id900: 'Tornado',
+      id901: 'Tropical Storm',
+      id902: 'Hurricane',
+      id903: 'Cold',
+      id904: 'Hot',
+      id905: 'Windy',
+      id906: 'Hail',
+    },
 
-			// Wetterbedingungen, siehe https://openweathermap.org/weather-conditions, 
-			id200: 'Gewitter mit leichtem Regen', // 'Thunderstorm with Light Rain', 
-			id201: 'Gewitter mit Regen', //'Thunderstorm with Rain', 
-			id202: 'Gewitter mit Starkregen', //'Thunderstorm with Heavy Rain', 
-			id210: 'Leichtes Gewitter', //'Light Thunderstorm', 
-			id211: 'Mäßiges Gewitter', //'Thunderstorm', 
-			id212: 'Starkes Gewitter', //'Heavy Thunderstorm' 
-			//	, id221: 'Ragged Thunderstorm' 
-			//	, id230: 'Thunderstorm with Light Drizzle' 
-			//	, id231: 'Thunderstorm with Drizzle' 
-			//	, id232: 'Thunderstorm with Heavy Drizzle', 
-			id300: 'Leichter Nieselregen', //'Light Intensity Drizzle', 
-			id301: 'Nieselregen', //'Drizzle', 
-			id302: 'Starker Nieselregen', //'Heavy Intensity Drizzle' 
-			//	, id310: 'Light Intensity Drizzle Rain'
-			//	, id311: 'Drizzle Rain'
-			//	, id312: 'Heavy Intensity Drizzle Rain' 
-			//	, id321: 'Shower Drizzle', 
-			id500: 'Leichter Regen', //'Light Rain', 
-			id501: 'Mäßiger Regen', //'Moderate Rain', 
-			id502: 'Starker Regen', //'Heavy Intensity Rain', 
-			id503: 'Ergiebiger Regen', //'Very Heavy Rain', 
-			id504: 'Starkregen', //'Extreme Rain', 
-			id511: 'Gefrierender Regen', //'Freezing Rain', 
-			id520: 'Leichte Regenschauer', //'Light Intensity Shower Rain', 
-			id521: 'Mäßige Regenschauer', //'Shower Rain', 
-			id522: 'Wolkenbruchartige Regenschauer', //'Heavy Intensity Shower Rain', 
-			id600: 'Leichter Schneefall', //'Light Snow', 
-			id601: 'Mäßiger Schneefall', //'Snow', 
-			id602: 'Starker Schneefall', //'Heavy Snow', 
-			id611: 'Schneeregen', //'Sleet', 
-			id621: 'Schneeschauer', //'Shower Snow', 
-			id622: 'Starke Schneeschauer', //'Heavy Shower Snow', 
-			id701: 'Dunst', //'Mist', 
-			id711: 'Rauch', //'Smoke', 
-			id721: 'Eingetrübt', //'Haze', 
-			id731: 'Sand-/Staubwirbel', //'Sand/Dust Whirls', 
-			id741: 'Nebel', //'Fog', 
-			id751: 'Sand', //'Sand', 
-			id800: 'Wolkenlos', //'Sky is Clear', 
-			id800d: 'Sonnig', //'Sky is Clear' at day, 
-			id800n: 'Klar', //'Sky is Clear' at night, 
-			id801: 'Leicht bewölkt', //'Few Clouds', 
-			id802: 'Wolkig', //'Scattered Clouds', 
-			id803: 'Stark bewölkt', //'Broken Clouds', 
-			id804: 'Bedeckt', //'Overcast Clouds', 
-			id900: 'Tornado', //'Tornado', 
-			id901: 'Tropischer Sturm', //'Tropical Storm', 
-			id902: 'Orkan', //'Hurricane', 
-			id903: 'Kälte', //'Cold', 
-			id904: 'Hitze', //'Hot', 
-			id905: 'Windig', //'Windy', 
-			id906: 'Hagel', //'Hail'
-		},
+    it: {
+      owmlinktitle: 'Dettagli su OpenWeatherMap',
+      temperature: 'Temperatura',
+      temp_minmax: 'Temp. min / max ',
+      wind: 'Vento', gust: 'Raffica',
+      windforce: 'Forza del vento',
+      direction: 'Direzione',
+      rain_1h: 'Pioggia',
+      humidity: 'Umidità',
+      pressure: 'Pressione',
 
-		ru: {
-			owmlinktitle: 'Информация в OpenWeatherMap',
-			temperature: 'Температура',
-			temp_minmax: 'Макс./Мин. темп',
-			wind: 'Ветер',
-			gust: 'Порывы',
-			windforce: 'Сила',
-			direction: 'Направление',
-			rain_1h: 'Дождь',
-			humidity: 'Влажность',
-			pressure: 'Давление', 
-			// weather conditions, see https://openweathermap.org/weather-conditions,
-			id200: 'Гроза с легким дождем', // 'Thunderstorm with Light Rain',
-			id201: 'Гроза с дождем', // 'Thunderstorm with Rain',
-			id202: 'Гроза с ливнем', // 'Thunderstorm with Heavy Rain',
-			id210: 'Легкая гроза', // 'Light Thunderstorm',
-			id211: 'Гроза', // 'Thunderstorm',
-			id212: 'Сильная гроза', // 'Heavy Thunderstorm',
-			id221: 'Прерывистая гроза', // 'Ragged Thunderstorm',
-			id230: 'Гроза с мелкой моросью', // 'Thunderstorm with Light Drizzle',
-			id231: 'Гроза с моросью', // 'Thunderstorm with Drizzle',
-			id232: 'Гроза с сильной моросью', // 'Thunderstorm with Heavy Drizzle',
-			id300: 'Морось слабой интенсивности', // 'Light Intensity Drizzle',
-			id301: 'Морось', // 'Drizzle',
-			id302: 'Морось сильной интенсивности', // 'Heavy Intensity Drizzle',
-			id310: 'Малоинтенсивный моросящий дождь', // 'Light Intensity Drizzle Rain',
-			id311: 'Моросящий дождь', // 'Drizzle Rain',
-			id312: 'Сильноинтенсивный моросящий дождь', // 'Heavy Intensity Drizzle Rain',
-			id321: 'Проливной дождь', // 'Shower Drizzle',
-			id500: 'Небольшой дождь', //'Light Rain',
-			id501: 'Дождь', // 'Moderate Rain',
-			id502: 'Сильный дождь', //'Heavy Intensity Rain',
-			id503: 'Очень сильный дождь', //'Very Heavy Rain',
-			id504: 'Сильный ливень', // 'Extreme Rain',
-			id511: 'Ледяной дождь', // 'Freezing Rain',
-			id520: 'Кратковременный слабый дождь', //'Light Intensity Shower Rain',
-			id521: 'Кратковременный дождь', //'Shower Rain',
-			id522: 'Кратковременный сильный дождь', //'Heavy Intensity Shower Rain',
-			id600: 'Слабый снег', // 'Light Snow',
-			id601: 'Снег', // 'Snow',
-			id602: 'Сильный снег', // 'Heavy Snow',
-			id611: 'Снег с дождем', //'Sleet',
-			id621: 'Кратковременный снег', // 'Shower Snow',
-			id622: 'Кратковременный сильный снег', //'Heavy Shower Snow',
-			id701: 'Мгла', // 'Mist',
-			id711: 'Смог', //'Smoke',
-			id721: 'Дымка', // 'Haze',
-			id731: 'Песочные/пыльевые вихри', // 'Sand/Dust Whirls',
-			id741: 'Туман', // 'Fog',
-			id751: 'Песок', // 'Sand',
-			id800: 'Ясно', // 'Sky is Clear',
-			id801: 'Малооблачно', // 'Few Clouds',
-			id802: 'Переменная облачность', // 'Scattered Clouds',
-			id803: 'Облачно с прояснениями', // 'Broken Clouds',
-			id804: 'Облачно', // 'Overcast Clouds',
-			id900: 'Торнадо', // 'Tornado',
-			id901: 'Тропический шторм', // 'Tropical Storm',
-			id902: 'Ураган', // 'Hurricane',
-			id903: 'Холод',//'Cold',
-			id904: 'Жара',//'Hot',
-			id905: 'Ветрено',//'Windy',
-			id906: 'Γрад', // 'Hail'
-		},
+      // condizioni meteorologiche, consultare https://openweathermap.org/weather-conditions
+      // Temporale
+      id200: 'Tempesta con pioggia debole',
+      id201: 'Tempesta di pioggia',
+      id202: 'Tempesta con forti piogge',
+      id210: 'Tempesta debole',
+      id211: 'Tempesta',
+      id212: 'Tempesta forte',
+      id221: 'Tempesta irregolare',
+      id230: 'Tempesta con deboli acquerugi',
+      id231: 'Tempesta con pioviggine',
+      id232: 'Tempesta con forte pioviggine',
 
-		fr: {
-			owmlinktitle: 'Détails à OpenWeatherMap',
-			temperature: 'Température',
-			temp_minmax: 'Temp. min/max',
-			wind: 'Vent',
-			gust: 'Rafales',
-			windforce: 'Force du vent',
-			direction: 'Direction',
-			rain_1h: 'Pluie',
-			humidity: 'Humidité',
-			pressure: 'Pression', 
-			// Les conditions météorologiques, voir https://openweathermap.org/weather-conditions,
-			id200: 'Orage avec pluie légère', // 'Thunderstorm with Light Rain',
-			id201: 'Orage avec pluie', // 'Thunderstorm with Rain',
-			id202: 'Orage avec fortes précipitations', // 'Thunderstorm with Heavy Rain'
-			//id210: 'Light Thunderstorm',
-			id211: 'Orage',
-			id212: 'Orage violent', // 'Heavy Thunderstorm' 
-			//id221: 'Ragged Thunderstorm',
-			id230: 'Orage avec bruine faible', // 'Thunderstorm with Light Drizzle',
-			id231: 'Orage avec bruine', // 'Thunderstorm with Drizzle' 
-			//	, id232: 'Thunderstorm with Heavy Drizzle'
-			//	, id300: 'Light Intensity Drizzle',
-			id301: 'Bruine', // 'Drizzle' 
-			//	, id302: 'Heavy Intensity Drizzle'
-			//	, id310: 'Light Intensity Drizzle Rain'
-			//	, id311: 'Drizzle Rain' 
-			//	, id312: 'Heavy Intensity Drizzle Rain' 
-			//	, id321: 'Shower Drizzle',
-			id500: 'Pluie légère', // 'Light Rain',
-			id501: 'Pluie modérée', // 'Moderate Rain',
-			id502: 'Pluie battante', // 'Heavy Intensity Rain' 
-			//	, id503: 'Very Heavy Rain' 
-			//	, id504: 'Extreme Rain',
-			id511: 'Pluie verglassante', // 'Freezing Rain',
-			id520: 'Averses de pluie fine', // 'Light Intensity Shower Rain' 
-			//	, id521: 'Shower Rain'
-			//	, id522: 'Heavy Intensity Shower Rain',
-			id600: 'Légers flocons', // 'Light Snow',
-			id601: 'Neige', // 'Snow',
-			id602: 'Fortes chutes de neige', // 'Heavy Snow',
-			id611: 'Neige fondue', // 'Sleet',
-			id621: 'Averses de neige', // 'Shower Snow',
-			id622: 'Fortes chutes de neige', // 'Heavy Shower Snow',
-			id701: 'Brume', // 'Mist',
-			id711: 'Fumée', // 'Smoke',
-			id721: 'Brume', // 'Haze',
-			id731: 'Tourbillons de sable/poussière', // 'Sand/Dust Whirls',
-			id741: 'Brouillard', // 'Fog', //	, id751: 'Sand',
-			id800: 'Ciel dégagé', // 'Sky is Clear',
-			id801: 'Ciel voilé',
-			id802: 'Nuageux', // 'Scattered Clouds',
-			id803: 'Nuageux', // 'Broken Clouds',
-			id804: 'Ciel couvert', // 'Overcast Clouds',
-			id900: 'Tornade', // 'Tornado',
-			id901: 'Tempête tropicale',// 'Tropical Storm',
-			id902: 'Ouragan', // 'Hurricane',
-			id903: 'Froid', // 'Cold',
-			id904: 'Chaleur', // 'Hot',
-			id905: 'Venteux', // 'Windy',
-			id906: 'Grêle', // 'Hail'
-		},
+      // Pioggerella
+      id300: 'Debole pioviggine',
+      id301: 'Pioggerella',
+      id302: 'Forti acquerugi',
+      id310: 'Pioggia / leggera pioggerellina',
+      id311: 'Pioggia / pioviggine',
+      id312: 'Pioggia / pioviggine forte',
+      id321: 'Pioviggine intensa',
 
-		nl: { 
-			//dutch translation
-			owmlinktitle: 'Details op OpenWeatherMap',
-			temperature: 'Temperatuur',
-			temp_minmax: 'Temp. min/max',
-			wind: 'Wind',
-			gust: 'Windvlaag',
-			windforce: 'Windkracht',
-			direction: 'Richting',
-			rain_1h: 'Regen',
-			humidity: 'Luchtvochtigheid',
-			pressure: 'Luchtdruk', 
-			
-			// weeercondities, see https://openweathermap.org/weather-conditions,
-			id200: 'Onweer met lichte regen',
-			id201: 'Onweer met met regen',
-			id202: 'Onweer met hevige regen',
-			id210: 'Lichte onweersbui',
-			id211: 'Onweersbui',
-			id212: 'Hevig onweer',
-			id221: 'Onregelmatige onweersbui',
-			id230: 'Onweer met licht motregen',
-			id231: 'Onweer met motregen',
-			id232: 'Onweer met hevige motregen',
-			id300: 'Lichte motregen',
-			id301: 'Motregen',
-			id302: 'Hevige motregen',
-			id310: 'Lichte motregen / regen',
-			id311: 'Motregen / regen',
-			id312: 'Hevige motregen / regen',
-			id321: 'Douche motregen',
-			id500: 'Lichte regen',
-			id501: 'Gematigde regen',
-			id502: 'Hevige regen',
-			id503: 'Erg hevige regen',
-			id504: 'Extreme regen',
-			id511: 'Hagel',
-			id520: 'Lichte miezerregen',
-			id521: 'Miezerregen',
-			id522: 'Hevige miezerregen',
-			id600: 'Lichte sneeuwval',
-			id601: 'Sneeuw',
-			id602: 'Hevige sneeuwval',
-			id611: 'Ijzel',
-			id621: 'Douche sneeuw',
-			id622: 'Hevige douche sneeuw',
-			id701: 'Mist',
-			id711: 'Rook',
-			id721: 'Nevel',
-			id731: 'Zand/stof werveling',
-			id741: 'Mist',
-			id751: 'Zand',
-			id800: 'Onbewolkt',
-			id801: 'Licht bewolkt',
-			id802: 'Half bewolkt',
-			id803: 'Overwegend bewolkt',
-			id804: 'Bewolkt',
-			id900: 'Tornado',
-			id901: 'Tropische Storm',
-			id902: 'Orkaan',
-			id903: 'Koud',
-			id904: 'Heet',
-			id905: 'Winderig',
-			id906: 'Hagel'
-		},
+      // Pioggia
+      id500: 'Debole pioggia',
+      id501: 'Pioggia moderata',
+      id502: 'Pioggia forte',
+      id503: 'Pioggia molto forte',
+      id504: 'Pioggia estrema',
+      id511: 'Grandine',
+      id520: 'Pioggia leggera',
+      id521: 'Pioggia',
+      id522: 'Pioggia forte',
+      id531: 'pioggia irregolare',
 
-		es: { 
-			//spanish translation
-			owmlinktitle: 'Detalles en OpenWeatherMap',
-			temperature: 'Temperatura',
-			temp_minmax: 'Temp. mín/máx',
-			wind: 'Viento',
-			gust: 'Ráfagas',
-			windforce: 'Fuerza del viento',
-			direction: 'Dirección',
-			rain_1h: 'Lluvia',
-			humidity: 'Humedad',
-			pressure: 'Presión', 
-			// weather conditions, see https://openweathermap.org/weather-conditions 
-			// Thunderstorm,
-			id200: 'Tormenta con lluvia débil',
-			id201: 'Tormenta con lluvia',
-			id202: 'Tormenta con lluvia fuerte',
-			id210: 'Tormenta débil',
-			id211: 'Tormenta',
-			id212: 'Tormenta fuerte',
-			id221: 'Tormenta irregular',
-			id230: 'Tormenta con llovizna débil',
-			id231: 'Tormenta con llovizna',
-			id232: 'Tormenta con llovizna fuerte', // Drizzle,
-			id300: 'Llovizna débil',
-			id301: 'Llovizna',
-			id302: 'Llovizna fuerte',
-			id310: 'Lluvia/llovizna débil',
-			id311: 'Lluvia/llovizna',
-			id312: 'Lluvia/llovizna fuerte',
-			id321: 'Chubasco de llovizna', // Rain,
-			id500: 'Lluvia débil',
-			id501: 'Lluvia moderada',
-			id502: 'Lluvia fuerte',
-			id503: 'Lluvia muy fuerte',
-			id504: 'Lluvia extrema',
-			id511: 'Granizo',
-			id520: 'Chubasco de lluvia débil',
-			id521: 'Chubasco de lluvia',
-			id522: 'Chubasco de lluvia fuerte',
-			id531: 'Chubasco de lluvia irregular', // Snow,
-			id600: 'Nieve débil',
-			id601: 'Nieve',
-			id602: 'Nieve fuerte',
-			id611: 'Aguanieve',
-			id612: 'Chubasco de aguanieve',
-			id615: 'Lluvia y nieve débiles',
-			id616: 'Lluvia y nieve',
-			id620: 'Chubasco de nieve débil',
-			id621: 'Chubasco de nieve',
-			id622: 'Chubasco de nieve fuerte', // Atmosphere,
-			id701: 'Bruma',
-			id711: 'Humo',
-			id721: 'Neblina',
-			id731: 'Torbellinos de arena/polvo',
-			id741: 'Niebla',
-			id751: 'Arena',
-			id761: 'Polvo',
-			id762: 'Ceniza volcánica',
-			id771: 'Tempestad',
-			id781: 'Tornado', // Clouds,
-			id800: 'Cielo despejado',
-			id801: 'Algunas nubes',
-			id802: 'Nubes dispersas',
-			id803: 'Intérvalos nubosos',
-			id804: 'Nublado', // Extreme,
-			id900: 'Tornado',
-			id901: 'Tormenta tropical',
-			id902: 'Huracán',
-			id903: 'Bajas temperaturas',
-			id904: 'Altas temperaturas',
-			id905: 'Ventoso',
-			id906: 'Granizo', // Additional,
-			id951: 'Calma',
-			id952: 'Brisa ligera',
-			id953: 'Brisa suave',
-			id954: 'Brisa moderada',
-			id955: 'Brisa fresca',
-			id956: 'Brisa fuerte',
-			id957: 'Viento fuerte, próximo a vendaval',
-			id958: 'Vendaval',
-			id959: 'Vendaval fuerte',
-			id960: 'Tempestad',
-			id961: 'Tempestad violenta',
-			id962: 'Huracán'
-		},
+      // neve
+      id600: 'Neve Debole',
+      id601: 'Neve',
+      id602: 'Forte nevicata',
+      id611: 'Nevischio',
+      id612: 'Nevischio moderato',
+      id615: 'Debole pioggia e neve',
+      id616: 'Pioggia e neve',
+      id620: 'Nevischio Leggero',
+      id621: 'Neve moderata',
+      id622: 'Forte nevicata',
 
-		ca: { 
-			//catalan translation
-			owmlinktitle: 'Detalls en OpenWeatherMap',
-			temperature: 'Temperatura',
-			temp_minmax: 'Temp. mín/màx',
-			wind: 'Vent',
-			gust: 'Ràfegues',
-			windforce: 'Força del vent',
-			direction: 'Direcció',
-			rain_1h: 'Pluja',
-			humidity: 'Humitat',
-			pressure: 'Pressió', 
-			// weather conditions, see https://openweathermap.org/weather-conditions 
-			// Thunderstorm,
-			id200: 'Tempesta amb pluja feble',
-			id201: 'Tempesta amb pluja',
-			id202: 'Tempesta amb pluja forta',
-			id210: 'Tempesta feble',
-			id211: 'Tempesta',
-			id212: 'Tempesta forta',
-			id221: 'Tempesta irregular',
-			id230: 'Tempesta amb plugim feble',
-			id231: 'Tempesta amb plugim',
-			id232: 'Tempesta amb plugim fort', // Drizzle,
-			id300: 'Plugim feble',
-			id301: 'Plugim',
-			id302: 'Plugim fort',
-			id310: 'Pluja/plugim feble',
-			id311: 'Pluja/plugim',
-			id312: 'Pluja/plugim fort',
-			id321: 'Ruixat de plugim', // Rain,
-			id500: 'Pluja feble',
-			id501: 'Pluja moderada',
-			id502: 'Pluja forta',
-			id503: 'Pluja molt forta',
-			id504: 'Pluja extrema',
-			id511: 'Calabruix',
-			id520: 'Ruixat de pluja feble',
-			id521: 'Ruixat de pluja',
-			id522: 'Ruixat de pluja fort',
-			id531: 'Ruixat de pluja irregular', // Snow,
-			id600: 'Neu feble',
-			id601: 'Neu',
-			id602: 'Neu forta',
-			id611: 'Aiguaneu',
-			id612: 'Ruixat de aguanieve',
-			id615: 'Pluja i neu febles',
-			id616: 'Pluja i neu',
-			id620: 'Ruixat de neu feble',
-			id621: 'Ruixat de neu',
-			id622: 'Ruixat de neu fort', // Atmosphere,
-			id701: 'Bruma',
-			id711: 'Fum',
-			id721: 'Boirina',
-			id731: 'Torbellinos de arena/polvo',
-			id741: 'Boira',
-			id751: 'Sorra',
-			id761: 'Pols',
-			id762: 'Cendra volcànica',
-			id771: 'Tempestat',
-			id781: 'Tornado', // Clouds,
-			id800: 'Cel clar',
-			id801: 'Alguns núvols',
-			id802: 'Núvols dispersos',
-			id803: 'Intervals nuvolosos',
-			id804: 'Ennuvolat', // Extreme,
-			id900: 'Tornado',
-			id901: 'Tempesta tropical',
-			id902: 'Huracà',
-			id903: 'Temperatures baixes',
-			id904: 'Temperatures altes',
-			id905: 'Ventós',
-			id906: 'Calabruix', // Additional,
-			id951: 'Calma',
-			id952: 'Brisa lleugera',
-			id953: 'Brisa suau',
-			id954: 'Brisa moderada',
-			id955: 'Brisa fresca',
-			id956: 'Brisa forta',
-			id957: 'Vent fort, pròxim a vendaval',
-			id958: 'Ventada',
-			id959: 'Ventada forta',
-			id960: 'Tempesta',
-			id961: 'Tempesta violenta',
-			id962: 'Huracà'
-		},
-		pt_br: { 
-			//brazillian translation
-			owmlinktitle: 'Detalhes em OpenWeatherMap',
-			temperature: 'Temperatura',
-			temp_minmax: 'Temp. min/max',
-			wind: 'Vento',
-			gust: 'Rajadas',
-			windforce: 'Força do Vento',
-			direction: 'Direção',
-			rain_1h: 'Chuva',
-			humidity: 'Umidade',
-			pressure: 'Pressão',
-			// weather conditions, see https://openweathermap.org/weather-conditions,
-			id200: 'Trovoadas com chuva fraca',
-			id201: 'Trovoadas com chuva',
-			id202: 'Trovoadas com chuva forte',
-			id210: 'Trovoadas leves',
-			id211: 'Trovoadas',
-			id212: 'Trovoadas fortes',
-			id221: 'Trovoadas irregulares',
-			id230: 'Trovoadas com garoa fraca',
-			id231: 'Trovoadas com garoa',
-			id232: 'Trovoadas com garoa forte',
-			id300: 'Garoa de fraca intensidade',
-			id301: 'Garoa',
-			id302: 'Garoa de forte intensidade',
-			id310: 'Chuva com garoa de fraca intensidade',
-			id311: 'Chuva com garoa',
-			id312: 'Chuva com garoa de forte intensidade',
-			id321: 'Garoa persistente',
-			id500: 'Chuva fraca',
-			id501: 'Chuva',
-			id502: 'Chuva forte',
-			id503: 'Chuva muito forte',
-			id504: 'Chuva extrema',
-			id511: 'Chuva de granizo',
-			id520: 'Aguaceiro de chuva fraco',
-			id521: 'Aguaceiro de chuva',
-			id522: 'Aguaceiro de chuva forte',
-			id600: 'Neve fraca',
-			id601: 'Neve',
-			id602: 'Neve forte',
-			id611: 'Chuva com neve',
-			id621: 'Aguaceiro de neve',
-			id622: 'Aguaceiro de neve forte',
-			id701: 'Névoa',
-			id711: 'Fumaça',
-			id721: 'Bruma',
-			id731: 'Redemoinhos de Areia/Poeira',
-			id741: 'Neblina',
-			id751: 'Areia',
-			id800: 'Ceu está limpo',
-			id801: 'Poucas nuvens',
-			id802: 'Nuvens dispersas',
-			id803: 'Cirros',
-			id804: 'Nublado',
-			id900: 'Tornado',
-			id901: 'Tempestade tropical',
-			id902: 'Furacão',
-			id903: 'Frio',
-			id904: 'Calor',
-			id905: 'Ventania',
-			id906: 'Granizo'
-		}
-	}
+      // atmosfera
+      id701: 'Bruma',
+      id711: 'Fumo',
+      id721: 'Foschia',
+      id731: 'Vortici di sabbia/polvere',
+      id741: 'Nebbia',
+      id751: 'Sabbia',
+      id761: 'Polvere',
+      id762: 'Cenere vulcanica',
+      id771: 'Tempesta',
+      id781: 'Tornado',
+
+      // Nuvole
+      id800: 'Cielo sereno',
+      id801: 'Alcune nuvole',
+      id802: 'Nuvole sparse',
+      id803: 'Tempo nuvoloso',
+      id804: 'Nuvoloso',
+
+      // Estremo
+      id900: 'Tornado',
+      id901: 'Tempesta tropicale',
+      id902: 'Uragano',
+      id903: 'Molto freddo',
+      id904: 'Molto caldo',
+      id905: 'Ventoso',
+      id906: 'Forte grandine',
+
+      // aggiuntivo
+      id951: 'Calmo',
+      id952: 'Brezza leggera',
+      id953: 'Brezza sostenuta',
+      id954: 'Brezza moderata',
+      id955: 'Brezza fresca',
+      id956: 'Brezza forte',
+      id957: 'Vento forte, vicino a burrasca',
+      id958: 'Burrasca',
+      id959: 'Forte burrasca',
+      id960: 'Tempesta',
+      id961: 'Tempesta violenta',
+      id962: 'Uragano',
+    },
+
+    de: {
+      owmlinktitle: 'Details bei OpenWeatherMap',
+      temperature: 'Temperatur',
+      temp_minmax: 'Temp. min/max',
+      wind: 'Wind',
+      gust: 'Windböen',
+      windforce: 'Windstärke',
+      direction: 'Windrichtung',
+      rain_1h: 'Regen',
+      humidity: 'Luftfeuchtigkeit',
+      pressure: 'Luftdruck',
+
+      // Wetterbedingungen, siehe https://openweathermap.org/weather-conditions,
+      id200: 'Gewitter mit leichtem Regen', // 'Thunderstorm with Light Rain',
+      id201: 'Gewitter mit Regen', // 'Thunderstorm with Rain',
+      id202: 'Gewitter mit Starkregen', // 'Thunderstorm with Heavy Rain',
+      id210: 'Leichtes Gewitter', // 'Light Thunderstorm',
+      id211: 'Mäßiges Gewitter', // 'Thunderstorm',
+      id212: 'Starkes Gewitter', // 'Heavy Thunderstorm'
+      //  , id221: 'Ragged Thunderstorm'
+      //  , id230: 'Thunderstorm with Light Drizzle'
+      //  , id231: 'Thunderstorm with Drizzle'
+      //  , id232: 'Thunderstorm with Heavy Drizzle',
+      id300: 'Leichter Nieselregen', // 'Light Intensity Drizzle',
+      id301: 'Nieselregen', // 'Drizzle',
+      id302: 'Starker Nieselregen', // 'Heavy Intensity Drizzle'
+      //  , id310: 'Light Intensity Drizzle Rain'
+      //  , id311: 'Drizzle Rain'
+      //  , id312: 'Heavy Intensity Drizzle Rain'
+      //  , id321: 'Shower Drizzle',
+      id500: 'Leichter Regen', // 'Light Rain',
+      id501: 'Mäßiger Regen', // 'Moderate Rain',
+      id502: 'Starker Regen', // 'Heavy Intensity Rain',
+      id503: 'Ergiebiger Regen', // 'Very Heavy Rain',
+      id504: 'Starkregen', // 'Extreme Rain',
+      id511: 'Gefrierender Regen', // 'Freezing Rain',
+      id520: 'Leichte Regenschauer', // 'Light Intensity Shower Rain',
+      id521: 'Mäßige Regenschauer', // 'Shower Rain',
+      id522: 'Wolkenbruchartige Regenschauer', // 'Heavy Intensity Shower Rain',
+      id600: 'Leichter Schneefall', // 'Light Snow',
+      id601: 'Mäßiger Schneefall', // 'Snow',
+      id602: 'Starker Schneefall', // 'Heavy Snow',
+      id611: 'Schneeregen', // 'Sleet',
+      id621: 'Schneeschauer', // 'Shower Snow',
+      id622: 'Starke Schneeschauer', // 'Heavy Shower Snow',
+      id701: 'Dunst', // 'Mist',
+      id711: 'Rauch', // 'Smoke',
+      id721: 'Eingetrübt', // 'Haze',
+      id731: 'Sand-/Staubwirbel', // 'Sand/Dust Whirls',
+      id741: 'Nebel', // 'Fog',
+      id751: 'Sand', // 'Sand',
+      id800: 'Wolkenlos', // 'Sky is Clear',
+      id800d: 'Sonnig', // 'Sky is Clear' at day,
+      id800n: 'Klar', // 'Sky is Clear' at night,
+      id801: 'Leicht bewölkt', // 'Few Clouds',
+      id802: 'Wolkig', // 'Scattered Clouds',
+      id803: 'Stark bewölkt', // 'Broken Clouds',
+      id804: 'Bedeckt', // 'Overcast Clouds',
+      id900: 'Tornado', // 'Tornado',
+      id901: 'Tropischer Sturm', // 'Tropical Storm',
+      id902: 'Orkan', // 'Hurricane',
+      id903: 'Kälte', // 'Cold',
+      id904: 'Hitze', // 'Hot',
+      id905: 'Windig', // 'Windy',
+      id906: 'Hagel', // 'Hail'
+    },
+
+    ru: {
+      owmlinktitle: 'Информация в OpenWeatherMap',
+      temperature: 'Температура',
+      temp_minmax: 'Макс./Мин. темп',
+      wind: 'Ветер',
+      gust: 'Порывы',
+      windforce: 'Сила',
+      direction: 'Направление',
+      rain_1h: 'Дождь',
+      humidity: 'Влажность',
+      pressure: 'Давление',
+      // weather conditions, see https://openweathermap.org/weather-conditions,
+      id200: 'Гроза с легким дождем', // 'Thunderstorm with Light Rain',
+      id201: 'Гроза с дождем', // 'Thunderstorm with Rain',
+      id202: 'Гроза с ливнем', // 'Thunderstorm with Heavy Rain',
+      id210: 'Легкая гроза', // 'Light Thunderstorm',
+      id211: 'Гроза', // 'Thunderstorm',
+      id212: 'Сильная гроза', // 'Heavy Thunderstorm',
+      id221: 'Прерывистая гроза', // 'Ragged Thunderstorm',
+      id230: 'Гроза с мелкой моросью', // 'Thunderstorm with Light Drizzle',
+      id231: 'Гроза с моросью', // 'Thunderstorm with Drizzle',
+      id232: 'Гроза с сильной моросью', // 'Thunderstorm with Heavy Drizzle',
+      id300: 'Морось слабой интенсивности', // 'Light Intensity Drizzle',
+      id301: 'Морось', // 'Drizzle',
+      id302: 'Морось сильной интенсивности', // 'Heavy Intensity Drizzle',
+      id310: 'Малоинтенсивный моросящий дождь', // 'Light Intensity Drizzle Rain',
+      id311: 'Моросящий дождь', // 'Drizzle Rain',
+      id312: 'Сильноинтенсивный моросящий дождь', // 'Heavy Intensity Drizzle Rain',
+      id321: 'Проливной дождь', // 'Shower Drizzle',
+      id500: 'Небольшой дождь', // 'Light Rain',
+      id501: 'Дождь', // 'Moderate Rain',
+      id502: 'Сильный дождь', // 'Heavy Intensity Rain',
+      id503: 'Очень сильный дождь', // 'Very Heavy Rain',
+      id504: 'Сильный ливень', // 'Extreme Rain',
+      id511: 'Ледяной дождь', // 'Freezing Rain',
+      id520: 'Кратковременный слабый дождь', // 'Light Intensity Shower Rain',
+      id521: 'Кратковременный дождь', // 'Shower Rain',
+      id522: 'Кратковременный сильный дождь', // 'Heavy Intensity Shower Rain',
+      id600: 'Слабый снег', // 'Light Snow',
+      id601: 'Снег', // 'Snow',
+      id602: 'Сильный снег', // 'Heavy Snow',
+      id611: 'Снег с дождем', // 'Sleet',
+      id621: 'Кратковременный снег', // 'Shower Snow',
+      id622: 'Кратковременный сильный снег', // 'Heavy Shower Snow',
+      id701: 'Мгла', // 'Mist',
+      id711: 'Смог', // 'Smoke',
+      id721: 'Дымка', // 'Haze',
+      id731: 'Песочные/пыльевые вихри', // 'Sand/Dust Whirls',
+      id741: 'Туман', // 'Fog',
+      id751: 'Песок', // 'Sand',
+      id800: 'Ясно', // 'Sky is Clear',
+      id801: 'Малооблачно', // 'Few Clouds',
+      id802: 'Переменная облачность', // 'Scattered Clouds',
+      id803: 'Облачно с прояснениями', // 'Broken Clouds',
+      id804: 'Облачно', // 'Overcast Clouds',
+      id900: 'Торнадо', // 'Tornado',
+      id901: 'Тропический шторм', // 'Tropical Storm',
+      id902: 'Ураган', // 'Hurricane',
+      id903: 'Холод', // 'Cold',
+      id904: 'Жара', // 'Hot',
+      id905: 'Ветрено', // 'Windy',
+      id906: 'Γрад', // 'Hail'
+    },
+
+    fr: {
+      owmlinktitle: 'Détails à OpenWeatherMap',
+      temperature: 'Température',
+      temp_minmax: 'Temp. min/max',
+      wind: 'Vent',
+      gust: 'Rafales',
+      windforce: 'Force du vent',
+      direction: 'Direction',
+      rain_1h: 'Pluie',
+      humidity: 'Humidité',
+      pressure: 'Pression',
+      // Les conditions météorologiques, voir https://openweathermap.org/weather-conditions,
+      id200: 'Orage avec pluie légère', // 'Thunderstorm with Light Rain',
+      id201: 'Orage avec pluie', // 'Thunderstorm with Rain',
+      id202: 'Orage avec fortes précipitations', // 'Thunderstorm with Heavy Rain'
+      // id210: 'Light Thunderstorm',
+      id211: 'Orage',
+      id212: 'Orage violent', // 'Heavy Thunderstorm'
+      // id221: 'Ragged Thunderstorm',
+      id230: 'Orage avec bruine faible', // 'Thunderstorm with Light Drizzle',
+      id231: 'Orage avec bruine', // 'Thunderstorm with Drizzle'
+      //  , id232: 'Thunderstorm with Heavy Drizzle'
+      //  , id300: 'Light Intensity Drizzle',
+      id301: 'Bruine', // 'Drizzle'
+      //  , id302: 'Heavy Intensity Drizzle'
+      //  , id310: 'Light Intensity Drizzle Rain'
+      //  , id311: 'Drizzle Rain'
+      //  , id312: 'Heavy Intensity Drizzle Rain'
+      //  , id321: 'Shower Drizzle',
+      id500: 'Pluie légère', // 'Light Rain',
+      id501: 'Pluie modérée', // 'Moderate Rain',
+      id502: 'Pluie battante', // 'Heavy Intensity Rain'
+      //  , id503: 'Very Heavy Rain'
+      //  , id504: 'Extreme Rain',
+      id511: 'Pluie verglassante', // 'Freezing Rain',
+      id520: 'Averses de pluie fine', // 'Light Intensity Shower Rain'
+      //  , id521: 'Shower Rain'
+      //  , id522: 'Heavy Intensity Shower Rain',
+      id600: 'Légers flocons', // 'Light Snow',
+      id601: 'Neige', // 'Snow',
+      id602: 'Fortes chutes de neige', // 'Heavy Snow',
+      id611: 'Neige fondue', // 'Sleet',
+      id621: 'Averses de neige', // 'Shower Snow',
+      id622: 'Fortes chutes de neige', // 'Heavy Shower Snow',
+      id701: 'Brume', // 'Mist',
+      id711: 'Fumée', // 'Smoke',
+      id721: 'Brume', // 'Haze',
+      id731: 'Tourbillons de sable/poussière', // 'Sand/Dust Whirls',
+      id741: 'Brouillard', // 'Fog', // , id751: 'Sand',
+      id800: 'Ciel dégagé', // 'Sky is Clear',
+      id801: 'Ciel voilé',
+      id802: 'Nuageux', // 'Scattered Clouds',
+      id803: 'Nuageux', // 'Broken Clouds',
+      id804: 'Ciel couvert', // 'Overcast Clouds',
+      id900: 'Tornade', // 'Tornado',
+      id901: 'Tempête tropicale', // 'Tropical Storm',
+      id902: 'Ouragan', // 'Hurricane',
+      id903: 'Froid', // 'Cold',
+      id904: 'Chaleur', // 'Hot',
+      id905: 'Venteux', // 'Windy',
+      id906: 'Grêle', // 'Hail'
+    },
+
+    nl: {
+      // dutch translation
+      owmlinktitle: 'Details op OpenWeatherMap',
+      temperature: 'Temperatuur',
+      temp_minmax: 'Temp. min/max',
+      wind: 'Wind',
+      gust: 'Windvlaag',
+      windforce: 'Windkracht',
+      direction: 'Richting',
+      rain_1h: 'Regen',
+      humidity: 'Luchtvochtigheid',
+      pressure: 'Luchtdruk',
+
+      // weeercondities, see https://openweathermap.org/weather-conditions,
+      id200: 'Onweer met lichte regen',
+      id201: 'Onweer met met regen',
+      id202: 'Onweer met hevige regen',
+      id210: 'Lichte onweersbui',
+      id211: 'Onweersbui',
+      id212: 'Hevig onweer',
+      id221: 'Onregelmatige onweersbui',
+      id230: 'Onweer met licht motregen',
+      id231: 'Onweer met motregen',
+      id232: 'Onweer met hevige motregen',
+      id300: 'Lichte motregen',
+      id301: 'Motregen',
+      id302: 'Hevige motregen',
+      id310: 'Lichte motregen / regen',
+      id311: 'Motregen / regen',
+      id312: 'Hevige motregen / regen',
+      id321: 'Douche motregen',
+      id500: 'Lichte regen',
+      id501: 'Gematigde regen',
+      id502: 'Hevige regen',
+      id503: 'Erg hevige regen',
+      id504: 'Extreme regen',
+      id511: 'Hagel',
+      id520: 'Lichte miezerregen',
+      id521: 'Miezerregen',
+      id522: 'Hevige miezerregen',
+      id600: 'Lichte sneeuwval',
+      id601: 'Sneeuw',
+      id602: 'Hevige sneeuwval',
+      id611: 'Ijzel',
+      id621: 'Douche sneeuw',
+      id622: 'Hevige douche sneeuw',
+      id701: 'Mist',
+      id711: 'Rook',
+      id721: 'Nevel',
+      id731: 'Zand/stof werveling',
+      id741: 'Mist',
+      id751: 'Zand',
+      id800: 'Onbewolkt',
+      id801: 'Licht bewolkt',
+      id802: 'Half bewolkt',
+      id803: 'Overwegend bewolkt',
+      id804: 'Bewolkt',
+      id900: 'Tornado',
+      id901: 'Tropische Storm',
+      id902: 'Orkaan',
+      id903: 'Koud',
+      id904: 'Heet',
+      id905: 'Winderig',
+      id906: 'Hagel',
+    },
+
+    es: {
+      // spanish translation
+      owmlinktitle: 'Detalles en OpenWeatherMap',
+      temperature: 'Temperatura',
+      temp_minmax: 'Temp. mín/máx',
+      wind: 'Viento',
+      gust: 'Ráfagas',
+      windforce: 'Fuerza del viento',
+      direction: 'Dirección',
+      rain_1h: 'Lluvia',
+      humidity: 'Humedad',
+      pressure: 'Presión',
+      // weather conditions, see https://openweathermap.org/weather-conditions
+      // Thunderstorm,
+      id200: 'Tormenta con lluvia débil',
+      id201: 'Tormenta con lluvia',
+      id202: 'Tormenta con lluvia fuerte',
+      id210: 'Tormenta débil',
+      id211: 'Tormenta',
+      id212: 'Tormenta fuerte',
+      id221: 'Tormenta irregular',
+      id230: 'Tormenta con llovizna débil',
+      id231: 'Tormenta con llovizna',
+      id232: 'Tormenta con llovizna fuerte', // Drizzle,
+      id300: 'Llovizna débil',
+      id301: 'Llovizna',
+      id302: 'Llovizna fuerte',
+      id310: 'Lluvia/llovizna débil',
+      id311: 'Lluvia/llovizna',
+      id312: 'Lluvia/llovizna fuerte',
+      id321: 'Chubasco de llovizna', // Rain,
+      id500: 'Lluvia débil',
+      id501: 'Lluvia moderada',
+      id502: 'Lluvia fuerte',
+      id503: 'Lluvia muy fuerte',
+      id504: 'Lluvia extrema',
+      id511: 'Granizo',
+      id520: 'Chubasco de lluvia débil',
+      id521: 'Chubasco de lluvia',
+      id522: 'Chubasco de lluvia fuerte',
+      id531: 'Chubasco de lluvia irregular', // Snow,
+      id600: 'Nieve débil',
+      id601: 'Nieve',
+      id602: 'Nieve fuerte',
+      id611: 'Aguanieve',
+      id612: 'Chubasco de aguanieve',
+      id615: 'Lluvia y nieve débiles',
+      id616: 'Lluvia y nieve',
+      id620: 'Chubasco de nieve débil',
+      id621: 'Chubasco de nieve',
+      id622: 'Chubasco de nieve fuerte', // Atmosphere,
+      id701: 'Bruma',
+      id711: 'Humo',
+      id721: 'Neblina',
+      id731: 'Torbellinos de arena/polvo',
+      id741: 'Niebla',
+      id751: 'Arena',
+      id761: 'Polvo',
+      id762: 'Ceniza volcánica',
+      id771: 'Tempestad',
+      id781: 'Tornado', // Clouds,
+      id800: 'Cielo despejado',
+      id801: 'Algunas nubes',
+      id802: 'Nubes dispersas',
+      id803: 'Intérvalos nubosos',
+      id804: 'Nublado', // Extreme,
+      id900: 'Tornado',
+      id901: 'Tormenta tropical',
+      id902: 'Huracán',
+      id903: 'Bajas temperaturas',
+      id904: 'Altas temperaturas',
+      id905: 'Ventoso',
+      id906: 'Granizo', // Additional,
+      id951: 'Calma',
+      id952: 'Brisa ligera',
+      id953: 'Brisa suave',
+      id954: 'Brisa moderada',
+      id955: 'Brisa fresca',
+      id956: 'Brisa fuerte',
+      id957: 'Viento fuerte, próximo a vendaval',
+      id958: 'Vendaval',
+      id959: 'Vendaval fuerte',
+      id960: 'Tempestad',
+      id961: 'Tempestad violenta',
+      id962: 'Huracán',
+    },
+
+    ca: {
+      // catalan translation
+      owmlinktitle: 'Detalls en OpenWeatherMap',
+      temperature: 'Temperatura',
+      temp_minmax: 'Temp. mín/màx',
+      wind: 'Vent',
+      gust: 'Ràfegues',
+      windforce: 'Força del vent',
+      direction: 'Direcció',
+      rain_1h: 'Pluja',
+      humidity: 'Humitat',
+      pressure: 'Pressió',
+      // weather conditions, see https://openweathermap.org/weather-conditions
+      // Thunderstorm,
+      id200: 'Tempesta amb pluja feble',
+      id201: 'Tempesta amb pluja',
+      id202: 'Tempesta amb pluja forta',
+      id210: 'Tempesta feble',
+      id211: 'Tempesta',
+      id212: 'Tempesta forta',
+      id221: 'Tempesta irregular',
+      id230: 'Tempesta amb plugim feble',
+      id231: 'Tempesta amb plugim',
+      id232: 'Tempesta amb plugim fort', // Drizzle,
+      id300: 'Plugim feble',
+      id301: 'Plugim',
+      id302: 'Plugim fort',
+      id310: 'Pluja/plugim feble',
+      id311: 'Pluja/plugim',
+      id312: 'Pluja/plugim fort',
+      id321: 'Ruixat de plugim', // Rain,
+      id500: 'Pluja feble',
+      id501: 'Pluja moderada',
+      id502: 'Pluja forta',
+      id503: 'Pluja molt forta',
+      id504: 'Pluja extrema',
+      id511: 'Calabruix',
+      id520: 'Ruixat de pluja feble',
+      id521: 'Ruixat de pluja',
+      id522: 'Ruixat de pluja fort',
+      id531: 'Ruixat de pluja irregular', // Snow,
+      id600: 'Neu feble',
+      id601: 'Neu',
+      id602: 'Neu forta',
+      id611: 'Aiguaneu',
+      id612: 'Ruixat de aguanieve',
+      id615: 'Pluja i neu febles',
+      id616: 'Pluja i neu',
+      id620: 'Ruixat de neu feble',
+      id621: 'Ruixat de neu',
+      id622: 'Ruixat de neu fort', // Atmosphere,
+      id701: 'Bruma',
+      id711: 'Fum',
+      id721: 'Boirina',
+      id731: 'Torbellinos de arena/polvo',
+      id741: 'Boira',
+      id751: 'Sorra',
+      id761: 'Pols',
+      id762: 'Cendra volcànica',
+      id771: 'Tempestat',
+      id781: 'Tornado', // Clouds,
+      id800: 'Cel clar',
+      id801: 'Alguns núvols',
+      id802: 'Núvols dispersos',
+      id803: 'Intervals nuvolosos',
+      id804: 'Ennuvolat', // Extreme,
+      id900: 'Tornado',
+      id901: 'Tempesta tropical',
+      id902: 'Huracà',
+      id903: 'Temperatures baixes',
+      id904: 'Temperatures altes',
+      id905: 'Ventós',
+      id906: 'Calabruix', // Additional,
+      id951: 'Calma',
+      id952: 'Brisa lleugera',
+      id953: 'Brisa suau',
+      id954: 'Brisa moderada',
+      id955: 'Brisa fresca',
+      id956: 'Brisa forta',
+      id957: 'Vent fort, pròxim a vendaval',
+      id958: 'Ventada',
+      id959: 'Ventada forta',
+      id960: 'Tempesta',
+      id961: 'Tempesta violenta',
+      id962: 'Huracà',
+    },
+    pt_br: {
+      // brazillian translation
+      owmlinktitle: 'Detalhes em OpenWeatherMap',
+      temperature: 'Temperatura',
+      temp_minmax: 'Temp. min/max',
+      wind: 'Vento',
+      gust: 'Rajadas',
+      windforce: 'Força do Vento',
+      direction: 'Direção',
+      rain_1h: 'Chuva',
+      humidity: 'Umidade',
+      pressure: 'Pressão',
+      // weather conditions, see https://openweathermap.org/weather-conditions,
+      id200: 'Trovoadas com chuva fraca',
+      id201: 'Trovoadas com chuva',
+      id202: 'Trovoadas com chuva forte',
+      id210: 'Trovoadas leves',
+      id211: 'Trovoadas',
+      id212: 'Trovoadas fortes',
+      id221: 'Trovoadas irregulares',
+      id230: 'Trovoadas com garoa fraca',
+      id231: 'Trovoadas com garoa',
+      id232: 'Trovoadas com garoa forte',
+      id300: 'Garoa de fraca intensidade',
+      id301: 'Garoa',
+      id302: 'Garoa de forte intensidade',
+      id310: 'Chuva com garoa de fraca intensidade',
+      id311: 'Chuva com garoa',
+      id312: 'Chuva com garoa de forte intensidade',
+      id321: 'Garoa persistente',
+      id500: 'Chuva fraca',
+      id501: 'Chuva',
+      id502: 'Chuva forte',
+      id503: 'Chuva muito forte',
+      id504: 'Chuva extrema',
+      id511: 'Chuva de granizo',
+      id520: 'Aguaceiro de chuva fraco',
+      id521: 'Aguaceiro de chuva',
+      id522: 'Aguaceiro de chuva forte',
+      id600: 'Neve fraca',
+      id601: 'Neve',
+      id602: 'Neve forte',
+      id611: 'Chuva com neve',
+      id621: 'Aguaceiro de neve',
+      id622: 'Aguaceiro de neve forte',
+      id701: 'Névoa',
+      id711: 'Fumaça',
+      id721: 'Bruma',
+      id731: 'Redemoinhos de Areia/Poeira',
+      id741: 'Neblina',
+      id751: 'Areia',
+      id800: 'Ceu está limpo',
+      id801: 'Poucas nuvens',
+      id802: 'Nuvens dispersas',
+      id803: 'Cirros',
+      id804: 'Nublado',
+      id900: 'Tornado',
+      id901: 'Tempestade tropical',
+      id902: 'Furacão',
+      id903: 'Frio',
+      id904: 'Calor',
+      id905: 'Ventania',
+      id906: 'Granizo',
+    },
+  },
 };
 
 
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
 
-    {
-        options: {
-            url: 'www.overpass-api.de/api/xapi?*[landuse=landfill][bbox=-119.89105224609376,34.1379517234964,-117.34634399414064,34.76192255039478]',
-            clearOutsideBounds: false
-        },
+  {
+    options: {
+      url: 'www.overpass-api.de/api/xapi?*[landuse=landfill][bbox=-119.89105224609376,34.1379517234964,-117.34634399414064,34.76192255039478]',
+      clearOutsideBounds: false,
+    },
 
-        initialize: function(options) {
-            options = options || {};
-            L.Util.setOptions(this, options);
-            this._layers = {};
-            this._nodes = {}; //Used to store position data for each node
-            this._colorOptions = {
-                landfill: "red",
-                mine: "blue",
-                quarry: "green"
-            }; //Colors for each of the 3 usage types
-        },
+    initialize: function(options) {
+      options = options || {};
+      L.Util.setOptions(this, options);
+      this._layers = {};
+      this._nodes = {}; // Used to store position data for each node
+      this._colorOptions = {
+        landfill: 'red',
+        mine: 'blue',
+        quarry: 'green',
+      }; // Colors for each of the 3 usage types
+    },
 
-        onAdd: function(map) {
-            map.on('moveend', this.requestData, this);
-            this._map = map;
-            this.requestData();
+    onAdd: function(map) {
+      map.on('moveend', this.requestData, this);
+      this._map = map;
+      this.requestData();
+    },
 
-        },
+    onRemove: function(map) {
+      map.off('moveend', this.requestData, this);
+      if (typeof map.spin === 'function') {
+        map.spin(false);
+      }
+      this.clearLayers();
+      this._layers = {};
+    },
 
-        onRemove: function(map) {
-            map.off('moveend', this.requestData, this);
-            if(typeof map.spin === 'function'){
-              map.spin(false);
+    requestData: function() {
+      var self = this;
+      var info = require('./info.json');
+      (function() {
+        var script = document.createElement('SCRIPT');
+        script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
+        script.type = 'text/javascript';
+        var northeast = self._map.getBounds().getNorthEast();
+        var southwest = self._map.getBounds().getSouthWest();
+
+        var currentMapZoom = self._map.getZoom();
+        if (currentMapZoom < info.OSMLandfillMineQuarryLayer.extents.minZoom) {
+          return;
+        }
+
+        script.onload = function() {
+          var $ = window.jQuery;
+          var countLayers = 0;
+          for (var key in self._colorOptions) {
+            // Generate URL for each type
+            var LMQ_url = info.OSMLandfillMineQuarryLayer.api_url + '?*[landuse=' + key + '][bbox=' + (southwest.lng) + ',' + (southwest.lat) + ',' + (northeast.lng) + ',' + (northeast.lat) + ']';
+            if (typeof self._map.spin === 'function') {
+              self._map.spin(true);
             }
-            this.clearLayers();
-            this._layers = {};
-        },
-
-        requestData: function() {
-            var self = this;
-            var info = require("./info.json");
-            (function() {
-                var script = document.createElement("SCRIPT");
-                script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                script.type = 'text/javascript';
-                var northeast = self._map.getBounds().getNorthEast(),
-                    southwest = self._map.getBounds().getSouthWest();
-
-                var currentMapZoom = self._map.getZoom();
-                 if(currentMapZoom < info.OSMLandfillMineQuarryLayer.extents.minZoom){
-                      return;
-                 }
-                
-                script.onload = function() {
-                    var $ = window.jQuery;
-                    var countLayers = 0;
-                    for (var key in self._colorOptions) {
-                        //Generate URL for each type
-                        var LMQ_url = info.OSMLandfillMineQuarryLayer.api_url + "?*[landuse=" + key + "][bbox=" + (southwest.lng) + "," + (southwest.lat) + "," + (northeast.lng) + "," + (northeast.lat) + "]";
-                        if(typeof self._map.spin === 'function'){
-                          self._map.spin(true);
-                        }
-                        $.ajax({
-                            url: LMQ_url,
-                            dataType: "xml",
-                            success: function(data) {
-                                self.parseData(data);
-                               
-                            }
-                        });
-                        /* The structure of the document is as follows:
+            $.ajax({
+              url: LMQ_url,
+              dataType: 'xml',
+              success: function(data) {
+                self.parseData(data);
+              },
+            });
+            /* The structure of the document is as follows:
                             <node id="node_id", lat="", lon="">
                             . Rest of nodes here
                             .
@@ -28753,358 +29205,352 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
                                 .
                             .. More ways
                         */
-                    }
-                };
-                document.getElementsByTagName("head")[0].appendChild(script);
-            })();
+          }
+        };
+        document.getElementsByTagName('head')[0].appendChild(script);
+      })();
+    },
 
+    getPolygon: function(selector) {
+      var latlngs = [];
+      var self = this;
 
-        },
-
-        getPolygon: function(selector) {
-            var latlngs = [];
-            var self = this;
-
-            var id = $(selector).attr('id');
-            $(selector).find('nd').each(function() {
-                if (self._nodes[$(this).attr('ref')]) { //Find the coordinates based on the node id
-                    var coords = self._nodes[$(this).attr('ref')];
-                    latlngs.push([coords.lat, coords.lng]); //Add node coordinates
-                } else {
-                    console.log("ERROR: COULDN'T FIND THE NODE ID");
-                }
-            });
-            var LSMPoly;
-            LSMPoly = L.polygon(latlngs, {
-                color: self._colorOptions[$(selector).find('tag[k="landuse"]').attr('v')] //Selects color based on the value for the landuse key
-            }).bindPopup(self.getPopupContent(selector));
-
-            return LSMPoly;
-        },
-
-        getPopupContent: function(selector) {
-            var content = '';
-            //Add each key value pair found
-            $(selector).find('tag').each(function() {
-                var key = $(this).attr('k');
-                var val = $(this).attr('v');
-                if (key === 'landuse') val = val.charAt(0).toUpperCase() + val.slice(1); //Capitalize first letter of the landuse
-                key = key.charAt(0).toUpperCase() + key.slice(1); //Capitalize first letter
-                //Check if the value is a link
-                if (/^((http|https|ftp):\/\/)/.test(val)) {
-                    content += "<strong>" + key + ": </strong><a href='" + val + "' target='_blank'>" + val + "</a><br>";
-                }
-                else {
-                    content += "<strong>" + key + ": </strong>" + val + "<br>";
-                }
-            });
-            content += "<hr>The data included in this layer is from www.openstreetmap.org. The data is made available under ODbL.<br>";
-            content += "From the <a href=https://github.com/publiclab/leaflet-environmental-layers/pull/94>OSM LMQ Inventory</a> (<a href = https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515>info</a>).";
-            return content;
-        },
-
-        addPolygon: function(selector) {
-            var key = $(selector).attr('id'); //Use the id for the way as the key
-            if (!this._layers[key]) {
-                var poly = this.getPolygon(selector, key);
-                this._layers[key] = poly;
-                this.addLayer(poly);
-            }
-        },
-
-        parseData: function(data) {
-            var self = this;
-            if(typeof self._map.spin === 'function'){
-                self._map.spin(false);
-            }
-            (function() {
-                //Create the map of nodes
-                $(data).find('node').each(function() {
-                    var id = $(this).attr('id'); //Use id as the key
-                    var nodeLat = $(this).attr('lat');
-                    var nodeLng = $(this).attr('lon');
-
-                    if (!self._nodes[id]) {
-                        self._nodes[id] = { //Set value as lat, lng pair provided key doesn't exist
-                            lat: nodeLat,
-                            lng: nodeLng
-                        };
-                    }
-
-                });
-            })();
-
-            (function() {
-                $(data).find('way').each(function() { //Add for each way
-                    self.addPolygon(this);
-                })
-            })();
-
-            if (this.options.clearOutsideBounds) {
-               this.clearOutsideBounds();
-            }
-        },
-
-        clearOutsideBounds: function() {
-            var bounds = this._map.getBounds(),
-                polyBounds,
-                key;
-
-            for (key in this._layers) {
-                if (this._layers.hasOwnProperty(key)) {
-                    polyBounds = this._layers[key].getBounds();
-
-                    if (!bounds.intersects(polyBounds)) {
-                        this.removeLayer(this._layers[key]);
-                        delete this._layers[key];
-                    }
-                }
-            }
+      var id = $(selector).attr('id');
+      $(selector).find('nd').each(function() {
+        if (self._nodes[$(this).attr('ref')]) { // Find the coordinates based on the node id
+          var coords = self._nodes[$(this).attr('ref')];
+          latlngs.push([coords.lat, coords.lng]); // Add node coordinates
+        } else {
+          console.log('ERROR: COULDN\'T FIND THE NODE ID');
         }
-    }
+      });
+      var LSMPoly;
+      LSMPoly = L.polygon(latlngs, {
+        color: self._colorOptions[$(selector).find('tag[k="landuse"]').attr('v')], // Selects color based on the value for the landuse key
+      }).bindPopup(self.getPopupContent(selector));
+
+      return LSMPoly;
+    },
+
+    getPopupContent: function(selector) {
+      var content = '';
+      // Add each key value pair found
+      $(selector).find('tag').each(function() {
+        var key = $(this).attr('k');
+        var val = $(this).attr('v');
+        if (key === 'landuse') val = val.charAt(0).toUpperCase() + val.slice(1); // Capitalize first letter of the landuse
+        key = key.charAt(0).toUpperCase() + key.slice(1); // Capitalize first letter
+        // Check if the value is a link
+        if (/^((http|https|ftp):\/\/)/.test(val)) {
+          content += '<strong>' + key + ': </strong><a href=\'' + val + '\' target=\'_blank\'>' + val + '</a><br>';
+        }
+        else {
+          content += '<strong>' + key + ': </strong>' + val + '<br>';
+        }
+      });
+      content += '<hr>The data included in this layer is from www.openstreetmap.org. The data is made available under ODbL.<br>';
+      content += 'From the <a href=https://github.com/publiclab/leaflet-environmental-layers/pull/94>OSM LMQ Inventory</a> (<a href = https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515>info</a>).';
+      return content;
+    },
+
+    addPolygon: function(selector) {
+      var key = $(selector).attr('id'); // Use the id for the way as the key
+      if (!this._layers[key]) {
+        var poly = this.getPolygon(selector, key);
+        this._layers[key] = poly;
+        this.addLayer(poly);
+      }
+    },
+
+    parseData: function(data) {
+      var self = this;
+      if (typeof self._map.spin === 'function') {
+        self._map.spin(false);
+      }
+      (function() {
+        // Create the map of nodes
+        $(data).find('node').each(function() {
+          var id = $(this).attr('id'); // Use id as the key
+          var nodeLat = $(this).attr('lat');
+          var nodeLng = $(this).attr('lon');
+
+          if (!self._nodes[id]) {
+            self._nodes[id] = { // Set value as lat, lng pair provided key doesn't exist
+              lat: nodeLat,
+              lng: nodeLng,
+            };
+          }
+        });
+      })();
+
+      (function() {
+        $(data).find('way').each(function() { // Add for each way
+          self.addPolygon(this);
+        });
+      })();
+
+      if (this.options.clearOutsideBounds) {
+        this.clearOutsideBounds();
+      }
+    },
+
+    clearOutsideBounds: function() {
+      var bounds = this._map.getBounds();
+      var polyBounds;
+      var key;
+
+      for (key in this._layers) {
+        if (this._layers.hasOwnProperty(key)) {
+          polyBounds = this._layers[key].getBounds();
+
+          if (!bounds.intersects(polyBounds)) {
+            this.removeLayer(this._layers[key]);
+            delete this._layers[key];
+          }
+        }
+      }
+    },
+  },
 );
 
 
 L.layerGroup.osmLandfillMineQuarryLayer = function(options) {
-    return new L.LayerGroup.OSMLandfillMineQuarryLayer(options);
+  return new L.LayerGroup.OSMLandfillMineQuarryLayer(options);
 };
 
-},{"./info.json":13}],18:[function(require,module,exports){
+},{"./info.json":13}],19:[function(require,module,exports){
 L.Icon.PfasLayerIcon = L.Icon.extend({
-   options: {
+  options: {
     iconUrl: 'https://openclipart.org/image/300px/svg_to_png/117253/1297044906.png',
-    iconSize:     [10, 10],
-    iconAnchor:   [20 , 0],
-    popupAnchor:  [-5, -5]
-  }
+    iconSize: [10, 10],
+    popupAnchor: [1, -2],
+  },
 });
 
-L.icon.pfasLayerIcon = function () {
-    return new L.Icon.PfasLayerIcon();
+L.icon.pfasLayerIcon = function() {
+  return new L.Icon.PfasLayerIcon();
 };
 
 L.LayerGroup.PfasLayer = L.LayerGroup.extend(
 
-    {
-        options: {
-            url: 'https://spreadsheets.google.com/feeds/list/1cjQ3H_DX-0dhVL5kMEesFEKaoJKLfC2wWAhokMnJxV4/1/public/values?alt=json',
-        },
+  {
+    options: {
+      url: 'https://spreadsheets.google.com/feeds/list/1cjQ3H_DX-0dhVL5kMEesFEKaoJKLfC2wWAhokMnJxV4/1/public/values?alt=json',
+    },
 
-        initialize: function (options) {
-            options = options || {};
-            L.Util.setOptions(this, options);
-            this._layers = {};
-        },
+    initialize: function(options) {
+      options = options || {};
+      L.Util.setOptions(this, options);
+      this._layers = {};
+    },
 
-        onAdd: function (map) {
-            this._map = map;
-            this.requestData();
-        },
+    onAdd: function(map) {
+      this._map = map;
+      this.requestData();
+    },
 
-        onRemove: function (map) {
-            this.clearLayers();
-            if(typeof map.spin === 'function'){
-              map.spin(false) ;
+    onRemove: function(map) {
+      this.clearLayers();
+      if (typeof map.spin === 'function') {
+        map.spin(false);
+      }
+      map.closePopup();
+      // oms.clearMarkers();
+      this._layers = {};
+    },
+
+    requestData: function() {
+      var self = this;
+      (function() {
+        var script = document.createElement('SCRIPT');
+        script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
+        script.type = 'text/javascript';
+
+        script.onload = function() {
+          var $ = window.jQuery;
+          var PFAS_URL = 'https://spreadsheets.google.com/feeds/list/1cjQ3H_DX-0dhVL5kMEesFEKaoJKLfC2wWAhokMnJxV4/1/public/values?alt=json';
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(true);
+          }
+          $.getJSON(PFAS_URL, function(data) {
+            self.parseData(data.feed.entry);
+            if (typeof self._map.spin === 'function') {
+              self._map.spin(false);
             }
-            map.closePopup();
-            oms.clearMarkers();
-            this._layers = {};
-        },
+          });
+        };
+        document.getElementsByTagName('head')[0].appendChild(script);
+      })();
+    },
 
-        requestData: function () {
-           var self = this;
-                (function() {
-                    var script = document.createElement("SCRIPT");
-                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                    script.type = 'text/javascript';
+    getMarker: function(data) {
+      var redDotIcon = new L.icon.pfasLayerIcon();
+      // added the column names which are formatted here and called in the generatePopup function
+      var props = ['contaminationsite', 'natureofsources', 'location', 'pfoapfos', 'dateofdiscovery', 'suspectedcontaminationsource', 'suspectedsourceurl', 'otherpfas', 'reggovresponse', 'litigationdetails', 'latitude', 'longitude'];
+      var item = {};
+      props.forEach(function(element) {
+        item[element] = data['gsx$' + element]['$t'];
+      });
 
-                    script.onload = function() {
-                        var $ = window.jQuery;
-                        var PFAS_URL = "https://spreadsheets.google.com/feeds/list/1cjQ3H_DX-0dhVL5kMEesFEKaoJKLfC2wWAhokMnJxV4/1/public/values?alt=json" ;
-                        if(typeof self._map.spin === 'function'){
-                          self._map.spin(true) ;
-                        }
-                        $.getJSON(PFAS_URL , function(data){
-                        self.parseData(data.feed.entry);
-                        if(typeof self._map.spin === 'function'){
-                          self._map.spin(false) ;
-                        }
-            		    });
-                    };
-                    document.getElementsByTagName("head")[0].appendChild(script);
-                })();
+      item['latitude'] = item['latitude'].replace(/[^\d.-]/g, '');
+      item['latitude'] = item['latitude'].replace(/[^\d.-]/g, '');
+
+      var pfasTracker;
+      pfasTracker = L.marker([item['latitude'], item['longitude']], {
+        icon: redDotIcon,
+      }).bindPopup(this.generatePopup(item));
+
+      // oms.addMarker(pfasTracker);
+
+      return pfasTracker;
+    },
+
+    generatePopup: function(item) {
+      var content = '<strong><center>' + item['contaminationsite'] + '</strong></center><hr /><br />';
+
+      var regResponse = item['reggovresponse'];
+      var regResponseTruncate = regResponse.split(' ').splice(0, 30).join(' ');
+      var litigation = item['litigationdetails'];
+      var litigationTruncate =
+            litigation.split(' ').splice(0, 30).join(' ');
+
+      if (item['dateofdiscovery']) content += '<strong> Date of Discovery:</strong> ' + item['dateofdiscovery'] + '</span>' + '<br>';
+
+      if (item['pfoapfos']) content += '<strong>Contamination type: </strong>' + item['pfoapfos'] + '<br>';
+
+      if (item['otherpfas']) content += '<strong>Other contaminant: </strong>' + item['otherpfas'] + '<br>';
+
+      if (item['suspectedcontaminationsource']) { content += '<strong>Suspected source:</strong> ' + '<a href=' + item['suspectedsourceurl'] + '>' +
+            item['suspectedcontaminationsource']+'</a>' + '<br>'; }
+
+      if (item['natureofsources']) content += '<strong>Nature of Sources:</strong> ' + item['natureofsources'] + '<br>';
+
+      if (item['reggovresponse']) content += '<strong>Regulatory Response:</strong> ' + '<a href=\'https://pfasproject.com/pfas-contamination-site-tracker/\'> ' + regResponseTruncate + ' [...]</a><br>';
+
+      if (item['litigationdetails'] == 'No data')
+      {
+        content += '<strong>Litigation:</strong> ' + litigationTruncate + '<br><hr>';
+      } else if (item['litigationdetails'] == 'No Data') {
+        content += '<strong>Litigation:</strong> ' + litigationTruncate + '<br><hr>';
+      } else {
+        content += '<strong>Litigation:</strong> ' + litigationTruncate + ' <a href=\'https://pfasproject.com/pfas-contamination-site-tracker/\'>[...]</a><br><hr>';
+      }
 
 
-        },
+      var generics = ['location'];
 
-        getMarker: function(data) {
-            var redDotIcon = new L.icon.pfasLayerIcon();
-            //added the column names which are formatted here and called in the generatePopup function
-            var props = ["contaminationsite", "natureofsources", "location", "pfoapfos","dateofdiscovery","suspectedcontaminationsource","suspectedsourceurl", "otherpfas", "reggovresponse", "litigationdetails", "latitude", "longitude"];
-            var item = {};
-            props.forEach(function(element) {
-                item[element] = data["gsx$" + element]["$t"];
-            });
-
-            item["latitude"] = item["latitude"].replace(/[^\d.-]/g, "");
-            item["latitude"] = item["latitude"].replace(/[^\d.-]/g, "");
-
-            var pfasTracker;
-            pfasTracker = L.marker([item["latitude"], item["longitude"]], {
-                icon: redDotIcon
-            }).bindPopup(this.generatePopup(item));
-
-            oms.addMarker(pfasTracker);
-
-            return pfasTracker;
-        },
-
-        generatePopup: function(item) {
-            var content = "<strong><center>" + item["contaminationsite"] + "</strong></center><hr /><br />";
-            
-            var regResponse = item["reggovresponse"];
-            var regResponseTruncate = regResponse.split(" ").splice(0,30).join(" ");
-            var litigation = item["litigationdetails"];
-            var litigationTruncate = 
-            litigation.split(" ").splice(0,30).join(" ");
-            
-            if(item["dateofdiscovery"]) content += "<strong> Date of Discovery:</strong> " + item["dateofdiscovery"] + '</span>' + "<br>";
-
-            if(item["pfoapfos"]) content += "<strong>Contamination type: </strong>" + item["pfoapfos"] + "<br>";
-            
-            if(item["otherpfas"]) content += "<strong>Other contaminant: </strong>" + item["otherpfas"] + "<br>";
-            
-            if(item["suspectedcontaminationsource"]) content += "<strong>Suspected source:</strong> " + "<a href=" + item["suspectedsourceurl"] + ">" +     
-            item["suspectedcontaminationsource"]+"</a>" + "<br>";
-            
-            if(item["natureofsources"]) content += "<strong>Nature of Sources:</strong> " + item["natureofsources"] + "<br>";
-            
-            if(item["reggovresponse"]) content += "<strong>Regulatory Response:</strong> " + "<a href='https://pfasproject.com/pfas-contamination-site-tracker/'> " + regResponseTruncate + " [...]</a><br>";
-            
-            if(item["litigationdetails"] == "No data") 
-            {
-                content += "<strong>Litigation:</strong> " + litigationTruncate + "<br><hr>";
-            } else if (item["litigationdetails"] == "No Data"){
-                content += "<strong>Litigation:</strong> " + litigationTruncate + "<br><hr>";
-            } else{
-                content += "<strong>Litigation:</strong> " + litigationTruncate + " <a href='https://pfasproject.com/pfas-contamination-site-tracker/'>[...]</a><br><hr>";
-            }
-
-            
-            var generics = ["location"];
-
-            for (var i = 0; i < generics.length; i++) {
-                var key = generics[i];
-                if (!!item[generics[i]]) {
-                    var itemContent = item[generics[i]];
-                    key = key.charAt(0).toUpperCase() + key.slice(1);
-                    content += key + ": " + itemContent + "<br>";
-                }
-               
-            }
-            
-            content += "<hr><i>Data provided by <a href='https://pfasproject.com/pfas-contamination-site-tracker/'>Source: Northeastern University - Social Science Environmental Health Research Institute</a></i>";
-            return content;
-        },
-
-        addMarker: function (data) {
-            //changed this to the value from my dataset
-            //var key = data.gsx$name.$t; 
-            var key = data.gsx$contaminationsite.$t;
-            if (!this._layers[key]) {
-                var marker = this.getMarker(data);
-                this._layers[key] = marker;
-                this.addLayer(marker);
-            }
-        },
-
-        parseData: function (data) {
-            for (i = 1 ; i < data.length ; i++) {
-             this.addMarker(data[i]) ;
-            }
+      for (var i = 0; i < generics.length; i++) {
+        var key = generics[i];
+        if (!!item[generics[i]]) {
+          var itemContent = item[generics[i]];
+          key = key.charAt(0).toUpperCase() + key.slice(1);
+          content += key + ': ' + itemContent + '<br>';
         }
-    }
+      }
+
+      content += '<hr><i>Data provided by <a href=\'https://pfasproject.com/pfas-contamination-site-tracker/\'>Source: Northeastern University - Social Science Environmental Health Research Institute</a></i>';
+      return content;
+    },
+
+    addMarker: function(data) {
+      // changed this to the value from my dataset
+      // var key = data.gsx$name.$t;
+      var key = data.gsx$contaminationsite.$t;
+      if (!this._layers[key]) {
+        var marker = this.getMarker(data);
+        this._layers[key] = marker;
+        this.addLayer(marker);
+      }
+    },
+
+    parseData: function(data) {
+      for (i = 1; i < data.length; i++) {
+        this.addMarker(data[i]);
+      }
+    },
+  },
 );
 
 
-L.layerGroup.pfasLayer = function (options) {
-    return new L.LayerGroup.PfasLayer(options) ;
+L.layerGroup.pfasLayer = function(options) {
+  return new L.LayerGroup.PfasLayer(options);
 };
 
 
-},{}],19:[function(require,module,exports){
-require('heatmap.js') ;
-require('leaflet-heatmap') ;
+},{}],20:[function(require,module,exports){
+require('heatmap.js');
+require('leaflet-heatmap');
 
 L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
 
-    {
+  {
 
-        options: {
-            "radius": 2,
-            "maxOpacity": 1 ,
-            "scaleRadius": true,
-            "useLocalExtrema": true,
-             latField: 'lat',
-             lngField: 'lng',
-             valueField: 'count' ,
-             blur: 0.75
-        },
+    options: {
+      'radius': 2,
+      'maxOpacity': 1,
+      'scaleRadius': true,
+      'useLocalExtrema': true,
+      'latField': 'lat',
+      'lngField': 'lng',
+      'valueField': 'count',
+      'blur': 0.75,
+    },
 
-        initialize: function (options) {
-            options = options || {};
-            L.Util.setOptions(this, options);
-            this._layers = {};
-            this._purpleLayerArray = [] ;
-            this.heatmapLayer ;
-        },
+    initialize: function(options) {
+      options = options || {};
+      L.Util.setOptions(this, options);
+      this._layers = {};
+      this._purpleLayerArray = [];
+      this.heatmapLayer;
+    },
 
-        onAdd: function (map) {
-             this._map = map;
-             this.heatmapLayer = new HeatmapOverlay(this.options) ;
-             this.requestData();
+    onAdd: function(map) {
+      this._map = map;
+      this.heatmapLayer = new HeatmapOverlay(this.options);
+      this.requestData();
+    },
 
+    onRemove: function(map) {
+      this._map.removeLayer(this.heatmapLayer);
+      if (typeof map.spin === 'function') {
+        map.spin(false);
+      }
+      this.clearLayers();
+      this._layers = {};
+    },
 
-        },
+    requestData: function() {
+      var self = this;
+      (function() {
+        var $ = window.jQuery;
+        var PurpleLayer_url = 'https://www.purpleair.com/json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L';
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(true);
+        }
+        $.getJSON(PurpleLayer_url, function(data) {
+          self.parseData(data);
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        });
+      })();
+    },
 
-        onRemove: function (map) {
-            this._map.removeLayer(this.heatmapLayer) ;
-            if(typeof map.spin === 'function'){
-              map.spin(false) ;
-            }
-            this.clearLayers();
-            this._layers = {};
-        },
+    getMarker: function(data) {
+      var lat = data.Lat;
+      var lng = data.Lon;
 
-        requestData: function () {
-           var self = this;
-                (function() {
-                    var $ = window.jQuery;
-                    var PurpleLayer_url = "https://www.purpleair.com/json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L";
-                    if(typeof self._map.spin === 'function'){
-                      self._map.spin(true) ;
-                    }
-                    $.getJSON(PurpleLayer_url , function(data){
-                        self.parseData(data) ;
-                        if(typeof self._map.spin === 'function'){
-                          self._map.spin(false) ;
-                        }
-                    }); 
-                })();
+      var value = parseFloat(data.PM2_5Value); // PM2.5 VALUE in microgram per metre cube
+      var isLocationPresent = lat || lng || value;
 
-
-        },
-
-        getMarker: function (data) {
-              var lat = data.Lat;
-              var lng = data.Lon;
-              var value = parseFloat(data.PM2_5Value);  //PM2.5 VALUE in microgram per metre cube
-
-              var purpleLayer_object = {};
-              purpleLayer_object.lat = lat;
-              purpleLayer_object.lng = lng;
-              purpleLayer_object.count = value;
-              /*
+      if (!isLocationPresent) {
+        return;
+      }
+      var purpleLayer_object = {};
+      purpleLayer_object.lat = parseFloat(lat);
+      purpleLayer_object.lng = parseFloat(lng);
+      purpleLayer_object.count = value;
+      /*
               var aqi ;
               if(value>=0 && value<=12.0)
               {
@@ -29131,468 +29577,1115 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
 
               purpleLayer_object.count = aqi ;
               */
-              return purpleLayer_object ;
-        },
+      return purpleLayer_object;
+    },
 
-        addMarker: function (data) {
-            this._purpleLayerArray.push(this.getMarker(data)) ;
-        },
+    addMarker: function(data) {
+      var marker = this.getMarker(data);
 
-        parseData: function (data) {
+      if (marker && marker.lat && marker.lng) {
+        this._purpleLayerArray.push(marker);
+      }
+    },
 
-            for (i = 0 ; i < data.results.length ; i++) {
-             this.addMarker(data.results[i]) ;
-            }
-            //console.log(this._purpleLayerArray) ;
-            this.heatmapLayer.setData({data: this._purpleLayerArray}) ;
-            this._map.addLayer(this.heatmapLayer) ;
-        }
-    }
+    parseData: function(data) {
+      for (i = 0; i < data.results.length; i++) {
+        this.addMarker(data.results[i]);
+      }
+      this.heatmapLayer.setData({data: this._purpleLayerArray});
+      this._map.addLayer(this.heatmapLayer);
+    },
+  },
 );
 
 
-L.layerGroup.purpleLayer = function (options) {
-    return new L.LayerGroup.PurpleLayer(options) ;
+L.layerGroup.purpleLayer = function(options) {
+  return new L.LayerGroup.PurpleLayer(options);
 };
 
-},{"heatmap.js":1,"leaflet-heatmap":4}],20:[function(require,module,exports){
+},{"heatmap.js":1,"leaflet-heatmap":4}],21:[function(require,module,exports){
 L.Icon.ToxicReleaseIcon = L.Icon.extend({
-    options: {
-      iconUrl: 'https://www.clker.com/cliparts/r/M/L/o/R/i/green-dot.svg',
-      iconSize:     [30, 20],
-      iconAnchor:   [20 , 0],
-      popupAnchor:  [-5, -5]
-    }
+  options: {
+    iconUrl: 'https://www.clker.com/cliparts/r/M/L/o/R/i/green-dot.svg',
+    iconSize: [30, 20],
+    iconAnchor: [20, 0],
+    popupAnchor: [-5, -5],
+  },
 });
 
-L.icon.toxicReleaseIcon = function () {
-    return new L.Icon.ToxicReleaseIcon();
+L.icon.toxicReleaseIcon = function() {
+  return new L.Icon.ToxicReleaseIcon();
 };
 
 
 L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
 
-    {
-        options: {
-            popupOnMouseover: false,
-            clearOutsideBounds: false,
-            target: '_self',
-        },
-
-        initialize: function (options) {
-            options = options || {};
-            L.Util.setOptions(this, options);
-            this._layers = {};
-
-        },
-
-        onAdd: function (map) {
-            map.on('moveend', this.requestData, this);
-            this._map = map;
-            this.requestData();
-
-        },
-
-        onRemove: function (map) {
-            map.off('moveend', this.requestData, this);
-            if(typeof map.spin === 'function'){
-              map.spin(false) ;
-            }
-            this.clearLayers();
-            this._layers = {};
-        },
-
-        requestData: function () {
-                var self = this ;
-                var info = require("./info.json");
-                (function() {
-                    var script = document.createElement("SCRIPT");
-                    script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-                    script.type = 'text/javascript';
-                    var zoom = self._map.getZoom(), origin = self._map.getCenter() ;
-                    var extents = info.toxicReleaseLayer.extents;
-                    var latLngbounds = extents.bounds;
-                    if(zoom < extents.minZoom){
-                      return;
-                    }
-                    var bounds = new L.LatLngBounds(latLngbounds);
-                    
-                    if(!bounds.contains(new L.LatLng(origin.lat, origin.lng))){
-                      return;
-                    }
-
-                    script.onload = function() {
-                        var $ = window.jQuery;
-                        var TRI_url = info.toxicReleaseLayer.api_url + parseInt(origin.lat)+"/PREF_LONGITUDE/BEGINNING/"+parseInt(-1*origin.lng)+"/rows/0:300/JSON" ;
-                        if(typeof self._map.spin === 'function'){
-                          self._map.spin(true) ;
-                        }
-                        $.getJSON(TRI_url , function(data){
-                         // console.log(parseInt(origin.lat) +" and "+parseInt(origin.lng)) ;
-                         self.parseData(data) ;
-                         if(typeof self._map.spin === 'function'){
-                           self._map.spin(false) ;
-                         }
-                        });
-                    };
-                    document.getElementsByTagName("head")[0].appendChild(script);
-                })();
-
-        },
-
-        getMarker: function (data) {
-
-            var greenDotIcon =new L.icon.toxicReleaseIcon();
-              var lat = data.PREF_LATITUDE ;
-              var lng = -1*data.PREF_LONGITUDE;
-             // console.log(lat +"  "+lng) ;
-              var fac_name = data.FACILITY_NAME ;
-              var city = data.CITY_NAME ;
-              var mail_street_addr = data.MAIL_STREET_ADDRESS ;
-              var contact = data.ASGN_PUBLIC_PHONE ; 
-              var tri_marker ; 
-              if (!isNaN((lat)) && !isNaN((lng)) ){
-                tri_marker = L.marker([lat , lng] , {icon: greenDotIcon}).bindPopup("<strong>Name : </strong>" + fac_name + "<br><strong> City :" + city +"</strong>" + "<br><strong> Street address : " + mail_street_addr + "</strong><br><strong> Contact : " + contact + "</strong><br>Lat :"+lat+"<br>Lon :"+lng +"<br><i>From the <a href='https://github.com/publiclab/leaflet-environmental-layers/pull/8'>Toxic Release Inventory</a> (<a href='https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515'>info<a>)</i>") ;
-              }
-            return tri_marker ;
-        },
-
-        addMarker: function (data) {
-            var marker = this.getMarker(data),
-
-             key = data.TRI_FACILITY_ID ;
-
-            if (!this._layers[key]) {
-                this._layers[key] = marker;
-                this.addLayer(marker);
-            }
-        },
-
-        parseData: function (data) {
-
-        if (!!data){
-           for (i = 0 ; i < data.length ; i++) {
-            this.addMarker(data[i]) ;
-           }
-
-             if (this.options.clearOutsideBounds) {
-                this.clearOutsideBounds();
-            }
-          }
-        },
-
-        clearOutsideBounds: function () {
-            var bounds = this._map.getBounds(),
-                latLng,
-                key;
-
-            for (key in this._layers) {
-                if (this._layers.hasOwnProperty(key)) {
-                    latLng = this._layers[key].getLatLng();
-
-                    if (!bounds.contains(latLng)) {
-                        this.removeLayer(this._layers[key]);
-                        delete this._layers[key];
-                    }
-                }
-            }
-        }
-    }
-);
-
-L.layerGroup.toxicReleaseLayer = function (options) {
-    return new L.LayerGroup.ToxicReleaseLayer(options);
-};
-
-},{"./info.json":13}],21:[function(require,module,exports){
-L.Control.Layers.include({
-  getActiveOverlayNames: function() {
-    
-    var layers = [];
-    var control = this;
-    this._layers.forEach(function(layerObj) {
-      if(layerObj.overlay) {
-        
-        layerName = layerObj.name;
-        if(control._map.hasLayer(layerObj.layer)) layers.push(layerObj.name);
-      }
-    });
-    
-    return layers;
-  }
-});
-},{}],22:[function(require,module,exports){
-L.SpreadsheetLayer = L.LayerGroup.extend({
-    //options: {
-        //Must be supplied:
-        //url: String url of data sheet
-        //columns: Array of column names to be used
-        //lat, lon column names
-        //generatePopup: function used to create content of popups
-        
-        //Optional:
-        //imageOptions: defaults to blank
-        //sheet index: defaults to 0 (first sheet)
-    //},
+  {
+    options: {
+      popupOnMouseover: false,
+      clearOutsideBounds: false,
+      target: '_self',
+    },
 
     initialize: function(options) {
-        options = options || {};
-        L.Util.setOptions(this, options);
-        this._layers = {};
-        this._columns = this.options.columns || [];
-        this.options.imageOptions = this.options.imageOptions || {};
-        this.options.sheetNum = this.options.sheetNum || 0;
-        this._parsedToOrig = {};
-        this._lat = this._cleanColumnName(this.options.lat);
-        this._lon = this._cleanColumnName(this.options.lon);
-        this._columns = this._cleanColumns(this._columns);
+      options = options || {};
+      L.Util.setOptions(this, options);
+      this._layers = {};
     },
-    
-    _cleanColumns: function(columns) {
-        for(var i = 0; i < columns.length; i++) { //the names of the columns are processed before given in JSON, so we must parse these column names too
-            var parsedColumnName = this._cleanColumnName(columns[i]);
-            this._parsedToOrig[parsedColumnName] = columns[i]; //Here we create an object with the parsed names as keys and original names as values;
-            columns[i] = parsedColumnName;
-        }
-        if(L.Util.indexOf(columns, this._lat) <= -1) { //parse lat and lon names the same way, then add them to columns if not there
-            columns.push(this._lat);
-            this._parsedToOrig[this._lat] = this.options.lat;
-        }
-        if(L.Util.indexOf(columns, this._lon) <= -1) {
-            columns.push(this._lon);
-            this._parsedToOrig[this._lon] = this.options.lon;
-        }
-        return columns;
-    },
-    
-    _cleanColumnName: function(columnName) { //Tries to emulate google's conversion of column titles
-        return columnName.replace(/^[^a-zA-Z]+/g, '') //remove any non letters from the front till first letter
-                         .replace(/\s+|[!@#$%^&*()]+/g, '') //remove most symbols
-                         .toLowerCase();
-    },
-    
+
     onAdd: function(map) {
-        this._map = map;
-        var self = this;
-        this._getURL().then(function() { //Wait for getURL to finish before requesting data. This way we can do it just once
-            self.requestData();
-        });
+      map.on('moveend', this.requestData, this);
+      this._map = map;
+      this.requestData();
     },
 
     onRemove: function(map) {
-        this.clearLayers();
+      map.off('moveend', this.requestData, this);
+      if (typeof map.spin === 'function') {
         map.spin(false);
-        this._layers = {};
-    },
-
-    _getURL: function() {
-        var spreadsheetID = this._getSpreadsheetID(); //To find the URL we need, we first need to find the spreadsheetID
-        var self = this;
-        //Then we have to make another request in order to find the worksheet ID, which is changed by the sheet within the spreadsheet we want
-        var spreadsheetFeedURL = 'https://spreadsheets.google.com/feeds/worksheets/' + spreadsheetID + '/public/basic?alt=json';
-        //Here we return the getjson request so that the previous code may know when it has completed
-        return this._getWorksheetID(spreadsheetID, spreadsheetFeedURL);
-    },
-    
-    _getSpreadsheetID: function() {
-        var sections = this.options.url.split('/'); //The spreadsheet ID generally comes after a section with only 1 character, usually a D.
-        var spreadsheetID;
-        var len = sections.length;
-        for (var i = 1; i < len; i++) {
-            if (sections[i - 1].length === 1) { //Here we check to see if the previous one was 1 character
-                spreadsheetID = sections[i];
-                break;
-            }
-        }
-        return spreadsheetID;
-    },
-    
-    _getWorksheetID: function(spreadsheetID, spreadsheetFeedURL) {
-        var self = this;
-        return $.getJSON(spreadsheetFeedURL, function(data) {
-            //The worksheetID we want is dependent on which sheet we are looking for
-            var tmpLink = data.feed.entry[self.options.sheetNum].id.$t;
-            var sections = tmpLink.split('/');
-            //It is always the last section of the URL
-            var sheetID = sections[sections.length - 1];
-            //Set the URL to the final one.
-            self.options.url = 'https://spreadsheets.google.com/feeds/list/' + spreadsheetID + '/' + sheetID + '/public/values?alt=json';
-        });
+      }
+      this.clearLayers();
+      this._layers = {};
     },
 
     requestData: function() {
-        var self = this;
-        (function() {
-            var script = document.createElement("SCRIPT");
-            script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-            script.type = 'text/javascript';
-            script.onload = function() {
-                var $ = window.jQuery;
-                var ssURL = self.options.url || '';
-                self._map.spin(true);
-                //start fetching data from the URL
-                $.getJSON(ssURL, function(data) {
-                    self.parseData(data.feed.entry);
-                    self._map.spin(false);
-                });
-            };
-            document.getElementsByTagName("head")[0].appendChild(script);
-        })();
-        
-    },
-    
-    parseData: function(data) {
-        for (var i = 0; i < data.length; i++) {
-            this.addMarker(data[i]);
+      var self = this;
+      var info = require('./info.json');
+      (function() {
+        var script = document.createElement('SCRIPT');
+        script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
+        script.type = 'text/javascript';
+        var zoom = self._map.getZoom(); var origin = self._map.getCenter();
+        var extents = info.toxicReleaseLayer.extents;
+        var latLngbounds = extents.bounds;
+        if (zoom < extents.minZoom) {
+          return;
         }
-    },
-    
-    addMarker: function(data) {
-        var urlSections = data.id.$t.split('/');
-        var key = urlSections[urlSections.length - 1];
-        if(!this._layers[key]) {
-            var marker = this.getMarker(data);
-            this._layers[key] = marker;
-            this.addLayer(marker);
+        var bounds = new L.LatLngBounds(latLngbounds);
+
+        if (!bounds.contains(new L.LatLng(origin.lat, origin.lng))) {
+          return;
         }
+
+        script.onload = function() {
+          var $ = window.jQuery;
+          var TRI_url = info.toxicReleaseLayer.api_url + parseInt(origin.lat)+'/PREF_LONGITUDE/BEGINNING/'+parseInt(-1*origin.lng)+'/rows/0:300/JSON';
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(true);
+          }
+          $.getJSON(TRI_url, function(data) {
+            // console.log(parseInt(origin.lat) +" and "+parseInt(origin.lng)) ;
+            self.parseData(data);
+            if (typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            }
+          });
+        };
+        document.getElementsByTagName('head')[0].appendChild(script);
+      })();
     },
-    
+
     getMarker: function(data) {
-        var info = {};
-        for (var i = 0; i < this._columns.length; i++) {
-            info[this._columns[i]] = data['gsx$' + this._columns[i]].$t || ''; //The JSON has gsx$ appended to the front of each columnname
-        }
-        //Get coordinates the coordinates; remember that _lat and _lon are the column names, not the actual values
-        var latlon = [parseInt(info[this._lat]), parseInt(info[this._lon])];
-        var generatePopup = this.options.generatePopup || function() {return;};
-        //Generate an object using the original column names as keys
-        var origInfo = this._createOrigInfo(info);
-        return L.marker(latlon, this.options.imageOptions).bindPopup(generatePopup(origInfo));
+      var greenDotIcon =new L.icon.toxicReleaseIcon();
+      var lat = data.PREF_LATITUDE;
+      var lng = -1*data.PREF_LONGITUDE;
+      // console.log(lat +"  "+lng) ;
+      var fac_name = data.FACILITY_NAME;
+      var city = data.CITY_NAME;
+      var mail_street_addr = data.MAIL_STREET_ADDRESS;
+      var contact = data.ASGN_PUBLIC_PHONE;
+      var tri_marker;
+      if (!isNaN((lat)) && !isNaN((lng)) ) {
+        tri_marker = L.marker([lat, lng], {icon: greenDotIcon}).bindPopup('<strong>Name : </strong>' + fac_name + '<br><strong> City :' + city +'</strong>' + '<br><strong> Street address : ' + mail_street_addr + '</strong><br><strong> Contact : ' + contact + '</strong><br>Lat :'+lat+'<br>Lon :'+lng +'<br><i>From the <a href=\'https://github.com/publiclab/leaflet-environmental-layers/pull/8\'>Toxic Release Inventory</a> (<a href=\'https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515\'>info<a>)</i>');
+      }
+      return tri_marker;
     },
-    
-    _createOrigInfo: function(info) {
-        //The user will most likely give their generatePopup in terms of the column names typed in,
-        //not the parsed names. So this creates a new object that uses the original typed column
-        //names as the keys
-        var origInfo = {};
-        for(var key in info) {
-            var origKey = this._parsedToOrig[key];
-            origInfo[origKey] = info[key];
+
+    addMarker: function(data) {
+      var marker = this.getMarker(data);
+
+      var key = data.TRI_FACILITY_ID;
+
+      if (!this._layers[key]) {
+        this._layers[key] = marker;
+        this.addLayer(marker);
+      }
+    },
+
+    parseData: function(data) {
+      if (!!data) {
+        for (i = 0; i < data.length; i++) {
+          this.addMarker(data[i]);
         }
-        return origInfo;
+
+        if (this.options.clearOutsideBounds) {
+          this.clearOutsideBounds();
+        }
+      }
+    },
+
+    clearOutsideBounds: function() {
+      var bounds = this._map.getBounds();
+      var latLng;
+      var key;
+
+      for (key in this._layers) {
+        if (this._layers.hasOwnProperty(key)) {
+          latLng = this._layers[key].getLatLng();
+
+          if (!bounds.contains(latLng)) {
+            this.removeLayer(this._layers[key]);
+            delete this._layers[key];
+          }
+        }
+      }
+    },
+  },
+);
+
+L.layerGroup.toxicReleaseLayer = function(options) {
+  return new L.LayerGroup.ToxicReleaseLayer(options);
+};
+
+},{"./info.json":13}],22:[function(require,module,exports){
+L.LayerGroup.unearthing = L.LayerGroup.extend(
+
+  {
+    options: {
+      json_url: 'https://publiclab.github.io/unearthing-pvd/RI_mfgs.json',
+    },
+
+    initialize: function(param) {
+      if (!!param && !!param.json_url) {
+        this.options.json_url = param.json_url;
+      }
+    },
+
+    onAdd: function(map) {
+      this._map = map;
+      this.requestData(map);
+    },
+
+    requestData: function(map) {
+      this.pointsLayer = {};
+      var points = this.pointsLayer;
+      var setP = this.setPoints;
+      $.get('https://publiclab.github.io/unearthing-pvd/RI_mfgs.json')
+        .done(function(data) {
+          // standardize lat/lon instead of lon/lat
+          // and add non-nested coords for feature[0], feature[1]
+          data.features.forEach(function(f) {
+            f[1] = f.geometry.coordinates[0];
+            f[0] = f.geometry.coordinates[1];
+            f.geometry.coordinates[0] = f[0];
+            f.geometry.coordinates[1] = f[1];
+          });
+
+          points = L.glify.points({
+            map: map,
+            data: data,
+            // size: 8,
+            color: function(index, point) {
+              // console.log(point); // point is currently just []
+              return {r: 0.1, g: 0.1, b: 1};
+            },
+            sensitivity: 5,
+            click: function(e, point, xy) {
+              var point_properties = ['street', 'employees', 'conames', 'years'];
+              // set up a standalone popup (use a popup as a layer)
+              var content = '<h4>' + (point.properties.sic_name || '') +'</h4>';
+              content += '<table>';
+              point_properties.forEach(function(property) {
+                content += '<tr><td><b>' + property + '</b></td><td>' + (point.properties[property] || '') +'</td></tr>';
+              });
+              content += '</table>';
+              content += '<p><a class=\'btn btn-outline-primary\' href=\'https://publiclab.org/post?tags=unearthing-pvd-stories,lat:' + point[0] + ',lon:' + point[1] + '\'>Add your story</a></p>';
+
+              L.popup()
+                .setLatLng([point[0], point[1]])
+                .setContent(content)
+                .openOn(map);
+            },
+          });
+          setP(points.glLayer);
+        });
+    },
+
+    setPoints: function(points) {
+      this.pointsLayer = points;
+    },
+
+    onRemove: function(map) {
+      this._map.removeLayer(this.pointsLayer);
+    },
+  },
+);
+
+
+L.layerGroup.Unearthing = function(options) {
+  return new L.LayerGroup.unearthing(options);
+};
+
+},{}],23:[function(require,module,exports){
+L.Control.Info = L.Control.extend({
+  options: {
+    mapHasControl: false
+  },
+
+  initialize: function(options) {
+    L.Util.setOptions(this, options);
+    this._infoDisplay = L.DomUtil.create('div');
+    this._infoDisplay.classList.add('leaflet-control-info', 'leaflet-bar', 'leaflet-control');
+    this._infoDisplay.style.backgroundColor = '#fff';
+    if(this.options.classname) {
+      this._infoDisplay.classList.add(this.options.classname);
     }
-    
+    this._textElement = L.DomUtil.create('span');
+    this._textElement.innerHTML = this.options.text;
+    this._textElement.classList.add('leaflet-control-info-text');
+    this._infoDisplay.appendChild(this._textElement);
+    this._closeButton = L.DomUtil.create('button');
+    this._closeButton.classList.add('leaflet-control-info-button');
+    this._closeButton.innerText = 'close';
+    this._infoDisplay.appendChild(this._closeButton);
+    this.onClose(map);
+  },
+
+  onAdd: function(map) {
+    this.options.mapHasControl = true;
+    return this._infoDisplay;
+  },
+
+  onClose: function(map) {
+    var self = this;
+    this._closeButton.addEventListener('click', function() {
+      self.options.mapHasControl = false;
+      map.removeControl(self);
+    });
+  },
+
+  onRemove: function(map) {},
+});
+
+L.control.info = function(options) {
+  return new L.Control.Info(options);
+};
+
+},{}],24:[function(require,module,exports){
+L.Control.Embed = L.Control.extend({
+
+  options: {
+    position: 'topleft',
+    hostname: 'publiclab.github.io',
+  },
+
+  initialize: function(options) {
+    L.Util.setOptions(this, options);
+    this._embedElement = L.DomUtil.create('div');
+    this._embedElement.classList.add('leaflet-control-embed', 'leaflet-bar', 'leaflet-control');
+    this._embedAnchorElement = L.DomUtil.create('a');
+    this._embedAnchorElement.classList.add('leaflet-control-embed-link');
+    this._embedAnchorElement.setAttribute('href', '#');
+    this._embedAnchorElement.setAttribute('onclick', 'return false'); // To prevent the removal of url hash
+    this._embedAnchorElement.setAttribute('title', 'embed');
+    this._embedAnchorElement.setAttribute('role', 'button');
+    this._embedAnchorElement.setAttribute('aria-labelledby', 'embed');
+    this._embedElement.appendChild(this._embedAnchorElement);
+    this._embedIconElement = L.DomUtil.create('i', 'fas fa-code');
+    this._embedAnchorElement.appendChild(this._embedIconElement);
+    this.onClick();
+  },
+
+  onAdd: function(map) {
+    return this._embedElement;
+  },
+
+  onClick: function() {
+    var self = this;
+    L.DomEvent.on(this._embedElement, 'click', function(ev) {
+      prompt('Use this HTML code to embed this map on another site.', self.generateCode());
+    });
+  },
+
+  generateCode: function() {
+    var currentHash = window.location.hash;
+    var path = window.location.pathname === '/example/embed.html' ? '/example/index.html' : window.location.pathname;
+    var hostname = this.options.hostname;
+    var code = '<iframe style="border:none;" width="100%" height="900px" src="//' + hostname + '/leaflet-environmental-layers' + path + currentHash +'"></iframe>';
+    return code;
+  },
+
+  onRemove: function(map) {},
+
+});
+
+L.control.embed = function(options) {
+  return new L.Control.Embed(options);
+};
+
+},{}],25:[function(require,module,exports){
+L.Control.Layers.include({
+  getActiveOverlayNames: function() {
+    var layers = [];
+    var control = this;
+    this._layers.forEach(function(layerObj) {
+      if (layerObj.overlay) {
+        layerName = layerObj.name;
+        if (control._map.hasLayer(layerObj.layer)) layers.push(layerObj.name);
+      }
+    });
+
+    return layers;
+  },
+});
+
+},{}],26:[function(require,module,exports){
+L.SpreadsheetLayer = L.LayerGroup.extend({
+  // options: {
+  // Must be supplied:
+  // url: String url of data sheet
+  // columns: Array of column names to be used
+  // lat, lon column names
+  // generatePopup: function used to create content of popups
+
+  // Optional:
+  // imageOptions: defaults to blank
+  // sheet index: defaults to 0 (first sheet)
+  // },
+
+  initialize: function(options) {
+    options = options || {};
+    L.Util.setOptions(this, options);
+    this._layers = {};
+    this._columns = this.options.columns || [];
+    this.options.imageOptions = this.options.imageOptions || {};
+    this.options.sheetNum = this.options.sheetNum || 0;
+    this._parsedToOrig = {};
+    this._lat = this._cleanColumnName(this.options.lat);
+    this._lon = this._cleanColumnName(this.options.lon);
+    this._columns = this._cleanColumns(this._columns);
+  },
+
+  _cleanColumns: function(columns) {
+    for (var i = 0; i < columns.length; i++) { // the names of the columns are processed before given in JSON, so we must parse these column names too
+      var parsedColumnName = this._cleanColumnName(columns[i]);
+      this._parsedToOrig[parsedColumnName] = columns[i]; // Here we create an object with the parsed names as keys and original names as values;
+      columns[i] = parsedColumnName;
+    }
+    if (L.Util.indexOf(columns, this._lat) <= -1) { // parse lat and lon names the same way, then add them to columns if not there
+      columns.push(this._lat);
+      this._parsedToOrig[this._lat] = this.options.lat;
+    }
+    if (L.Util.indexOf(columns, this._lon) <= -1) {
+      columns.push(this._lon);
+      this._parsedToOrig[this._lon] = this.options.lon;
+    }
+    return columns;
+  },
+
+  _cleanColumnName: function(columnName) { // Tries to emulate google's conversion of column titles
+    return columnName.replace(/^[^a-zA-Z]+/g, '') // remove any non letters from the front till first letter
+      .replace(/\s+|[!@#$%^&*()]+/g, '') // remove most symbols
+      .toLowerCase();
+  },
+
+  onAdd: function(map) {
+    this._map = map;
+    var self = this;
+    this._getURL().then(function() { // Wait for getURL to finish before requesting data. This way we can do it just once
+      self.requestData();
+    });
+  },
+
+  onRemove: function(map) {
+    this.clearLayers();
+    map.spin(false);
+    this._layers = {};
+  },
+
+  _getURL: function() {
+    var spreadsheetID = this._getSpreadsheetID(); // To find the URL we need, we first need to find the spreadsheetID
+    var self = this;
+    // Then we have to make another request in order to find the worksheet ID, which is changed by the sheet within the spreadsheet we want
+    var spreadsheetFeedURL = 'https://spreadsheets.google.com/feeds/worksheets/' + spreadsheetID + '/public/basic?alt=json';
+    // Here we return the getjson request so that the previous code may know when it has completed
+    return this._getWorksheetID(spreadsheetID, spreadsheetFeedURL);
+  },
+
+  _getSpreadsheetID: function() {
+    var sections = this.options.url.split('/'); // The spreadsheet ID generally comes after a section with only 1 character, usually a D.
+    var spreadsheetID;
+    var len = sections.length;
+    for (var i = 1; i < len; i++) {
+      if (sections[i - 1].length === 1) { // Here we check to see if the previous one was 1 character
+        spreadsheetID = sections[i];
+        break;
+      }
+    }
+    return spreadsheetID;
+  },
+
+  _getWorksheetID: function(spreadsheetID, spreadsheetFeedURL) {
+    var self = this;
+    return $.getJSON(spreadsheetFeedURL, function(data) {
+      // The worksheetID we want is dependent on which sheet we are looking for
+      var tmpLink = data.feed.entry[self.options.sheetNum].id.$t;
+      var sections = tmpLink.split('/');
+      // It is always the last section of the URL
+      var sheetID = sections[sections.length - 1];
+      // Set the URL to the final one.
+      self.options.url = 'https://spreadsheets.google.com/feeds/list/' + spreadsheetID + '/' + sheetID + '/public/values?alt=json';
+    });
+  },
+
+  requestData: function() {
+    var self = this;
+    (function() {
+      var script = document.createElement('SCRIPT');
+      script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
+      script.type = 'text/javascript';
+      script.onload = function() {
+        var $ = window.jQuery;
+        var ssURL = self.options.url || '';
+        self._map.spin(true);
+        // start fetching data from the URL
+        $.getJSON(ssURL, function(data) {
+          self.parseData(data.feed.entry);
+          self._map.spin(false);
+        });
+      };
+      document.getElementsByTagName('head')[0].appendChild(script);
+    })();
+  },
+
+  parseData: function(data) {
+    for (var i = 0; i < data.length; i++) {
+      this.addMarker(data[i]);
+    }
+  },
+
+  addMarker: function(data) {
+    var urlSections = data.id.$t.split('/');
+    var key = urlSections[urlSections.length - 1];
+    if (!this._layers[key]) {
+      var marker = this.getMarker(data);
+      this._layers[key] = marker;
+      this.addLayer(marker);
+    }
+  },
+
+  getMarker: function(data) {
+    var info = {};
+    for (var i = 0; i < this._columns.length; i++) {
+      info[this._columns[i]] = data['gsx$' + this._columns[i]].$t || ''; // The JSON has gsx$ appended to the front of each columnname
+    }
+    // Get coordinates the coordinates; remember that _lat and _lon are the column names, not the actual values
+    var latlon = [parseInt(info[this._lat]), parseInt(info[this._lon])];
+    var generatePopup = this.options.generatePopup || function() { return; };
+    // Generate an object using the original column names as keys
+    var origInfo = this._createOrigInfo(info);
+    return L.marker(latlon, this.options.imageOptions).bindPopup(generatePopup(origInfo));
+  },
+
+  _createOrigInfo: function(info) {
+    // The user will most likely give their generatePopup in terms of the column names typed in,
+    // not the parsed names. So this creates a new object that uses the original typed column
+    // names as the keys
+    var origInfo = {};
+    for (var key in info) {
+      var origKey = this._parsedToOrig[key];
+      origInfo[origKey] = info[key];
+    }
+    return origInfo;
+  },
+
 });
 
 L.spreadsheetLayer = function(options) {
-    return new L.SpreadsheetLayer(options);
+  return new L.SpreadsheetLayer(options);
 };
-},{}],23:[function(require,module,exports){
+
+},{}],27:[function(require,module,exports){
+L.Control.LayersBrowser = L.Control.Layers.extend({
+  options: {
+    collapsed: true,
+    position: 'topright',
+    autoZIndex: true,
+    hideSingleBase: true,
+    overlays: {}
+  },
+
+  initialize: function(baseLayers, overlays, options) {
+    this.options.overlays = overlays;
+    L.Util.setOptions(this, options);
+
+    this._layerControlInputs = [];
+    this._layers = [];
+    this._lastZIndex = 0;
+    this._handlingClick = false;
+
+    for (var i in baseLayers) {
+      this._addLayer(baseLayers[i], i);
+    }
+
+    for (i in overlays) {
+      if (overlays[i].category === 'group') {
+        for (var j in overlays[i].layers) {
+          this._addLayer(overlays[i].layers[j], j, true, i);
+        }
+      } else {
+        this._addLayer(overlays[i], i, true);
+      }
+    }
+  },
+
+  expand: function() {
+    L.DomUtil.addClass(this._container, 'leaflet-control-layers-expanded');
+    this._section.style.height = null;
+    var acceptableHeight = this._map.getSize().y - (this._container.offsetTop + 50);
+    if (acceptableHeight < this._section.clientHeight) {
+      L.DomUtil.addClass(this._section, 'leaflet-control-layers-scrollbar');
+      this._section.style.height = acceptableHeight + 'px';
+    } else {
+      L.DomUtil.removeClass(this._section, 'leaflet-control-layers-scrollbar');
+    }
+    this._checkDisabledLayers();
+    return this;
+  },
+
+  _initLayout: function() {
+    var className = 'leaflet-control-layers';
+    var container = this._container = L.DomUtil.create('div', className);
+    var collapsed = this.options.collapsed;
+
+    // makes this work on IE touch devices by stopping it from firing a mouseout event when the touch is released
+    container.setAttribute('aria-haspopup', true);
+
+    L.DomEvent.disableClickPropagation(container);
+    L.DomEvent.disableScrollPropagation(container);
+
+    var section = this._section = L.DomUtil.create('section', className + '-list' +
+    ' ' + className + '-menu');
+
+    var img = L.DomUtil.create('img', 'mx-auto d-block', section);
+    img.src = 'https://static.thenounproject.com/png/257237-200.png';
+    img.alt = 'industrial building icon by Parkjisun';
+    img.style.maxHeight = '75px';
+    img.style.maxWidth = '75px';
+
+    var heading = L.DomUtil.create('h3', 'text-center', section);
+    heading.innerHTML = 'Environmental data near here';
+
+    var lead = L.DomUtil.create('p', 'text-center', section);
+    lead.innerHTML = 'A range of groups publish environmental data near here. ';
+
+    var readMoreLink = L.DomUtil.create('a', '', lead);
+    readMoreLink.innerHTML = 'Read more';
+    readMoreLink.href = '#';
+
+    var or = L.DomUtil.create('span', '', lead);
+    or.innerHTML = ' or ';
+
+    var shareLink = L.DomUtil.create('a', '', lead);
+    shareLink.innerHTML = 'share your own map data.';
+    shareLink.href = '#';
+
+    if (collapsed) {
+      this._map.on('click', this.collapse, this);
+
+      if (!L.Browser.android) {
+        L.DomEvent.on(container, {
+          mouseenter: this.expand,
+          mouseleave: this.collapse,
+        }, this);
+      }
+    }
+
+    var link = this._layersLink = L.DomUtil.create('a', className + '-toggle', container);
+    link.href = '#';
+    link.title = 'Layers';
+
+    if (L.Browser.touch) {
+      L.DomEvent.on(link, 'click', L.DomEvent.stop);
+      L.DomEvent.on(link, 'click', this.expand, this);
+    } else {
+      L.DomEvent.on(link, 'focus', this.expand, this);
+    }
+
+    if (!collapsed) {
+      this.expand();
+    }
+
+    this._baseLayersList = L.DomUtil.create('div', className + '-base', section);
+    this._separator = L.DomUtil.create('div', className + '-separator', section);
+    this._overlaysList = L.DomUtil.create('div', className + '-overlays', section);
+    this._overlaysList.style.maxHeight = '35vh';
+    this._overlaysList.style.overflowY = 'scroll';
+    this._overlaysList.style.overflowX = 'hidden';
+
+    container.appendChild(section);
+  },
+
+  _addLayer: function(layer, name, overlay, group) {
+    if (this._map) {
+      layer.on('add remove', this._onLayerChange, this);
+    }
+
+    this._layers.push({
+      layer: layer,
+      name: name,
+      overlay: overlay,
+      group: group
+    });
+
+    if (this.options.autoZIndex && layer.setZIndex) {
+      this._lastZIndex++;
+      layer.setZIndex(this._lastZIndex);
+    }
+
+    this._expandIfNotCollapsed();
+  },
+
+  _update: function() {
+    if (!this._container) { return this; }
+
+    L.DomUtil.empty(this._baseLayersList);
+    L.DomUtil.empty(this._overlaysList);
+
+    this._layerControlInputs = [];
+    var baseLayersPresent; var overlaysPresent; var i; var obj; var baseLayersCount = 0;
+
+    var group;
+    
+    for (i = 0; i < this._layers.length; i++) {
+      var groupHolder;
+      obj = this._layers[i];
+      if(group !== obj.group) {
+        this._createGroup(obj);
+        groupHolder = this._createGroupHolder(obj);
+      };
+
+      if(obj.group) {
+        groupHolder.appendChild(this._addItem(obj));
+      } else {
+        this._addItem(obj);
+      }
+      
+      group = obj.group;
+      overlaysPresent = overlaysPresent || obj.overlay;
+      baseLayersPresent = baseLayersPresent || !obj.overlay;
+      baseLayersCount += !obj.overlay ? 1 : 0;
+    }
+
+    // Hide base layers section if there's only one layer.
+    if (this.options.hideSingleBase) {
+      baseLayersPresent = baseLayersPresent && baseLayersCount > 1;
+      this._baseLayersList.style.display = baseLayersPresent ? '' : 'none';
+    }
+
+    this._separator.style.display = overlaysPresent && baseLayersPresent ? '' : 'none';
+
+    return this;
+  },
+
+  _createSeparator: function() {
+    var separator = document.createElement('div');
+    separator.className = 'leaflet-control-layers-separator';
+
+    return separator;
+  },
+
+  _createLayerInfoElements: function(obj) {
+    var data = this._getLayerData(obj);
+    
+    var icon = document.createElement('div');
+    icon.className = 'rounded-circle layer-icon';
+    icon.style.width = '10px';
+    icon.style.height = '10px';
+    icon.style.backgroundColor = data && data.icon || 'black';
+    icon.style.display = 'inline-block';
+    icon.style.margin = '0 1em';
+
+    var reportBtn = document.createElement('a');
+    reportBtn.setAttribute('role', 'button');
+    reportBtn.setAttribute('href', '#');
+    reportBtn.setAttribute('target', '_blank');
+    reportBtn.innerHTML = 'Add a report';
+    reportBtn.className = 'btn btn-default btn-outline-secondary btn-sm report-btn invisible';
+    reportBtn.style.margin = '0 1em';
+    reportBtn.style.lineHeight = '10px';
+    reportBtn.style.color = '#717171';
+
+    if(data && data.report_url) {
+      reportBtn.setAttribute('href', data.report_url);
+      reportBtn.classList.remove('invisible');
+    }
+
+    reportBtn.addEventListener('mouseover', function() {
+      reportBtn.style.color = 'white';
+    });
+
+    reportBtn.addEventListener('mouseout', function() {
+      reportBtn.style.color = '#717171';
+    });
+
+    var layerDesc = document.createElement('span');
+    layerDesc.innerHTML = data && data.layer_desc;
+    layerDesc.className = 'layer-description';
+    layerDesc.style.fontSize = '1.2em';
+
+    var dataInfo = document.createElement('div');
+    dataInfo.style.display = 'inline-block';
+    dataInfo.className = 'float-sm-right layer-data-info';
+
+    dataInfo.style.transform = 'translateY(6px)';
+
+    var dataType = document.createElement('span');
+    dataType.innerHTML = 'NRT/RT';
+    dataType.style.color = '#717171';
+
+    if(data && data.data.type !== 'NRT' && data.data.type !== 'RT') {
+      dataType.classList.add('invisible');
+    }
+
+    var dataInfoBtn = document.createElement('button');
+    dataInfoBtn.style.backgroundColor = 'transparent';
+    dataInfoBtn.style.borderColor = 'transparent';
+    var infoIcon = document.createElement('i');
+    infoIcon.className = 'fas fa-info-circle';
+    infoIcon.style.fontSize = '1.2em';
+    infoIcon.style.color = '#717171';
+
+    var infoModal;
+    dataInfoBtn.addEventListener('click', function() {
+      // Add only one instance of the modal for the map layer
+      if(!infoModal || !infoModal.options.mapHasControl) {
+        infoModal = new L.control.info({ 
+          text: data && data.data.disclaimer,
+          classname: 'info-modal'
+        });
+
+        infoModal.addTo(map);
+      }
+    });
+
+    dataInfo.appendChild(dataType);
+    dataInfo.appendChild(dataInfoBtn);
+    dataInfoBtn.appendChild(infoIcon);
+
+    return {
+      icon: icon,
+      reportBtn: reportBtn,
+      layerDesc: layerDesc,
+      dataInfo: dataInfo,
+      dataType: dataType,
+      dataInfoBtn: dataInfoBtn,
+      infoIcon: infoIcon
+    }
+  },
+
+  _createGroup: function(obj) {
+    if(obj.group) {
+      var layerGroup = document.createElement('a');
+      layerGroup.href = '#' + obj.group.replace(/\s/g, '');
+      layerGroup.setAttribute('data-toggle', 'collapse');
+      layerGroup.setAttribute('role', 'button');
+      layerGroup.setAttribute('aria-expanded', 'false');
+      layerGroup.setAttribute('aria-controls', obj.group)
+
+      var groupName = document.createElement('span');
+      groupName.innerHTML = obj.group;
+      groupName.className = 'layer-group-name';
+      groupName.style.margin = '0 1em';
+      groupName.style.fontSize = '1.2em';
+      groupName.style.fontWeight = 'bold';
+      groupName.style.display = 'inline-block';
+      groupName.style.width = '12em';
+
+      var chevron = document.createElement('i');
+      chevron.className = 'fa fa-chevron-down';
+      chevron.setAttribute('aria-hidden', 'true');
+      chevron.style.margin = '1em';
+      
+      layerGroup.addEventListener('click', function() {
+        if(chevron.className === 'fa fa-chevron-down') {
+          chevron.className = 'fa fa-chevron-up';
+        } else {
+          chevron.className = 'fa fa-chevron-down';
+        }
+      });
+
+      var elements = this._createLayerInfoElements(obj);
+
+      var titleHolder = document.createElement('div');
+      titleHolder.className = 'clearfix layer-info-container';
+      titleHolder.appendChild(layerGroup);
+      layerGroup.appendChild(chevron);
+      layerGroup.appendChild(elements.icon);
+      titleHolder.appendChild(elements.reportBtn);
+      titleHolder.appendChild(groupName);
+      titleHolder.appendChild(elements.layerDesc);
+      titleHolder.appendChild(elements.dataInfo);
+
+      var separator = this._createSeparator();
+
+      this._hideOutOfBounds(obj, [titleHolder, separator]);
+      
+      var container = obj.overlay ? this._overlaysList : this._baseLayersList;
+      container.appendChild(titleHolder);
+      container.appendChild(separator);
+      return titleHolder;
+    }
+  },
+
+  _createGroupHolder: function(obj) {
+    var groupName;
+    if(obj.group) {
+      groupName =  obj.group.replace(/\s/g, '');
+    }
+    var groupHolder = document.createElement('div');
+    groupHolder.className = 'layers-sub-list collapse';
+    groupHolder.setAttribute('id', groupName);
+
+    var container = obj.overlay ? this._overlaysList : this._baseLayersList;
+    container.appendChild(groupHolder);
+    
+    return groupHolder;
+  },
+
+  _addItem: function(obj) {
+    var labelContainer = document.createElement('div');
+    var label = document.createElement('label');
+    label.style.display = 'inline-block';
+    var checked = this._map.hasLayer(obj.layer);
+    var input;
+
+    if (obj.overlay) {
+      input = document.createElement('input');
+      input.type = 'checkbox';
+      input.className = 'leaflet-control-layers-selector';
+      input.defaultChecked = checked;
+      input.style.margin = '0.5em 0.9em';
+    } else {
+      input = this._createRadioElement('leaflet-base-layers_' + L.Util.stamp(this), checked);
+    }
+
+    this._layerControlInputs.push(input);
+    input.layerId = L.Util.stamp(obj.layer);
+
+    L.DomEvent.on(input, 'click', this._onInputClick, this);
+
+    var name = document.createElement('span');
+    name.innerHTML = ' ' + obj.name;
+    name.style.fontWeight = 'bold';
+    name.style.display = 'inline-block';
+    
+    name.style.fontSize = '1.2em';
+
+    var elements = this._createLayerInfoElements(obj);
+    var separator = this._createSeparator();
+
+    // Helps from preventing layer control flicker when checkboxes are disabled
+    // https://github.com/Leaflet/Leaflet/issues/2771
+    var holder = document.createElement('div');
+
+    labelContainer.appendChild(label);
+    label.appendChild(holder);
+    holder.appendChild(input);
+    if(obj.overlay && !obj.group) {
+      holder.appendChild(elements.icon);
+      holder.appendChild(elements.reportBtn);
+      name.style.margin = '0 1em';
+      name.style.width = '12em';
+      name.className = 'layer-name';
+      label.className = 'label';
+    }
+    holder.appendChild(name);
+    if(obj.overlay && obj.group) {
+      label.style.width = '100%';
+      label.style.marginBottom = '3px';
+      input.style.marginLeft = '3.8em';
+      name.style.marginLeft = '9.6em';
+      name.style.color = '#717171';
+      name.className = 'layer-list-name';
+      labelContainer.appendChild(separator);
+    }
+    if(obj.overlay && !obj.group) {
+      labelContainer.appendChild(elements.layerDesc);
+      labelContainer.className = 'clearfix layer-info-container';
+      labelContainer.appendChild(elements.dataInfo);
+      labelContainer.appendChild(separator);
+    }
+
+    this._hideOutOfBounds(obj, [labelContainer, separator]);
+    
+    var container = obj.overlay ? this._overlaysList : this._baseLayersList;
+    container.appendChild(labelContainer);
+    this._checkDisabledLayers();
+    return labelContainer;
+  },
+
+  _hideOutOfBounds: function(obj, elements) {
+    var self = this;
+    var map = this._map;
+    var data = this._getLayerData(obj);
+    var layerName;
+    if(obj.name && !obj.group) {
+      layerName = this.options.overlays && this.options.overlays[obj.name];
+    } else {
+      layerName = this.options.overlays && this.options.overlays[obj.group].layers[obj.name];
+    }
+    this._hideElements(data, layerName, elements); // Filter layer list on initialization
+    map.on('moveend', function() { // Update layer list on map movement
+      self._hideElements(data, layerName, elements, true);
+    });
+  },
+
+  _hideElements: function(data, layerName, elements, removeLayer) {
+    var map = this._map;
+    var removeFrmMap = removeLayer;
+    var currentBounds = map.getBounds();
+    var currentZoom = map.getZoom();
+    var bounds;
+    if(data) {
+      bounds = L.latLngBounds(data.extents.bounds);
+      for(var i in elements) {
+        if((!bounds.intersects(currentBounds) && map.hasLayer(layerName) && removeFrmMap) ||
+          (currentZoom < data.extents.minZoom && map.hasLayer(layerName) && removeFrmMap)) {
+          elements[i].style.display = 'none';
+            // Remove layer from map if active
+            map.removeLayer(layerName);
+        } else if(!bounds.intersects(currentBounds) || currentZoom < data.extents.minZoom) {
+          elements[i].style.display = 'none';
+        } else {
+          elements[i].style.display = 'block';
+        }
+      };
+    };
+  },
+
+  _getLayerData: function(obj) {
+    var layerData = require('../layerData.json');
+    var data;
+    for (let j in layerData) {
+      if((obj.group && obj.group.replace(/\s/g, '').toLowerCase() === j.toLowerCase()) ||
+        (obj.name.replace(/\s/g, '').toLowerCase() === j.toLowerCase())) {
+          data = layerData[j];
+      };
+    };
+    return data;
+  }
+});
+
+L.control.layersBrowser = function(baseLayers, overlays, options) {
+  return new L.Control.LayersBrowser(baseLayers, overlays, options);
+};
+
+},{"../layerData.json":14}],28:[function(require,module,exports){
 L.Control.LegendControl = L.Control.extend({
   options: {
     position: 'bottomleft',
   },
-  
+
   initialize: function(options) {
     L.Util.setOptions(this, options);
     this._legendElement = L.DomUtil.create('div', 'legend-container');
     this._legendElement.style.display = 'none';
-    this._legendURLs = []; //Array of URLs
+    this._legendURLs = []; // Array of URLs
   },
-  
+
   onAdd: function(map) {
     return this._legendElement;
   },
-  
+
   onRemove: function(map) {
     this._legendURLs = [];
     this._drawLegend();
     this._legendElement.style.display = 'none';
   },
-  
+
   addLegend: function(legendURL) {
     this._legendURLs.push(legendURL);
     this._drawLegend();
     this._legendElement.style.display = 'block';
   },
-  
+
   removeLegend: function(legendURL) {
     var index = this._legendURLs.indexOf(legendURL);
-    if(index > -1) {
-      this._legendURLs.splice(index, 1); //remove URL from the array
-    }    
-    if(!this._legendURLs.length) { //if no more URLs
+    if (index > -1) {
+      this._legendURLs.splice(index, 1); // remove URL from the array
+    }
+    if (!this._legendURLs.length) { // if no more URLs
       this._legendElement.style.display = 'none';
     }
     this._drawLegend();
   },
-  
-  _drawLegend: function() {
 
+  _drawLegend: function() {
     this._legendElement.innerHTML = '';
     var self = this;
-    for(var i = 0; i < this._legendURLs.length; i++) {
+    for (var i = 0; i < this._legendURLs.length; i++) {
       var item = L.DomUtil.create('div', 'legend-item', this._legendElement);
       item.innerHTML = '<img src="' + this._legendURLs[i] + '" style="height: 200px;"/>';
       item.style.cssFloat = 'left';
       item.style.margin = '5px';
-
     }
-  }
-  
+  },
+
 });
 
-L.control.legendControl = function(options) { 
+L.control.legendControl = function(options) {
   return new L.Control.LegendControl(options);
 };
 
-},{}],24:[function(require,module,exports){
-omsUtil = function (map, options) {
-    var oms = new OverlappingMarkerSpiderfier(map, options);
+},{}],29:[function(require,module,exports){
+omsUtil = function(map, options) {
+  var oms = new OverlappingMarkerSpiderfier(map, options);
 
-    var popup;
-    oms.addListener('click', function(marker) {
-        popup = marker.getPopup();
-        map.openPopup(popup);
-    });
+  var popup;
+  oms.addListener('click', function(marker) {
+    popup = marker.getPopup();
+    map.openPopup(popup);
+  });
 
-    oms.addListener('spiderfy', function(markers) {
-        map.closePopup();
-    });
+  oms.addListener('spiderfy', function(markers) {
+    map.closePopup();
+  });
 
-    return oms;
-}
-},{}],25:[function(require,module,exports){
-wisconsinLayer = function (map) {
-   var info = require("./info.json");
-
-   var Wisconsin_NM  = L.esri.featureLayer({
-     url: info.wisconsin.api_url,
-     simplifyFactor: 1
-   }) ;
-
-   Wisconsin_NM.bindPopup(function (layer) {
-     return L.Util.template('<p><strong>Id : </strong>{FID}<br><strong>PLACENAME : </strong>{PLACENAME}<br><strong>STATE : </strong>{STATE}<br><strong>Lat :</strong> {LATITUDE} <br> <strong>Lon : </strong>{LONGITUDE} <br> <strong>Owner :</strong> {OWNERNME1} <br> <strong>POSTAL ADRESS :</strong> {PSTLADRESS} <br><strong> Assessed Acres :</strong> {ASSDACRES} <br> <strong>County Name :</strong> {CONAME} <br> </p>', layer.feature.properties);
-   });
-
-   Wisconsin_NM.on('loading', function(e){
-    if(typeof map.spin === 'function'){
-       map.spin(true) ;
-     }
-   });
-
-   Wisconsin_NM.on('load', function(e){
-    if(typeof map.spin === 'function'){
-       map.spin(false) ;
-     }
-   });
-
-   // Wisconsin_NM.on('add', function(e){
-   //    if(map.getZoom() < info.wisconsin.extents.minZoom){
-   //      return;
-   //    }
-   // });
-   return Wisconsin_NM ;
+  return oms;
 };
 
-},{"./info.json":13}]},{},[3,7,15,21,22,23,24]);
+},{}],30:[function(require,module,exports){
+wisconsinLayer = function(map) {
+  var info = require('./info.json');
+
+  var Wisconsin_NM = L.esri.featureLayer({
+    url: info.wisconsin.api_url,
+    simplifyFactor: 1,
+  });
+
+  Wisconsin_NM.bindPopup(function(layer) {
+    return L.Util.template('<p><strong>Id : </strong>{FID}<br><strong>PLACENAME : </strong>{PLACENAME}<br><strong>STATE : </strong>{STATE}<br><strong>Lat :</strong> {LATITUDE} <br> <strong>Lon : </strong>{LONGITUDE} <br> <strong>Owner :</strong> {OWNERNME1} <br> <strong>POSTAL ADRESS :</strong> {PSTLADRESS} <br><strong> Assessed Acres :</strong> {ASSDACRES} <br> <strong>County Name :</strong> {CONAME} <br> </p>', layer.feature.properties);
+  });
+
+  Wisconsin_NM.on('loading', function(e) {
+    if (typeof map.spin === 'function') {
+      map.spin(true);
+    }
+  });
+
+  Wisconsin_NM.on('load', function(e) {
+    if (typeof map.spin === 'function') {
+      map.spin(false);
+    }
+  });
+
+  // Wisconsin_NM.on('add', function(e){
+  //    if(map.getZoom() < info.wisconsin.extents.minZoom){
+  //      return;
+  //    }
+  // });
+  return Wisconsin_NM;
+};
+
+},{"./info.json":13}]},{},[3,7,16,23,24,25,26,27,28,29]);

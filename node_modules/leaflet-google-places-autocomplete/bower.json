@@ -1,0 +1,27 @@
+{
+  "name": "leaflet-google-places-autocomplete",
+  "homepage": "https://github.com/Twista/leaflet-google-places-autocomplete",
+  "authors": [
+    "Michal Haták <me@twista.cz>"
+  ],
+  "description": "Add google places autocomplete to your map",
+  "main": [
+    "src/js/leaflet-gplaces-autocomplete.js",
+    "src/css/leaflet-gplaces-autocomplete.css"
+  ],
+  "keywords": [
+    "leaflet",
+    "map",
+    "autocomplete",
+    "google"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "example"
+  ]
+}
