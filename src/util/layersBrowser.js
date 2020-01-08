@@ -439,15 +439,17 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     var currentBounds = map.getBounds();
     var currentZoom = map.getZoom();
     var bounds;
+    var zoom;
     if(data) {
-      bounds = L.latLngBounds(data.extents.bounds);
+      bounds = data.extents && data.extents.bounds && L.latLngBounds(data.extents.bounds);
+      zoom =  data.extents && data.extents.minZoom && data.extents.minZoom;
       for(var i in elements) {
-        if((!bounds.intersects(currentBounds) && map.hasLayer(layerName) && removeFrmMap) ||
-          (currentZoom < data.extents.minZoom && map.hasLayer(layerName) && removeFrmMap)) {
+        if((bounds && !bounds.intersects(currentBounds) && map.hasLayer(layerName) && removeFrmMap) ||
+          ( zoom && (currentZoom < zoom) && map.hasLayer(layerName) && removeFrmMap)) {
           elements[i].style.display = 'none';
             // Remove layer from map if active
             map.removeLayer(layerName);
-        } else if(!bounds.intersects(currentBounds) || currentZoom < data.extents.minZoom) {
+        } else if((bounds && !bounds.intersects(currentBounds)) || (zoom && (currentZoom < zoom))) {
           elements[i].style.display = 'none';
         } else {
           elements[i].style.display = 'block';
