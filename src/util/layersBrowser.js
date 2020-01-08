@@ -152,12 +152,12 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     for (i = 0; i < this._layers.length; i++) {
       var groupHolder;
       obj = this._layers[i];
-      if(group !== obj.group) {
+      if(obj.group && group !== obj.group) {
         this._createGroup(obj);
         groupHolder = this._createGroupHolder(obj);
       };
 
-      if(obj.group) {
+      if(groupHolder && obj.group) {
         groupHolder.appendChild(this._addItem(obj));
       } else {
         this._addItem(obj);
