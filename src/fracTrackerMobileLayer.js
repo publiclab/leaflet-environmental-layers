@@ -1,4 +1,4 @@
-L.GeoJSON.FractrackerMobileLayer = L.GeoJSON.extend(
+L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
   {
     options: { },
 
@@ -43,14 +43,14 @@ L.GeoJSON.FractrackerMobileLayer = L.GeoJSON.extend(
           self._map.spin(true);
         }
 
-        $.getJSON(fractrackerMobile_url, function(data) {
-          console.log(data);
-          self.parseData(data);
-          if (typeof self._map.spin === 'function') {
-            self._map.spin(false);
-          }
-        });
-      })();
+        return $.getJSON(fractrackerMobile_url);
+
+      })().done(function(data) {
+        self.parseData(data);
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(false);
+        }
+      });
     },
 
     parseData: function(data) {
@@ -62,18 +62,19 @@ L.GeoJSON.FractrackerMobileLayer = L.GeoJSON.extend(
     },
 
     getMarker: function(data) {
-      var coords = this.coordsToLatLng(data.geometry.geometries[0].coordinates);
+      var coords = this.coordsToLatLng(data.geometry.coordinates || data.geometry.geometries[0].coordinates);
       var lat = coords.lat;
       var lng = coords.lng;
-      var description = data.properties.description;
+      var description = data.properties.description ? data.properties.description : '';
       var date = new Date(data.properties.report_date).toUTCString();
       var dateModified = new Date(data.properties.modified_on).toUTCString();
       var organizationName = data.properties.created_by.organization_name ? data.properties.created_by.organization_name : '';
       var imageUrl = data.properties.images[0] && data.properties.images[0].properties.square;
+      var imageElement = imageUrl ? '<img src="'  + imageUrl + '" alt="User image" width="100%" />' : '';
       var marker;
       if (!isNaN((lat)) && !isNaN((lng)) ) {
         marker = new L.circleMarker([lat, lng], { radius: 5, color: '#e4458b'})
-        .bindPopup('<img src="'  + imageUrl + '" alt="User image" width="100%" /><br><strong>'+ description + '</strong><br>Lat : ' + lat + '<br>Lon : '+ lng + '<br>Reported on : ' + date + '<br>Modified on : ' + dateModified + '<br>' + organizationName);
+        .bindPopup(imageElement + '<br><strong>'+ description + '</strong><br>Lat : ' + lat + '<br>Lon : '+ lng + '<br>Reported on : ' + date + '<br>Modified on : ' + dateModified + '<br>' + organizationName);
       }
       return marker;
     },
@@ -96,6 +97,6 @@ L.GeoJSON.FractrackerMobileLayer = L.GeoJSON.extend(
 );
 
 
-L.geoJSON.fractrackerMobileLayer = function(options) {
-  return new L.GeoJSON.FractrackerMobileLayer(options);
+L.geoJSON.fracTrackerMobile = function(options) {
+  return new L.GeoJSON.FracTrackerMobile(options);
 };
