@@ -176,11 +176,11 @@ We're going to try spinning this out into its own library; see: https://github.c
         var city = L.OWM.current({intervall: 15, minZoom: 3});
 
 2.) WindRose (by openWeather)
-       <script src="../src/windRoseLayer.js"></script>
+      
+      <script src="../src/windRoseLayer.js"></script>
        <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet">
 
-
-        var windrose = L.OWM.current({intervall: 15, minZoom: 3, markerFunction: myWindroseMarker, popup: false, clusterSize:       50,imageLoadingBgUrl: 'https://openweathermap.org/img/w0/iwind.png' });
+     var windrose = L.OWM.current({intervall: 15, minZoom: 3, markerFunction: myWindroseMarker, popup: false, clusterSize:       50,imageLoadingBgUrl: 'https://openweathermap.org/img/w0/iwind.png' });
     windrose.on('owmlayeradd', windroseAdded, windrose);
 
 ## Open Infra Map :
