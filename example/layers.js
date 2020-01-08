@@ -109,7 +109,7 @@ var IndigenousLandsLanguages = L.layerGroup.indigenousLayers('Languages');
 var IndigenousLandsTreaties = L.layerGroup.indigenousLayers('Treaties');
 
 var Wisconsin_NM = wisconsinLayer(map);
-var FracTracker_mobile = L.geoJSON.fractrackerMobileLayer();
+var FracTracker_mobile = L.geoJSON.fracTrackerMobile();
 
 var EonetFiresLayer = L.geoJSON.eonetFiresLayer();
 
