@@ -13,7 +13,7 @@ describe('embed control properties', function() {
     });
 
     it('generates correct embed code with default hostname', function() {
-      var matchCode = '<iframe style="border:none;" width="100%" height="900px" src="//publiclab.github.io/leaflet-environmental-layers' + window.location.pathname + window.location.hash +'"></iframe>';
+      var matchCode = '<iframe style="border:none;" width="100%" height="900px" src="//publiclab.github.io' + window.location.pathname + window.location.hash +'"></iframe>';
   
       expect(control.generateCode()).toEqual(matchCode);
     });
@@ -32,7 +32,7 @@ describe('embed control properties', function() {
     });
   
     it('overrides default hostname in the embed code with custom hostname', function() {
-      var matchCode = '<iframe style="border:none;" width="100%" height="900px" src="//placeholder.com/leaflet-environmental-layers' + window.location.pathname + window.location.hash +'"></iframe>';
+      var matchCode = '<iframe style="border:none;" width="100%" height="900px" src="//placeholder.com' + window.location.pathname + window.location.hash +'"></iframe>';
   
       expect(control.generateCode()).toEqual(matchCode);
     });
@@ -58,7 +58,7 @@ describe('embed control in the DOM', function() {
   });
 
   it('triggers window prompt', function() {
-    var matchCode = '<iframe style="border:none;" width="100%" height="900px" src="//publiclab.github.io/leaflet-environmental-layers' + window.location.pathname + window.location.hash +'"></iframe>';
+    var matchCode = '<iframe style="border:none;" width="100%" height="900px" src="//publiclab.github.io' + window.location.pathname + window.location.hash +'"></iframe>';
 
     spyOn(window, 'prompt').and.returnValue();
 

@@ -26683,15 +26683,7 @@ module.exports={
     },
     "description": "The World Air Quality Index project provides transparent and world-wide air quality information for more than 100 countries, covering more than 12,000 stations in 1000 major cities.",
     "layer_desc": "World-wide air quality information",
-    "icon": "#096",
-    "extents": {
-      "bounds": [
-                  [-44.087585028245165, -148.88671875000003],
-                  [76.63922560965888, 140.62500000000003]
-                ],
-      "minZoom": 3,
-      "maxZoom": 15
-    }
+    "icon": "#096"
   },
   "eonetFires": {
     "url": "https://eonet.sci.gsfc.nasa.gov/",
@@ -26701,15 +26693,7 @@ module.exports={
     },
     "description": "EONET provides a curated source of continuously updated natural event metadata. EONET Events: Wildfires: Wildfires includes all nature of fire, including forest and plains fires, as well as urban and industrial fire events. Fires may be naturally caused or manmade.",
     "layer_desc": "All nature of fire events.",
-    "icon": "#ff421d",
-    "extents": {
-      "bounds": [
-                  [-44.087585028245165, -148.88671875000003],
-                  [76.63922560965888, 140.62500000000003]
-                ],
-      "minZoom": 3,
-      "maxZoom": 15
-    }
+    "icon": "#ff421d"
   },
   "fractracker": {
     "url": "https://www.fractracker.org/",
@@ -26721,10 +26705,6 @@ module.exports={
     "layer_desc": "Oil and gas development",
     "icon": "#e8e800",
     "extents": {
-      "bounds": [
-                  [-44.087585028245165, -148.88671875000003],
-                  [76.63922560965888, 140.62500000000003]
-                ],
       "minZoom": 5,
       "maxZoom": 15
     }
@@ -26757,10 +26737,6 @@ module.exports={
     "layer_desc": "Indigenous nations - Territories, Languages, Treaties",
     "icon": "#532200",
     "extents": {
-      "bounds": [
-                  [-44.087585028245165, -148.88671875000003],
-                  [76.63922560965888, 140.62500000000003]
-                ],
       "minZoom": 6,
       "maxZoom": 15
     }
@@ -26791,15 +26767,7 @@ module.exports={
     },
     "description": "building particulate matter sensors and visualizing the data in an overall picture.",
     "layer_desc": "Fine dust measurement",
-    "icon": "#4edd51",
-    "extents": {
-      "bounds": [
-                  [-44.087585028245165, -148.88671875000003],
-                  [76.63922560965888, 140.62500000000003]
-                ],
-      "minZoom": 3,
-      "maxZoom": 15
-    }
+    "icon": "#4edd51"
   },
   "mapknitter": {
     "url": "https://mapknitter.org/",
@@ -26811,10 +26779,6 @@ module.exports={
     "layer_desc": "Map data from aerial photos from balloons and kites",
     "icon": "#ca283b",
     "extents": {
-      "bounds": [
-                  [-44.087585028245165, -148.88671875000003],
-                  [76.63922560965888, 140.62500000000003]
-                ],
       "minZoom": 10,
       "maxZoom": 15
     }
@@ -26830,10 +26794,6 @@ module.exports={
     "layer_desc": "Bad odor events",
     "icon": "#ff00ff",
     "extents": {
-      "bounds": [
-                  [-44.087585028245165, -148.88671875000003],
-                  [76.63922560965888, 140.62500000000003]
-                ],
       "minZoom": 8,
       "maxZoom": 15
     }
@@ -26846,15 +26806,7 @@ module.exports={
     },
     "description": "OpenAQ is a non-profit organization empowering communities around the globe to clean their air by harmonizing, sharing, and using open air quality data.",
     "layer_desc": "Air quality data",
-    "icon": "#912d25",
-    "extents": {
-      "bounds": [
-                  [-44.087585028245165, -148.88671875000003],
-                  [76.63922560965888, 140.62500000000003]
-                ],
-      "minZoom": 3,
-      "maxZoom": 15
-    }
+    "icon": "#912d25"
   },
   "openInfraMap": {
     "url": "https://openinframap.org/about.html",
@@ -26864,15 +26816,7 @@ module.exports={
     },
     "description": "Open Infrastructure Map is a view of the world's hidden infrastructure mapped in the OpenStreetMap database.",
     "layer_desc": "World's hidden infrastructure",
-    "icon": "#b59f10",
-    "extents": {
-      "bounds": [
-                  [-44.087585028245165, -148.88671875000003],
-                  [76.63922560965888, 140.62500000000003]
-                ],
-      "minZoom": 3,
-      "maxZoom": 15
-    }
+    "icon": "#b59f10"
   },
   "opensense": {
     "url": "https://opensensemap.org/",
@@ -26883,15 +26827,7 @@ module.exports={
     },
     "description": "openSenseMap is a platform for open sensor data at which everyone can participate in.",
     "layer_desc": "Sensor data from senseboxes",
-    "icon": "",
-    "extents": {
-      "bounds": [
-                  [-44.087585028245165, -148.88671875000003],
-                  [76.63922560965888, 140.62500000000003]
-                ],
-      "minZoom": 3,
-      "maxZoom": 15
-    }
+    "icon": ""
   },
   "openWeatherMap": {
     "url": "https://openweathermap.org/guide",
@@ -26901,15 +26837,7 @@ module.exports={
     },
     "description": "OpenWeatherMap provides many kinds of weather maps including Precipitation, Clouds, Pressure, Temperature, Wind.",
     "layer_desc": "Weather information",
-    "icon": "#00a3fe",
-    "extents": {
-      "bounds": [
-                  [-44.087585028245165, -148.88671875000003],
-                  [76.63922560965888, 140.62500000000003]
-                ],
-      "minZoom": 3,
-      "maxZoom": 15
-    }
+    "icon": "#00a3fe"
   },
   "osmlandfills,quarries": {
     "url": "https://www.openstreetmap.org/about",
@@ -26921,10 +26849,6 @@ module.exports={
     "layer_desc": "Land used for landfill and mine quarry",
     "icon": "#008000",
     "extents": {
-      "bounds": [
-                  [-44.087585028245165, -148.88671875000003],
-                  [76.63922560965888, 140.62500000000003]
-                ],
       "minZoom": 11,
       "maxZoom": 15
     }
@@ -26957,15 +26881,7 @@ module.exports={
     },
     "description": "An air quality monitoring network built on a new generation of \"Internet of Things\" sensors",
     "layer_desc": "Air quality data from PurpleAir sensors",
-    "icon": "#7c22b5",
-    "extents": {
-      "bounds": [
-                  [-44.087585028245165, -148.88671875000003],
-                  [76.63922560965888, 140.62500000000003]
-                ],
-      "minZoom": 3,
-      "maxZoom": 15
-    }
+    "icon": "#7c22b5"
   },
   "skytruth": {
     "url": "https://alerts.skytruth.org/",
@@ -26977,10 +26893,6 @@ module.exports={
     "layer_desc": "Environmentally significant incidents",
     "icon": "#f00",
     "extents": {
-      "bounds": [
-                  [-44.087585028245165, -148.88671875000003],
-                  [76.63922560965888, 140.62500000000003]
-                ],
       "minZoom": 10,
       "maxZoom": 15
     }
@@ -29909,9 +29821,9 @@ L.Control.Embed = L.Control.extend({
 
   generateCode: function() {
     var currentHash = window.location.hash;
-    var path = window.location.pathname === '/example/embed.html' ? '/example/index.html' : window.location.pathname;
+    var path = window.location.pathname === '/leaflet-environmental-layers/example/embed.html' ? '/leaflet-environmental-layers/example/index.html' : window.location.pathname;
     var hostname = this.options.hostname;
-    var code = '<iframe style="border:none;" width="100%" height="900px" src="//' + hostname + '/leaflet-environmental-layers' + path + currentHash +'"></iframe>';
+    var code = '<iframe style="border:none;" width="100%" height="900px" src="//' + hostname + path + currentHash +'"></iframe>';
     return code;
   },
 
@@ -30547,15 +30459,17 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     var currentBounds = map.getBounds();
     var currentZoom = map.getZoom();
     var bounds;
+    var zoom;
     if(data) {
-      bounds = L.latLngBounds(data.extents.bounds);
+      bounds = data.extents && data.extents.bounds && L.latLngBounds(data.extents.bounds);
+      zoom =  data.extents && data.extents.minZoom && data.extents.minZoom;
       for(var i in elements) {
-        if((!bounds.intersects(currentBounds) && map.hasLayer(layerName) && removeFrmMap) ||
-          (currentZoom < data.extents.minZoom && map.hasLayer(layerName) && removeFrmMap)) {
+        if((bounds && !bounds.intersects(currentBounds) && map.hasLayer(layerName) && removeFrmMap) ||
+          ( zoom && (currentZoom < zoom) && map.hasLayer(layerName) && removeFrmMap)) {
           elements[i].style.display = 'none';
             // Remove layer from map if active
             map.removeLayer(layerName);
-        } else if(!bounds.intersects(currentBounds) || currentZoom < data.extents.minZoom) {
+        } else if((bounds && !bounds.intersects(currentBounds)) || (zoom && (currentZoom < zoom))) {
           elements[i].style.display = 'none';
         } else {
           elements[i].style.display = 'block';
