@@ -33,25 +33,6 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     }
   },
 
-  onAdd: function (map) {
-		this._initLayout();
-		this._update();
-
-		this._map = map;
-		map.on('zoomend', this._checkDisabledLayers, this);
-
-		for (var i = 0; i < this._layers.length; i++) {
-			this._layers[i].layer.on('add remove', this._onLayerChange, this);
-    }
-    
-    map.on('moveend', function() {
-      
-      console.log('mapmove',this._newLayersInBounds())
-    }, this);
-
-		return this._container;
-	},
-
   expand: function() {
     L.DomUtil.addClass(this._container, 'leaflet-control-layers-expanded');
     this._section.style.height = null;
@@ -64,6 +45,9 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     }
     this._checkDisabledLayers();
     this.options.newLayers = []; // Reset new layers list when the control is accessed
+    this._alertBadge.innerHTML = '';
+    this._alertBadge.style.display = 'none';
+    this._layersLink.style.marginLeft = '0';
     return this;
   },
 
@@ -118,6 +102,20 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     var link = this._layersLink = L.DomUtil.create('a', className + '-toggle', container);
     link.href = '#';
     link.title = 'Layers';
+    link.style.marginLeft = '0';
+
+    var alert = this._alertBadge = L.DomUtil.create('section', 'rounded-circle bg-danger text-white text-center'); // Badge to alert new layers within bounds
+    alert.style.display = 'none';
+    alert.style.position = 'relative';
+    alert.style.right = '55%';
+    alert.style.top = '25%';
+    alert.style.fontWeight = 'bold';
+    alert.style.width = '23px';
+    alert.style.height = '23px';
+    alert.style.justifyContent = 'center';
+    alert.style.alignItems = 'center';
+    alert.innerHTML = '';
+    link.appendChild(alert);
 
     if (L.Browser.touch) {
       L.DomEvent.on(link, 'click', L.DomEvent.stop);
@@ -190,6 +188,18 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       baseLayersPresent = baseLayersPresent || !obj.overlay;
       baseLayersCount += !obj.overlay ? 1 : 0;
     }
+
+    map.on('moveend', function() {
+      if(this.options.newLayers.length > 0) {
+        this._layersLink.style.marginLeft = '2.9em';
+        this._alertBadge.style.display = 'flex';
+        this._alertBadge.innerHTML = this.options.newLayers.length;
+      } else {
+        this._layersLink.style.marginLeft = '0';
+        this._alertBadge.style.display = 'none';
+        this._alertBadge.innerHTML = '';
+      }
+    }, this);
 
     // Hide base layers section if there's only one layer.
     if (this.options.hideSingleBase) {
@@ -495,10 +505,6 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       this.options.existingLayers[obj.name] = false; // layer does not exist upon inititalization
     }
 
-  },
-
-  _newLayersInBounds: function() {
-    return this.options.newLayers;
   },
 
   _getLayerData: function(obj) {
