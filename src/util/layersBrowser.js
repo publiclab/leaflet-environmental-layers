@@ -167,6 +167,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     this._layerControlInputs = [];
     var baseLayersPresent; var overlaysPresent; var i; var obj; var baseLayersCount = 0;
 
+    var map = this._map;
     var group;
     
     for (i = 0; i < this._layers.length; i++) {
