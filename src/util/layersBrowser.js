@@ -4,7 +4,9 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     position: 'topright',
     autoZIndex: true,
     hideSingleBase: true,
-    overlays: {}
+    overlays: {},
+    existingLayers: {},
+    newLayers: []
   },
 
   initialize: function(baseLayers, overlays, options) {
@@ -31,6 +33,25 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     }
   },
 
+  onAdd: function (map) {
+		this._initLayout();
+		this._update();
+
+		this._map = map;
+		map.on('zoomend', this._checkDisabledLayers, this);
+
+		for (var i = 0; i < this._layers.length; i++) {
+			this._layers[i].layer.on('add remove', this._onLayerChange, this);
+    }
+    
+    map.on('moveend', function() {
+      
+      console.log('mapmove',this._newLayersInBounds())
+    }, this);
+
+		return this._container;
+	},
+
   expand: function() {
     L.DomUtil.addClass(this._container, 'leaflet-control-layers-expanded');
     this._section.style.height = null;
@@ -42,6 +63,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       L.DomUtil.removeClass(this._section, 'leaflet-control-layers-scrollbar');
     }
     this._checkDisabledLayers();
+    this.options.newLayers = []; // Reset new layers list when the control is accessed
     return this;
   },
 
@@ -427,13 +449,13 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     } else {
       layerName = this.options.overlays && this.options.overlays[obj.group].layers[obj.name];
     }
-    this._hideElements(data, layerName, elements); // Filter layer list on initialization
+    this._hideElements(obj, data, layerName, elements); // Filter layer list on initialization
     map.on('moveend', function() { // Update layer list on map movement
-      self._hideElements(data, layerName, elements, true);
+      self._hideElements(obj, data, layerName, elements, true);
     });
   },
 
-  _hideElements: function(data, layerName, elements, removeLayer) {
+  _hideElements: function(obj, data, layerName, elements, removeLayer) {
     var map = this._map;
     var removeFrmMap = removeLayer;
     var currentBounds = map.getBounds();
@@ -451,11 +473,32 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
             map.removeLayer(layerName);
         } else if((bounds && !bounds.intersects(currentBounds)) || (zoom && (currentZoom < zoom))) {
           elements[i].style.display = 'none';
+          this._existingLayers(obj, false, removeFrmMap);
         } else {
           elements[i].style.display = 'block';
+          this._existingLayers(obj, true, removeFrmMap);
         }
       };
     };
+  },
+
+  _existingLayers: function(obj, doesExist, isInitialized) { 
+    if(doesExist && isInitialized && !this.options.existingLayers[obj.name]) { // Check if there is a new layer in current bounds
+      this.options.newLayers = [...this.options.newLayers, obj.name];
+      this.options.existingLayers[obj.name] = true;
+    } else if(doesExist) {
+      this.options.existingLayers[obj.name] = true; // layer exists upon inititalization
+    } else if(isInitialized && this.options.existingLayers[obj.name]) { // Remove from new layers if the layer no longer exists within current bounds
+      this.options.newLayers = this.options.newLayers.filter(layer => layer !== obj.name);
+      this.options.existingLayers[obj.name] = false;
+    } else {
+      this.options.existingLayers[obj.name] = false; // layer does not exist upon inititalization
+    }
+
+  },
+
+  _newLayersInBounds: function() {
+    return this.options.newLayers;
   },
 
   _getLayerData: function(obj) {
