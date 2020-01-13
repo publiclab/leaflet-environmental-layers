@@ -240,9 +240,14 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     reportBtn.style.margin = '0 1em';
     reportBtn.style.lineHeight = '10px';
     reportBtn.style.color = '#717171';
+    reportBtn.style.minWidth = '95px';
 
     if(data && data.report_url) {
       reportBtn.setAttribute('href', data.report_url);
+      reportBtn.classList.remove('invisible');
+    } else if(data && data.contribute_url) {
+      reportBtn.setAttribute('href', data.contribute_url);
+      reportBtn.innerHTML = 'Contribute';
       reportBtn.classList.remove('invisible');
     }
 

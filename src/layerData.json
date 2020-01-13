@@ -134,6 +134,7 @@
   },
   "openInfraMap": {
     "url": "https://openinframap.org/about.html",
+    "contribute_url": "https://openinframap.org/about.html",
     "data": {
       "type": "",
       "disclaimer": "All the data currently displayed on OpenInfraMap is sourced directly from OpenStreetMap."

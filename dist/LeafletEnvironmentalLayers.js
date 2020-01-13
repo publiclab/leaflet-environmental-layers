@@ -26810,6 +26810,7 @@ module.exports={
   },
   "openInfraMap": {
     "url": "https://openinframap.org/about.html",
+    "contribute_url": "https://openinframap.org/about.html",
     "data": {
       "type": "",
       "disclaimer": "All the data currently displayed on OpenInfraMap is sourced directly from OpenStreetMap."
@@ -30260,9 +30261,14 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     reportBtn.style.margin = '0 1em';
     reportBtn.style.lineHeight = '10px';
     reportBtn.style.color = '#717171';
+    reportBtn.style.minWidth = '95px';
 
     if(data && data.report_url) {
       reportBtn.setAttribute('href', data.report_url);
+      reportBtn.classList.remove('invisible');
+    } else if(data && data.contribute_url) {
+      reportBtn.setAttribute('href', data.contribute_url);
+      reportBtn.innerHTML = 'Contribute';
       reportBtn.classList.remove('invisible');
     }
 
