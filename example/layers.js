@@ -264,6 +264,9 @@ var embedControl = new L.control.embed({
 });
 embedControl.addTo(map);
 
+var modeControl = new L.control.minimalMode();
+modeControl.addTo(map);
+
 // Collapsible search control
 new L.Control.GPlaceAutocomplete({
   position: 'topleft',
