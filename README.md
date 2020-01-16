@@ -285,6 +285,14 @@ We're going to try spinning this out into its own library; see: https://github.c
             include: ['mapknitter', 'clouds'],
          }).addTo(map);
 
+## Add base layers:
+
+    L.LayerGroup.EnvironmentalLayers({
+            baseLayers: {               // Grayscale base map is used by default when this is undefined 
+             'Standard': baselayer1
+            },
+          }).addTo(map);
+
 ## Turn on Leaflet Hash in the URL:
 
 	 L.LayerGroup.EnvironmentalLayers({
