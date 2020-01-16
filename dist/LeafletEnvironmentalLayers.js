@@ -25855,6 +25855,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       hash: false,
       embed: false, // activates layers on map by default if true.
       currentHash: location.hash,
+      addLayersToMap: false,
       // Source of Truth of Layers name .
       // please put name of Layers carefully in the the appropriate layer group.
       layers0: ['purpleLayer', 'toxicReleaseLayer', 'pfasLayer', 'aqicnLayer', 'osmLandfillMineQuarryLayer', 'Unearthing'],
@@ -25890,6 +25891,9 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       }
       if (!!param.baseLayers) {
         this.options.baseLayers = param.baseLayers;
+      }
+      if (!!param.include) {
+        this.options.addLayersToMap = true;
       }
       param.all = [...this.options.layers0, ...this.options.layers1, ...this.options.layers2, ...this.options.layers3, ...this.options.layers4, ...this.options.layers5, ...this.options.layers6];
       if (!param.include || !param.include.length) {
@@ -25980,6 +25984,14 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         // Update map state from hash
         hash.update(this.options.currentHash);
       }
+        
+      for (let layer of this.options.layers.include) {
+        if (!this.options.addLayersToMap) {
+          return;
+        }
+        map.addLayer(this.overlayMaps[layer]);
+      }
+      
     },
 
     onRemove: function(map) {},
@@ -29729,7 +29741,7 @@ L.LayerGroup.unearthing = L.LayerGroup.extend(
     },
 
     onRemove: function(map) {
-      this._map.removeLayer(this.pointsLayer);
+      this._map.removeLayer(pointsLayer);
     },
   },
 );
