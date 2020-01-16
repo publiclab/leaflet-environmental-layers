@@ -61,13 +61,13 @@
       }).setView([43, -83], 3);
       map.options.minZoom = 3;
 
-      var baselayer1 =L.tileLayer(
-            "https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png",
-            {
-              attribution:
-                '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }
-          ).addTo(map);
+      var baselayer1 = L.tileLayer(
+        'https://api.tiles.mapbox.com/v4/mapbox.emerald/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2FnYXJwcmVldDk3IiwiYSI6ImNqaXhlZjgwaDJtb3EzcW1zdDdwMzJkODcifQ.MA2YIv6VpGLLAo-QYUudTA',
+        {
+          attribution:
+                  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        },
+      ).addTo(map);
 
       /* This is required, make this optional! */
       // var oms = omsUtil(map, {
@@ -75,9 +75,9 @@
       //   circleSpiralSwitchover: 0
       // });
       L.LayerGroup.EnvironmentalLayers({
-        baseLayers: {
-          'Grey-scale': baselayer1
-        },
+        // baseLayers: {
+        //   'Standard': baselayer1
+        // },
         include: ['odorreport', 'asian', 'clouds', 'eonetFiresLayer', 'Unearthing'],
         // exclude: ['mapknitter', 'clouds'],
         hash: true,
