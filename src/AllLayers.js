@@ -5,6 +5,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       hash: false,
       embed: false, // activates layers on map by default if true.
       currentHash: location.hash,
+      addLayersToMap: false,
       defaultBaseLayer: L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }),
@@ -43,6 +44,9 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       }
       if (!!param.baseLayers) {
         this.options.baseLayers = param.baseLayers;
+      }
+      if (!!param.include) {
+        this.options.addLayersToMap = true;
       }
       param.all = [...this.options.layers0, ...this.options.layers1, ...this.options.layers2, ...this.options.layers3, ...this.options.layers4, ...this.options.layers5, ...this.options.layers6];
       if (!param.include || !param.include.length) {
@@ -133,6 +137,14 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         // Update map state from hash
         hash.update(this.options.currentHash);
       }
+        
+      for (let layer of this.options.layers.include) {
+        if (!this.options.addLayersToMap) {
+          return;
+        }
+        map.addLayer(this.overlayMaps[layer]);
+      }
+      
     },
 
     onRemove: function(map) {},

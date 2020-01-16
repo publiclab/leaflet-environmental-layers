@@ -66,7 +66,7 @@ L.LayerGroup.unearthing = L.LayerGroup.extend(
     },
 
     onRemove: function(map) {
-      this._map.removeLayer(this.pointsLayer);
+      this._map.removeLayer(pointsLayer);
     },
   },
 );
