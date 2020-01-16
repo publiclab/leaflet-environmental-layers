@@ -107,6 +107,7 @@ windrose.on('owmlayeradd', windroseAdded, windrose);
 var IndigenousLandsTerritories = L.layerGroup.indigenousLayers('Territories');
 var IndigenousLandsLanguages = L.layerGroup.indigenousLayers('Languages');
 var IndigenousLandsTreaties = L.layerGroup.indigenousLayers('Treaties');
+var Unearthing = L.layerGroup.Unearthing();
 
 var Wisconsin_NM = wisconsinLayer(map);
 var FracTracker_mobile = L.geoJSON.fracTrackerMobile();
@@ -193,6 +194,7 @@ var overlayMaps = {
   'OpenSense ': OpenSenseLayer,
   'OSM Landfills, Quarries': OSMLandfillMineQuarryLayer,
   'EONET Fires': EonetFiresLayer,
+  'Unearthing': Unearthing
 };
 
 var allMapLayers = {
@@ -247,6 +249,7 @@ var allMapLayers = {
   'opensense': OpenSenseLayer,
   'osmLandfillMineQuarryLayer': OSMLandfillMineQuarryLayer,
   'eonetFiresLayer': EonetFiresLayer,
+  'Unearthing': Unearthing
 };
 
 // var oms = omsUtil(map, {
