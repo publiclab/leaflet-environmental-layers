@@ -72,11 +72,11 @@ z-index: 10; }
     max-width: 100%;
   }
 
-  .leaflet-control-layers-scrollbar {
+  .leaflet-control-layers-menu .leaflet-control-layers-scrollbar {
     overflow-y: hidden;
   }
 
-  .leaflet-control-layers-overlays {
+  .leaflet-control-layers-menu .leaflet-control-layers-overlays {
     max-height: 72vh !important;
   }
 
@@ -104,7 +104,7 @@ z-index: 10; }
     height: 3em;
   }
 
-  .layer-info-container .leaflet-control-layers-separator {
+  .leaflet-control-layers-menu .layer-info-container .leaflet-control-layers-separator {
     position: relative;
     bottom: 1.4em;
   }
@@ -152,7 +152,7 @@ z-index: 10; }
     max-width: 100%;
   }
 
-  .leaflet-control-layers-overlays {
+  .leaflet-control-layers-menu .leaflet-control-layers-overlays {
     max-height: 52vh !important;
   }
 
