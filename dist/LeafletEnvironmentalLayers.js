@@ -25852,6 +25852,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 
   {
     options: {
+      simpleLayerControl: false,
       hash: false,
       embed: false, // activates layers on map by default if true.
       currentHash: location.hash,
@@ -25896,7 +25897,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         this.options.baseLayers = param.baseLayers;
       }
       if (!!param.include) {
-        this.options.addLayersToMap = true;
+        this.options.addLayersToMap = param.addLayersToMap === false ? false : true;
       }
       param.all = [...this.options.layers0, ...this.options.layers1, ...this.options.layers2, ...this.options.layers3, ...this.options.layers4, ...this.options.layers5, ...this.options.layers6];
       if (!param.include || !param.include.length) {
@@ -25916,6 +25917,9 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       if (!!param.hostname) {
         this.options.hostname = param.hostname;
       }
+      if (!!param.simpleLayerControl) {
+        this.options.simpleLayerControl = param.simpleLayerControl;
+      }
     },
 
     onAdd: function(map) {
@@ -25927,30 +25931,43 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       for (let layer of this.options.layers.include) {
         if (this.options.layers0.includes(layer)) {
           this.overlayMaps[layer] = window['L']['layerGroup'][layer]();
-          if (layer === 'purpleLayer' && !this.groupedOverlayMaps.PurpleAir) {
-            this.groupedOverlayMaps.PurpleAir = { category: 'group', layers: {} };
-            this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
-          } else if(layer === 'purpleLayer') {
-            this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
-          } else if (layer === 'toxicReleaseLayer') {
-            this.groupedOverlayMaps['Toxic Release'] = this.overlayMaps[layer];
-          } else if (layer === 'aqicnLayer') {
-            this.groupedOverlayMaps['Air Quality Index'] = this.overlayMaps[layer];
-          } else if (layer === 'osmLandfillMineQuarryLayer') {
-            this.groupedOverlayMaps['OSM landfills, quarries'] = this.overlayMaps[layer];
-          } else {
+          switch(layer) {
+            case 'purpleLayer':
+              if (!this.groupedOverlayMaps.PurpleAir) {
+                this.groupedOverlayMaps.PurpleAir = { category: 'group', layers: {} };
+                this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
+              } else {
+                this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
+              };
+              break;
+            case 'toxicReleaseLayer':
+              this.groupedOverlayMaps['Toxic Release'] = this.overlayMaps[layer];
+              break;
+            case 'aqicnLayer':
+              this.groupedOverlayMaps['Air Quality Index'] = this.overlayMaps[layer];
+              break;
+            case 'osmLandfillMineQuarryLayer':
+              this.groupedOverlayMaps['OSM landfills, quarries'] = this.overlayMaps[layer];
+              break;
+            default:
+              this.groupedOverlayMaps[layer] = this.overlayMaps[layer];  
             this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
+              this.groupedOverlayMaps[layer] = this.overlayMaps[layer];  
           }
         }
         else if (this.options.layers1.includes(layer)) {
           this.overlayMaps[layer] = window['L']['layerGroup']['layerCode'](layer);
-          if (layer === 'purpleairmarker' && !this.groupedOverlayMaps.PurpleAir) {
-            this.groupedOverlayMaps.PurpleAir = { category: 'group', layers: {} };
-            this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
-          } else if(layer === 'purpleairmarker') {
-            this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
-          } else {
-            this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
+          switch(layer) {
+            case 'purpleairmarker':
+              if (!this.groupedOverlayMaps.PurpleAir) {
+                this.groupedOverlayMaps.PurpleAir = { category: 'group', layers: {} };
+                this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
+              } else {
+                this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
+              }
+              break;
+            default:
+              this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
           }
         }
         else if (this.options.layers2.includes(layer)) {
@@ -25979,10 +25996,12 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         }
         else if (this.options.layers3.includes(layer)) {
           this.overlayMaps[layer] = window[layer + 'Layer'](map);
-          if(layer === 'wisconsin') {
-            this.groupedOverlayMaps['Wisconsin Non-metal'] = this.overlayMaps[layer];
-          } else {
-            this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
+          switch(layer) {
+            case 'wisconsin':
+              this.groupedOverlayMaps['Wisconsin Non-metal'] = this.overlayMaps[layer];
+              break;
+            default:
+              this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
           }
         }
         else if (this.options.layers4.includes(layer)) {
@@ -26009,10 +26028,12 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         }
         else if (this.options.layers6.includes(layer)) {
           this.overlayMaps[layer] = window['L']['geoJSON'][layer]();
-          if(layer === 'eonetFiresLayer') {
-            this.groupedOverlayMaps['EONET Fires'] = this.overlayMaps[layer];
-          } else {
-            this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
+          switch(layer) {
+            case 'eonetFiresLayer':
+              this.groupedOverlayMaps['EONET Fires'] = this.overlayMaps[layer];
+              break;
+            default:
+              this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
           }
         }
         else {
@@ -26028,8 +26049,9 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         ) : L.control.embed().addTo(map);
       }
 
-      L.control.layers(baseMaps, this.overlayMaps).addTo(map);
-      // L.control.layersBrowser(baseMaps, this.groupedOverlayMaps).addTo(map);
+      this.options.simpleLayerControl ? 
+      L.control.layers(baseMaps, this.overlayMaps).addTo(map) :
+      L.control.layersBrowser(baseMaps, this.groupedOverlayMaps).addTo(map);
 
       var allMaps = Object.assign(baseMaps, this.overlayMaps);
       if (this.options.hash) {
@@ -27128,7 +27150,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         }
 
 
-        if (typeof self._map.spin === 'function') {
+        if (self._map && typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
         $.getJSON(Layer_URL, function(data) {
@@ -27138,7 +27160,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
           { self.parseData(data.results); }
           else
           { self.parseData(data); }
-          if (typeof self._map.spin === 'function') {
+          if (self._map && typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
         });
@@ -27396,7 +27418,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
           for (i = 0; i < data.feed.length; i++) {
             this.addMarker(data.feed[i]);
           }
-          if (this.options.clearOutsideBounds) {
+          if (this.options.clearOutsideBounds && this._map) {
             this.clearOutsideBounds();
           }
         }
@@ -27406,7 +27428,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
           for (i = 0; i < data.total_count; i++) {
             this.addMarker(data.results[i]);
           }
-          if (this.options.clearOutsideBounds) {
+          if (this.options.clearOutsideBounds && this._map) {
             this.clearOutsideBounds();
           }
         }
@@ -27415,7 +27437,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         for (i = 0; i < data.length; i++) {
           this.addMarker(data[i]);
         }
-        if (this.options.clearOutsideBounds) {
+        if (this.options.clearOutsideBounds && this._map) {
           this.clearOutsideBounds();
         }
       }
@@ -27431,7 +27453,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
               this.addMarker1(data[i], i);
             }
           }
-          if (this.options.clearOutsideBounds) {
+          if (this.options.clearOutsideBounds && this._map) {
             this.clearOutsideBounds();
           }
         }
