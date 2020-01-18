@@ -46,7 +46,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         this.options.baseLayers = param.baseLayers;
       }
       if (!!param.include) {
-        this.options.addLayersToMap = true;
+        this.options.addLayersToMap = param.addLayersToMap === false ? false : true;
       }
       param.all = [...this.options.layers0, ...this.options.layers1, ...this.options.layers2, ...this.options.layers3, ...this.options.layers4, ...this.options.layers5, ...this.options.layers6];
       if (!param.include || !param.include.length) {
