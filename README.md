@@ -112,6 +112,15 @@ In `src/legendCreation.js`, add `addLayerNameURLPair(layer_var, "img_url");`, wh
 
 #### Add the layers browser menu from the demo page
 To add the layers browser menu from the demo page,
+
+Dependencies:
+```
+  <!-- Bootstrap --> 
+  <link rel="stylesheet" href="../node_modules\bootstrap\dist\css\bootstrap.min.css">
+  <script src="../node_modules\jquery\dist\jquery.slim.min.js"></script>
+  <script src="../node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
+```
+
 ```js
   var baseMaps = {
   'Standard': baselayer1,
@@ -285,6 +294,15 @@ We're going to try spinning this out into its own library; see: https://github.c
             include: ['mapknitter', 'clouds'],
          }).addTo(map);
 
+  The layers added to the 'include' option are displayed by default when the map is initialized
+
+## Add some layers without displaying them default:
+
+	 L.LayerGroup.EnvironmentalLayers({
+            addLayersToMap: false,    // Prevents displaying layers by default
+            include: ['mapknitter', 'clouds'],
+         }).addTo(map);
+
 ## Add base layers:
 
     L.LayerGroup.EnvironmentalLayers({
@@ -310,3 +328,21 @@ We're going to try spinning this out into its own library; see: https://github.c
     }).addTo(map);
 
   By adding a hostname, the embed code can point to the domain that hosts the maps.
+
+
+## Browse layers
+
+  The layer menu used by default groups similar layers, displays more information about the layers and filters them when out of bounds.
+
+  ### Dependencies
+      
+        <link rel="stylesheet" href="../node_modules\bootstrap\dist\css\bootstrap.min.css">
+        <script src="../node_modules\jquery\dist\jquery.slim.min.js"></script>
+        <script src="../node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
+        <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet" />
+    
+  ### To use Leaflet's default layer control:
+
+    L.LayerGroup.EnvironmentalLayers({
+            simpleLayerControl: true,   // by default this is FALSE
+      }).addTo(map);
