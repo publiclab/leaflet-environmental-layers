@@ -77,30 +77,43 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       for (let layer of this.options.layers.include) {
         if (this.options.layers0.includes(layer)) {
           this.overlayMaps[layer] = window['L']['layerGroup'][layer]();
-          if (layer === 'purpleLayer' && !this.groupedOverlayMaps.PurpleAir) {
-            this.groupedOverlayMaps.PurpleAir = { category: 'group', layers: {} };
-            this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
-          } else if(layer === 'purpleLayer') {
-            this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
-          } else if (layer === 'toxicReleaseLayer') {
-            this.groupedOverlayMaps['Toxic Release'] = this.overlayMaps[layer];
-          } else if (layer === 'aqicnLayer') {
-            this.groupedOverlayMaps['Air Quality Index'] = this.overlayMaps[layer];
-          } else if (layer === 'osmLandfillMineQuarryLayer') {
-            this.groupedOverlayMaps['OSM landfills, quarries'] = this.overlayMaps[layer];
-          } else {
+          switch(layer) {
+            case 'purpleLayer':
+              if (!this.groupedOverlayMaps.PurpleAir) {
+                this.groupedOverlayMaps.PurpleAir = { category: 'group', layers: {} };
+                this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
+              } else {
+                this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
+              };
+              break;
+            case 'toxicReleaseLayer':
+              this.groupedOverlayMaps['Toxic Release'] = this.overlayMaps[layer];
+              break;
+            case 'aqicnLayer':
+              this.groupedOverlayMaps['Air Quality Index'] = this.overlayMaps[layer];
+              break;
+            case 'osmLandfillMineQuarryLayer':
+              this.groupedOverlayMaps['OSM landfills, quarries'] = this.overlayMaps[layer];
+              break;
+            default:
+              this.groupedOverlayMaps[layer] = this.overlayMaps[layer];  
             this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
+              this.groupedOverlayMaps[layer] = this.overlayMaps[layer];  
           }
         }
         else if (this.options.layers1.includes(layer)) {
           this.overlayMaps[layer] = window['L']['layerGroup']['layerCode'](layer);
-          if (layer === 'purpleairmarker' && !this.groupedOverlayMaps.PurpleAir) {
-            this.groupedOverlayMaps.PurpleAir = { category: 'group', layers: {} };
-            this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
-          } else if(layer === 'purpleairmarker') {
-            this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
-          } else {
-            this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
+          switch(layer) {
+            case 'purpleairmarker':
+              if (!this.groupedOverlayMaps.PurpleAir) {
+                this.groupedOverlayMaps.PurpleAir = { category: 'group', layers: {} };
+                this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
+              } else {
+                this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
+              }
+              break;
+            default:
+              this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
           }
         }
         else if (this.options.layers2.includes(layer)) {
@@ -129,10 +142,12 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         }
         else if (this.options.layers3.includes(layer)) {
           this.overlayMaps[layer] = window[layer + 'Layer'](map);
-          if(layer === 'wisconsin') {
-            this.groupedOverlayMaps['Wisconsin Non-metal'] = this.overlayMaps[layer];
-          } else {
-            this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
+          switch(layer) {
+            case 'wisconsin':
+              this.groupedOverlayMaps['Wisconsin Non-metal'] = this.overlayMaps[layer];
+              break;
+            default:
+              this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
           }
         }
         else if (this.options.layers4.includes(layer)) {
@@ -159,10 +174,12 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         }
         else if (this.options.layers6.includes(layer)) {
           this.overlayMaps[layer] = window['L']['geoJSON'][layer]();
-          if(layer === 'eonetFiresLayer') {
-            this.groupedOverlayMaps['EONET Fires'] = this.overlayMaps[layer];
-          } else {
-            this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
+          switch(layer) {
+            case 'eonetFiresLayer':
+              this.groupedOverlayMaps['EONET Fires'] = this.overlayMaps[layer];
+              break;
+            default:
+              this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
           }
         }
         else {
