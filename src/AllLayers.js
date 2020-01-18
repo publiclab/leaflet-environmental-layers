@@ -2,6 +2,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 
   {
     options: {
+      simpleLayerControl: false,
       hash: false,
       embed: false, // activates layers on map by default if true.
       currentHash: location.hash,
@@ -65,6 +66,9 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       }
       if (!!param.hostname) {
         this.options.hostname = param.hostname;
+      }
+      if (!!param.simpleLayerControl) {
+        this.options.simpleLayerControl = param.simpleLayerControl;
       }
     },
 
@@ -195,7 +199,8 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         ) : L.control.embed().addTo(map);
       }
 
-      // L.control.layers(baseMaps, this.overlayMaps).addTo(map);
+      this.options.simpleLayerControl ? 
+      L.control.layers(baseMaps, this.overlayMaps).addTo(map) :
       L.control.layersBrowser(baseMaps, this.groupedOverlayMaps).addTo(map);
 
       var allMaps = Object.assign(baseMaps, this.overlayMaps);
