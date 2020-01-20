@@ -30566,6 +30566,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   _hideOutOfBounds: function(obj, elements) {
     var self = this;
     var map = this._map;
+    var isPageRefreshed = 0;
     var data = this._getLayerData(obj);
     var layerName;
     if(obj.name && !obj.group) {
@@ -30575,7 +30576,12 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     }
     this._hideElements(obj, data, layerName, elements); // Filter layer list on initialization
     map.on('moveend', function() { // Update layer list on map movement
-      self._hideElements(obj, data, layerName, elements, true);
+      if (isPageRefreshed < 2 && window.performance.navigation.type !== 1) {
+        isPageRefreshed++;  // Track page moveend events to prevent errors on map.removeLayer when a page is reloaded
+      }
+      if(isPageRefreshed > 1) {
+        self._hideElements(obj, data, layerName, elements, true);
+      }
     });
   },
 
