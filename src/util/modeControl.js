@@ -5,8 +5,9 @@ L.Control.MinimalMode = L.Control.extend({
       minimalMode: false
     },
   
-    initialize: function(options) {
+    initialize: function(layersControl, options) {
       L.Util.setOptions(this, options);
+      this._layersControl = layersControl;
       this._modeBtnContainer = L.DomUtil.create('div', 'leaflet-control-mode leaflet-bar leaflet-control');
       var link = L.DomUtil.create('a', 'leaflet-control-mode-link', this._modeBtnContainer);
       link.href = '#';
@@ -26,9 +27,17 @@ L.Control.MinimalMode = L.Control.extend({
     },
   
     toggleMode: function() {
+      var self = this;
       this.options.minimalMode = !this.options.minimalMode;
       this._minimalModeIcon.classList = this.options.minimalMode ? 'far fa-circle' : 'fas fa-map-marker-alt';
       this._map._minimalMode = this.options.minimalMode;
+
+      this._layersControl._layers.forEach(function(layerObj) {
+        if (layerObj.overlay && self._layersControl._map.hasLayer(layerObj.layer)) {
+          self._layersControl._map.removeLayer(layerObj.layer)
+          self._layersControl._map.addLayer(layerObj.layer)
+        }
+      });
     },
   
     onRemove: function(map) {},

@@ -264,7 +264,7 @@ var embedControl = new L.control.embed({
 });
 embedControl.addTo(map);
 
-var modeControl = new L.control.minimalMode();
+var modeControl = new L.control.minimalMode(leafletControl);
 modeControl.addTo(map);
 
 // Collapsible search control
