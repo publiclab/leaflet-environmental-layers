@@ -75,9 +75,11 @@ L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
       var date = new Date(data.geometries[0].date).toUTCString();
       var source = data.sources && data.sources[0].url;
       var fire_marker;
-      var minimalMarker = L.circleMarker(coords, { radius: 5, color: '#333', fillColor: '#ff421d' });
+      var defaultMarker = L.marker([lat, lng], {icon: fireIcon});
+      var minimalMarker = L.circleMarker(coords, { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#ff421d' });
       if (!isNaN((lat)) && !isNaN((lng)) ) {
-        fire_marker = this._map._minimalMode ? minimalMarker.bindPopup('<strong>Event : </strong>' + title + '<br>Lat : ' + lat + '<br>Lon : '+ lng + '<br>Date : ' + date + '<br><i><a href=' + source + '>source<a></i>') : L.marker([lat, lng], {icon: fireIcon}).bindPopup('<strong>Event : </strong>' + title + '<br>Lat : ' + lat + '<br>Lon : '+ lng + '<br>Date : ' + date + '<br><i><a href=' + source + '>source<a></i>');
+        var content = '<strong>Event : </strong>' + title + '<br>Lat : ' + lat + '<br>Lon : '+ lng + '<br>Date : ' + date + '<br><i><a href=' + source + '>source<a></i>';
+        fire_marker = this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
       }
       return fire_marker;
     },
