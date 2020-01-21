@@ -1,5 +1,12 @@
 describe("Testing for PLpeopleLayer", function() {
 
+  var geocoder;
+
+  beforeAll(function() {
+    geocoder = jasmine.createSpyObj('Geocoder', ['geocode']);
+    spyOn(google.maps, 'Geocoder').and.returnValue(geocoder);
+  });
+
   beforeEach(function () {
       loadFixtures('PLpeopleLayer.html');
     });
