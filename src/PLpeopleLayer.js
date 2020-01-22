@@ -1,7 +1,7 @@
 // require('leaflet-blurred-location') ;
 // require('leaflet-blurred-location-display') ;
 
-L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
+L.LayerGroup.pLpeopleLayer = L.LayerGroup.extend(
 
   {
     options: {
@@ -48,5 +48,5 @@ L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
 
 
 L.layerGroup.pLpeopleLayer = function(options) {
-  return new L.LayerGroup.PLpeopleLayer(options);
+  return new L.LayerGroup.pLpeopleLayer(options);
 };

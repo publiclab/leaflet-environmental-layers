@@ -565,8 +565,8 @@
         }
 
 
-        /* PlpeopleLayer */ 
-        L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
+        /* PLpeopleLayer */ 
+        L.LayerGroup.pLpeopleLayer = L.LayerGroup.extend(
             {
                 options: {
                     url: 'https://publiclab.org/api/srch/nearbyPeople',
@@ -608,7 +608,7 @@
 
 
         L.layerGroup.pLpeopleLayer = function (options) {
-            return new L.LayerGroup.PLpeopleLayer(options) ;
+            return new L.LayerGroup.pLpeopleLayer(options) ;
         };
 
     </script>
