@@ -25857,7 +25857,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       currentHash: location.hash,
       // Source of Truth of Layers name .
       // please put name of Layers carefully in the the appropriate layer group.
-      layers0: ['PLpeopleLayer', 'purpleLayer', 'toxicReleaseLayer', 'pfasLayer', 'aqicnLayer', 'osmLandfillMineQuarryLayer', 'Unearthing'],
+      layers0: ['pLpeopleLayer', 'purpleLayer', 'toxicReleaseLayer', 'pfasLayer', 'aqicnLayer', 'osmLandfillMineQuarryLayer', 'Unearthing'],
       layers1: ['purpleairmarker', 'skytruth', 'fractracker', 'odorreport', 'mapknitter', 'openaq', 'luftdaten', 'opensense'],
       layers2: ['Power', 'Petroleum', 'Telecom', 'Water'],
       layers3: ['wisconsin'],
@@ -25995,7 +25995,7 @@ L.LayerGroup.EnvironmentalLayers = function(options) {
 // require('leaflet-blurred-location') ;
 // require('leaflet-blurred-location-display') ;
 
-L.LayerGroup.pLpeopleLayer = L.LayerGroup.extend(
+L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
 
   {
     options: {
@@ -26015,7 +26015,7 @@ L.LayerGroup.pLpeopleLayer = L.LayerGroup.extend(
         map: this._map,
       };
       this.BlurredLocation = new BlurredLocation(this.blurred_options);
-      this.locations = [[23.1, 77.1]]; // testing marker
+      // this.locations = [[23.1, 77.1]]; // testing marker
       this.options_display = {
         blurredLocation: this.BlurredLocation,
         locations: this.locations,
@@ -26042,7 +26042,7 @@ L.LayerGroup.pLpeopleLayer = L.LayerGroup.extend(
 
 
 L.layerGroup.pLpeopleLayer = function(options) {
-  return new L.LayerGroup.pLpeopleLayer(options);
+  return new L.LayerGroup.PLpeopleLayer(options);
 };
 
 },{}],10:[function(require,module,exports){
