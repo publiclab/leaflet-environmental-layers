@@ -114,6 +114,11 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         }
       }
 
+      var leafletControl = L.control.layers(baseMaps, this.overlayMaps).addTo(map);
+
+      var modeControl = new L.control.minimalMode(leafletControl);
+      modeControl.addTo(map);
+
       if (this.options.embed) {
         this.options.hostname ? (
           L.control.embed({
@@ -121,8 +126,6 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
           }).addTo(map)
         ) : L.control.embed().addTo(map);
       }
-
-      L.control.layers(baseMaps, this.overlayMaps).addTo(map);
 
       var allMaps = Object.assign(baseMaps, this.overlayMaps);
       if (this.options.hash) {

@@ -259,13 +259,13 @@ var hash = new L.FullHash(map, allMapLayers);
 var leafletControl = new L.control.layersBrowser(baseMaps, overlayMaps);
 leafletControl.addTo(map);
 
+var modeControl = new L.control.minimalMode(leafletControl);
+modeControl.addTo(map);
+
 var embedControl = new L.control.embed({
   // hostname: 'your domain name goes here'
 });
 embedControl.addTo(map);
-
-var modeControl = new L.control.minimalMode(leafletControl);
-modeControl.addTo(map);
 
 // Collapsible search control
 new L.Control.GPlaceAutocomplete({
