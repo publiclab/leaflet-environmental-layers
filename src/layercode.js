@@ -106,7 +106,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         }
 
 
-        if (typeof self._map.spin === 'function') {
+        if (self._map && typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
         $.getJSON(Layer_URL, function(data) {
@@ -116,7 +116,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
           { self.parseData(data.results); }
           else
           { self.parseData(data); }
-          if (typeof self._map.spin === 'function') {
+          if (self._map && typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
         });
@@ -393,7 +393,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
           for (i = 0; i < data.feed.length; i++) {
             this.addMarker(data.feed[i]);
           }
-          if (this.options.clearOutsideBounds) {
+          if (this.options.clearOutsideBounds && this._map) {
             this.clearOutsideBounds();
           }
         }
@@ -403,7 +403,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
           for (i = 0; i < data.total_count; i++) {
             this.addMarker(data.results[i]);
           }
-          if (this.options.clearOutsideBounds) {
+          if (this.options.clearOutsideBounds && this._map) {
             this.clearOutsideBounds();
           }
         }
@@ -412,7 +412,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         for (i = 0; i < data.length; i++) {
           this.addMarker(data[i]);
         }
-        if (this.options.clearOutsideBounds) {
+        if (this.options.clearOutsideBounds && this._map) {
           this.clearOutsideBounds();
         }
       }
@@ -428,7 +428,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
               this.addMarker1(data[i], i);
             }
           }
-          if (this.options.clearOutsideBounds) {
+          if (this.options.clearOutsideBounds && this._map) {
             this.clearOutsideBounds();
           }
         }
