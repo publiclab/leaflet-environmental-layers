@@ -14,8 +14,8 @@ L.Control.MinimalMode = L.Control.extend({
       this._map = map;
       this._map._minimalMode = this.options.minimalMode;
       this._modeBtnContainer = L.DomUtil.create('div', 'leaflet-control-mode leaflet-bar leaflet-control');
-      this._defaultMode = this._createButton('Default mode', 'fas fa-map-marker-alt', this.loadDefaultMode);
-      this._minimalMode = this._createButton('Minimal mode', 'far fa-dot-circle', this.loadMinimalMode);
+      this._defaultModeBtn = this._createButton('Show default markers', 'fas fa-map-marker-alt', this.loadDefaultMode);
+      this._minimalModeBtn = this._createButton('Show minimal markers', 'far fa-dot-circle', this.loadMinimalMode);
       this._updateDisabled();
       return this._modeBtnContainer;
     },
@@ -34,7 +34,7 @@ L.Control.MinimalMode = L.Control.extend({
     },
 
     loadMinimalMode: function() {
-      if (L.DomUtil.hasClass(this._minimalMode, 'leaflet-disabled')) {
+      if (L.DomUtil.hasClass(this._minimalModeBtn, 'leaflet-disabled')) {
         return;
       }
       this.options.minimalMode = true;
@@ -44,7 +44,7 @@ L.Control.MinimalMode = L.Control.extend({
     },
 
     loadDefaultMode: function() {
-      if (L.DomUtil.hasClass(this._defaultMode, 'leaflet-disabled')) {
+      if (L.DomUtil.hasClass(this._defaultModeBtn, 'leaflet-disabled')) {
         return;
       }
       this.options.minimalMode = false;
@@ -56,11 +56,11 @@ L.Control.MinimalMode = L.Control.extend({
     _updateDisabled: function() {
       var className = 'leaflet-disabled';
       if(this._map._minimalMode) {
-        L.DomUtil.removeClass(this._defaultMode, className);
-        L.DomUtil.addClass(this._minimalMode, className);
+        L.DomUtil.removeClass(this._defaultModeBtn, className);
+        L.DomUtil.addClass(this._minimalModeBtn, className);
       } else {
-        L.DomUtil.addClass(this._defaultMode, className);
-        L.DomUtil.removeClass(this._minimalMode, className);
+        L.DomUtil.addClass(this._defaultModeBtn, className);
+        L.DomUtil.removeClass(this._minimalModeBtn, className);
       }
     },
 
