@@ -27093,7 +27093,7 @@ module.exports={
       "maxZoom": 15
     }
   },
-  "PLpeople": {
+  "pLpeopleLayer": {
     "url": "http://publiclab.org",
     "data": {
       "type": "",

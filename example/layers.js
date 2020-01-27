@@ -36,7 +36,7 @@ var baselayer4 = L.tileLayer(
   },
 );
 
-var PLpeople = L.layerGroup.pLpeopleLayer();
+var pLpeopleLayer = L.layerGroup.pLpeopleLayer();
 var PurpleLayer = L.layerGroup.purpleLayer();
 var ToxicRelease = L.layerGroup.toxicReleaseLayer();
 var PFASTracker = L.layerGroup.pfasLayer();
@@ -122,7 +122,7 @@ var baseMaps = {
 };
 
 var overlayMaps = {
-  "PLpeople" : PLpeople,
+  "pLpeopleLayer" : pLpeopleLayer,
   'Wisconsin Non-Metal': Wisconsin_NM,
   'Fractracker': Fractracker,
   'FracTracker mobile': FracTracker_mobile,
@@ -203,7 +203,7 @@ var allMapLayers = {
   'Streets': baselayer3,
   'Dark': baselayer4,
 
-  "PLpeople" : PLpeople,
+  "pLpeopleLayer" : pLpeopleLayer,
   'wisconsin': Wisconsin_NM,
   'fracTrackerMobile': FracTracker_mobile,
   'purpleLayer': PurpleLayer,
