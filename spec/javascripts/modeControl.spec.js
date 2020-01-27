@@ -24,14 +24,14 @@ describe('Minimal Mode Control', function() {
     var minimalModeBtn = buttons[1];
 
     it('has default mode upon initialization', function() {
-      expect(defaultModeBtn.title).toEqual('Default mode');
+      expect(defaultModeBtn.title).toEqual('Show default markers');
       expect(defaultModeBtn).toHaveClass('leaflet-disabled');
       expect(minimalModeBtn).not.toHaveClass('leaflet-disabled');
       expect(map._minimalMode).toBeFalsy();
     });
 
     it('turns on minimal mode', function() {
-      expect(minimalModeBtn.title).toEqual('Minimal mode');
+      expect(minimalModeBtn.title).toEqual('Show minimal markers');
       minimalModeBtn.click();
       expect(minimalModeBtn).toHaveClass('leaflet-disabled');
       expect(defaultModeBtn).not.toHaveClass('leaflet-disabled');
@@ -40,7 +40,7 @@ describe('Minimal Mode Control', function() {
 
     // Checks if default mode can be turned on after activating minimal mode
     it('turns on default mode', function() {
-      expect(defaultModeBtn.title).toEqual('Default mode');
+      expect(defaultModeBtn.title).toEqual('Show default markers');
       defaultModeBtn.click();
       expect(defaultModeBtn).toHaveClass('leaflet-disabled');
       expect(minimalModeBtn).not.toHaveClass('leaflet-disabled');
