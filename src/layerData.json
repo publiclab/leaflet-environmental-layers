@@ -276,7 +276,7 @@
       "maxZoom": 15
     }
   },
-  "pLpeopleLayer": {
+  "PLpeople": {
     "url": "http://publiclab.org",
     "data": {
       "type": "",

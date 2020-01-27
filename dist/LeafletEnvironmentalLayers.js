@@ -25862,7 +25862,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       }),
       // Source of Truth of Layers name .
       // please put name of Layers carefully in the the appropriate layer group.
-      layers0: ['pLpeopleLayer', 'purpleLayer', 'toxicReleaseLayer', 'pfasLayer', 'aqicnLayer', 'osmLandfillMineQuarryLayer', 'Unearthing'],
+      layers0: ['PLpeople', 'purpleLayer', 'toxicReleaseLayer', 'pfasLayer', 'aqicnLayer', 'osmLandfillMineQuarryLayer', 'Unearthing'],
       layers1: ['purpleairmarker', 'skytruth', 'fractracker', 'odorreport', 'mapknitter', 'openaq', 'luftdaten', 'opensense'],
       layers2: ['Power', 'Petroleum', 'Telecom', 'Water'],
       layers3: ['wisconsin'],
@@ -26128,7 +26128,7 @@ L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
 );
 
 
-L.layerGroup.pLpeopleLayer = function(options) {
+L.layerGroup.PLpeople = function(options) {
   return new L.LayerGroup.PLpeopleLayer(options);
 };
 
@@ -27093,7 +27093,7 @@ module.exports={
       "maxZoom": 15
     }
   },
-  "pLpeopleLayer": {
+  "PLpeople": {
     "url": "http://publiclab.org",
     "data": {
       "type": "",

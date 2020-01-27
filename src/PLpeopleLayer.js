@@ -47,6 +47,6 @@ L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
 );
 
 
-L.layerGroup.pLpeopleLayer = function(options) {
+L.layerGroup.PLpeople = function(options) {
   return new L.LayerGroup.PLpeopleLayer(options);
 };
