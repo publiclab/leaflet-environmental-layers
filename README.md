@@ -7,19 +7,19 @@
 
 A leaflet plugin that has a collection of layers containing environmental data pulled in from different sources. See this [demo page](https://publiclab.github.io/leaflet-environmental-layers/example/index.html#lat=43.00&lon=-4.07&zoom=3&layers=Standard) for a simple demonstration of the plugin.
 
-## Content
+## Table of Contents
 1. [What is LEL](#leaflet-environmental-layers-(LEL))
 2. [Installation](##installation)
 3. [Usage](##usage)
 4. [Dependencies](##dependencies)
-4. [Features](##features)
-5. [Adding LEL features individually](##adding-LEL-features-individually)
-6. [Layers](##layers)
-7. [Adding layers individually](##adding-layers-individually)
-8. How to contribute?
-9. Testing
-10. Reach out to the maintainers
-11. About PublicLab
+5. [Getting started](##getting-started)
+6. [Features](##features)
+7. [Layers](##layers)
+8. [Adding LEL features individually](##adding-LEL-features-individually)
+9. [Adding layers individually](##adding-layers-individually)
+10. [Contributing](##contributing)
+11. Reach out to the maintainers
+12. [About PublicLab](##about-publicLab)
 
 ## Installation
   
@@ -84,7 +84,21 @@ A leaflet plugin that has a collection of layers containing environmental data p
         <!-- Leaflet Google Places Autocomplete -->
         <script src="../node_modules/leaflet-google-places-autocomplete/src/js/leaflet-gplaces-autocomplete.js"></script>
         <link rel="stylesheet" href="../node_modules/leaflet-google-places-autocomplete/src/css/leaflet-gplaces-autocomplete.css">
-        <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script> 
+        <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+
+## Getting started
+### _Installation Instructions_
+1. Clone this repository to your local environment.
+2. Run `npm install` to install all the necessary packages required.
+3. Open `examples/index.html` in your browser to look at the preview of the library.
+
+### _Instructions for a developer_
+1. Install grunt - https://gruntjs.com/installing-grunt.
+2. Make the changes you are working on in respective /src files.
+3. Run `grunt build` to generate files in the /dist directory.
+4. Run `grunt transpile` to transpile es6 code and copy files needed to run the tests to the /dist directory.
+5. Run `grunt jasmine` to run tests on the LEL layers and ensure they pass.
+6. Test your changes on a browser by opening `examples/index.html`.
 
 ## Features
 
@@ -98,10 +112,12 @@ Use the button on right-most corner to change the way the background of the map 
 
 ### _See More Data_
 
-- Toggle certain layers on and off using the Layers button in the toolbar. - Layers with near-real-time or real-time data will have the 'NRT/RT' text on them.
+- Toggle certain layers on and off using the Layers button in the toolbar. 
+- Layers with near-real-time or real-time data will have the 'NRT/RT' mark on them.
 - More information on the layer data will be available when clicking the 'i' button on the layer
 - Layers that allow contributions will have a `report` button or `contribute` button.
 - Layers will be visible on the menu only when the map view intersects with the layer's bounds or zoom levels.
+- A badge displays the number of new layers in the map view when the map intersects with new layers
 
 ### _Click on a Point_
 
@@ -119,85 +135,9 @@ The map page's URL hash updates on map movement and when a layer is added or rem
 
 Click on the button at the bottom on the left side of a map to generate an embed code so that the map page can be embedded in other sites.
 
-## Adding LEL features individually
-### _Add a legend_
-
-In `src/legendCreation.js`, add `addLayerNameURLPair(layer_var, "img_url");`, where `layer_var` is consistent with the variable used in `example/index.html` and `img_url` is the source of the image to be used as the legend.
-
-### _Add an embed control_
-
-#### Creation
-
-    // Assuming your map instance is in a variable called map
-    L.control.embed(options).addTo(map);
-
-The optional options object can be passed in with any of the following properties:
-| Option    | Type    | Default     | Description |
-|-----------|---------|-------------|-------------|
-| position  | String  | 'topleft'   | Other possible values include 'topright', 'bottomleft' or 'bottomright' |
-| hostname  | String  | 'publiclab.github.io'   | Sets hostname for the URL in the embed code |
-
-### _Add hash support for easy sharing of map_    
-#### Steps To add
-1. Add link
-
-        <script src="node_modules/leaflet-environmental-layers/lib/leaflet-fullUrlHash.js"></script>
-
-2. Creation
-
-        // Assuming your map instance is in a variable called map
-        // Assuming an object with all the map layers is in a variable called allMapLayers
-        var hash = new L.FullHash(map, allMapLayers);  
-
-### _Add the layers browser menu_
-#### Dependencies
-- Requires Bootstrap and jquery to be installed
-
-```
-  <!-- Bootstrap --> 
-  <link rel="stylesheet" href="node_modules\bootstrap\dist\css\bootstrap.min.css">
-  <script src="node_modules\jquery\dist\jquery.slim.min.js"></script>
-  <script src="node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
-```
-#### Usage example
-```js
-  var baseMaps = {
-    'Standard': baselayer1,
-  };
-
-  var overlayMaps = {
-    'Wisconsin Non-Metal': Wisconsin_NM,
-    'Indigenous Lands': {
-      category: 'group', // Let's the control know if this should be rendered as a group
-      layers: { // Layers making the group
-        'Territories': IndigenousLandsTerritories,
-        'Languages': IndigenousLandsLanguages,
-        'Treaties': IndigenousLandsTreaties,
-      },
-    },
-  };
-
-  var leafletControl = new L.control.layersBrowser(baseMaps, overlayMaps);
-  leafletControl.addTo(map);
-```
-#### Creation
-
-    L.control.layersBrowser(baseMaps, overlayMaps).addTo(map);
-
-- `baseMaps` and `overlayMaps` are object literals that have layer names for keys and map layer objects for values.
-- `baseMaps` will be hidden if only one base map is provided
-- The layer information displayed for each layer is stored in `layerData.json`
-- The layer name(key) in the `overlayMaps` object is not case-sensitive and can have spaces but the characters should match with those in `layerData.json`
-- The layers are filtered according to the map view
-- When there are new layers present in the map view when moving around a badge is displayed near the layer control icon on the top right showing the number of new layers in the view
-
-### _Add search control_
-  LEL uses [leaflet-google-places-autocomplete](https://github.com/Twista/leaflet-google-places-autocomplete) for the search control feature.
-
 ## Layers
-The information of each layer can be found here:
+The information of each layer can be found here: [Layer Information](https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library)
 
-https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library
 
 | Layer Name                  | Color   |
 | --------------------------- | ------- |
@@ -249,39 +189,114 @@ https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-li
 | Unearthing                  | N/A     |
 
 
-## Adding LEL layers individually
-### General (required for all layers) :
+## Adding LEL features individually
+### _Add a legend_
 
-      <script src="../dist/LeafletEnvironmentalLayers.js"></script>
-      <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet">
-	    <script src="../node_modules/leaflet-spin/example/spin/dist/spin.min.js"></script>  <!-- Compulsory to add -->
-         
-      <script src="../node_modules/leaflet-spin/example/leaflet.spin.min.js"></script>
+In `src/legendCreation.js`, add `addLayerNameURLPair(layer_var, "img_url");`, where `layer_var` is consistent with the variable used in `example/index.html` and `img_url` is the source of the image to be used as the legend.
 
-### To use Wisconsin Non-Metallic Layer :
+### _Add an embed control_
 
-            <script src="https://unpkg.com/esri-leaflet@2.2.3/dist/esri-leaflet.js"></script>
-            <script src="https://unpkg.com/esri-leaflet-renderers@2.0.6"></script>
+#### Creation
 
-              var Wisconsin_NM = wisconsinLayer(map) ;
+    // Assuming your map instance is in a variable called map
+    L.control.embed(options).addTo(map);
 
-### To use Fractracker Mobile Layer :
-            var FracTracker_mobile = L.geoJSON.fracTrackerMobile();
+The optional options object can be passed in with any of the following properties:
+| Option    | Type    | Default     | Description |
+|-----------|---------|-------------|-------------|
+| position  | String  | 'topleft'   | Other possible values include 'topright', 'bottomleft' or 'bottomright' |
+| hostname  | String  | 'publiclab.github.io'   | Sets hostname for the URL in the embed code |
+
+### _Add hash support for easy sharing of map_    
+#### Add link
+
+        <script src="node_modules/leaflet-environmental-layers/lib/leaflet-fullUrlHash.js"></script>
+
+#### Creation
+
+        // Assuming your map instance is in a variable called map
+        // Assuming an object with all the map layers is in a variable called allMapLayers
+        var hash = new L.FullHash(map, allMapLayers);  
+
+### _Add the layers menu_
+#### Prerequisites
+- Bootstrap
+- jQuery
+#### Dependencies
+
+    <!-- Bootstrap --> 
+    <link rel="stylesheet" href="node_modules\bootstrap\dist\css\bootstrap.min.css">
+    <script src="node_modules\jquery\dist\jquery.slim.min.js"></script>
+    <script src="node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
+
+#### Usage example
+```js
+  var baseMaps = {
+    'Standard': baselayer1,
+  };
+
+  var overlayMaps = {
+    'Wisconsin Non-Metal': Wisconsin_NM,
+    'Indigenous Lands': {
+      category: 'group', // Let's the control know if this should be rendered as a group
+      layers: { // Layers making the group
+        'Territories': IndigenousLandsTerritories,
+        'Languages': IndigenousLandsLanguages,
+        'Treaties': IndigenousLandsTreaties,
+      },
+    },
+  };
+
+  var leafletControl = new L.control.layersBrowser(baseMaps, overlayMaps);
+  leafletControl.addTo(map);
+```
+#### Creation
+
+    L.control.layersBrowser(baseMaps, overlayMaps).addTo(map);
+
+- `baseMaps` and `overlayMaps` are object literals that have layer names for keys and map layer objects for values.
+- `baseMaps` will be hidden if only one base map is provided
+- The layer information displayed for each layer is stored in `layerData.json`
+- The layer name(key) in the `overlayMaps` object is not case-sensitive and can have spaces but the characters should match with those in `layerData.json`
+- The layers are filtered according to the map view
+- When there are new layers present in the map view when moving around a badge is displayed near the layer control icon on the top right showing the number of new layers in the view
+
+### _Add search control_
+  LEL uses [leaflet-google-places-autocomplete](https://github.com/Twista/leaflet-google-places-autocomplete) for the search control feature.
 
 
-### To use Purple Layer :
 
-			<script src="../node_modules/heatmap.js/build/heatmap.min.js"></script>
-			<script src="../node_modules/leaflet-heatmap/leaflet-heatmap.js"></script>
+## Adding layers individually
+### _General (required for all layers)_
+
+      <script src="node_modules/leaflet-environmental-layers/dist/LeafletEnvironmentalLayers.js"></script>
+      <link href="node_modules/leaflet/dist/leaflet.css" rel="stylesheet">
+	  <script src="node_modules/leaflet-spin/example/spin/dist/spin.min.js"></script>  <!-- Compulsory to add --> 
+      <script src="node_modules/leaflet-spin/example/leaflet.spin.min.js"></script>
+
+### _To use Wisconsin Non-Metallic Layer_
+#### Add
+      <script src="https://unpkg.com/esri-leaflet@2.2.3/dist/esri-leaflet.js"></script>
+      <script src="https://unpkg.com/esri-leaflet-renderers@2.0.6"></script>
+#### Creation
+      var Wisconsin_NM = wisconsinLayer(map) ;
+
+### _To use Fractracker Mobile Layer_
+      var FracTracker_mobile = L.geoJSON.fracTrackerMobile();
 
 
-### Real Time Layers :
+### _To use Purple Layer_
+	<script src="../node_modules/heatmap.js/build/heatmap.min.js"></script>
+	<script src="../node_modules/leaflet-heatmap/leaflet-heatmap.js"></script>
 
-1.) city (by openWeather)
+
+### _Real Time Layers_
+
+#### city (by openWeather)
 
         var city = L.OWM.current({intervall: 15, minZoom: 3});
 
-2.) WindRose (by openWeather)
+#### WindRose (by openWeather)
       
       <script src="../src/windRoseLayer.js"></script>
        <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet">
@@ -289,37 +304,36 @@ https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-li
      var windrose = L.OWM.current({intervall: 15, minZoom: 3, markerFunction: myWindroseMarker, popup: false, clusterSize:       50,imageLoadingBgUrl: 'https://openweathermap.org/img/w0/iwind.png' });
     windrose.on('owmlayeradd', windroseAdded, windrose);
 
-### Open Infra Map :
-
-##### OpenInfraMap_Power Layer :
+### _Open Infra Map_
+#### OpenInfraMap_Power Layer
 
     var OpenInfraMap_Power = L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png',{
         maxZoom: 18,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
     });
 
-##### OpenInfraMap_Petroleum Layer :
+#### OpenInfraMap_Petroleum Layer
 
     var OpenInfraMap_Petroleum = L.tileLayer('https://tiles-{s}.openinframap.org/petroleum/{z}/{x}/{y}.png', {
       maxZoom: 18,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
     });
 
-##### OpenInfraMap_Telecom Layer :
+#### OpenInfraMap_Telecom Layer
 
     var OpenInfraMap_Telecom = L.tileLayer('https://tiles-{s}.openinframap.org/telecoms/{z}/{x}/{y}.png', {
       maxZoom: 18,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
     });
 
-##### OpenInfraMap_Water Layer :
+#### OpenInfraMap_Water Layer
 
     var OpenInfraMap_Water = L.tileLayer('https://tiles-{s}.openinframap.org/water/{z}/{x}/{y}.png',{
       maxZoom: 18,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
     });
 
-### Spreadsheet-based layers
+### _Spreadsheet-based layers_
 
 We can source locations from a spreadsheet in a format like this:
 
@@ -349,3 +363,11 @@ layer.addTo(map);
 Read more here: https://github.com/publiclab/leaflet-environmental-layers/blob/master/src/util/googleSpreadsheetLayer.js
 
 We're going to try spinning this out into its own library; see: https://github.com/publiclab/leaflet-environmental-layers/issues/121
+
+## Contributing
+Please read [CONTRIBUTING.md](https://github.com/publiclab/leaflet-environmental-layers/blob/master/CONTRIBUTING.md) for details on our code of conduct, the process for submitting pull requests, and steps to add new layers.
+
+## About PublicLab
+Public Lab is a community and non-profit democratizing science to address environmental issues that affect people.
+
+[_^back to top_](#leaflet-environmental-layers-(LEL))
