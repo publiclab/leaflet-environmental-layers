@@ -170,6 +170,13 @@ The optional options object can be passed in with any of the following propertie
 - hostname<String>
   Defaults to 'publiclab.github.io'
 
+### Add minimal mode control
+
+    // Assuming your map instance is in a variable called map
+    // Assuming your leaflet layers control instance is in a variable called layersControl
+    var modeControl = new L.control.minimalMode(layersControl);
+    modeControl.addTo(map);
+
 ### Spreadsheet-based layers
 
 We can source locations from a spreadsheet in a format like this:

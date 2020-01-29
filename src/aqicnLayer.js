@@ -52,33 +52,45 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
       var uid = data.uid;
       var clName = 'aqiSign ';
       var aqiN;
+      var markerColor;
 
       if (isNaN(aqi)) { // If it is not a number
         clName += 'aqiNull';
+        markerColor = '#7c7c7c';
       }
       else { // Parsing AQI to see what color to use
         aqiN = parseInt(aqi, 10);
         if (aqiN <= 50) {
           clName += 'aqiGood';
+          markerColor = '#009966';
         }
         else if (aqiN <= 100) {
           clName += 'aqiMod';
+          markerColor = '#ffde33';
         }
         else if (aqiN <= 150) {
           clName += 'aqiSens';
+          markerColor = '#ff9933';
         }
         else if (aqiN <= 200) {
           clName += 'aqiUnhealth';
+          markerColor = '#c03';
         }
         else if (aqiN <= 300) {
           clName += 'aqiVUnhealth';
+          markerColor = '#609';
         }
         else {
           clName += 'aqiHazard';
+          markerColor = '#7e0023';
         }
       }
 
-      return L.marker([lat, lon], {icon: L.divIcon({className: clName, iconSize: [36, 25], iconAnchor: [18, 40], popupAnchor: [0, -25], html: aqi})});
+      var defaultMarker = L.marker([lat, lon], {icon: L.divIcon({className: clName, iconSize: [36, 25], iconAnchor: [18, 40], popupAnchor: [0, -25], html: aqi})});
+      var minimalMarker = L.circleMarker(L.latLng([lat, lon]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: markerColor });
+
+      marker = this._map._minimalMode ? minimalMarker : defaultMarker;
+      return marker;
     },
 
     addMarker: function(data) {
