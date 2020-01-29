@@ -27722,7 +27722,7 @@ require('./layercode.js');
 require('./eonetFiresLayer');
 require('./AllLayers.js');
 
-},{"./AllLayers.js":8,"./PLpeopleLayer.js":9,"./aqicnLayer.js":10,"./eonetFiresLayer":11,"./fracTrackerMobileLayer.js":12,"./indigenousLayers.js":13,"./layercode.js":16,"./openWeatherMapLayer.js":18,"./osmLandfillMineQuarryLayer.js":19,"./pfasLayer.js":20,"./purpleLayer.js":21,"./toxicReleaseLayer.js":22,"./unearthing.js":23,"./wisconsinLayer.js":31,"jquery":2,"leaflet":6,"leaflet-providers":5}],18:[function(require,module,exports){
+},{"./AllLayers.js":8,"./PLpeopleLayer.js":9,"./aqicnLayer.js":10,"./eonetFiresLayer":11,"./fracTrackerMobileLayer.js":12,"./indigenousLayers.js":13,"./layercode.js":16,"./openWeatherMapLayer.js":18,"./osmLandfillMineQuarryLayer.js":19,"./pfasLayer.js":20,"./purpleLayer.js":21,"./toxicReleaseLayer.js":22,"./unearthing.js":23,"./wisconsinLayer.js":32,"jquery":2,"leaflet":6,"leaflet-providers":5}],18:[function(require,module,exports){
 L.OWM = L.TileLayer.extend({
   options: {
     appId: '4c6704566155a7d0d5d2f107c5156d6e', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
@@ -30816,7 +30816,7 @@ L.control.legendControl = function(options) {
   return new L.Control.LegendControl(options);
 };
 
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 L.Control.MinimalMode = L.Control.extend({
 
     options: {
@@ -30901,7 +30901,7 @@ L.Control.MinimalMode = L.Control.extend({
     return new L.Control.MinimalMode(options);
   };
   
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 omsUtil = function(map, options) {
   var oms = new OverlappingMarkerSpiderfier(map, options);
 
@@ -30918,7 +30918,7 @@ omsUtil = function(map, options) {
   return oms;
 };
 
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 wisconsinLayer = function(map) {
   var info = require('./info.json');
 
@@ -30951,4 +30951,4 @@ wisconsinLayer = function(map) {
   return Wisconsin_NM;
 };
 
-},{"./info.json":14}]},{},[3,7,17,24,25,26,27,28,29,30]);
+},{"./info.json":14}]},{},[3,7,17,24,25,26,27,28,29,30,31]);
