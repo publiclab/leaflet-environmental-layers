@@ -232,7 +232,8 @@ The optional options object can be passed in with any of the following propertie
 #### Usage example
 ```js
   var baseMaps = {
-    'Standard': baselayer1,
+    'Standard': L.tileLayer('TILE_LAYER_URL').addTo(map),
+    'Dark': L.tileLayer('TILE_LAYER_URL')
   };
 
   var overlayMaps = {
