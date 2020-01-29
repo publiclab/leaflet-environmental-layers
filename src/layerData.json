@@ -275,5 +275,23 @@
       "minZoom": 10,
       "maxZoom": 15
     }
+  },
+  "PLpeople": {
+    "url": "http://publiclab.org",
+    "data": {
+      "type": "",
+      "disclaimer": "disclaimer"
+    },
+    "description": "Long desc.",
+    "layer_desc": "Users from publiclab.org",
+    "icon": "#096",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 3,
+      "maxZoom": 18
+    }
   }
 }

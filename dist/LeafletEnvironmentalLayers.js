@@ -25857,12 +25857,9 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       embed: false, // activates layers on map by default if true.
       currentHash: location.hash,
       addLayersToMap: false,
-      defaultBaseLayer: L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      }),
       // Source of Truth of Layers name .
       // please put name of Layers carefully in the the appropriate layer group.
-      layers0: ['purpleLayer', 'toxicReleaseLayer', 'pfasLayer', 'aqicnLayer', 'osmLandfillMineQuarryLayer', 'Unearthing'],
+      layers0: ['PLpeople', 'purpleLayer', 'toxicReleaseLayer', 'pfasLayer', 'aqicnLayer', 'osmLandfillMineQuarryLayer', 'Unearthing'],
       layers1: ['purpleairmarker', 'skytruth', 'fractracker', 'odorreport', 'mapknitter', 'openaq', 'luftdaten', 'opensense'],
       layers2: ['Power', 'Petroleum', 'Telecom', 'Water'],
       layers3: ['wisconsin'],
@@ -25926,8 +25923,11 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       this._map = map;
       this.overlayMaps = {};
       this.groupedOverlayMaps = {}; // For grouping layers in the new menu
-      var baseMaps = this.options.baseLayers ? this.options.baseLayers : { "Grey-scale": this.options.defaultBaseLayer.addTo(map) };
-
+	  var defaultBaseLayer = L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      });
+	  var baseMaps = this.options.baseLayers ? this.options.baseLayers : { "Grey-scale": defaultBaseLayer.addTo(map) };
+		
       for (let layer of this.options.layers.include) {
         if (this.options.layers0.includes(layer)) {
           this.overlayMaps[layer] = window['L']['layerGroup'][layer]();
@@ -26082,6 +26082,60 @@ L.LayerGroup.EnvironmentalLayers = function(options) {
 };
 
 },{}],9:[function(require,module,exports){
+// require('leaflet-blurred-location') ;
+// require('leaflet-blurred-location-display') ;
+
+L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
+
+  {
+    options: {
+      url: 'https://publiclab.org/api/srch/nearbyPeople',
+      clearOutsideBounds: false,
+    },
+
+    initialize: function(options) {
+      options = options || {};
+      L.Util.setOptions(this, options);
+      this._layers = {};
+    },
+
+    onAdd: function(map) {
+      this._map = map;
+      this.blurred_options = {
+        map: this._map,
+      };
+      this.BlurredLocation = new BlurredLocation(this.blurred_options);
+      // this.locations = [[23.1, 77.1]]; // testing marker
+      this.options_display = {
+        blurredLocation: this.BlurredLocation,
+        locations: this.locations,
+        source_url: 'https://publiclab.org/api/srch/nearbyPeople',
+        color_code_markers: false, // by default this is false .
+        style: 'both', // or 'heatmap' or 'markers' , by default is 'both'
+      };
+
+      this.blurredLocationDisplay = new BlurredLocationDisplay(this.options_display);
+    },
+
+    onRemove: function(map) {
+      this._layers = {};
+      this.blurredLocationDisplay.removeLBLD();
+      var lbld = this.blurredLocationDisplay;
+      setTimeout(function() { lbld.removeLBLD(); }, 2000);
+      setTimeout(function() { lbld.removeLBLD(); }, 5000);
+      setTimeout(function() { lbld.removeLBLD(); }, 7000);
+      setTimeout(function() { lbld.removeLBLD(); }, 10000);
+    },
+
+  },
+);
+
+
+L.layerGroup.PLpeople = function(options) {
+  return new L.LayerGroup.PLpeopleLayer(options);
+};
+
+},{}],10:[function(require,module,exports){
 L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
 
   {
@@ -26275,7 +26329,7 @@ L.layerGroup.aqicnLayer = function(options) {
   return new L.LayerGroup.AQICNLayer(options);
 };
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 L.Icon.EonetFiresIcon = L.Icon.extend({
   options: {
     iconUrl: 'https://image.flaticon.com/icons/svg/785/785116.svg',
@@ -26384,7 +26438,7 @@ L.geoJSON.eonetFiresLayer = function(options) {
   return new L.GeoJSON.EonetFiresLayer(options);
 };
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
   {
     options: { },
@@ -26488,7 +26542,7 @@ L.geoJSON.fracTrackerMobile = function(options) {
   return new L.GeoJSON.FracTrackerMobile(options);
 };
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
 
   {
@@ -26625,7 +26679,7 @@ L.layerGroup.indigenousLayers = function(name, options) {
   return new L.LayerGroup.IndigenousLayers(name, options);
 };
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 module.exports={
    "wisconsin": {
       "name": "Wisconsin Non-Metallic Mining",
@@ -26778,7 +26832,7 @@ module.exports={
 
 }
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 module.exports={
   "airQualityIndex": {
     "url": "http://aqicn.org/json-api/doc/",
@@ -27056,10 +27110,28 @@ module.exports={
       "minZoom": 10,
       "maxZoom": 15
     }
+  },
+  "PLpeople": {
+    "url": "http://publiclab.org",
+    "data": {
+      "type": "",
+      "disclaimer": "disclaimer"
+    },
+    "description": "Long desc.",
+    "layer_desc": "Users from publiclab.org",
+    "icon": "#096",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 3,
+      "maxZoom": 18
+    }
   }
 }
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 require('jquery');
 require('leaflet');
 
@@ -27630,7 +27702,7 @@ L.icon.purpleAirMarkerIcon = function() {
   return new L.Icon.PurpleAirMarkerIcon();
 };
 
-},{"./info.json":13,"jquery":2,"leaflet":6}],16:[function(require,module,exports){
+},{"./info.json":14,"jquery":2,"leaflet":6}],17:[function(require,module,exports){
 require('jquery');
 require('leaflet');
 
@@ -27645,12 +27717,12 @@ require('./fracTrackerMobileLayer.js');
 require('./pfasLayer.js');
 require('./unearthing.js');
 require('./indigenousLayers.js');
-// require('./PLpeopleLayer.js');
+require('./PLpeopleLayer.js');
 require('./layercode.js');
 require('./eonetFiresLayer');
 require('./AllLayers.js');
 
-},{"./AllLayers.js":8,"./aqicnLayer.js":9,"./eonetFiresLayer":10,"./fracTrackerMobileLayer.js":11,"./indigenousLayers.js":12,"./layercode.js":15,"./openWeatherMapLayer.js":17,"./osmLandfillMineQuarryLayer.js":18,"./pfasLayer.js":19,"./purpleLayer.js":20,"./toxicReleaseLayer.js":21,"./unearthing.js":22,"./wisconsinLayer.js":31,"jquery":2,"leaflet":6,"leaflet-providers":5}],17:[function(require,module,exports){
+},{"./AllLayers.js":8,"./PLpeopleLayer.js":9,"./aqicnLayer.js":10,"./eonetFiresLayer":11,"./fracTrackerMobileLayer.js":12,"./indigenousLayers.js":13,"./layercode.js":16,"./openWeatherMapLayer.js":18,"./osmLandfillMineQuarryLayer.js":19,"./pfasLayer.js":20,"./purpleLayer.js":21,"./toxicReleaseLayer.js":22,"./unearthing.js":23,"./wisconsinLayer.js":31,"jquery":2,"leaflet":6,"leaflet-providers":5}],18:[function(require,module,exports){
 L.OWM = L.TileLayer.extend({
   options: {
     appId: '4c6704566155a7d0d5d2f107c5156d6e', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
@@ -29162,7 +29234,7 @@ L.OWM.Utils = {
 
 
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
 
   {
@@ -29355,7 +29427,7 @@ L.layerGroup.osmLandfillMineQuarryLayer = function(options) {
   return new L.LayerGroup.OSMLandfillMineQuarryLayer(options);
 };
 
-},{"./info.json":13}],19:[function(require,module,exports){
+},{"./info.json":14}],20:[function(require,module,exports){
 L.Icon.PfasLayerIcon = L.Icon.extend({
   options: {
     iconUrl: 'https://openclipart.org/image/300px/svg_to_png/117253/1297044906.png',
@@ -29517,7 +29589,7 @@ L.layerGroup.pfasLayer = function(options) {
 };
 
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 require('heatmap.js');
 require('leaflet-heatmap');
 
@@ -29643,7 +29715,7 @@ L.layerGroup.purpleLayer = function(options) {
   return new L.LayerGroup.PurpleLayer(options);
 };
 
-},{"heatmap.js":1,"leaflet-heatmap":4}],21:[function(require,module,exports){
+},{"heatmap.js":1,"leaflet-heatmap":4}],22:[function(require,module,exports){
 L.Icon.ToxicReleaseIcon = L.Icon.extend({
   options: {
     iconUrl: 'https://www.clker.com/cliparts/r/M/L/o/R/i/green-dot.svg',
@@ -29790,7 +29862,7 @@ L.layerGroup.toxicReleaseLayer = function(options) {
   return new L.LayerGroup.ToxicReleaseLayer(options);
 };
 
-},{"./info.json":13}],22:[function(require,module,exports){
+},{"./info.json":14}],23:[function(require,module,exports){
 L.LayerGroup.unearthing = L.LayerGroup.extend(
 
   {
@@ -29869,7 +29941,7 @@ L.layerGroup.Unearthing = function(options) {
   return new L.LayerGroup.unearthing(options);
 };
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 L.Control.Info = L.Control.extend({
   options: {
     mapHasControl: false
@@ -29914,7 +29986,7 @@ L.control.info = function(options) {
   return new L.Control.Info(options);
 };
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 L.Control.Embed = L.Control.extend({
 
   options: {
@@ -29966,7 +30038,7 @@ L.control.embed = function(options) {
   return new L.Control.Embed(options);
 };
 
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 L.Control.Layers.include({
   getActiveOverlayNames: function() {
     var layers = [];
@@ -29982,7 +30054,7 @@ L.Control.Layers.include({
   },
 });
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 L.SpreadsheetLayer = L.LayerGroup.extend({
   // options: {
   // Must be supplied:
@@ -30148,7 +30220,7 @@ L.spreadsheetLayer = function(options) {
   return new L.SpreadsheetLayer(options);
 };
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 L.Control.LayersBrowser = L.Control.Layers.extend({
   options: {
     collapsed: true,
@@ -30687,7 +30759,7 @@ L.control.layersBrowser = function(baseLayers, overlays, options) {
   return new L.Control.LayersBrowser(baseLayers, overlays, options);
 };
 
-},{"../layerData.json":14}],28:[function(require,module,exports){
+},{"../layerData.json":15}],29:[function(require,module,exports){
 L.Control.LegendControl = L.Control.extend({
   options: {
     position: 'bottomleft',
@@ -30879,4 +30951,4 @@ wisconsinLayer = function(map) {
   return Wisconsin_NM;
 };
 
-},{"./info.json":13}]},{},[3,7,16,23,24,25,26,27,28,29,30]);
+},{"./info.json":14}]},{},[3,7,17,24,25,26,27,28,29,30]);

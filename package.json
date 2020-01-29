@@ -52,7 +52,7 @@
   "dependencies": {
     "jquery": "^3.3.1",
     "leaflet": "^1.3.1",
-    "leaflet-blurred-location": "git://github.com/publiclab/leaflet-blurred-location#main",
+    "leaflet-blurred-location": "^1.7.0",
     "leaflet-fullhash": "github:sagarpreet-chadha/leaflet-fullHash",
     "leaflet-google-places-autocomplete": "0.0.8",
     "leaflet-heatmap": "1.0.0",

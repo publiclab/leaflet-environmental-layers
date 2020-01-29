@@ -565,7 +565,7 @@
         }
 
 
-        /* PlpeopleLayer */ 
+        /* PLpeopleLayer */ 
         L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
             {
                 options: {
@@ -607,8 +607,8 @@
         );
 
 
-        L.layerGroup.pLpeopleLayer = function (options) {
-            return new L.LayerGroup.PLpeopleLayer(options) ;
+        L.layerGroup.PLpeople = function (options) {
+            return new L.LayerGroup.PLpeopleLayer(options);
         };
 
     </script>
@@ -627,7 +627,7 @@
         }
       ).addTo(map) ;
     
-      var PLpeople = L.layerGroup.pLpeopleLayer().addTo(map) ;
+      var PLpeople = L.layerGroup.PLpeople().addTo(map) ;
 
     </script>
     
