@@ -267,9 +267,10 @@ The optional options object can be passed in with any of the following propertie
 - When there are new layers present in the map view when moving around a badge is displayed near the layer control icon on the top right showing the number of new layers in the view
 
 ### _Add minimal mode control_
+#### Creation
 
     // Assuming your map instance is in a variable called map
-    // Assuming your leaflet layers control instance is in a variable called layersControl
+    // Assuming your layers menu or layers control instance is in a variable called layersControl
     L.control.minimalMode(layersControl).addTo(map);
 
 ### _Add search control_
