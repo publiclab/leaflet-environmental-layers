@@ -26062,7 +26062,17 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         // Update map state from hash
         hash.update(this.options.currentHash);
       }
-        
+      
+      //Collapsible search control
+      new L.Control.GPlaceAutocomplete({
+        position: 'topleft',
+        collapsed_mode: true,
+        callback: function(place){
+          var loc = place.geometry.location;
+          map.setView( [loc.lat(), loc.lng()], 18);
+        }
+      }).addTo(map);
+
       for (let layer of this.options.layers.include) {
         if (!this.options.addLayersToMap) {
           return;
