@@ -18,7 +18,7 @@ A leaflet plugin that has a collection of layers containing environmental data p
 8. [Adding LEL features individually](##adding-LEL-features-individually)
 9. [Adding layers individually](##adding-layers-individually)
 10. [Contributing](##contributing)
-11. Reach out to the maintainers
+11. [Reach out to the maintainers](##reach-out-to-the-maintainers)
 12. [About PublicLab](##about-publicLab)
 
 ## Installation
@@ -119,6 +119,8 @@ Use the button on right-most corner to change the way the background of the map 
 - Layers will be visible on the menu only when the map view intersects with the layer's bounds or zoom levels.
 - A badge displays the number of new layers in the map view when the map intersects with new layers
 
+Read more about the layers menu [here](https://publiclab.org/notes/christie_reni/01-29-2020/new-features-in-leaflet-environmental-layers#Layers+Menu).
+
 ### _Click on a Point_
 
 Click on a point or marker on the map to learn more about it.
@@ -126,6 +128,8 @@ Click on a point or marker on the map to learn more about it.
 ### _Minimal mode_
 
 Click on the button group on the left, below the zoom controls, to change between default markers mode and minimal markers mode. Use minimal markers mode for a smoother experience when using multiple layers with many markers.
+
+Read more about this feature [here](https://publiclab.org/notes/christie_reni/01-29-2020/new-features-in-leaflet-environmental-layers#Minimal+mode).
 
 ### _URL Hash_
 
@@ -255,7 +259,7 @@ The optional options object can be passed in with any of the following propertie
 
     L.control.layersBrowser(baseMaps, overlayMaps).addTo(map);
 
-- `baseMaps` and `overlayMaps` are object literals that have layer names for keys and map layer objects for values.
+- `baseMaps` and `overlayMaps` are object literals that have layer names as keys and [Layer](https://leafletjs.com/reference-1.6.0.html#layer) objects as values. Read more about [Leaflet's Control.Layers](https://leafletjs.com/reference-1.6.0.html#control-layers).
 - `baseMaps` will be hidden if only one base map is provided
 - The layer information displayed for each layer is stored in `layerData.json`
 - The layer name(key) in the `overlayMaps` object is not case-sensitive and can have spaces but the characters should match with those in `layerData.json`
@@ -367,6 +371,9 @@ We're going to try spinning this out into its own library; see: https://github.c
 
 ## Contributing
 Please read [CONTRIBUTING.md](https://github.com/publiclab/leaflet-environmental-layers/blob/master/CONTRIBUTING.md) for details on our code of conduct, the process for submitting pull requests, and steps to add new layers.
+
+## Reach out to the maintainers
+Reach out to the maintainers here: https://github.com/orgs/publiclab/teams/maintainers
 
 ## About PublicLab
 Public Lab is a community and non-profit democratizing science to address environmental issues that affect people.
