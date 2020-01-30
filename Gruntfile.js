@@ -51,6 +51,7 @@ module.exports = function(grunt) {
         jasmine: {
           src: ['dist/LeafletEnvironmentalLayers.js',
                 'src/util/embedControl.js',
+                'src/util/modeControl.js',
                 'dist/util/layersBrowser.js',
                 'dist/fracTrackerMobileLayer.js'
               ],

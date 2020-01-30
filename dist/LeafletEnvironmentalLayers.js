@@ -25857,12 +25857,9 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       embed: false, // activates layers on map by default if true.
       currentHash: location.hash,
       addLayersToMap: false,
-      defaultBaseLayer: L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      }),
       // Source of Truth of Layers name .
       // please put name of Layers carefully in the the appropriate layer group.
-      layers0: ['purpleLayer', 'toxicReleaseLayer', 'pfasLayer', 'aqicnLayer', 'osmLandfillMineQuarryLayer', 'Unearthing'],
+      layers0: ['PLpeople', 'purpleLayer', 'toxicReleaseLayer', 'pfasLayer', 'aqicnLayer', 'osmLandfillMineQuarryLayer', 'Unearthing'],
       layers1: ['purpleairmarker', 'skytruth', 'fractracker', 'odorreport', 'mapknitter', 'openaq', 'luftdaten', 'opensense'],
       layers2: ['Power', 'Petroleum', 'Telecom', 'Water'],
       layers3: ['wisconsin'],
@@ -25926,8 +25923,11 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       this._map = map;
       this.overlayMaps = {};
       this.groupedOverlayMaps = {}; // For grouping layers in the new menu
-      var baseMaps = this.options.baseLayers ? this.options.baseLayers : { "Grey-scale": this.options.defaultBaseLayer.addTo(map) };
-
+	  var defaultBaseLayer = L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      });
+	  var baseMaps = this.options.baseLayers ? this.options.baseLayers : { "Grey-scale": defaultBaseLayer.addTo(map) };
+		
       for (let layer of this.options.layers.include) {
         if (this.options.layers0.includes(layer)) {
           this.overlayMaps[layer] = window['L']['layerGroup'][layer]();
@@ -26041,6 +26041,13 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         }
       }
 
+      var leafletControl = this.options.simpleLayerControl ? 
+      L.control.layers(baseMaps, this.overlayMaps).addTo(map) :
+      L.control.layersBrowser(baseMaps, this.groupedOverlayMaps).addTo(map);
+
+      var modeControl = new L.control.minimalMode(leafletControl);
+      modeControl.addTo(map);
+
       if (this.options.embed) {
         this.options.hostname ? (
           L.control.embed({
@@ -26048,10 +26055,6 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
           }).addTo(map)
         ) : L.control.embed().addTo(map);
       }
-
-      this.options.simpleLayerControl ? 
-      L.control.layers(baseMaps, this.overlayMaps).addTo(map) :
-      L.control.layersBrowser(baseMaps, this.groupedOverlayMaps).addTo(map);
 
       var allMaps = Object.assign(baseMaps, this.overlayMaps);
       if (this.options.hash) {
@@ -26079,6 +26082,60 @@ L.LayerGroup.EnvironmentalLayers = function(options) {
 };
 
 },{}],9:[function(require,module,exports){
+// require('leaflet-blurred-location') ;
+// require('leaflet-blurred-location-display') ;
+
+L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
+
+  {
+    options: {
+      url: 'https://publiclab.org/api/srch/nearbyPeople',
+      clearOutsideBounds: false,
+    },
+
+    initialize: function(options) {
+      options = options || {};
+      L.Util.setOptions(this, options);
+      this._layers = {};
+    },
+
+    onAdd: function(map) {
+      this._map = map;
+      this.blurred_options = {
+        map: this._map,
+      };
+      this.BlurredLocation = new BlurredLocation(this.blurred_options);
+      // this.locations = [[23.1, 77.1]]; // testing marker
+      this.options_display = {
+        blurredLocation: this.BlurredLocation,
+        locations: this.locations,
+        source_url: 'https://publiclab.org/api/srch/nearbyPeople',
+        color_code_markers: false, // by default this is false .
+        style: 'both', // or 'heatmap' or 'markers' , by default is 'both'
+      };
+
+      this.blurredLocationDisplay = new BlurredLocationDisplay(this.options_display);
+    },
+
+    onRemove: function(map) {
+      this._layers = {};
+      this.blurredLocationDisplay.removeLBLD();
+      var lbld = this.blurredLocationDisplay;
+      setTimeout(function() { lbld.removeLBLD(); }, 2000);
+      setTimeout(function() { lbld.removeLBLD(); }, 5000);
+      setTimeout(function() { lbld.removeLBLD(); }, 7000);
+      setTimeout(function() { lbld.removeLBLD(); }, 10000);
+    },
+
+  },
+);
+
+
+L.layerGroup.PLpeople = function(options) {
+  return new L.LayerGroup.PLpeopleLayer(options);
+};
+
+},{}],10:[function(require,module,exports){
 L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
 
   {
@@ -26133,33 +26190,45 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
       var uid = data.uid;
       var clName = 'aqiSign ';
       var aqiN;
+      var markerColor;
 
       if (isNaN(aqi)) { // If it is not a number
         clName += 'aqiNull';
+        markerColor = '#7c7c7c';
       }
       else { // Parsing AQI to see what color to use
         aqiN = parseInt(aqi, 10);
         if (aqiN <= 50) {
           clName += 'aqiGood';
+          markerColor = '#009966';
         }
         else if (aqiN <= 100) {
           clName += 'aqiMod';
+          markerColor = '#ffde33';
         }
         else if (aqiN <= 150) {
           clName += 'aqiSens';
+          markerColor = '#ff9933';
         }
         else if (aqiN <= 200) {
           clName += 'aqiUnhealth';
+          markerColor = '#c03';
         }
         else if (aqiN <= 300) {
           clName += 'aqiVUnhealth';
+          markerColor = '#609';
         }
         else {
           clName += 'aqiHazard';
+          markerColor = '#7e0023';
         }
       }
 
-      return L.marker([lat, lon], {icon: L.divIcon({className: clName, iconSize: [36, 25], iconAnchor: [18, 40], popupAnchor: [0, -25], html: aqi})});
+      var defaultMarker = L.marker([lat, lon], {icon: L.divIcon({className: clName, iconSize: [36, 25], iconAnchor: [18, 40], popupAnchor: [0, -25], html: aqi})});
+      var minimalMarker = L.circleMarker(L.latLng([lat, lon]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: markerColor });
+
+      marker = this._map._minimalMode ? minimalMarker : defaultMarker;
+      return marker;
     },
 
     addMarker: function(data) {
@@ -26260,7 +26329,7 @@ L.layerGroup.aqicnLayer = function(options) {
   return new L.LayerGroup.AQICNLayer(options);
 };
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 L.Icon.EonetFiresIcon = L.Icon.extend({
   options: {
     iconUrl: 'https://image.flaticon.com/icons/svg/785/785116.svg',
@@ -26338,8 +26407,11 @@ L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
       var date = new Date(data.geometries[0].date).toUTCString();
       var source = data.sources && data.sources[0].url;
       var fire_marker;
+      var defaultMarker = L.marker([lat, lng], {icon: fireIcon});
+      var minimalMarker = L.circleMarker(coords, { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#ff421d' });
       if (!isNaN((lat)) && !isNaN((lng)) ) {
-        fire_marker = L.marker([lat, lng], {icon: fireIcon}).bindPopup('<strong>Event : </strong>' + title + '<br>Lat : ' + lat + '<br>Lon : '+ lng + '<br>Date : ' + date + '<br><i><a href=' + source + '>source<a></i>');
+        var content = '<strong>Event : </strong>' + title + '<br>Lat : ' + lat + '<br>Lon : '+ lng + '<br>Date : ' + date + '<br><i><a href=' + source + '>source<a></i>';
+        fire_marker = this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
       }
       return fire_marker;
     },
@@ -26366,7 +26438,7 @@ L.geoJSON.eonetFiresLayer = function(options) {
   return new L.GeoJSON.EonetFiresLayer(options);
 };
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
   {
     options: { },
@@ -26470,7 +26542,7 @@ L.geoJSON.fracTrackerMobile = function(options) {
   return new L.GeoJSON.FracTrackerMobile(options);
 };
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
 
   {
@@ -26607,7 +26679,7 @@ L.layerGroup.indigenousLayers = function(name, options) {
   return new L.LayerGroup.IndigenousLayers(name, options);
 };
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 module.exports={
    "wisconsin": {
       "name": "Wisconsin Non-Metallic Mining",
@@ -26760,7 +26832,7 @@ module.exports={
 
 }
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 module.exports={
   "airQualityIndex": {
     "url": "http://aqicn.org/json-api/doc/",
@@ -27038,10 +27110,28 @@ module.exports={
       "minZoom": 10,
       "maxZoom": 15
     }
+  },
+  "PLpeople": {
+    "url": "http://publiclab.org",
+    "data": {
+      "type": "",
+      "disclaimer": "disclaimer"
+    },
+    "description": "Long desc.",
+    "layer_desc": "Users from publiclab.org",
+    "icon": "#096",
+    "extents": {
+      "bounds": [
+                  [-44.087585028245165, -148.88671875000003],
+                  [76.63922560965888, 140.62500000000003]
+                ],
+      "minZoom": 3,
+      "maxZoom": 18
+    }
   }
 }
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 require('jquery');
 require('leaflet');
 
@@ -27179,11 +27269,14 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         item['use'] = (data.gsx$useformap.$t.replace(/\s+/g, '').toLowerCase() === 'use');
         item['latitude'] = item['latitude'].replace(/[^\d.-]/g, '');
         item['latitude'] = item['latitude'].replace(/[^\d.-]/g, '');
-        var fracTracker;
-        fracTracker = L.marker([item['latitude'], item['longitude']], {
+        var defaultMarker = L.marker([item['latitude'], item['longitude']], {
           icon: redDotIcon,
-        }).bindPopup(this.generatePopup(item));
-        return fracTracker;
+        });
+        var minimalMarker = L.circleMarker(L.latLng([item['latitude'], item['longitude']]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#e8e800' });
+        var content = this.generatePopup(item);
+        var fracTracker;
+        fracTracker = this._map._minimalMode ? minimalMarker : defaultMarker;
+        return fracTracker.bindPopup(content);
       }
 
       if (this.layer == 'skytruth') {
@@ -27192,13 +27285,15 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         var lng = data.lng;
         var title = data.title;
         var url = data.link;
+        var defaultMarker = L.marker([lat, lng], {icon: redDotIcon});
+        var minimalMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#f00' });
+        var content = '<a href='+url+'>' +title + '</a><br>' +
+        '<br><strong> lat: ' + lat +
+        '</strong><br><strong> lon: ' + lng +
+        '</strong> <br><br>Data provided by <a href=\'http://alerts.skytruth.org/\'>alerts.skytruth.org/</a>';
         var skymarker;
         if (!isNaN(lat) && !isNaN(lng) ) {
-          skymarker = L.marker([lat, lng], {icon: redDotIcon}).bindPopup(
-            '<a href='+url+'>' +title + '</a><br>' +
-                  '<br><strong> lat: ' + lat +
-                  '</strong><br><strong> lon: ' + lng +
-                  '</strong> <br><br>Data provided by <a href=\'http://alerts.skytruth.org/\'>alerts.skytruth.org/</a>');
+          skymarker = this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
         }
         return skymarker;
       }
@@ -27209,13 +27304,16 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         var lng = data.values['bcc29002-c4d3-4c2c-92c7-1c9032c3b0fd'][0].lon;
         var title = data.title;
         var url = data.url;
+        var defaultMarker = L.marker([lat, lng], {icon: redDotIcon});
+        var minimalMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#ff00ff' });
+        var content = title +
+        '<br><a href='+url+'>' + url +'</a>' +
+        '<br><strong> lat: ' + lat +
+        '</strong><br><strong> lon: ' + lng +
+        '</strong><br><br>Data provided by <a href=\'https://odorlog.ushahidi.io\'>https://odorlog.ushahidi.io</a>';
         var odormarker;
         if (!isNaN(lat) && !isNaN(lng) ) {
-          odormarker = L.marker([lat, lng], {icon: redDotIcon}).bindPopup(title +
-                  '<br><a href='+url+'>' + url +'</a>' +
-                  '<br><strong> lat: ' + lat +
-                  '</strong><br><strong> lon: ' + lng +
-                  '</strong><br><br>Data provided by <a href=\'https://odorlog.ushahidi.io\'>https://odorlog.ushahidi.io</a>');
+          odormarker = this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
         }
         // oms.addMarker(odormarker);
         return odormarker;
@@ -27234,27 +27332,27 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         if (data.image_urls.length > 0) {
           image_url = data.image_urls[0];
         }
+        var defaultMarker = L.marker([lat, lng], {icon: redDotIcon});
+        var minimalMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#ca283b' });
+        var content = '<strong>Title : </strong>'+ '<a href=' + map_page + '>' + title + '</a>' +
+        '<br><strong>Author :</strong> ' + '<a href='+url+'>' + author +'</a>' +
+        '<br><strong>Location : </strong>' + location +
+        '<br><strong> Lat : </strong>' + lat + '  ,  <strong> Lon : </strong>' + lng +
+        '<br><a href=' + image_url + '><img src='+image_url+' style=\'height: 202px ; width: 245px;\'></a>'+
+        '<br><i>For more info on <a href=\'https://github.com/publiclab/leaflet-environmental-layers/issues/10\'>MapKnitter Layer</a>, visit <a href=\'https://mapknitter.org/\'>here<a></i>';
         var mapknitter;
         if (!isNaN(lat) && !isNaN(lng) ) {
           if (image_url !== undefined) {
-            mapknitter = L.marker([lat, lng], {icon: redDotIcon}).bindPopup(
-              '<strong>Title : </strong>'+ '<a href=' + map_page + '>' + title + '</a>' +
-                      '<br><strong>Author :</strong> ' + '<a href='+url+'>' + author +'</a>' +
-                      '<br><strong>Location : </strong>' + location +
-                      '<br><strong> Lat : </strong>' + lat + '  ,  <strong> Lon : </strong>' + lng +
-                      '<br><a href=' + image_url + '><img src='+image_url+' style=\'height: 202px ; width: 245px;\'></a>'+
-                      '<br><i>For more info on <a href=\'https://github.com/publiclab/leaflet-environmental-layers/issues/10\'>MapKnitter Layer</a>, visit <a href=\'https://mapknitter.org/\'>here<a></i>',
-            );
+            mapknitter = this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
             // oms.addMarker(mapknitter);
           }
           else {
-            mapknitter = L.marker([lat, lng], {icon: redDotIcon}).bindPopup(
-              '<strong>Title : </strong>'+ '<a href=' + map_page + '>' + title + '</a>' +
-                      '<br><strong>Author :</strong> ' + '<a href='+url+'>' + author +'</a>' +
-                      '<br><strong>Location : </strong>' + location +
-                      '<br><strong> Lat : </strong>' + lat + '  ,  <strong> Lon : </strong>' + lng +
-                      '<br><i>For more info on <a href=\'https://github.com/publiclab/leaflet-environmental-layers/issues/10\'>MapKnitter Layer</a>, visit <a href=\'https://mapknitter.org/\'>here<a></i>',
-            );
+            content = '<strong>Title : </strong>'+ '<a href=' + map_page + '>' + title + '</a>' +
+            '<br><strong>Author :</strong> ' + '<a href='+url+'>' + author +'</a>' +
+            '<br><strong>Location : </strong>' + location +
+            '<br><strong> Lat : </strong>' + lat + '  ,  <strong> Lon : </strong>' + lng +
+            '<br><i>For more info on <a href=\'https://github.com/publiclab/leaflet-environmental-layers/issues/10\'>MapKnitter Layer</a>, visit <a href=\'https://mapknitter.org/\'>here<a></i>';
+            mapknitter = this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
             // oms.addMarker(mapknitter);
           }
         }
@@ -27281,7 +27379,10 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
           }
         }
 
-        return L.marker([lat, lng], {icon: greenIcon}).bindPopup(popupContent);
+        var defaultMarker = L.marker([lat, lng], {icon: greenIcon});
+        var minimalMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#4edd51' });
+        var marker = this._map._minimalMode ? minimalMarker : defaultMarker;
+        return marker.bindPopup(popupContent);
       }
 
       if (this.layer == 'openaq')
@@ -27302,10 +27403,12 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         for (var i = 0; i < data.measurements.length; i++) {
           contentData+='<strong>'+labels[data.measurements[i].parameter]+' : </strong>'+data.measurements[i].value+' '+data.measurements[i].unit+'<br>';
         }
-        return L.marker([lat, lon], {icon: redDotIcon}).bindPopup(
-          '<h3>'+data.location+', '+data.country+'</h3><br>'+
-                    '<strong>distance: '+'</strong>'+data.distance+'<br>'+contentData,
-        );
+        var defaultMarker = L.marker([lat, lon], {icon: redDotIcon});
+        var minimalMarker = L.circleMarker(L.latLng([lat, lon]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#912d25' });
+        var content = '<h3>'+data.location+', '+data.country+'</h3><br>'+
+        '<strong>distance: '+'</strong>'+data.distance+'<br>'+contentData;
+        var marker = this._map._minimalMode ? minimalMarker : defaultMarker;
+        return marker.bindPopup(content);
       }
 
       if (this.layer == 'opensense')
@@ -27314,7 +27417,10 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         var lat = data.currentLocation.coordinates[1];
         var lng = data.currentLocation.coordinates[0];
         var loadingText = 'Loading ...';
-        return L.marker([lat, lng], {icon: blackCube, boxId: data._id}).bindPopup(loadingText);
+        var defaultMarker = L.marker([lat, lng], {icon: blackCube, boxId: data._id});
+        var minimalMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#262626' });
+        var marker = this._map._minimalMode ? minimalMarker : defaultMarker;
+        return marker.bindPopup(loadingText);
       }
 
       if (this.layer == 'purpleairmarker')
@@ -27327,9 +27433,12 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         var temp_f = data[21];
         var humidity = data[20];
         var pressure = data[22];
+        var defaultMarker = L.marker([lat, lng], {icon: redDotIcon});
+        var minimalMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#7c22b5' });
+        var content = '<i style=\'color: purple ; size : 20px\'>Label : ' + Label + '</i><br><br> <strong>PM2.5 Value : ' + value +'</strong><br><strong> Lat: ' + lat + '</strong><br><strong> Lon: ' + lng + '<br>Temp (F) : '+temp_f+'<br>Humidity : ' + humidity + '<br>Pressure : ' + pressure +'<br><br> <i>Data provided by <a href=\'www.purpleair.com\'>www.purpleair.com</a></i>';
         var purpleAirMarker;
         if (lat!=null && lng!=null) {
-          purpleAirMarker = L.marker([lat, lng], {icon: redDotIcon}).bindPopup('<i style=\'color: purple ; size : 20px\'>Label : ' + Label + '</i><br><br> <strong>PM2.5 Value : ' + value +'</strong><br><strong> Lat: ' + lat + '</strong><br><strong> Lon: ' + lng + '<br>Temp (F) : '+temp_f+'<br>Humidity : ' + humidity + '<br>Pressure : ' + pressure +'<br><br> <i>Data provided by <a href=\'www.purpleair.com\'>www.purpleair.com</a></i>');
+          purpleAirMarker = this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
         }
         return purpleAirMarker;
       }
@@ -27593,7 +27702,7 @@ L.icon.purpleAirMarkerIcon = function() {
   return new L.Icon.PurpleAirMarkerIcon();
 };
 
-},{"./info.json":13,"jquery":2,"leaflet":6}],16:[function(require,module,exports){
+},{"./info.json":14,"jquery":2,"leaflet":6}],17:[function(require,module,exports){
 require('jquery');
 require('leaflet');
 
@@ -27608,12 +27717,12 @@ require('./fracTrackerMobileLayer.js');
 require('./pfasLayer.js');
 require('./unearthing.js');
 require('./indigenousLayers.js');
-// require('./PLpeopleLayer.js');
+require('./PLpeopleLayer.js');
 require('./layercode.js');
 require('./eonetFiresLayer');
 require('./AllLayers.js');
 
-},{"./AllLayers.js":8,"./aqicnLayer.js":9,"./eonetFiresLayer":10,"./fracTrackerMobileLayer.js":11,"./indigenousLayers.js":12,"./layercode.js":15,"./openWeatherMapLayer.js":17,"./osmLandfillMineQuarryLayer.js":18,"./pfasLayer.js":19,"./purpleLayer.js":20,"./toxicReleaseLayer.js":21,"./unearthing.js":22,"./wisconsinLayer.js":30,"jquery":2,"leaflet":6,"leaflet-providers":5}],17:[function(require,module,exports){
+},{"./AllLayers.js":8,"./PLpeopleLayer.js":9,"./aqicnLayer.js":10,"./eonetFiresLayer":11,"./fracTrackerMobileLayer.js":12,"./indigenousLayers.js":13,"./layercode.js":16,"./openWeatherMapLayer.js":18,"./osmLandfillMineQuarryLayer.js":19,"./pfasLayer.js":20,"./purpleLayer.js":21,"./toxicReleaseLayer.js":22,"./unearthing.js":23,"./wisconsinLayer.js":32,"jquery":2,"leaflet":6,"leaflet-providers":5}],18:[function(require,module,exports){
 L.OWM = L.TileLayer.extend({
   options: {
     appId: '4c6704566155a7d0d5d2f107c5156d6e', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
@@ -29125,7 +29234,7 @@ L.OWM.Utils = {
 
 
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
 
   {
@@ -29318,7 +29427,7 @@ L.layerGroup.osmLandfillMineQuarryLayer = function(options) {
   return new L.LayerGroup.OSMLandfillMineQuarryLayer(options);
 };
 
-},{"./info.json":13}],19:[function(require,module,exports){
+},{"./info.json":14}],20:[function(require,module,exports){
 L.Icon.PfasLayerIcon = L.Icon.extend({
   options: {
     iconUrl: 'https://openclipart.org/image/300px/svg_to_png/117253/1297044906.png',
@@ -29395,10 +29504,13 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
       item['latitude'] = item['latitude'].replace(/[^\d.-]/g, '');
       item['latitude'] = item['latitude'].replace(/[^\d.-]/g, '');
 
-      var pfasTracker;
-      pfasTracker = L.marker([item['latitude'], item['longitude']], {
+      var defaultMarker = L.marker([item['latitude'], item['longitude']], {
         icon: redDotIcon,
-      }).bindPopup(this.generatePopup(item));
+      });
+      var minimalMarker = L.circleMarker(L.latLng([item['latitude'], item['longitude']]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#b52822' });
+      var content = this.generatePopup(item);
+      var pfasTracker;
+      pfasTracker = this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
 
       // oms.addMarker(pfasTracker);
 
@@ -29477,7 +29589,7 @@ L.layerGroup.pfasLayer = function(options) {
 };
 
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 require('heatmap.js');
 require('leaflet-heatmap');
 
@@ -29603,7 +29715,7 @@ L.layerGroup.purpleLayer = function(options) {
   return new L.LayerGroup.PurpleLayer(options);
 };
 
-},{"heatmap.js":1,"leaflet-heatmap":4}],21:[function(require,module,exports){
+},{"heatmap.js":1,"leaflet-heatmap":4}],22:[function(require,module,exports){
 L.Icon.ToxicReleaseIcon = L.Icon.extend({
   options: {
     iconUrl: 'https://www.clker.com/cliparts/r/M/L/o/R/i/green-dot.svg',
@@ -29694,9 +29806,12 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
       var city = data.CITY_NAME;
       var mail_street_addr = data.MAIL_STREET_ADDRESS;
       var contact = data.ASGN_PUBLIC_PHONE;
+      var defaultMarker = L.marker([lat, lng], {icon: greenDotIcon});
+      var minimalMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#6ccc00' });
+      var content = '<strong>Name : </strong>' + fac_name + '<br><strong> City :' + city +'</strong>' + '<br><strong> Street address : ' + mail_street_addr + '</strong><br><strong> Contact : ' + contact + '</strong><br>Lat :'+lat+'<br>Lon :'+lng +'<br><i>From the <a href=\'https://github.com/publiclab/leaflet-environmental-layers/pull/8\'>Toxic Release Inventory</a> (<a href=\'https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515\'>info<a>)</i>';
       var tri_marker;
       if (!isNaN((lat)) && !isNaN((lng)) ) {
-        tri_marker = L.marker([lat, lng], {icon: greenDotIcon}).bindPopup('<strong>Name : </strong>' + fac_name + '<br><strong> City :' + city +'</strong>' + '<br><strong> Street address : ' + mail_street_addr + '</strong><br><strong> Contact : ' + contact + '</strong><br>Lat :'+lat+'<br>Lon :'+lng +'<br><i>From the <a href=\'https://github.com/publiclab/leaflet-environmental-layers/pull/8\'>Toxic Release Inventory</a> (<a href=\'https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515\'>info<a>)</i>');
+        tri_marker = this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
       }
       return tri_marker;
     },
@@ -29747,7 +29862,7 @@ L.layerGroup.toxicReleaseLayer = function(options) {
   return new L.LayerGroup.ToxicReleaseLayer(options);
 };
 
-},{"./info.json":13}],22:[function(require,module,exports){
+},{"./info.json":14}],23:[function(require,module,exports){
 L.LayerGroup.unearthing = L.LayerGroup.extend(
 
   {
@@ -29826,7 +29941,7 @@ L.layerGroup.Unearthing = function(options) {
   return new L.LayerGroup.unearthing(options);
 };
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 L.Control.Info = L.Control.extend({
   options: {
     mapHasControl: false
@@ -29871,7 +29986,7 @@ L.control.info = function(options) {
   return new L.Control.Info(options);
 };
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 L.Control.Embed = L.Control.extend({
 
   options: {
@@ -29923,7 +30038,7 @@ L.control.embed = function(options) {
   return new L.Control.Embed(options);
 };
 
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 L.Control.Layers.include({
   getActiveOverlayNames: function() {
     var layers = [];
@@ -29939,7 +30054,7 @@ L.Control.Layers.include({
   },
 });
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 L.SpreadsheetLayer = L.LayerGroup.extend({
   // options: {
   // Must be supplied:
@@ -30105,7 +30220,7 @@ L.spreadsheetLayer = function(options) {
   return new L.SpreadsheetLayer(options);
 };
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 L.Control.LayersBrowser = L.Control.Layers.extend({
   options: {
     collapsed: true,
@@ -30644,7 +30759,7 @@ L.control.layersBrowser = function(baseLayers, overlays, options) {
   return new L.Control.LayersBrowser(baseLayers, overlays, options);
 };
 
-},{"../layerData.json":14}],28:[function(require,module,exports){
+},{"../layerData.json":15}],29:[function(require,module,exports){
 L.Control.LegendControl = L.Control.extend({
   options: {
     position: 'bottomleft',
@@ -30701,7 +30816,92 @@ L.control.legendControl = function(options) {
   return new L.Control.LegendControl(options);
 };
 
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
+L.Control.MinimalMode = L.Control.extend({
+
+    options: {
+      position: 'topleft',
+      minimalMode: false
+    },
+  
+    initialize: function(layersControl, options) {
+      L.Util.setOptions(this, options);
+      this._layersControl = layersControl;
+    },
+  
+    onAdd: function(map) {
+      this._map = map;
+      this._map._minimalMode = this.options.minimalMode;
+      this._modeBtnContainer = L.DomUtil.create('div', 'leaflet-control-mode leaflet-bar leaflet-control');
+      this._defaultModeBtn = this._createButton('Show default markers', 'fas fa-map-marker-alt', this.loadDefaultMode);
+      this._minimalModeBtn = this._createButton('Show minimal markers', 'far fa-dot-circle', this.loadMinimalMode);
+      this._updateDisabled();
+      return this._modeBtnContainer;
+    },
+
+    _createButton: function(title, icon, fn) {
+      var link = L.DomUtil.create('a', 'leaflet-control-mode-link', this._modeBtnContainer);
+      link.href = '#';
+      link.title = title;
+      link.setAttribute('role', 'button');
+      link.setAttribute('aria-labelledby', title);
+      L.DomUtil.create('i', icon, link);
+      L.DomEvent.disableClickPropagation(link);
+      L.DomEvent.on(link, 'click', L.DomEvent.stop);
+      L.DomEvent.on(link, 'click', fn, this);
+      return link;
+    },
+
+    loadMinimalMode: function() {
+      if (L.DomUtil.hasClass(this._minimalModeBtn, 'leaflet-disabled')) {
+        return;
+      }
+      this.options.minimalMode = true;
+      this._map._minimalMode = this.options.minimalMode;
+      this._reloadLayers();
+      this._updateDisabled();
+    },
+
+    loadDefaultMode: function() {
+      if (L.DomUtil.hasClass(this._defaultModeBtn, 'leaflet-disabled')) {
+        return;
+      }
+      this.options.minimalMode = false;
+      this._map._minimalMode = this.options.minimalMode;
+      this._reloadLayers();
+      this._updateDisabled();
+    },
+
+    _updateDisabled: function() {
+      var className = 'leaflet-disabled';
+      if(this._map._minimalMode) {
+        L.DomUtil.removeClass(this._defaultModeBtn, className);
+        L.DomUtil.addClass(this._minimalModeBtn, className);
+      } else {
+        L.DomUtil.addClass(this._defaultModeBtn, className);
+        L.DomUtil.removeClass(this._minimalModeBtn, className);
+      }
+    },
+
+    _reloadLayers: function() {
+      var self = this;
+      this._layersControl._layers.forEach(function(layerObj) {
+        if (layerObj.overlay && self._layersControl._map.hasLayer(layerObj.layer)) {
+          self._layersControl._map.removeLayer(layerObj.layer)
+          self._layersControl._map.addLayer(layerObj.layer)
+        }
+      });
+    },
+  
+    onRemove: function(map) {},
+  
+  });
+  
+  L.control.minimalMode = function(options) {
+    return new L.Control.MinimalMode(options);
+  };
+  
+},{}],31:[function(require,module,exports){
 omsUtil = function(map, options) {
   var oms = new OverlappingMarkerSpiderfier(map, options);
 
@@ -30718,7 +30918,7 @@ omsUtil = function(map, options) {
   return oms;
 };
 
-},{}],30:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 wisconsinLayer = function(map) {
   var info = require('./info.json');
 
@@ -30751,4 +30951,4 @@ wisconsinLayer = function(map) {
   return Wisconsin_NM;
 };
 
-},{"./info.json":13}]},{},[3,7,16,23,24,25,26,27,28,29]);
+},{"./info.json":14}]},{},[3,7,17,24,25,26,27,28,29,30,31]);

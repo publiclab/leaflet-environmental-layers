@@ -266,6 +266,12 @@ The optional options object can be passed in with any of the following propertie
 - The layers are filtered according to the map view
 - When there are new layers present in the map view when moving around a badge is displayed near the layer control icon on the top right showing the number of new layers in the view
 
+### _Add minimal mode control_
+
+    // Assuming your map instance is in a variable called map
+    // Assuming your leaflet layers control instance is in a variable called layersControl
+    L.control.minimalMode(layersControl).addTo(map);
+
 ### _Add search control_
   LEL uses [leaflet-google-places-autocomplete](https://github.com/Twista/leaflet-google-places-autocomplete) for the search control feature.
 

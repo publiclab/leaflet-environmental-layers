@@ -74,10 +74,13 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
       item['latitude'] = item['latitude'].replace(/[^\d.-]/g, '');
       item['latitude'] = item['latitude'].replace(/[^\d.-]/g, '');
 
-      var pfasTracker;
-      pfasTracker = L.marker([item['latitude'], item['longitude']], {
+      var defaultMarker = L.marker([item['latitude'], item['longitude']], {
         icon: redDotIcon,
-      }).bindPopup(this.generatePopup(item));
+      });
+      var minimalMarker = L.circleMarker(L.latLng([item['latitude'], item['longitude']]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#b52822' });
+      var content = this.generatePopup(item);
+      var pfasTracker;
+      pfasTracker = this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
 
       // oms.addMarker(pfasTracker);
 

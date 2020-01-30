@@ -36,7 +36,7 @@ var baselayer4 = L.tileLayer(
   },
 );
 
-// var PLpeople = L.layerGroup.pLpeopleLayer() ;
+var PLpeople = L.layerGroup.PLpeople();
 var PurpleLayer = L.layerGroup.purpleLayer();
 var ToxicRelease = L.layerGroup.toxicReleaseLayer();
 var PFASTracker = L.layerGroup.pfasLayer();
@@ -122,7 +122,7 @@ var baseMaps = {
 };
 
 var overlayMaps = {
-  // "PLpeople" : PLpeople,
+  "PLpeople" : PLpeople,
   'Wisconsin Non-Metal': Wisconsin_NM,
   'Fractracker': Fractracker,
   'FracTracker mobile': FracTracker_mobile,
@@ -203,7 +203,7 @@ var allMapLayers = {
   'Streets': baselayer3,
   'Dark': baselayer4,
 
-  // "PLpeople" : PLpeople,
+  "PLpeople" : PLpeople,
   'wisconsin': Wisconsin_NM,
   'fracTrackerMobile': FracTracker_mobile,
   'purpleLayer': PurpleLayer,
@@ -261,6 +261,9 @@ var hash = new L.FullHash(map, allMapLayers);
 // var leafletControl = new L.control.layers(baseMaps, overlayMaps);
 var leafletControl = new L.control.layersBrowser(baseMaps, overlayMaps);
 leafletControl.addTo(map);
+
+var modeControl = new L.control.minimalMode(leafletControl);
+modeControl.addTo(map);
 
 var embedControl = new L.control.embed({
   // hostname: 'your domain name goes here'

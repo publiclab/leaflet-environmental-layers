@@ -7,12 +7,9 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       embed: false, // activates layers on map by default if true.
       currentHash: location.hash,
       addLayersToMap: false,
-      defaultBaseLayer: L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      }),
       // Source of Truth of Layers name .
       // please put name of Layers carefully in the the appropriate layer group.
-      layers0: ['purpleLayer', 'toxicReleaseLayer', 'pfasLayer', 'aqicnLayer', 'osmLandfillMineQuarryLayer', 'Unearthing'],
+      layers0: ['PLpeople', 'purpleLayer', 'toxicReleaseLayer', 'pfasLayer', 'aqicnLayer', 'osmLandfillMineQuarryLayer', 'Unearthing'],
       layers1: ['purpleairmarker', 'skytruth', 'fractracker', 'odorreport', 'mapknitter', 'openaq', 'luftdaten', 'opensense'],
       layers2: ['Power', 'Petroleum', 'Telecom', 'Water'],
       layers3: ['wisconsin'],
@@ -76,8 +73,11 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       this._map = map;
       this.overlayMaps = {};
       this.groupedOverlayMaps = {}; // For grouping layers in the new menu
-      var baseMaps = this.options.baseLayers ? this.options.baseLayers : { "Grey-scale": this.options.defaultBaseLayer.addTo(map) };
-
+	  var defaultBaseLayer = L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      });
+	  var baseMaps = this.options.baseLayers ? this.options.baseLayers : { "Grey-scale": defaultBaseLayer.addTo(map) };
+		
       for (let layer of this.options.layers.include) {
         if (this.options.layers0.includes(layer)) {
           this.overlayMaps[layer] = window['L']['layerGroup'][layer]();
@@ -191,6 +191,13 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         }
       }
 
+      var leafletControl = this.options.simpleLayerControl ? 
+      L.control.layers(baseMaps, this.overlayMaps).addTo(map) :
+      L.control.layersBrowser(baseMaps, this.groupedOverlayMaps).addTo(map);
+
+      var modeControl = new L.control.minimalMode(leafletControl);
+      modeControl.addTo(map);
+
       if (this.options.embed) {
         this.options.hostname ? (
           L.control.embed({
@@ -198,10 +205,6 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
           }).addTo(map)
         ) : L.control.embed().addTo(map);
       }
-
-      this.options.simpleLayerControl ? 
-      L.control.layers(baseMaps, this.overlayMaps).addTo(map) :
-      L.control.layersBrowser(baseMaps, this.groupedOverlayMaps).addTo(map);
 
       var allMaps = Object.assign(baseMaps, this.overlayMaps);
       if (this.options.hash) {

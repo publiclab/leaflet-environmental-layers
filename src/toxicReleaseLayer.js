@@ -88,9 +88,12 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
       var city = data.CITY_NAME;
       var mail_street_addr = data.MAIL_STREET_ADDRESS;
       var contact = data.ASGN_PUBLIC_PHONE;
+      var defaultMarker = L.marker([lat, lng], {icon: greenDotIcon});
+      var minimalMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#6ccc00' });
+      var content = '<strong>Name : </strong>' + fac_name + '<br><strong> City :' + city +'</strong>' + '<br><strong> Street address : ' + mail_street_addr + '</strong><br><strong> Contact : ' + contact + '</strong><br>Lat :'+lat+'<br>Lon :'+lng +'<br><i>From the <a href=\'https://github.com/publiclab/leaflet-environmental-layers/pull/8\'>Toxic Release Inventory</a> (<a href=\'https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515\'>info<a>)</i>';
       var tri_marker;
       if (!isNaN((lat)) && !isNaN((lng)) ) {
-        tri_marker = L.marker([lat, lng], {icon: greenDotIcon}).bindPopup('<strong>Name : </strong>' + fac_name + '<br><strong> City :' + city +'</strong>' + '<br><strong> Street address : ' + mail_street_addr + '</strong><br><strong> Contact : ' + contact + '</strong><br>Lat :'+lat+'<br>Lon :'+lng +'<br><i>From the <a href=\'https://github.com/publiclab/leaflet-environmental-layers/pull/8\'>Toxic Release Inventory</a> (<a href=\'https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515\'>info<a>)</i>');
+        tri_marker = this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
       }
       return tri_marker;
     },
