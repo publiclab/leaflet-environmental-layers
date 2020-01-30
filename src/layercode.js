@@ -141,7 +141,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         var minimalMarker = L.circleMarker(L.latLng([item['latitude'], item['longitude']]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#e8e800' });
         var content = this.generatePopup(item);
         var fracTracker;
-        fracTracker = this._map._minimalMode ? minimalMarker : defaultMarker;
+        fracTracker = this._map && this._map._minimalMode ? minimalMarker : defaultMarker;
         return fracTracker.bindPopup(content);
       }
 
@@ -159,7 +159,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         '</strong> <br><br>Data provided by <a href=\'http://alerts.skytruth.org/\'>alerts.skytruth.org/</a>';
         var skymarker;
         if (!isNaN(lat) && !isNaN(lng) ) {
-          skymarker = this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
+          skymarker = this._map && this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
         }
         return skymarker;
       }
@@ -179,7 +179,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         '</strong><br><br>Data provided by <a href=\'https://odorlog.ushahidi.io\'>https://odorlog.ushahidi.io</a>';
         var odormarker;
         if (!isNaN(lat) && !isNaN(lng) ) {
-          odormarker = this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
+          odormarker = this._map && this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
         }
         // oms.addMarker(odormarker);
         return odormarker;
@@ -209,7 +209,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         var mapknitter;
         if (!isNaN(lat) && !isNaN(lng) ) {
           if (image_url !== undefined) {
-            mapknitter = this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
+            mapknitter = this._map && this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
             // oms.addMarker(mapknitter);
           }
           else {
@@ -218,7 +218,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
             '<br><strong>Location : </strong>' + location +
             '<br><strong> Lat : </strong>' + lat + '  ,  <strong> Lon : </strong>' + lng +
             '<br><i>For more info on <a href=\'https://github.com/publiclab/leaflet-environmental-layers/issues/10\'>MapKnitter Layer</a>, visit <a href=\'https://mapknitter.org/\'>here<a></i>';
-            mapknitter = this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
+            mapknitter = this._map && this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
             // oms.addMarker(mapknitter);
           }
         }
@@ -247,7 +247,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
 
         var defaultMarker = L.marker([lat, lng], {icon: greenIcon});
         var minimalMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#4edd51' });
-        var marker = this._map._minimalMode ? minimalMarker : defaultMarker;
+        var marker = this._map && this._map._minimalMode ? minimalMarker : defaultMarker;
         return marker.bindPopup(popupContent);
       }
 
@@ -273,7 +273,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         var minimalMarker = L.circleMarker(L.latLng([lat, lon]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#912d25' });
         var content = '<h3>'+data.location+', '+data.country+'</h3><br>'+
         '<strong>distance: '+'</strong>'+data.distance+'<br>'+contentData;
-        var marker = this._map._minimalMode ? minimalMarker : defaultMarker;
+        var marker = this._map && this._map._minimalMode ? minimalMarker : defaultMarker;
         return marker.bindPopup(content);
       }
 
@@ -285,7 +285,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         var loadingText = 'Loading ...';
         var defaultMarker = L.marker([lat, lng], {icon: blackCube, boxId: data._id});
         var minimalMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#262626' });
-        var marker = this._map._minimalMode ? minimalMarker : defaultMarker;
+        var marker = this._map && this._map._minimalMode ? minimalMarker : defaultMarker;
         return marker.bindPopup(loadingText);
       }
 
@@ -304,7 +304,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         var content = '<i style=\'color: purple ; size : 20px\'>Label : ' + Label + '</i><br><br> <strong>PM2.5 Value : ' + value +'</strong><br><strong> Lat: ' + lat + '</strong><br><strong> Lon: ' + lng + '<br>Temp (F) : '+temp_f+'<br>Humidity : ' + humidity + '<br>Pressure : ' + pressure +'<br><br> <i>Data provided by <a href=\'www.purpleair.com\'>www.purpleair.com</a></i>';
         var purpleAirMarker;
         if (lat!=null && lng!=null) {
-          purpleAirMarker = this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
+          purpleAirMarker = this._map && this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
         }
         return purpleAirMarker;
       }

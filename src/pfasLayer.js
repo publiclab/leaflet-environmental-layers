@@ -80,7 +80,7 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
       var minimalMarker = L.circleMarker(L.latLng([item['latitude'], item['longitude']]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#b52822' });
       var content = this.generatePopup(item);
       var pfasTracker;
-      pfasTracker = this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
+      pfasTracker = this._map && this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
 
       // oms.addMarker(pfasTracker);
 
