@@ -44,38 +44,18 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
 
     requestData: function() {
       var self = this;
-      var info = require('./info.json');
       (function() {
-        var script = document.createElement('SCRIPT');
-        script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-        script.type = 'text/javascript';
-        var zoom = self._map.getZoom(); var origin = self._map.getCenter();
-        var extents = info.toxicReleaseLayer.extents;
-        var latLngbounds = extents.bounds;
-        if (zoom < extents.minZoom) {
-          return;
+        if (typeof jQuery == 'undefined' || (typeof jQuery == 'function' && jQuery.fn.jquery !== '1.7.1')) {
+          var script = document.createElement('SCRIPT');
+          script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
+          script.type = 'text/javascript';
+          script.onload = function() {
+            self.fetchData();
+          };
+          document.getElementsByTagName('head')[0].appendChild(script);
+        } else {
+          self.fetchData()
         }
-        var bounds = new L.LatLngBounds(latLngbounds);
-
-        if (!bounds.contains(new L.LatLng(origin.lat, origin.lng))) {
-          return;
-        }
-
-        script.onload = function() {
-          var $ = window.jQuery;
-          var TRI_url = info.toxicReleaseLayer.api_url + parseInt(origin.lat)+'/PREF_LONGITUDE/BEGINNING/'+parseInt(-1*origin.lng)+'/rows/0:300/JSON';
-          if (typeof self._map.spin === 'function') {
-            self._map.spin(true);
-          }
-          $.getJSON(TRI_url, function(data) {
-            // console.log(parseInt(origin.lat) +" and "+parseInt(origin.lng)) ;
-            self.parseData(data);
-            if (typeof self._map.spin === 'function') {
-              self._map.spin(false);
-            }
-          });
-        };
-        document.getElementsByTagName('head')[0].appendChild(script);
       })();
     },
 
@@ -119,6 +99,34 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
           this.clearOutsideBounds();
         }
       }
+    },
+
+    fetchData: function() {
+      var self = this;
+      var $ = window.jQuery;
+      var info = require('./info.json');
+      var zoom = self._map.getZoom(); var origin = self._map.getCenter();
+      var extents = info.toxicReleaseLayer.extents;
+      var latLngbounds = extents.bounds;
+      if (zoom < extents.minZoom) {
+        return;
+      }
+      var bounds = new L.LatLngBounds(latLngbounds);
+
+      if (!bounds.contains(new L.LatLng(origin.lat, origin.lng))) {
+        return;
+      }
+      var TRI_url = info.toxicReleaseLayer.api_url + parseInt(origin.lat)+'/PREF_LONGITUDE/BEGINNING/'+parseInt(-1*origin.lng)+'/rows/0:300/JSON';
+      if (typeof self._map.spin === 'function') {
+        self._map.spin(true);
+      }
+      $.getJSON(TRI_url, function(data) {
+        // console.log(parseInt(origin.lat) +" and "+parseInt(origin.lng)) ;
+        self.parseData(data);
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(false);
+        }
+      });
     },
 
     clearOutsideBounds: function() {
