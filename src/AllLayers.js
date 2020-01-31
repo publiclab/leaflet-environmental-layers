@@ -219,7 +219,12 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         }
       } else if (!!this.options.layers.display) {  // turn on only layers in display
         for (let layer of this.options.layers.display) {
-          map.addLayer(this.overlayMaps[layer]);
+          // make sure the layer exists in the display list
+          if (this.options.layers.include.includes(layer)) {
+            map.addLayer(this.overlayMaps[layer]);
+          } else {
+            console.log("Layer specified does not exist.");
+          }
         }
       } // or turn on nothing
       
