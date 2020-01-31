@@ -25854,9 +25854,9 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
     options: {
       simpleLayerControl: false,
       hash: false,
-      embed: false, // activates layers on map by default if true.
+      embed: false,
       currentHash: location.hash,
-      addLayersToMap: false,
+      addLayersToMap: false, // activates layers on map by default if true.
       // Source of Truth of Layers name .
       // please put name of Layers carefully in the the appropriate layer group.
       layers0: ['PLpeople', 'purpleLayer', 'toxicReleaseLayer', 'pfasLayer', 'aqicnLayer', 'osmLandfillMineQuarryLayer', 'Unearthing'],
@@ -26062,13 +26062,16 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         // Update map state from hash
         hash.update(this.options.currentHash);
       }
-        
-      for (let layer of this.options.layers.include) {
-        if (!this.options.addLayersToMap) {
-          return;
+
+      if (!!this.options.addLayersToMap) {  // turn on all layers
+        for (let layer of this.options.layers.include) {
+          map.addLayer(this.overlayMaps[layer]);
         }
-        map.addLayer(this.overlayMaps[layer]);
-      }
+      } else if (!!this.options.layers.display) {  // turn on only layers in display
+        for (let layer of this.options.layers.display) {
+          map.addLayer(this.overlayMaps[layer]);
+        }
+      } // or turn on nothing
       
     },
 
