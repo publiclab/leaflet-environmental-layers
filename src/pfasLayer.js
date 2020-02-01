@@ -41,24 +41,37 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
     requestData: function() {
       var self = this;
       (function() {
-        var script = document.createElement('SCRIPT');
-        script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-        script.type = 'text/javascript';
-
-        script.onload = function() {
-          var $ = window.jQuery;
-          var PFAS_URL = 'https://spreadsheets.google.com/feeds/list/1cjQ3H_DX-0dhVL5kMEesFEKaoJKLfC2wWAhokMnJxV4/1/public/values?alt=json';
-          if (typeof self._map.spin === 'function') {
-            self._map.spin(true);
-          }
-          $.getJSON(PFAS_URL, function(data) {
+        var PFAS_URL = 'https://spreadsheets.google.com/feeds/list/1cjQ3H_DX-0dhVL5kMEesFEKaoJKLfC2wWAhokMnJxV4/1/public/values?alt=json';
+        var request = new XMLHttpRequest();
+        request.open('GET', PFAS_URL, true);
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(true);
+        }
+        request.onload = function() {     
+          if (this.status >= 200 && this.status < 400) {
+            // Success!
+            var data = JSON.parse(this.response);
             self.parseData(data.feed.entry);
             if (typeof self._map.spin === 'function') {
               self._map.spin(false);
             }
-          });
+          } else {
+            // We reached our target server, but it returned an error
+            console.log('server error')
+            if (typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            }
+          }
         };
-        document.getElementsByTagName('head')[0].appendChild(script);
+        request.onerror = function() {
+          // There was a connection error of some sort
+          console.log('Something went wrong')
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        };
+        request.send();
+       
       })();
     },
 
