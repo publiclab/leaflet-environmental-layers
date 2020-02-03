@@ -52,22 +52,28 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
             // Success!
             var data = JSON.parse(this.response);
             self.parseData(data.feed.entry);
-            if (typeof self._map.spin === 'function') {
+            if (self._map && typeof self._map.spin === 'function') {
               self._map.spin(false);
+            } else {
+              map.spin(false);
             }
           } else {
             // We reached our target server, but it returned an error
             console.log('server error')
-            if (typeof self._map.spin === 'function') {
+            if (self._map && typeof self._map.spin === 'function') {
               self._map.spin(false);
+            } else {
+              map.spin(false);
             }
           }
         };
         request.onerror = function() {
           // There was a connection error of some sort
           console.log('Something went wrong')
-          if (typeof self._map.spin === 'function') {
+          if (self._map && typeof self._map.spin === 'function') {
             self._map.spin(false);
+          } else {
+            map.spin(false);
           }
         };
         request.send();

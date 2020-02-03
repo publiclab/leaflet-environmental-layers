@@ -85,34 +85,70 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
 
   _getWorksheetID: function(spreadsheetID, spreadsheetFeedURL) {
     var self = this;
-    return $.getJSON(spreadsheetFeedURL, function(data) {
-      // The worksheetID we want is dependent on which sheet we are looking for
-      var tmpLink = data.feed.entry[self.options.sheetNum].id.$t;
-      var sections = tmpLink.split('/');
-      // It is always the last section of the URL
-      var sheetID = sections[sections.length - 1];
-      // Set the URL to the final one.
-      self.options.url = 'https://spreadsheets.google.com/feeds/list/' + spreadsheetID + '/' + sheetID + '/public/values?alt=json';
-    });
+    var request = new XMLHttpRequest();
+    request.open('GET', spreadsheetFeedURL, true);
+    request.onload = function() {     
+      if (this.status >= 200 && this.status < 400) {
+        // Success!
+        var data = JSON.parse(this.response);
+        // The worksheetID we want is dependent on which sheet we are looking for
+        var tmpLink = data.feed.entry[self.options.sheetNum].id.$t;
+        var sections = tmpLink.split('/');
+        // It is always the last section of the URL
+        var sheetID = sections[sections.length - 1];
+        // Set the URL to the final one.
+        self.options.url = 'https://spreadsheets.google.com/feeds/list/' + spreadsheetID + '/' + sheetID + '/public/values?alt=json';
+      } else {
+        // We reached our target server, but it returned an error
+        console.log('server error')
+      }
+    };
+    request.onerror = function() {
+      // There was a connection error of some sort
+      console.log('Something went wrong')
+    };
+    request.send();
   },
 
   requestData: function() {
     var self = this;
     (function() {
-      var script = document.createElement('SCRIPT');
-      script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-      script.type = 'text/javascript';
-      script.onload = function() {
-        var $ = window.jQuery;
-        var ssURL = self.options.url || '';
+      var ssURL = self.options.url || '';
+      var request = new XMLHttpRequest();
+      request.open('GET', ssURL, true);
+      if (typeof self._map.spin === 'function') {
         self._map.spin(true);
-        // start fetching data from the URL
-        $.getJSON(ssURL, function(data) {
+      }
+      request.onload = function() {     
+        if (this.status >= 200 && this.status < 400) {
+          // Success!
+          var data = JSON.parse(this.response);
           self.parseData(data.feed.entry);
-          self._map.spin(false);
-        });
+          if (self._map && typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          } else {
+            map.spin(false);
+          }
+        } else {
+          // We reached our target server, but it returned an error
+          console.log('server error')
+          if (self._map && typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          } else {
+            map.spin(false);
+          }
+        }
       };
-      document.getElementsByTagName('head')[0].appendChild(script);
+      request.onerror = function() {
+        // There was a connection error of some sort
+        console.log('Something went wrong')
+        if (self._map && typeof self._map.spin === 'function') {
+          self._map.spin(false);
+        } else {
+          map.spin(false);
+        }
+      };
+      request.send();
     })();
   },
 

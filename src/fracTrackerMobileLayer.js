@@ -36,21 +36,43 @@ L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
         var bottom = southWest.lat;
         var polygon = left + ' ' + top + ',' + right + ' ' + top + ',' + right + ' ' + bottom + ',' + left + ' ' + bottom + ',' + left + ' ' + top;
         
-        var $ = window.jQuery;
         var fractrackerMobile_url = 'https://cors-anywhere.herokuapp.com/https://api.fractracker.org/v1/data/report?page=1&results_per_page=250&q={"filters":[{"name":"geometry","op":"intersects","val":"SRID=4326;POLYGON((' + polygon +'))"}],"order_by":[{"field":"report_date","direction":"desc"},{"field":"id","direction":"desc"}]}';
-
+        var request = new XMLHttpRequest();
+        request.open('GET', fractrackerMobile_url, true);
         if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
-
-        return $.getJSON(fractrackerMobile_url);
-
-      })().done(function(data) {
-        self.parseData(data);
-        if (typeof self._map.spin === 'function') {
-          self._map.spin(false);
-        }
-      });
+        request.onload = function() {     
+          if (this.status >= 200 && this.status < 400) {
+            // Success!
+            var data = JSON.parse(this.response);
+            self.parseData(data);
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
+          } else {
+            // We reached our target server, but it returned an error
+            console.log('server error')
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
+          }
+        };
+        request.onerror = function() {
+          // There was a connection error of some sort
+          console.log('Something went wrong')
+          if (self._map && typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          } else {
+            map.spin(false);
+          }
+        };
+        request.send();
+      })();
     },
 
     parseData: function(data) {

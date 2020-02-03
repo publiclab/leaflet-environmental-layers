@@ -1,4 +1,4 @@
-$(window).one('load', function() {
+window.onload = function() {
   function getLayerKey(overlayObject) {
     return Object.keys(overlayMaps).find((key) => overlayMaps[key] === overlayObject);
   }
@@ -40,4 +40,4 @@ $(window).one('load', function() {
     var layerName = eventLayer.name;
     if (legendPairs[layerName]) legendControl.removeLegend(legendPairs[layerName]);
   });
-});
+}

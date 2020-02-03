@@ -38,30 +38,43 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
       if (this.layer == 'opensense') {
         if (e) {
           var popup = e.target.getPopup();
-          var $ = window.jQuery;
           var url = 'https://api.opensensemap.org/boxes/' + e.target.options.boxId;
-          $.getJSON(url, function(data) {
-            var popUpContent = '';
-            if (data.name && data.grouptag) {
-              popUpContent += '<h3>' + data.name + ',' + data.grouptag + '</h3>';
-            }
-            else if (data.name) {
-              popUpContent += '<h3>' + data.name + '</h3>';
-            }
-            for (var i in data.sensors) {
-              if (data.sensors[i].lastMeasurement) {
-                popUpContent += '<span><b>' + data.sensors[i].title + ': </b>' +
-                  data.sensors[i].lastMeasurement.value +
-                  data.sensors[i].unit + '</span><br>';
+          var request = new XMLHttpRequest();
+          request.open('GET', url, true);
+          request.onload = function() {     
+            if (this.status >= 200 && this.status < 400) {
+              // Success!
+              var data = JSON.parse(this.response);
+              var popUpContent = '';
+              if (data.name && data.grouptag) {
+                popUpContent += '<h3>' + data.name + ',' + data.grouptag + '</h3>';
+              }
+              else if (data.name) {
+                popUpContent += '<h3>' + data.name + '</h3>';
+              }
+              for (var i in data.sensors) {
+                if (data.sensors[i].lastMeasurement) {
+                  popUpContent += '<span><b>' + data.sensors[i].title + ': </b>' +
+                    data.sensors[i].lastMeasurement.value +
+                    data.sensors[i].unit + '</span><br>';
+                }
+              }
+              if (data.lastMeasurementAt) {
+                popUpContent += '<br><small>Measured at <i>' + data.lastMeasurementAt + '</i>';
+              }
+              popup.setContent(popUpContent);
+              } else {
+                // We reached our target server, but it returned an error
+                console.log('server error');
               }
             }
-            if (data.lastMeasurementAt) {
-              popUpContent += '<br><small>Measured at <i>' + data.lastMeasurementAt + '</i>';
-            }
-            popup.setContent(popUpContent);
-          });
+          };
+          request.onerror = function() {
+            // There was a connection error of some sort
+            console.log('Something went wrong');
+          };
+          request.send();
         }
-      }
     },
 
 
@@ -71,7 +84,6 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
       (function() {
         var zoom;
         var Layer_URL;
-        var $ = window.jQuery;
 
         if (self.layer === 'fractracker') {
           Layer_URL = info.fractracker.api_url; ;
@@ -106,20 +118,46 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         }
 
 
-        if (self._map && typeof self._map.spin === 'function') {
+        var request = new XMLHttpRequest();
+        request.open('GET', Layer_URL, true);
+        if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
-        $.getJSON(Layer_URL, function(data) {
-          if (self.layer == 'fractracker')
-          { self.parseData(data.feed.entry); }
-          if (self.layer == 'openaq')
-          { self.parseData(data.results); }
-          else
-          { self.parseData(data); }
+        request.onload = function() {     
+          if (this.status >= 200 && this.status < 400) {
+            // Success!
+            var data = JSON.parse(this.response);
+            if (self.layer == 'fractracker')
+            { self.parseData(data.feed.entry); }
+            if (self.layer == 'openaq')
+            { self.parseData(data.results); }
+            else
+            { self.parseData(data); }
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
+          } else {
+            // We reached our target server, but it returned an error
+            console.log('server error')
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
+          }
+        };
+        request.onerror = function() {
+          // There was a connection error of some sort
+          console.log('Something went wrong')
           if (self._map && typeof self._map.spin === 'function') {
             self._map.spin(false);
+          } else {
+            map.spin(false);
           }
-        });
+        };
+        request.send();
       })();
     },
 
