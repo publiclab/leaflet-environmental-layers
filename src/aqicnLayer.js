@@ -30,18 +30,42 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
 
       (function() {
         var zoom = self._map.getZoom(); var northeast = self._map.getBounds().getNorthEast(); var southwest = self._map.getBounds().getSouthWest();
-        var $ = window.jQuery;
         var AQI_url = 'https://api.waqi.info/map/bounds/?latlng=' + southwest.lat + ',' + southwest.lng + ',' + northeast.lat + ',' + northeast.lng + '&token=' + self.options.tokenID;
-
+        var request = new XMLHttpRequest();
+        request.open('GET', AQI_url, true);
         if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
-        $.getJSON(AQI_url, function(regionalData) {
-          self.parseData(regionalData);
-          if (typeof self._map.spin === 'function') {
-            self._map.spin(false);
+        request.onload = function() {     
+          if (this.status >= 200 && this.status < 400) {
+            // Success!
+            var regionalData = JSON.parse(this.response);
+            self.parseData(regionalData);
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
+          } else {
+            // We reached our target server, but it returned an error
+            console.log('server error')
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
           }
-        });
+        };
+        request.onerror = function() {
+          // There was a connection error of some sort
+          console.log('Something went wrong')
+          if (self._map && typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          } else {
+            map.spin(false);
+          }
+        };
+        request.send();
       })();
     },
 
@@ -112,39 +136,57 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
 
         var stationURL = 'https://api.waqi.info/feed/@' + data.uid + '/?token=' + self.options.tokenID;
 
-        $.getJSON(stationURL, function(stationData) {
-          var labels = {
-            pm25: 'PM<sub>2.5</sub>',
-            pm10: 'PM<sub>10</sub>',
-            o3: 'Ozone',
-            no2: 'Nitrogen Dioxide',
-            so2: 'Sulphur Dioxide',
-            co: 'Carbon Monoxide',
-            t: 'Temperature',
-            w: 'Wind',
-            r: 'Rain (precipitation)',
-            h: 'Relative Humidity',
-            d: 'Dew',
-            p: 'Atmostpheric Pressure',
-          };
+        var request = new XMLHttpRequest();
+        request.open('GET', stationURL, true);
 
-          var strContent = '';
-          var name = '<h2>' + stationData.data.city.name + '</h2><br> '; // Set the default content first
-
-          for (var species in stationData.data.iaqi) {
-            strContent += '<strong>' + labels[species] + '</strong>: ' + stationData.data.iaqi[species].v + ';<br>';
+        request.onload = function() {
+          if (this.status >= 200 && this.status < 400) {
+            // Success!
+            var stationData = JSON.parse(this.response);
+            var labels = {
+              pm25: 'PM<sub>2.5</sub>',
+              pm10: 'PM<sub>10</sub>',
+              o3: 'Ozone',
+              no2: 'Nitrogen Dioxide',
+              so2: 'Sulphur Dioxide',
+              co: 'Carbon Monoxide',
+              t: 'Temperature',
+              w: 'Wind',
+              r: 'Rain (precipitation)',
+              h: 'Relative Humidity',
+              d: 'Dew',
+              p: 'Atmostpheric Pressure',
+            };
+  
+            var strContent = '';
+            var name = '<h2>' + stationData.data.city.name + '</h2><br> '; // Set the default content first
+  
+            for (var species in stationData.data.iaqi) {
+              strContent += '<strong>' + labels[species] + '</strong>: ' + stationData.data.iaqi[species].v + ';<br>';
+            }
+            strContent += 'See <a href=' + stationData.data.city.url + '>AQICN - ' + stationData.data.city.name + '</a> for more info. Data provided by aqicn.org.<br>From the <a href=https://github.com/publiclab/leaflet-environmental-layers/pull/79>AQICN Inventory</a> (<a href = https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515>info</a>)';
+            el.innerHTML = name + strContent;
+  
+            var res = stationData.data.city.url.split('/');
+  
+            // Parse url to see what the city is called by the API; the majority of cities cannot be found.
+            var cityName = res[res.length - 1];
+            if (cityName.length <= 1) cityName = res[res.length - 2];
+            // if city can be found, display is reset to include details
+            _aqiFeed({display: name + '%details <br>' + strContent, container: 'city-aqi-container', city: cityName});
+          } else {
+            // We reached our target server, but it returned an error
+            console.log('Server error while fetching popup information');
           }
-          strContent += 'See <a href=' + stationData.data.city.url + '>AQICN - ' + stationData.data.city.name + '</a> for more info. Data provided by aqicn.org.<br>From the <a href=https://github.com/publiclab/leaflet-environmental-layers/pull/79>AQICN Inventory</a> (<a href = https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515>info</a>)';
-          el.innerHTML = name + strContent;
+        };
 
-          var res = stationData.data.city.url.split('/');
+        request.onerror = function() {
+          // There was a connection error of some sort
+          console.log('Something went wrong while fetching popup information');
+        };
 
-          // Parse url to see what the city is called by the API; the majority of cities cannot be found.
-          var cityName = res[res.length - 1];
-          if (cityName.length <= 1) cityName = res[res.length - 2];
-          // if city can be found, display is reset to include details
-          _aqiFeed({display: name + '%details <br>' + strContent, container: 'city-aqi-container', city: cityName});
-        });
+        request.send();
+
         return el;
       });
 

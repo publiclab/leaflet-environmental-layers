@@ -34,7 +34,6 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
       var self = this;
       (function() {
         var zoom = self._map.getZoom(); var origin = self._map.getCenter();
-        var $ = window.jQuery;
         var ILL_url;
 
         if (self.layer === 'Territories' ) {
@@ -47,15 +46,41 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
           ILL_url = 'https://native-land.ca/api/index.php?maps=treaties&position=' + parseInt(origin.lat) + ',' + parseInt(origin.lng);
         }
 
+        var request = new XMLHttpRequest();
+        request.open('GET', ILL_url, true);
         if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
-        $.getJSON(ILL_url, function(data) {
-          self.parseData(data);
-          if (typeof self._map.spin === 'function') {
-            self._map.spin(false);
+        request.onload = function() {     
+          if (this.status >= 200 && this.status < 400) {
+            // Success!
+            var data = JSON.parse(this.response);
+            self.parseData(data);
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
+          } else {
+            // We reached our target server, but it returned an error
+            console.log('server error')
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
           }
-        });
+        };
+        request.onerror = function() {
+          // There was a connection error of some sort
+          console.log('Something went wrong')
+          if (self._map && typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          } else {
+            map.spin(false);
+          }
+        };
+        request.send();
       })();
     },
 

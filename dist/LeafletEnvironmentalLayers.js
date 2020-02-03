@@ -26176,18 +26176,42 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
 
       (function() {
         var zoom = self._map.getZoom(); var northeast = self._map.getBounds().getNorthEast(); var southwest = self._map.getBounds().getSouthWest();
-        var $ = window.jQuery;
         var AQI_url = 'https://api.waqi.info/map/bounds/?latlng=' + southwest.lat + ',' + southwest.lng + ',' + northeast.lat + ',' + northeast.lng + '&token=' + self.options.tokenID;
-
+        var request = new XMLHttpRequest();
+        request.open('GET', AQI_url, true);
         if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
-        $.getJSON(AQI_url, function(regionalData) {
-          self.parseData(regionalData);
-          if (typeof self._map.spin === 'function') {
-            self._map.spin(false);
+        request.onload = function() {     
+          if (this.status >= 200 && this.status < 400) {
+            // Success!
+            var regionalData = JSON.parse(this.response);
+            self.parseData(regionalData);
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
+          } else {
+            // We reached our target server, but it returned an error
+            console.log('server error')
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
           }
-        });
+        };
+        request.onerror = function() {
+          // There was a connection error of some sort
+          console.log('Something went wrong')
+          if (self._map && typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          } else {
+            map.spin(false);
+          }
+        };
+        request.send();
       })();
     },
 
@@ -26258,39 +26282,57 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
 
         var stationURL = 'https://api.waqi.info/feed/@' + data.uid + '/?token=' + self.options.tokenID;
 
-        $.getJSON(stationURL, function(stationData) {
-          var labels = {
-            pm25: 'PM<sub>2.5</sub>',
-            pm10: 'PM<sub>10</sub>',
-            o3: 'Ozone',
-            no2: 'Nitrogen Dioxide',
-            so2: 'Sulphur Dioxide',
-            co: 'Carbon Monoxide',
-            t: 'Temperature',
-            w: 'Wind',
-            r: 'Rain (precipitation)',
-            h: 'Relative Humidity',
-            d: 'Dew',
-            p: 'Atmostpheric Pressure',
-          };
+        var request = new XMLHttpRequest();
+        request.open('GET', stationURL, true);
 
-          var strContent = '';
-          var name = '<h2>' + stationData.data.city.name + '</h2><br> '; // Set the default content first
-
-          for (var species in stationData.data.iaqi) {
-            strContent += '<strong>' + labels[species] + '</strong>: ' + stationData.data.iaqi[species].v + ';<br>';
+        request.onload = function() {
+          if (this.status >= 200 && this.status < 400) {
+            // Success!
+            var stationData = JSON.parse(this.response);
+            var labels = {
+              pm25: 'PM<sub>2.5</sub>',
+              pm10: 'PM<sub>10</sub>',
+              o3: 'Ozone',
+              no2: 'Nitrogen Dioxide',
+              so2: 'Sulphur Dioxide',
+              co: 'Carbon Monoxide',
+              t: 'Temperature',
+              w: 'Wind',
+              r: 'Rain (precipitation)',
+              h: 'Relative Humidity',
+              d: 'Dew',
+              p: 'Atmostpheric Pressure',
+            };
+  
+            var strContent = '';
+            var name = '<h2>' + stationData.data.city.name + '</h2><br> '; // Set the default content first
+  
+            for (var species in stationData.data.iaqi) {
+              strContent += '<strong>' + labels[species] + '</strong>: ' + stationData.data.iaqi[species].v + ';<br>';
+            }
+            strContent += 'See <a href=' + stationData.data.city.url + '>AQICN - ' + stationData.data.city.name + '</a> for more info. Data provided by aqicn.org.<br>From the <a href=https://github.com/publiclab/leaflet-environmental-layers/pull/79>AQICN Inventory</a> (<a href = https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515>info</a>)';
+            el.innerHTML = name + strContent;
+  
+            var res = stationData.data.city.url.split('/');
+  
+            // Parse url to see what the city is called by the API; the majority of cities cannot be found.
+            var cityName = res[res.length - 1];
+            if (cityName.length <= 1) cityName = res[res.length - 2];
+            // if city can be found, display is reset to include details
+            _aqiFeed({display: name + '%details <br>' + strContent, container: 'city-aqi-container', city: cityName});
+          } else {
+            // We reached our target server, but it returned an error
+            console.log('Server error while fetching popup information');
           }
-          strContent += 'See <a href=' + stationData.data.city.url + '>AQICN - ' + stationData.data.city.name + '</a> for more info. Data provided by aqicn.org.<br>From the <a href=https://github.com/publiclab/leaflet-environmental-layers/pull/79>AQICN Inventory</a> (<a href = https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515>info</a>)';
-          el.innerHTML = name + strContent;
+        };
 
-          var res = stationData.data.city.url.split('/');
+        request.onerror = function() {
+          // There was a connection error of some sort
+          console.log('Something went wrong while fetching popup information');
+        };
 
-          // Parse url to see what the city is called by the API; the majority of cities cannot be found.
-          var cityName = res[res.length - 1];
-          if (cityName.length <= 1) cityName = res[res.length - 2];
-          // if city can be found, display is reset to include details
-          _aqiFeed({display: name + '%details <br>' + strContent, container: 'city-aqi-container', city: cityName});
-        });
+        request.send();
+
         return el;
       });
 
@@ -26383,18 +26425,43 @@ L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
       var self = this;
 
       (function() {
-        var $ = window.jQuery;
         var EonetFire_url = 'https://eonet.sci.gsfc.nasa.gov/api/v2.1/categories/8';
+        var request = new XMLHttpRequest();
+        request.open('GET', EonetFire_url, true);
         if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
-
-        $.getJSON(EonetFire_url, function(data) {
-          self.parseData(data);
-          if (typeof self._map.spin === 'function') {
-            self._map.spin(false);
+        request.onload = function() {     
+          if (this.status >= 200 && this.status < 400) {
+            // Success!
+            var data = JSON.parse(this.response);
+            self.parseData(data);
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
+          } else {
+            // We reached our target server, but it returned an error
+            console.log('server error')
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
           }
-        });
+        };
+        request.onerror = function() {
+          // There was a connection error of some sort
+          console.log('Something went wrong')
+          if (self._map && typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          } else {
+            map.spin(false);
+          }
+        };
+        request.send();
+
       })();
     },
 
@@ -26485,21 +26552,43 @@ L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
         var bottom = southWest.lat;
         var polygon = left + ' ' + top + ',' + right + ' ' + top + ',' + right + ' ' + bottom + ',' + left + ' ' + bottom + ',' + left + ' ' + top;
         
-        var $ = window.jQuery;
         var fractrackerMobile_url = 'https://cors-anywhere.herokuapp.com/https://api.fractracker.org/v1/data/report?page=1&results_per_page=250&q={"filters":[{"name":"geometry","op":"intersects","val":"SRID=4326;POLYGON((' + polygon +'))"}],"order_by":[{"field":"report_date","direction":"desc"},{"field":"id","direction":"desc"}]}';
-
+        var request = new XMLHttpRequest();
+        request.open('GET', fractrackerMobile_url, true);
         if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
-
-        return $.getJSON(fractrackerMobile_url);
-
-      })().done(function(data) {
-        self.parseData(data);
-        if (typeof self._map.spin === 'function') {
-          self._map.spin(false);
-        }
-      });
+        request.onload = function() {     
+          if (this.status >= 200 && this.status < 400) {
+            // Success!
+            var data = JSON.parse(this.response);
+            self.parseData(data);
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
+          } else {
+            // We reached our target server, but it returned an error
+            console.log('server error')
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
+          }
+        };
+        request.onerror = function() {
+          // There was a connection error of some sort
+          console.log('Something went wrong')
+          if (self._map && typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          } else {
+            map.spin(false);
+          }
+        };
+        request.send();
+      })();
     },
 
     parseData: function(data) {
@@ -26587,7 +26676,6 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
       var self = this;
       (function() {
         var zoom = self._map.getZoom(); var origin = self._map.getCenter();
-        var $ = window.jQuery;
         var ILL_url;
 
         if (self.layer === 'Territories' ) {
@@ -26600,15 +26688,41 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
           ILL_url = 'https://native-land.ca/api/index.php?maps=treaties&position=' + parseInt(origin.lat) + ',' + parseInt(origin.lng);
         }
 
+        var request = new XMLHttpRequest();
+        request.open('GET', ILL_url, true);
         if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
-        $.getJSON(ILL_url, function(data) {
-          self.parseData(data);
-          if (typeof self._map.spin === 'function') {
-            self._map.spin(false);
+        request.onload = function() {     
+          if (this.status >= 200 && this.status < 400) {
+            // Success!
+            var data = JSON.parse(this.response);
+            self.parseData(data);
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
+          } else {
+            // We reached our target server, but it returned an error
+            console.log('server error')
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
           }
-        });
+        };
+        request.onerror = function() {
+          // There was a connection error of some sort
+          console.log('Something went wrong')
+          if (self._map && typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          } else {
+            map.spin(false);
+          }
+        };
+        request.send();
       })();
     },
 
@@ -27180,30 +27294,43 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
       if (this.layer == 'opensense') {
         if (e) {
           var popup = e.target.getPopup();
-          var $ = window.jQuery;
           var url = 'https://api.opensensemap.org/boxes/' + e.target.options.boxId;
-          $.getJSON(url, function(data) {
-            var popUpContent = '';
-            if (data.name && data.grouptag) {
-              popUpContent += '<h3>' + data.name + ',' + data.grouptag + '</h3>';
-            }
-            else if (data.name) {
-              popUpContent += '<h3>' + data.name + '</h3>';
-            }
-            for (var i in data.sensors) {
-              if (data.sensors[i].lastMeasurement) {
-                popUpContent += '<span><b>' + data.sensors[i].title + ': </b>' +
-                  data.sensors[i].lastMeasurement.value +
-                  data.sensors[i].unit + '</span><br>';
+          var request = new XMLHttpRequest();
+          request.open('GET', url, true);
+          request.onload = function() {     
+            if (this.status >= 200 && this.status < 400) {
+              // Success!
+              var data = JSON.parse(this.response);
+              var popUpContent = '';
+              if (data.name && data.grouptag) {
+                popUpContent += '<h3>' + data.name + ',' + data.grouptag + '</h3>';
+              }
+              else if (data.name) {
+                popUpContent += '<h3>' + data.name + '</h3>';
+              }
+              for (var i in data.sensors) {
+                if (data.sensors[i].lastMeasurement) {
+                  popUpContent += '<span><b>' + data.sensors[i].title + ': </b>' +
+                    data.sensors[i].lastMeasurement.value +
+                    data.sensors[i].unit + '</span><br>';
+                }
+              }
+              if (data.lastMeasurementAt) {
+                popUpContent += '<br><small>Measured at <i>' + data.lastMeasurementAt + '</i>';
+              }
+              popup.setContent(popUpContent);
+              } else {
+                // We reached our target server, but it returned an error
+                console.log('server error');
               }
             }
-            if (data.lastMeasurementAt) {
-              popUpContent += '<br><small>Measured at <i>' + data.lastMeasurementAt + '</i>';
-            }
-            popup.setContent(popUpContent);
-          });
+          };
+          request.onerror = function() {
+            // There was a connection error of some sort
+            console.log('Something went wrong');
+          };
+          request.send();
         }
-      }
     },
 
 
@@ -27213,7 +27340,6 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
       (function() {
         var zoom;
         var Layer_URL;
-        var $ = window.jQuery;
 
         if (self.layer === 'fractracker') {
           Layer_URL = info.fractracker.api_url; ;
@@ -27248,20 +27374,46 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         }
 
 
-        if (self._map && typeof self._map.spin === 'function') {
+        var request = new XMLHttpRequest();
+        request.open('GET', Layer_URL, true);
+        if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
-        $.getJSON(Layer_URL, function(data) {
-          if (self.layer == 'fractracker')
-          { self.parseData(data.feed.entry); }
-          if (self.layer == 'openaq')
-          { self.parseData(data.results); }
-          else
-          { self.parseData(data); }
+        request.onload = function() {     
+          if (this.status >= 200 && this.status < 400) {
+            // Success!
+            var data = JSON.parse(this.response);
+            if (self.layer == 'fractracker')
+            { self.parseData(data.feed.entry); }
+            if (self.layer == 'openaq')
+            { self.parseData(data.results); }
+            else
+            { self.parseData(data); }
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
+          } else {
+            // We reached our target server, but it returned an error
+            console.log('server error')
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
+          }
+        };
+        request.onerror = function() {
+          // There was a connection error of some sort
+          console.log('Something went wrong')
           if (self._map && typeof self._map.spin === 'function') {
             self._map.spin(false);
+          } else {
+            map.spin(false);
           }
-        });
+        };
+        request.send();
       })();
     },
 
@@ -29271,7 +29423,9 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
 
     onRemove: function(map) {
       map.off('moveend', this.requestData, this);
-      if (typeof map.spin === 'function') {
+      if (self._map && typeof self._map.spin === 'function') {
+        self._map.spin(false);
+      } else {
         map.spin(false);
       }
       this.clearLayers();
@@ -29282,9 +29436,9 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
       var self = this;
       var info = require('./info.json');
       (function() {
-        var script = document.createElement('SCRIPT');
-        script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-        script.type = 'text/javascript';
+
+        var request = new XMLHttpRequest();
+        
         var northeast = self._map.getBounds().getNorthEast();
         var southwest = self._map.getBounds().getSouthWest();
 
@@ -29292,39 +29446,58 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
         if (currentMapZoom < info.OSMLandfillMineQuarryLayer.extents.minZoom) {
           return;
         }
-
-        script.onload = function() {
-          var $ = window.jQuery;
-          var countLayers = 0;
-          for (var key in self._colorOptions) {
-            // Generate URL for each type
-            var LMQ_url = info.OSMLandfillMineQuarryLayer.api_url + '?*[landuse=' + key + '][bbox=' + (southwest.lng) + ',' + (southwest.lat) + ',' + (northeast.lng) + ',' + (northeast.lat) + ']';
-            if (typeof self._map.spin === 'function') {
-              self._map.spin(true);
-            }
-            $.ajax({
-              url: LMQ_url,
-              dataType: 'xml',
-              success: function(data) {
-                self.parseData(data);
-              },
-            });
-            /* The structure of the document is as follows:
-                            <node id="node_id", lat="", lon="">
-                            . Rest of nodes here
-                            .
-                            <way id="">
-                                <nd ref="node_id">
-                                . Rest of nodes here, with the node_id defined beforehand
-                                .
-                                <tag k="key", v="value">
-                                . Each object has different keys so it is hard to create a uniform popup
-                                .
-                            .. More ways
-                        */
+        for (var key in self._colorOptions) {
+        // Generate URL for each type
+          var LMQ_url = info.OSMLandfillMineQuarryLayer.api_url + '?*[landuse=' + key + '][bbox=' + (southwest.lng) + ',' + (southwest.lat) + ',' + (northeast.lng) + ',' + (northeast.lat) + ']';
+          request.open('GET', LMQ_url, true);
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(true);
           }
-        };
-        document.getElementsByTagName('head')[0].appendChild(script);
+
+          request.onload = function() {     
+            if (this.status >= 200 && this.status < 400) {
+              // Success!
+              var data = request.responseXML;
+              self.parseData(data);
+              if (self._map && typeof self._map.spin === 'function') {
+                self._map.spin(false);
+              } else {
+                map.spin(false);
+              }
+            } else {
+              // We reached our target server, but it returned an error
+              console.log('server error')
+              if (self._map && typeof self._map.spin === 'function') {
+                self._map.spin(false);
+              } else {
+                map.spin(false);
+              }
+            }
+          };
+          request.onerror = function() {
+            // There was a connection error of some sort
+            console.log('Something went wrong')
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
+          };
+          request.send();
+          /* The structure of the response document is as follows:
+                          <node id="node_id", lat="", lon="">
+                          . Rest of nodes here
+                          .
+                          <way id="">
+                              <nd ref="node_id">
+                              . Rest of nodes here, with the node_id defined beforehand
+                              .
+                              <tag k="key", v="value">
+                              . Each object has different keys so it is hard to create a uniform popup
+                              .
+                          .. More ways
+                      */
+        }
       })();
     },
 
@@ -29332,10 +29505,10 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
       var latlngs = [];
       var self = this;
 
-      var id = $(selector).attr('id');
-      $(selector).find('nd').each(function() {
-        if (self._nodes[$(this).attr('ref')]) { // Find the coordinates based on the node id
-          var coords = self._nodes[$(this).attr('ref')];
+      var nds = selector.querySelectorAll('nd');
+      [].forEach.call(nds, function(nd) {
+        if (self._nodes[nd.getAttribute('ref')]) { // Find the coordinates based on the node id
+          var coords = self._nodes[nd.getAttribute('ref')];
           latlngs.push([coords.lat, coords.lng]); // Add node coordinates
         } else {
           console.log('ERROR: COULDN\'T FIND THE NODE ID');
@@ -29343,7 +29516,7 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
       });
       var LSMPoly;
       LSMPoly = L.polygon(latlngs, {
-        color: self._colorOptions[$(selector).find('tag[k="landuse"]').attr('v')], // Selects color based on the value for the landuse key
+        color: self._colorOptions[selector.querySelector('tag[k="landuse"]').getAttribute('v')], // Selects color based on the value for the landuse key
       }).bindPopup(self.getPopupContent(selector));
 
       return LSMPoly;
@@ -29352,9 +29525,10 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
     getPopupContent: function(selector) {
       var content = '';
       // Add each key value pair found
-      $(selector).find('tag').each(function() {
-        var key = $(this).attr('k');
-        var val = $(this).attr('v');
+      var tags = selector.querySelectorAll('tag');
+      [].forEach.call(tags, function(tag) {
+        var key = tag.getAttribute('k');
+        var val = tag.getAttribute('v');
         if (key === 'landuse') val = val.charAt(0).toUpperCase() + val.slice(1); // Capitalize first letter of the landuse
         key = key.charAt(0).toUpperCase() + key.slice(1); // Capitalize first letter
         // Check if the value is a link
@@ -29371,7 +29545,7 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
     },
 
     addPolygon: function(selector) {
-      var key = $(selector).attr('id'); // Use the id for the way as the key
+      var key = selector.getAttribute('id'); // Use the id for the way as the key
       if (!this._layers[key]) {
         var poly = this.getPolygon(selector, key);
         this._layers[key] = poly;
@@ -29381,15 +29555,18 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
 
     parseData: function(data) {
       var self = this;
-      if (typeof self._map.spin === 'function') {
+      if (self._map && typeof self._map.spin === 'function') {
         self._map.spin(false);
+      } else {
+        map.spin(false);
       }
       (function() {
         // Create the map of nodes
-        $(data).find('node').each(function() {
-          var id = $(this).attr('id'); // Use id as the key
-          var nodeLat = $(this).attr('lat');
-          var nodeLng = $(this).attr('lon');
+        var nodes = data.querySelectorAll('node');
+        [].forEach.call(nodes, function(node) {
+          var id = node.getAttribute('id'); // Use id as the key
+          var nodeLat = node.getAttribute('lat');
+          var nodeLng = node.getAttribute('lon');
 
           if (!self._nodes[id]) {
             self._nodes[id] = { // Set value as lat, lng pair provided key doesn't exist
@@ -29401,8 +29578,9 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
       })();
 
       (function() {
-        $(data).find('way').each(function() { // Add for each way
-          self.addPolygon(this);
+        var ways = data.querySelectorAll('way');
+        [].forEach.call(ways, function(way) { // Add for each way
+          self.addPolygon(way);
         });
       })();
 
@@ -29479,24 +29657,43 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
     requestData: function() {
       var self = this;
       (function() {
-        var script = document.createElement('SCRIPT');
-        script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-        script.type = 'text/javascript';
-
-        script.onload = function() {
-          var $ = window.jQuery;
-          var PFAS_URL = 'https://spreadsheets.google.com/feeds/list/1cjQ3H_DX-0dhVL5kMEesFEKaoJKLfC2wWAhokMnJxV4/1/public/values?alt=json';
-          if (typeof self._map.spin === 'function') {
-            self._map.spin(true);
-          }
-          $.getJSON(PFAS_URL, function(data) {
+        var PFAS_URL = 'https://spreadsheets.google.com/feeds/list/1cjQ3H_DX-0dhVL5kMEesFEKaoJKLfC2wWAhokMnJxV4/1/public/values?alt=json';
+        var request = new XMLHttpRequest();
+        request.open('GET', PFAS_URL, true);
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(true);
+        }
+        request.onload = function() {     
+          if (this.status >= 200 && this.status < 400) {
+            // Success!
+            var data = JSON.parse(this.response);
             self.parseData(data.feed.entry);
-            if (typeof self._map.spin === 'function') {
+            if (self._map && typeof self._map.spin === 'function') {
               self._map.spin(false);
+            } else {
+              map.spin(false);
             }
-          });
+          } else {
+            // We reached our target server, but it returned an error
+            console.log('server error')
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
+          }
         };
-        document.getElementsByTagName('head')[0].appendChild(script);
+        request.onerror = function() {
+          // There was a connection error of some sort
+          console.log('Something went wrong')
+          if (self._map && typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          } else {
+            map.spin(false);
+          }
+        };
+        request.send();
+       
       })();
     },
 
@@ -29642,17 +29839,43 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
     requestData: function() {
       var self = this;
       (function() {
-        var $ = window.jQuery;
         var PurpleLayer_url = 'https://www.purpleair.com/json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L';
+        var request = new XMLHttpRequest();
+        request.open('GET', PurpleLayer_url, true);
         if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
-        $.getJSON(PurpleLayer_url, function(data) {
-          self.parseData(data);
-          if (typeof self._map.spin === 'function') {
-            self._map.spin(false);
+        request.onload = function() {     
+          if (this.status >= 200 && this.status < 400) {
+            // Success!
+            var data = JSON.parse(this.response);
+            self.parseData(data);
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
+          } else {
+            // We reached our target server, but it returned an error
+            console.log('server error')
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
           }
-        });
+        };
+        request.onerror = function() {
+          // There was a connection error of some sort
+          console.log('Something went wrong')
+          if (self._map && typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          } else {
+            map.spin(false);
+          }
+        };
+        request.send();
+        
       })();
     },
 
@@ -29772,9 +29995,7 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
       var self = this;
       var info = require('./info.json');
       (function() {
-        var script = document.createElement('SCRIPT');
-        script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-        script.type = 'text/javascript';
+        var request = new XMLHttpRequest();
         var zoom = self._map.getZoom(); var origin = self._map.getCenter();
         var extents = info.toxicReleaseLayer.extents;
         var latLngbounds = extents.bounds;
@@ -29786,22 +30007,41 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
         if (!bounds.contains(new L.LatLng(origin.lat, origin.lng))) {
           return;
         }
-
-        script.onload = function() {
-          var $ = window.jQuery;
-          var TRI_url = info.toxicReleaseLayer.api_url + parseInt(origin.lat)+'/PREF_LONGITUDE/BEGINNING/'+parseInt(-1*origin.lng)+'/rows/0:300/JSON';
-          if (typeof self._map.spin === 'function') {
-            self._map.spin(true);
-          }
-          $.getJSON(TRI_url, function(data) {
-            // console.log(parseInt(origin.lat) +" and "+parseInt(origin.lng)) ;
+        var TRI_url = info.toxicReleaseLayer.api_url + parseInt(origin.lat)+'/PREF_LONGITUDE/BEGINNING/'+parseInt(-1*origin.lng)+'/rows/0:300/JSON';
+        request.open('GET', TRI_url, true);
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(true);
+        }
+        request.onload = function() {     
+          if (this.status >= 200 && this.status < 400) {
+            // Success!
+            var data = JSON.parse(this.response);
             self.parseData(data);
-            if (typeof self._map.spin === 'function') {
+            if (self._map && typeof self._map.spin === 'function') {
               self._map.spin(false);
+            } else {
+              map.spin(false); // Remove spinner from map if layer is removed during request
             }
-          });
+          } else {
+            // We reached our target server, but it returned an error
+            console.log('server error')
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
+          }
         };
-        document.getElementsByTagName('head')[0].appendChild(script);
+        request.onerror = function() {
+          // There was a connection error of some sort
+          console.log('Something went wrong')
+          if (self._map && typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          } else {
+            map.spin(false);
+          }
+        };
+        request.send();
       })();
     },
 
@@ -29893,45 +30133,56 @@ L.LayerGroup.unearthing = L.LayerGroup.extend(
       this.pointsLayer = {};
       var points = this.pointsLayer;
       var setP = this.setPoints;
-      $.get('https://publiclab.github.io/unearthing-pvd/RI_mfgs.json')
-        .done(function(data) {
-          // standardize lat/lon instead of lon/lat
-          // and add non-nested coords for feature[0], feature[1]
-          data.features.forEach(function(f) {
-            f[1] = f.geometry.coordinates[0];
-            f[0] = f.geometry.coordinates[1];
-            f.geometry.coordinates[0] = f[0];
-            f.geometry.coordinates[1] = f[1];
-          });
-
-          points = L.glify.points({
-            map: map,
-            data: data,
-            // size: 8,
-            color: function(index, point) {
-              // console.log(point); // point is currently just []
-              return {r: 0.1, g: 0.1, b: 1};
-            },
-            sensitivity: 5,
-            click: function(e, point, xy) {
-              var point_properties = ['street', 'employees', 'conames', 'years'];
-              // set up a standalone popup (use a popup as a layer)
-              var content = '<h4>' + (point.properties.sic_name || '') +'</h4>';
-              content += '<table>';
-              point_properties.forEach(function(property) {
-                content += '<tr><td><b>' + property + '</b></td><td>' + (point.properties[property] || '') +'</td></tr>';
-              });
-              content += '</table>';
-              content += '<p><a class=\'btn btn-outline-primary\' href=\'https://publiclab.org/post?tags=unearthing-pvd-stories,lat:' + point[0] + ',lon:' + point[1] + '\'>Add your story</a></p>';
-
-              L.popup()
-                .setLatLng([point[0], point[1]])
-                .setContent(content)
-                .openOn(map);
-            },
-          });
-          setP(points.glLayer);
-        });
+      var request = new XMLHttpRequest();
+        request.open('GET', 'https://publiclab.github.io/unearthing-pvd/RI_mfgs.json', true);
+        request.onload = function() {     
+          if (this.status >= 200 && this.status < 400) {
+            // Success!
+            var data = JSON.parse(this.response);
+            data.features.forEach(function(f) {
+              f[1] = f.geometry.coordinates[0];
+              f[0] = f.geometry.coordinates[1];
+              f.geometry.coordinates[0] = f[0];
+              f.geometry.coordinates[1] = f[1];
+            });
+  
+            points = L.glify.points({
+              map: map,
+              data: data,
+              // size: 8,
+              color: function(index, point) {
+                // console.log(point); // point is currently just []
+                return {r: 0.1, g: 0.1, b: 1};
+              },
+              sensitivity: 5,
+              click: function(e, point, xy) {
+                var point_properties = ['street', 'employees', 'conames', 'years'];
+                // set up a standalone popup (use a popup as a layer)
+                var content = '<h4>' + (point.properties.sic_name || '') +'</h4>';
+                content += '<table>';
+                point_properties.forEach(function(property) {
+                  content += '<tr><td><b>' + property + '</b></td><td>' + (point.properties[property] || '') +'</td></tr>';
+                });
+                content += '</table>';
+                content += '<p><a class=\'btn btn-outline-primary\' href=\'https://publiclab.org/post?tags=unearthing-pvd-stories,lat:' + point[0] + ',lon:' + point[1] + '\'>Add your story</a></p>';
+  
+                L.popup()
+                  .setLatLng([point[0], point[1]])
+                  .setContent(content)
+                  .openOn(map);
+              },
+            });
+            setP(points.glLayer);
+          } else {
+            // We reached our target server, but it returned an error
+            console.log('server error')
+          }
+        };
+        request.onerror = function() {
+          // There was a connection error of some sort
+          console.log('Something went wrong')
+        };
+        request.send();
     },
 
     setPoints: function(points) {
@@ -30150,34 +30401,70 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
 
   _getWorksheetID: function(spreadsheetID, spreadsheetFeedURL) {
     var self = this;
-    return $.getJSON(spreadsheetFeedURL, function(data) {
-      // The worksheetID we want is dependent on which sheet we are looking for
-      var tmpLink = data.feed.entry[self.options.sheetNum].id.$t;
-      var sections = tmpLink.split('/');
-      // It is always the last section of the URL
-      var sheetID = sections[sections.length - 1];
-      // Set the URL to the final one.
-      self.options.url = 'https://spreadsheets.google.com/feeds/list/' + spreadsheetID + '/' + sheetID + '/public/values?alt=json';
-    });
+    var request = new XMLHttpRequest();
+    request.open('GET', spreadsheetFeedURL, true);
+    request.onload = function() {     
+      if (this.status >= 200 && this.status < 400) {
+        // Success!
+        var data = JSON.parse(this.response);
+        // The worksheetID we want is dependent on which sheet we are looking for
+        var tmpLink = data.feed.entry[self.options.sheetNum].id.$t;
+        var sections = tmpLink.split('/');
+        // It is always the last section of the URL
+        var sheetID = sections[sections.length - 1];
+        // Set the URL to the final one.
+        self.options.url = 'https://spreadsheets.google.com/feeds/list/' + spreadsheetID + '/' + sheetID + '/public/values?alt=json';
+      } else {
+        // We reached our target server, but it returned an error
+        console.log('server error')
+      }
+    };
+    request.onerror = function() {
+      // There was a connection error of some sort
+      console.log('Something went wrong')
+    };
+    request.send();
   },
 
   requestData: function() {
     var self = this;
     (function() {
-      var script = document.createElement('SCRIPT');
-      script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-      script.type = 'text/javascript';
-      script.onload = function() {
-        var $ = window.jQuery;
-        var ssURL = self.options.url || '';
+      var ssURL = self.options.url || '';
+      var request = new XMLHttpRequest();
+      request.open('GET', ssURL, true);
+      if (typeof self._map.spin === 'function') {
         self._map.spin(true);
-        // start fetching data from the URL
-        $.getJSON(ssURL, function(data) {
+      }
+      request.onload = function() {     
+        if (this.status >= 200 && this.status < 400) {
+          // Success!
+          var data = JSON.parse(this.response);
           self.parseData(data.feed.entry);
-          self._map.spin(false);
-        });
+          if (self._map && typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          } else {
+            map.spin(false);
+          }
+        } else {
+          // We reached our target server, but it returned an error
+          console.log('server error')
+          if (self._map && typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          } else {
+            map.spin(false);
+          }
+        }
       };
-      document.getElementsByTagName('head')[0].appendChild(script);
+      request.onerror = function() {
+        // There was a connection error of some sort
+        console.log('Something went wrong')
+        if (self._map && typeof self._map.spin === 'function') {
+          self._map.spin(false);
+        } else {
+          map.spin(false);
+        }
+      };
+      request.send();
     })();
   },
 

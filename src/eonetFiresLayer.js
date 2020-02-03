@@ -43,18 +43,43 @@ L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
       var self = this;
 
       (function() {
-        var $ = window.jQuery;
         var EonetFire_url = 'https://eonet.sci.gsfc.nasa.gov/api/v2.1/categories/8';
+        var request = new XMLHttpRequest();
+        request.open('GET', EonetFire_url, true);
         if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
-
-        $.getJSON(EonetFire_url, function(data) {
-          self.parseData(data);
-          if (typeof self._map.spin === 'function') {
-            self._map.spin(false);
+        request.onload = function() {     
+          if (this.status >= 200 && this.status < 400) {
+            // Success!
+            var data = JSON.parse(this.response);
+            self.parseData(data);
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
+          } else {
+            // We reached our target server, but it returned an error
+            console.log('server error')
+            if (self._map && typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            } else {
+              map.spin(false);
+            }
           }
-        });
+        };
+        request.onerror = function() {
+          // There was a connection error of some sort
+          console.log('Something went wrong')
+          if (self._map && typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          } else {
+            map.spin(false);
+          }
+        };
+        request.send();
+
       })();
     },
 
