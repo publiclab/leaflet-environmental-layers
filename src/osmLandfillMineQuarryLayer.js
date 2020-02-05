@@ -44,7 +44,7 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
         var southwest = self._map.getBounds().getSouthWest();
 
         var currentMapZoom = self._map.getZoom();
-        if (currentMapZoom < info.OSMLandfillMineQuarryLayer.extents.minZoom) {
+        if (currentMapZoom < info.osmLandfillMineQuarryLayer.extents.minZoom) {
           return;
         }
 
@@ -53,7 +53,7 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
           var countLayers = 0;
           for (var key in self._colorOptions) {
             // Generate URL for each type
-            var LMQ_url = info.OSMLandfillMineQuarryLayer.api_url + '?*[landuse=' + key + '][bbox=' + (southwest.lng) + ',' + (southwest.lat) + ',' + (northeast.lng) + ',' + (northeast.lat) + ']';
+            var LMQ_url = info.osmLandfillMineQuarryLayer.api_url + '?*[landuse=' + key + '][bbox=' + (southwest.lng) + ',' + (southwest.lat) + ',' + (northeast.lng) + ',' + (northeast.lat) + ']';
             if (typeof self._map.spin === 'function') {
               self._map.spin(true);
             }

@@ -99,10 +99,10 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         }
         if (self.layer == 'purpleairmarker') {
           zoom = self._map.getZoom(), northwest = self._map.getBounds().getNorthWest(), southeast = self._map.getBounds().getSouthEast();
-          if (zoom < info.purpleairmarker.extents.minZoom) {
+          if (zoom < info.purpleair.layers.purpleairmarker.extents.minZoom) {
             return;
           }
-          Layer_URL = info.purpleairmarker.api_url + '?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat='+(northwest.lat)+'&selat='+(southeast.lat)+'&nwlng='+(northwest.lng)+'&selng='+(southeast.lng);
+          Layer_URL = info.purpleair.api_url + '?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat='+(northwest.lat)+'&selat='+(southeast.lat)+'&nwlng='+(northwest.lng)+'&selng='+(southeast.lng);
         }
 
 

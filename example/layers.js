@@ -123,21 +123,21 @@ var baseMaps = {
 
 var overlayMaps = {
   "PLpeople" : PLpeople,
-  'Wisconsin Non-Metal': Wisconsin_NM,
-  'Fractracker': Fractracker,
-  'FracTracker mobile': FracTracker_mobile,
-  'PurpleAir': {
+  'wisconsin': Wisconsin_NM,
+  'fractracker': Fractracker,
+  'fracTrackerMobile': FracTracker_mobile,
+  'purpleair': {
     category: 'group',
     layers: {
       'PurpleAirLayer-HeatMap': PurpleLayer,
       'PurpleAirMarkerLayer': PurpleAirMarkerLayer,
     }
   },
-  'SkyTruth': SkyTruth,
-  'ToxicRelease': ToxicRelease,
-  'OdorReport': OdorReport,
-  'MapKnitter': MapKnitter,
-  'OpenInfraMap': {
+  'skytruth': SkyTruth,
+  'toxicReleaseLayer': ToxicRelease,
+  'odorreport': OdorReport,
+  'mapknitter': MapKnitter,
+  'openInfraMap': {
     category: 'group',
     layers: {
       'Power': OpenInfraMap_Power,
@@ -146,7 +146,7 @@ var overlayMaps = {
       'Water': OpenInfraMap_Water,
     }
   },
-  'Indigenous Lands': {
+  'indigenousLands': {
     category: 'group',
     layers: {
       'Territories': IndigenousLandsTerritories,
@@ -154,7 +154,7 @@ var overlayMaps = {
       'Treaties': IndigenousLandsTreaties,
     },
   },
-  'Justicemap': {
+  'justiceMap': {
     category: 'group',
     layers: {
       'income': Justicemap_income,
@@ -168,7 +168,7 @@ var overlayMaps = {
       'plurality': JusticeMap_plurality,
     },
   },
-  'Open Weather Map': {
+  'openWeatherMap': {
     category: 'group',
     layers: {
       'Clouds': clouds,
@@ -186,15 +186,15 @@ var overlayMaps = {
       'windrose (zoom in)': windrose,
     },
   },
-  'PFAsLayer': PFASTracker,
+  'pfaslayer': PFASTracker,
   
-  'Air Quality Index': AQICNLayer,
-  'Open AQ ': OpenAqLayer,
-  'Luftdaten': LuftdatenLayer,
-  'OpenSense ': OpenSenseLayer,
-  'OSM Landfills, Quarries': OSMLandfillMineQuarryLayer,
-  'EONET Fires': EonetFiresLayer,
-  'Unearthing': Unearthing
+  'aqicnLayer': AQICNLayer,
+  'openaq': OpenAqLayer,
+  'luftdaten': LuftdatenLayer,
+  'opensense': OpenSenseLayer,
+  'osmLandfillMineQuarryLayer': OSMLandfillMineQuarryLayer,
+  'eonetFiresLayer': EonetFiresLayer,
+  'unearthing': Unearthing
 };
 
 var allMapLayers = {

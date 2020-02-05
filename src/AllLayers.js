@@ -83,37 +83,26 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
           this.overlayMaps[layer] = window['L']['layerGroup'][layer]();
           switch(layer) {
             case 'purpleLayer':
-              if (!this.groupedOverlayMaps.PurpleAir) {
-                this.groupedOverlayMaps.PurpleAir = { category: 'group', layers: {} };
-                this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
+              if (!this.groupedOverlayMaps.purpleair) {
+                this.groupedOverlayMaps.purpleair = { category: 'group', layers: {} };
+                this.groupedOverlayMaps.purpleair.layers[layer] = this.overlayMaps[layer];
               } else {
-                this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
+                this.groupedOverlayMaps.purpleAir.layers[layer] = this.overlayMaps[layer];
               };
               break;
-            case 'toxicReleaseLayer':
-              this.groupedOverlayMaps['Toxic Release'] = this.overlayMaps[layer];
-              break;
-            case 'aqicnLayer':
-              this.groupedOverlayMaps['Air Quality Index'] = this.overlayMaps[layer];
-              break;
-            case 'osmLandfillMineQuarryLayer':
-              this.groupedOverlayMaps['OSM landfills, quarries'] = this.overlayMaps[layer];
-              break;
             default:
-              this.groupedOverlayMaps[layer] = this.overlayMaps[layer];  
-            this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
-              this.groupedOverlayMaps[layer] = this.overlayMaps[layer];  
+              this.groupedOverlayMaps[layer] = this.overlayMaps[layer]; 
           }
         }
         else if (this.options.layers1.includes(layer)) {
           this.overlayMaps[layer] = window['L']['layerGroup']['layerCode'](layer);
           switch(layer) {
             case 'purpleairmarker':
-              if (!this.groupedOverlayMaps.PurpleAir) {
-                this.groupedOverlayMaps.PurpleAir = { category: 'group', layers: {} };
-                this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
+              if (!this.groupedOverlayMaps.purpleair) {
+                this.groupedOverlayMaps.purpleair = { category: 'group', layers: {} };
+                this.groupedOverlayMaps.purpleair.layers[layer] = this.overlayMaps[layer];
               } else {
-                this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
+                this.groupedOverlayMaps.purpleair.layers[layer] = this.overlayMaps[layer];
               }
               break;
             default:
@@ -146,13 +135,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         }
         else if (this.options.layers3.includes(layer)) {
           this.overlayMaps[layer] = window[layer + 'Layer'](map);
-          switch(layer) {
-            case 'wisconsin':
-              this.groupedOverlayMaps['Wisconsin Non-metal'] = this.overlayMaps[layer];
-              break;
-            default:
-              this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
-          }
+          this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
         }
         else if (this.options.layers4.includes(layer)) {
           if(!this.groupedOverlayMaps.Justicemap) {
@@ -178,13 +161,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         }
         else if (this.options.layers6.includes(layer)) {
           this.overlayMaps[layer] = window['L']['geoJSON'][layer]();
-          switch(layer) {
-            case 'eonetFiresLayer':
-              this.groupedOverlayMaps['EONET Fires'] = this.overlayMaps[layer];
-              break;
-            default:
-              this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
-          }
+          this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
         }
         else {
           console.log('Incorrect Layer Name');

@@ -222,7 +222,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
 
   _createLayerInfoElements: function(obj) {
     var data = this._getLayerData(obj);
-    
+   
     var icon = document.createElement('div');
     icon.className = 'rounded-circle layer-icon';
     icon.style.width = '10px';
@@ -304,6 +304,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     dataInfoBtn.appendChild(infoIcon);
 
     return {
+      name: data && data.name,
       icon: icon,
       reportBtn: reportBtn,
       layerDesc: layerDesc,
@@ -324,7 +325,6 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       layerGroup.setAttribute('aria-controls', obj.group)
 
       var groupName = document.createElement('span');
-      groupName.innerHTML = obj.group;
       groupName.className = 'layer-group-name';
       groupName.style.margin = '0 1em';
       groupName.style.fontSize = '1.2em';
@@ -346,6 +346,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       });
 
       var elements = this._createLayerInfoElements(obj);
+      groupName.innerHTML = elements.name;
 
       var titleHolder = document.createElement('div');
       titleHolder.className = 'clearfix layer-info-container';
@@ -406,7 +407,6 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     L.DomEvent.on(input, 'click', this._onInputClick, this);
 
     var name = document.createElement('span');
-    name.innerHTML = ' ' + obj.name;
     name.style.fontWeight = 'bold';
     name.style.display = 'inline-block';
     
@@ -414,6 +414,12 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
 
     var elements = this._createLayerInfoElements(obj);
     var separator = this._createSeparator();
+    if(obj.group) {
+      name.innerHTML = ' ' + obj.name;
+    } else {
+      name.innerHTML = ' ' + elements.name;
+    }
+    
 
     // Helps from preventing layer control flicker when checkboxes are disabled
     // https://github.com/Leaflet/Leaflet/issues/2771
@@ -520,7 +526,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   },
 
   _getLayerData: function(obj) {
-    var layerData = require('../layerData.json');
+    var layerData = require('../info.json');
     var data;
     for (let j in layerData) {
       if((obj.group && obj.group.replace(/\s/g, '').toLowerCase() === j.toLowerCase()) ||
