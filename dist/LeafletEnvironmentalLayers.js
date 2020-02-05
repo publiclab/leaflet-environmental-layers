@@ -24008,8 +24008,12 @@ L.LayerGroup.EnvironmentalLayers = function(options) {
 };
 
 },{}],9:[function(require,module,exports){
+<<<<<<< HEAD
 // require('leaflet-blurred-location') ;
 // require('leaflet-blurred-location-display') ;
+=======
+console.log("PLPEOPLE");
+>>>>>>> using babel
 
 L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
 
