@@ -129,8 +129,8 @@ Dependencies:
   };
 
   var overlayMaps = {
-  'Wisconsin Non-Metal': Wisconsin_NM,
-  'Indigenous Lands': {
+  'wisconsin': Wisconsin_NM,
+  'indigenousLands': {
     category: 'group', // Let's the control know if this should be rendered as a group
     layers: { // Layers making the group
       'Territories': IndigenousLandsTerritories,
@@ -145,8 +145,8 @@ Dependencies:
 ```
 - `baseMaps` and `overlayMaps` are object literals that have layer names for keys and map layer objects for values.
 - `baseMaps` will be hidden if only one base map is provided
-- The layer information displayed for each layer is stored in `layerData.json`
-- The layer name(key) in the `overlayMaps` object is not case-sensitive and can have spaces but the characters should match with those in `layerData.json`
+- The layer information displayed for each layer is stored in `info.json`
+- The layer name(key) in the `overlayMaps` object should match the keys in `info.json`
 - The layers are filtered according to the map view
 - When there are new layers present in the map view when moving around a badge is displayed near the layer control icon on the top right showing the number of new layers in the view
 
