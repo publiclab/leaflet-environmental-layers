@@ -44,9 +44,9 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
 
     requestData: function() {
       var self = this;
+      var info = require('./info.json');
       (function() {
         var $ = window.jQuery;
-        var info = require('./info.json');
         var zoom = self._map.getZoom(); var origin = self._map.getCenter();
         var extents = info.toxicReleaseLayer.extents;
         var latLngbounds = extents.bounds;
