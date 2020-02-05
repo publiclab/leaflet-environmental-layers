@@ -1,3 +1,5 @@
+console.log("LEGEND CONTROL");
+
 L.Control.LegendControl = L.Control.extend({
   options: {
     position: 'bottomleft',

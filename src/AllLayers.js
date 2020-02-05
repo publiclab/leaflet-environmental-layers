@@ -1,3 +1,5 @@
+console.log("ALL LAYERS");
+
 L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 
   {

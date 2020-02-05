@@ -1,3 +1,4 @@
+console.log("PLPEOPLE");
 // require('leaflet-blurred-location') ;
 // require('leaflet-blurred-location-display') ;
 

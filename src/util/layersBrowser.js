@@ -1,3 +1,5 @@
+console.log('LAYERS BROWSER');
+
 L.Control.LayersBrowser = L.Control.Layers.extend({
   options: {
     collapsed: true,

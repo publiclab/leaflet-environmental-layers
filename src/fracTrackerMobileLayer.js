@@ -1,3 +1,5 @@
+console.log("FRACTRACKER");
+
 L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
   {
     options: { },

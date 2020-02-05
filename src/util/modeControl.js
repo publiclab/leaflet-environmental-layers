@@ -1,3 +1,5 @@
+console.log("MODE CONTROL");
+
 L.Control.MinimalMode = L.Control.extend({
 
     options: {

@@ -42,28 +42,31 @@ module.exports = function(grunt) {
           },
           dist: {
             files: {
-              "dist/util/layersBrowser_babel.js": "src/util/layersBrowser.js",
-              'dist/fracTrackerMobileLayer.js': 'src/fracTrackerMobileLayer.js'
+              "dist/layersBrowser_babel.js": "src/util/layersBrowser.js",
+              'dist/fracTrackerMobileLayer_babel.js': 'dist/fracTrackerMobileLayer.js',
+              'dist/AllLayers_babel.js': 'src/AllLayers.js',
+              'dist/PLpeopleLayer_babel.js': 'src/PLpeopleLayer.js',
             }
           }
         },
 
         jasmine: {
-          src: ['dist/LeafletEnvironmentalLayers.js',
-                'src/util/embedControl.js',
-                'src/util/modeControl.js',
-                'dist/util/layersBrowser.js',
-                'dist/fracTrackerMobileLayer.js'
-              ],
+          src: [
+            'src/*.js',
+            'src/util/*.js',
+            'dist/*_babel.js',
+            // 'dist/util/*.js',
+            // 'dist/*.js',
+          ],
           options: {
             specs: "spec/javascripts/*spec.js",
             vendor: [
-            'node_modules/jquery/dist/jquery.js',
-            'node_modules/jasmine-jquery/lib/jasmine-jquery.js',
-            'node_modules/jasmine-ajax/lib/mock-ajax.js',
-            'node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js',
-            'node_modules/leaflet/dist/leaflet.js',
-            'node_modules/leaflet-blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js'
+              'node_modules/jquery/dist/jquery.js',
+              'node_modules/jasmine-jquery/lib/jasmine-jquery.js',
+              'node_modules/jasmine-ajax/lib/mock-ajax.js',
+              'node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js',
+              'node_modules/leaflet/dist/leaflet.js',
+              'node_modules/leaflet-blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js',
             ],
             keepRunner: true,
             '--web-security' : false,
