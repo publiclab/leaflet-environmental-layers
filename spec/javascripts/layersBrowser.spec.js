@@ -210,10 +210,10 @@ describe('Layer Browser Control', function() {
 
       });
 
-      it('displays information from layerData.json', function() {
+      it('displays information from info.json', function() {
         var overlayMaps = {
-          'Wisconsin Non-metal': L.marker([0, 0]),
-          'Odor Report': L.marker([0, 0])
+          'wisconsin': L.marker([0, 0]),
+          'odorreport': L.marker([0, 0])
         }
 
         leafletControl = new L.control.layersBrowser(baseMaps, overlayMaps).addTo(map);
@@ -230,9 +230,9 @@ describe('Layer Browser Control', function() {
 
       });
 
-      it('displays layerGroup information from layerData.json', function() {
+      it('displays layerGroup information from info.json', function() {
         var overlayMaps = {
-          'Open Weather Map': {
+          'openWeatherMap': {
             category: 'group',
             layers: {
               'Clouds': L.marker([0, 0]),
