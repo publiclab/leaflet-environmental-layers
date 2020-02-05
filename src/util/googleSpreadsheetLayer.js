@@ -99,17 +99,14 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
   requestData: function() {
     var self = this;
     (function() {
-      if (typeof jQuery == 'undefined' || (typeof jQuery == 'function' && jQuery.fn.jquery !== '1.7.1')) {
-        var script = document.createElement('SCRIPT');
-        script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-        script.type = 'text/javascript';
-        script.onload = function() {
-          self.fetchData();
-        };
-        document.getElementsByTagName('head')[0].appendChild(script);
-      } else {
-        self.fetchData()
-      }
+      var $ = window.jQuery;
+      var ssURL = self.options.url || '';
+      self._map.spin(true);
+      // start fetching data from the URL
+      $.getJSON(ssURL, function(data) {
+        self.parseData(data.feed.entry);
+        self._map.spin(false);
+      });
     })();
   },
 
@@ -117,18 +114,6 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
     for (var i = 0; i < data.length; i++) {
       this.addMarker(data[i]);
     }
-  },
-
-  fetchData: function() {
-    var self = this;
-    var $ = window.jQuery;
-    var ssURL = self.options.url || '';
-    self._map.spin(true);
-    // start fetching data from the URL
-    $.getJSON(ssURL, function(data) {
-      self.parseData(data.feed.entry);
-      self._map.spin(false);
-    });
   },
 
   addMarker: function(data) {

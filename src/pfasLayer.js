@@ -41,17 +41,17 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
     requestData: function() {
       var self = this;
       (function() {
-        if (typeof jQuery == 'undefined' || (typeof jQuery == 'function' && jQuery.fn.jquery !== '1.7.1')) {
-          var script = document.createElement('SCRIPT');
-          script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-          script.type = 'text/javascript';
-          script.onload = function() {
-            self.fetchData();
-          };
-          document.getElementsByTagName('head')[0].appendChild(script);
-        } else {
-          self.fetchData()
+        var $ = window.jQuery;
+        var PFAS_URL = 'https://spreadsheets.google.com/feeds/list/1cjQ3H_DX-0dhVL5kMEesFEKaoJKLfC2wWAhokMnJxV4/1/public/values?alt=json';
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(true);
         }
+        $.getJSON(PFAS_URL, function(data) {
+          self.parseData(data.feed.entry);
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        });
       })();
     },
 
@@ -144,20 +144,6 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
       }
     },
 
-    fetchData: function() {
-      var self = this;
-      var $ = window.jQuery;
-      var PFAS_URL = 'https://spreadsheets.google.com/feeds/list/1cjQ3H_DX-0dhVL5kMEesFEKaoJKLfC2wWAhokMnJxV4/1/public/values?alt=json';
-      if (typeof self._map.spin === 'function') {
-        self._map.spin(true);
-      }
-      $.getJSON(PFAS_URL, function(data) {
-        self.parseData(data.feed.entry);
-        if (typeof self._map.spin === 'function') {
-          self._map.spin(false);
-        }
-      });
-    }
   },
 );
 

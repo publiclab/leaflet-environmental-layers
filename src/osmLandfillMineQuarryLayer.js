@@ -35,17 +35,43 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
 
     requestData: function() {
       var self = this;
+      var info = require('./info.json');
       (function() {
-        if (typeof jQuery == 'undefined' || (typeof jQuery == 'function' && jQuery.fn.jquery !== '1.7.1')) {
-          var script = document.createElement('SCRIPT');
-          script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-          script.type = 'text/javascript';
-          script.onload = function() {
-            self.fetchData();
-          };
-          document.getElementsByTagName('head')[0].appendChild(script);
-        } else {
-          self.fetchData()
+        var $ = window.jQuery;
+        // var countLayers = 0;
+        var northeast = self._map.getBounds().getNorthEast();
+        var southwest = self._map.getBounds().getSouthWest();
+
+        var currentMapZoom = self._map.getZoom();
+        if (currentMapZoom < info.OSMLandfillMineQuarryLayer.extents.minZoom) {
+          return;
+        }
+        for (var key in self._colorOptions) {
+          // Generate URL for each type
+          var LMQ_url = info.OSMLandfillMineQuarryLayer.api_url + '?*[landuse=' + key + '][bbox=' + (southwest.lng) + ',' + (southwest.lat) + ',' + (northeast.lng) + ',' + (northeast.lat) + ']';
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(true);
+          }
+          $.ajax({
+            url: LMQ_url,
+            dataType: 'xml',
+            success: function(data) {
+              self.parseData(data);
+            },
+          });
+          /* The structure of the document is as follows:
+                          <node id="node_id", lat="", lon="">
+                          . Rest of nodes here
+                          .
+                          <way id="">
+                              <nd ref="node_id">
+                              . Rest of nodes here, with the node_id defined beforehand
+                              .
+                              <tag k="key", v="value">
+                              . Each object has different keys so it is hard to create a uniform popup
+                              .
+                          .. More ways
+                      */
         }
       })();
     },
@@ -130,47 +156,6 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
 
       if (this.options.clearOutsideBounds) {
         this.clearOutsideBounds();
-      }
-    },
-
-    fetchData: function() {
-      var self = this;
-      var info = require('./info.json');
-      var $ = window.jQuery;
-      // var countLayers = 0;
-      var northeast = self._map.getBounds().getNorthEast();
-      var southwest = self._map.getBounds().getSouthWest();
-
-      var currentMapZoom = self._map.getZoom();
-      if (currentMapZoom < info.OSMLandfillMineQuarryLayer.extents.minZoom) {
-        return;
-      }
-      for (var key in self._colorOptions) {
-        // Generate URL for each type
-        var LMQ_url = info.OSMLandfillMineQuarryLayer.api_url + '?*[landuse=' + key + '][bbox=' + (southwest.lng) + ',' + (southwest.lat) + ',' + (northeast.lng) + ',' + (northeast.lat) + ']';
-        if (typeof self._map.spin === 'function') {
-          self._map.spin(true);
-        }
-        $.ajax({
-          url: LMQ_url,
-          dataType: 'xml',
-          success: function(data) {
-            self.parseData(data);
-          },
-        });
-        /* The structure of the document is as follows:
-                        <node id="node_id", lat="", lon="">
-                        . Rest of nodes here
-                        .
-                        <way id="">
-                            <nd ref="node_id">
-                            . Rest of nodes here, with the node_id defined beforehand
-                            .
-                            <tag k="key", v="value">
-                            . Each object has different keys so it is hard to create a uniform popup
-                            .
-                        .. More ways
-                    */
       }
     },
 
