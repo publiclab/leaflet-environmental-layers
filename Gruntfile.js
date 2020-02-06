@@ -34,18 +34,19 @@ module.exports = function(grunt) {
         babel: {
           options: {
             sourceMap: true,
-            presets: ['@babel/preset-env'],
+            "presets": ['@babel/env'],
             "plugins": [
               "transform-object-rest-spread",
-              "transform-remove-strict-mode"
-            ]        
+              "transform-remove-strict-mode",
+            ],
           },
           dist: {
             files: {
               "dist/util/layersBrowser_babel.js": "src/util/layersBrowser.js",
-              'dist/fracTrackerMobileLayer_babel.js': 'dist/fracTrackerMobileLayer.js',
+              'dist/fracTrackerMobileLayer_babel.js': 'src/fracTrackerMobileLayer.js',
               'dist/AllLayers_babel.js': 'src/AllLayers.js',
               'dist/PLpeopleLayer_babel.js': 'src/PLpeopleLayer.js',
+              // 'node_modules/leaflet.blurred-location-display/dist/BlurredLocationDisplay_babel.js' : 'node_modules/leaflet.blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js'
             }
           }
         },
@@ -55,7 +56,7 @@ module.exports = function(grunt) {
             'src/*.js',
             'src/util/*.js',
             'dist/*babel.js',
-            'dist/util/layersBrowser.js',
+            'dist/util/*.js',
             // 'dist/util/*.js',
             // 'dist/*.js',
           ],
@@ -65,11 +66,15 @@ module.exports = function(grunt) {
               'node_modules/jquery/dist/jquery.js',
               'node_modules/jasmine-jquery/lib/jasmine-jquery.js',
               'node_modules/jasmine-ajax/lib/mock-ajax.js',
-              'node_modules/leaflet.blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js',
               'node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js',
-              'node_modules/leaflet/dist/leaflet.js',
+              // 'node_modules/leaflet/dist/leaflet.js',
+              // 'node_modules/leaflet.blurred-location-display/dist/BlurredLocationDisplay.js',
             ],
             keepRunner: true,
+            polyfills: [
+              'node_modules/jquery/dist/jquery.js',
+              'node_modules/core-js/client/core.js',
+            ],
             '--web-security' : false,
             '--local-to-remote-url-access' : true,
             '--ignore-ssl-errors' : true

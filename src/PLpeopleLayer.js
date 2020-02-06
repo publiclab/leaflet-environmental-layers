@@ -1,5 +1,3 @@
-console.log("PLPEOPLE");
-
 L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
 
   {

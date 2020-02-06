@@ -1,5 +1,3 @@
-console.log("ALL LAYERS");
-
 L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 
   {
@@ -38,7 +36,11 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
     },
 
     initialize: function(param) {
+<<<<<<< HEAD
       L.Util.setOptions(this, param);
+=======
+      console.log("INIT");
+>>>>>>> add layer name id to broswer menu
       param = param || {};
 
       this.options.addLayersToMap = !!param.include ? param.addLayersToMap : false;
@@ -58,13 +60,14 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
     },
 
     onAdd: function(map) {
+      console.log("ONADD");
       this._map = map;
       this.overlayMaps = {};
       this.groupedOverlayMaps = {}; // For grouping layers in the new menu
-	  var defaultBaseLayer = L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png', {
+	    var defaultBaseLayer = L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       });
-	  var baseMaps = this.options.baseLayers ? this.options.baseLayers : { "Grey-scale": defaultBaseLayer.addTo(map) };
+	    var baseMaps = this.options.baseLayers ? this.options.baseLayers : { "Grey-scale": defaultBaseLayer.addTo(map) };
 		
       for (let layer of this.options.layers.include) {
         if (this.options.layers0.includes(layer)) {
@@ -177,6 +180,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         else {
           console.log('Incorrect Layer Name');
         }
+        this.overlayMaps[layer].layerCode = layer;
       }
 
       var leafletControl = this.options.simpleLayerControl ? 
@@ -209,12 +213,18 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         for (let layer of this.options.layers.display) {
           // make sure the layer exists in the display list
           if (this.options.layers.include.includes(layer)) {
+            console.log("LAYER ADDED");
             map.addLayer(this.overlayMaps[layer]);
           } else {
             console.log("Layer specified does not exist.");
           }
         }
       } // or turn on nothing
+<<<<<<< HEAD
+=======
+      console.log("LAYER NOT ADDED");
+      
+>>>>>>> add layer name id to broswer menu
     },
 
     onRemove: function(map) {},

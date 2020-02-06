@@ -41746,6 +41746,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
     },
 
     initialize: function(param) {
+      console.log("INIT");
       param = param || {};
       if (!!param.hash) {
         this.options.hash = param.hash;
@@ -41780,13 +41781,14 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
     },
 
     onAdd: function(map) {
+      console.log("ONADD");
       this._map = map;
       this.overlayMaps = {};
       this.groupedOverlayMaps = {}; // For grouping layers in the new menu
-	  var defaultBaseLayer = L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png', {
+	    var defaultBaseLayer = L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       });
-	  var baseMaps = this.options.baseLayers ? this.options.baseLayers : { "Grey-scale": defaultBaseLayer.addTo(map) };
+	    var baseMaps = this.options.baseLayers ? this.options.baseLayers : { "Grey-scale": defaultBaseLayer.addTo(map) };
 		
       for (let layer of this.options.layers.include) {
         if (this.options.layers0.includes(layer)) {
@@ -41898,6 +41900,383 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
         }
         else {
           console.log('Incorrect Layer Name');
+<<<<<<< HEAD
+=======
+        }
+        this.overlayMaps[layer].layerCode = layer;
+      }
+
+      var leafletControl = this.options.simpleLayerControl ? 
+      L.control.layers(baseMaps, this.overlayMaps).addTo(map) :
+      L.control.layersBrowser(baseMaps, this.groupedOverlayMaps).addTo(map);
+
+      var modeControl = new L.control.minimalMode(leafletControl);
+      modeControl.addTo(map);
+
+      if (this.options.embed) {
+        this.options.hostname ? (
+          L.control.embed({
+            hostname: this.options.hostname,
+          }).addTo(map)
+        ) : L.control.embed().addTo(map);
+      }
+
+      var allMaps = Object.assign(baseMaps, this.overlayMaps);
+      if (this.options.hash) {
+        var hash = new L.FullHash(map, allMaps);
+        // Update map state from hash
+        hash.update(this.options.currentHash);
+      }
+
+      if (!!this.options.addLayersToMap) {  // turn on all layers
+        for (let layer of this.options.layers.include) {
+          map.addLayer(this.overlayMaps[layer]);
+        }
+      } else if (!!this.options.layers.display) {  // turn on only layers in display
+        for (let layer of this.options.layers.display) {
+          // make sure the layer exists in the display list
+          if (this.options.layers.include.includes(layer)) {
+            console.log("LAYER ADDED");
+            map.addLayer(this.overlayMaps[layer]);
+          } else {
+            console.log("Layer specified does not exist.");
+          }
+        }
+      } // or turn on nothing
+      console.log("LAYER NOT ADDED");
+      
+    },
+
+    onRemove: function(map) {},
+  },
+);
+
+
+L.LayerGroup.EnvironmentalLayers = function(options) {
+  return new L.LayerGroup.environmentalLayers(options);
+};
+
+},{}],9:[function(require,module,exports){
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> add layer name id to broswer menu
+// require('leaflet-blurred-location') ;
+// require('leaflet-blurred-location-display') ;
+
+=======
+>>>>>>> add layer name id to broswer menu
+L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
+
+  {
+    options: {
+      url: 'https://publiclab.org/api/srch/nearbyPeople',
+      clearOutsideBounds: false,
+    },
+
+    initialize: function(options) {
+      options = options || {};
+      L.Util.setOptions(this, options);
+      this._layers = {};
+    },
+
+    onAdd: function(map) {
+      this._map = map;
+      this.blurred_options = {
+        map: this._map,
+      };
+      this.BlurredLocation = new BlurredLocation(this.blurred_options);
+      // this.locations = [[23.1, 77.1]]; // testing marker
+      this.options_display = {
+        blurredLocation: this.BlurredLocation,
+        locations: this.locations,
+        source_url: 'https://publiclab.org/api/srch/nearbyPeople',
+        color_code_markers: false, // by default this is false .
+        style: 'both', // or 'heatmap' or 'markers' , by default is 'both'
+      };
+
+      this.blurredLocationDisplay = new BlurredLocationDisplay(this.options_display);
+    },
+
+    onRemove: function(map) {
+      this._layers = {};
+      this.blurredLocationDisplay.removeLBLD();
+      var lbld = this.blurredLocationDisplay;
+      setTimeout(function() { lbld.removeLBLD(); }, 2000);
+      setTimeout(function() { lbld.removeLBLD(); }, 5000);
+      setTimeout(function() { lbld.removeLBLD(); }, 7000);
+      setTimeout(function() { lbld.removeLBLD(); }, 10000);
+    },
+
+  },
+);
+
+
+L.layerGroup.PLpeople = function(options) {
+  return new L.LayerGroup.PLpeopleLayer(options);
+};
+
+},{}],10:[function(require,module,exports){
+L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
+
+  {
+    options: {
+      popupOnMouseover: true,
+      clearOutsideBounds: true,
+      tokenID: '566331c289f0aeacd78e0b18362b4bcfa5097572',
+    },
+
+    initialize: function(options) {
+      options = options || {};
+      L.Util.setOptions(this, options);
+      this._layers = {};
+    },
+
+    onAdd: function(map) {
+      map.on('moveend', this.requestRegionData, this);
+      this._map = map;
+      this.requestRegionData();
+    },
+
+    onRemove: function(map) {
+      map.off('moveend', this.requestRegionData, this);
+      this.clearLayers();
+      this._layers = {};
+    },
+
+    requestRegionData: function() {
+      var self = this;
+
+      (function() {
+        var zoom = self._map.getZoom(); var northeast = self._map.getBounds().getNorthEast(); var southwest = self._map.getBounds().getSouthWest();
+        var $ = window.jQuery;
+        var AQI_url = 'https://api.waqi.info/map/bounds/?latlng=' + southwest.lat + ',' + southwest.lng + ',' + northeast.lat + ',' + northeast.lng + '&token=' + self.options.tokenID;
+
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(true);
+        }
+        $.getJSON(AQI_url, function(regionalData) {
+          self.parseData(regionalData);
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        });
+      })();
+    },
+
+    getMarker: function(data) {
+      var aqi = data.aqi;
+      var lat = data.lat;
+      var lon = data.lon;
+      var uid = data.uid;
+      var clName = 'aqiSign ';
+      var aqiN;
+      var markerColor;
+
+      if (isNaN(aqi)) { // If it is not a number
+        clName += 'aqiNull';
+        markerColor = '#7c7c7c';
+      }
+      else { // Parsing AQI to see what color to use
+        aqiN = parseInt(aqi, 10);
+        if (aqiN <= 50) {
+          clName += 'aqiGood';
+          markerColor = '#009966';
+        }
+        else if (aqiN <= 100) {
+          clName += 'aqiMod';
+          markerColor = '#ffde33';
+        }
+        else if (aqiN <= 150) {
+          clName += 'aqiSens';
+          markerColor = '#ff9933';
+        }
+        else if (aqiN <= 200) {
+          clName += 'aqiUnhealth';
+          markerColor = '#c03';
+        }
+        else if (aqiN <= 300) {
+          clName += 'aqiVUnhealth';
+          markerColor = '#609';
+        }
+        else {
+          clName += 'aqiHazard';
+          markerColor = '#7e0023';
+        }
+      }
+
+      var defaultMarker = L.marker([lat, lon], {icon: L.divIcon({className: clName, iconSize: [36, 25], iconAnchor: [18, 40], popupAnchor: [0, -25], html: aqi})});
+      var minimalMarker = L.circleMarker(L.latLng([lat, lon]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: markerColor });
+
+      marker = this._map && this._map._minimalMode ? minimalMarker : defaultMarker;
+      return marker;
+    },
+
+    addMarker: function(data) {
+      var self = this;
+      var marker = this.getMarker(data);
+      var key = data.uid;
+      // Code provided by widget API
+      /* jshint ignore:start */
+      (function(w, d, t, f) { w[f]=w[f]||function(c, k, n) { s=w[f], k=s['k']=(s['k']||(k?('&k='+k):'')); s['c']=
+            c=(c instanceof Array)?c:[c]; s['n']=n=n||0; Apa=d.createElement(t), e=d.getElementsByTagName(t)[0];
+      Apa.async=1; Apa.src='http://feed.aqicn.org/feed/'+(c[n].city)+'/'+(c[n].lang||'')+'/feed.v1.js?n='+n+k;
+      e.parentNode.insertBefore(Apa, e); }; })( window, document, 'script', '_aqiFeed' );
+      /* jshint ignore:end */
+
+      marker.bindPopup( function() { // Fetch popup content only when clicked; else the quota will be reached
+        var el = document.createElement('div');
+        el.classList.add('city-container');
+        el.id = 'city-aqi-container';
+
+        var stationURL = 'https://api.waqi.info/feed/@' + data.uid + '/?token=' + self.options.tokenID;
+
+        $.getJSON(stationURL, function(stationData) {
+          var labels = {
+            pm25: 'PM<sub>2.5</sub>',
+            pm10: 'PM<sub>10</sub>',
+            o3: 'Ozone',
+            no2: 'Nitrogen Dioxide',
+            so2: 'Sulphur Dioxide',
+            co: 'Carbon Monoxide',
+            t: 'Temperature',
+            w: 'Wind',
+            r: 'Rain (precipitation)',
+            h: 'Relative Humidity',
+            d: 'Dew',
+            p: 'Atmostpheric Pressure',
+          };
+
+          var strContent = '';
+          var name = '<h2>' + stationData.data.city.name + '</h2><br> '; // Set the default content first
+
+          for (var species in stationData.data.iaqi) {
+            strContent += '<strong>' + labels[species] + '</strong>: ' + stationData.data.iaqi[species].v + ';<br>';
+          }
+          strContent += 'See <a href=' + stationData.data.city.url + '>AQICN - ' + stationData.data.city.name + '</a> for more info. Data provided by aqicn.org.<br>From the <a href=https://github.com/publiclab/leaflet-environmental-layers/pull/79>AQICN Inventory</a> (<a href = https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515>info</a>)';
+          el.innerHTML = name + strContent;
+
+          var res = stationData.data.city.url.split('/');
+
+          // Parse url to see what the city is called by the API; the majority of cities cannot be found.
+          var cityName = res[res.length - 1];
+          if (cityName.length <= 1) cityName = res[res.length - 2];
+          // if city can be found, display is reset to include details
+          _aqiFeed({display: name + '%details <br>' + strContent, container: 'city-aqi-container', city: cityName});
+        });
+        return el;
+      });
+
+
+      if (!this._layers[key]) {
+        this._layers[key] = marker;
+        this.addLayer(marker);
+      }
+    },
+
+    parseData: function(regionalData) {
+      if (!!regionalData) {
+        for (var i = 0; i < regionalData.data.length; i++) {
+          // this.requestStationData(regionalData.data[i].uid);
+          this.addMarker(regionalData.data[i]);
+        }
+
+        if (this.options.clearOutsideBounds) {
+          this.clearOutsideBounds();
+        }
+      }
+    },
+
+    clearOutsideBounds: function() {
+      var bounds = this._map.getBounds();
+      var latLng;
+      var key;
+
+      for (key in this._layers) {
+        if (this._layers.hasOwnProperty(key)) {
+          latLng = this._layers[key].getLatLng();
+
+          if (!bounds.contains(latLng)) {
+            this.removeLayer(this._layers[key]);
+            delete this._layers[key];
+          }
+        }
+      }
+    },
+  },
+);
+
+L.layerGroup.aqicnLayer = function(options) {
+  return new L.LayerGroup.AQICNLayer(options);
+};
+
+},{}],11:[function(require,module,exports){
+L.Icon.EonetFiresIcon = L.Icon.extend({
+  options: {
+    iconUrl: 'https://image.flaticon.com/icons/svg/785/785116.svg',
+    iconSize: [30, 20],
+    iconAnchor: [20, 0],
+    popupAnchor: [-5, -5],
+  },
+});
+
+L.icon.eonetFiresIcon = function() {
+  return new L.Icon.EonetFiresIcon();
+};
+
+
+L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
+  {
+    options: {
+      attribution: '<div>Icon made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>',
+    },
+
+    initialize: function(options) {
+      options = options || {};
+      L.Util.setOptions(this, options);
+      this._layers = {};
+    },
+
+    onAdd: function(map) {
+      map.on('moveend', this.requestData, this);
+      this._map = map;
+      this.requestData();
+    },
+
+    onRemove: function(map) {
+      map.off('moveend', this.requestData, this);
+      if (typeof map.spin === 'function') {
+        map.spin(false);
+      }
+      this.clearLayers();
+      this._layers = {};
+    },
+
+    requestData: function() {
+      var self = this;
+
+      (function() {
+        var $ = window.jQuery;
+        var EonetFire_url = 'https://eonet.sci.gsfc.nasa.gov/api/v2.1/categories/8';
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(true);
+        }
+
+        $.getJSON(EonetFire_url, function(data) {
+          self.parseData(data);
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        });
+      })();
+    },
+
+    parseData: function(data) {
+      if (!!data) {
+        for (i = 0; i < data.events.length; i++) {
+          this.addMarker(data.events[i]);
+>>>>>>> add layer name id to broswer menu
         }
       }
 
@@ -44908,11 +45287,30 @@ var TouchZoom = Handler.extend({
 		on(document, 'touchmove', this._onTouchMove, this);
 		on(document, 'touchend', this._onTouchEnd, this);
 
+<<<<<<< HEAD
 		preventDefault(e);
 	},
 
 	_onTouchMove: function (e) {
 		if (!e.touches || e.touches.length !== 2 || !this._zooming) { return; }
+=======
+  _addItem: function(obj) {
+    var labelContainer = document.createElement('div');
+    var label = document.createElement('label');
+    label.style.display = 'inline-block';
+    var checked = this._map.hasLayer(obj.layer);
+    var input;
+map
+    if (obj.overlay) {
+      input = document.createElement('input');
+      input.type = 'checkbox';
+      input.className = 'leaflet-control-layers-selector';
+      input.defaultChecked = checked;
+      input.style.margin = '0.5em 0.9em';
+    } else {
+      input = this._createRadioElement('leaflet-base-layers_' + L.Util.stamp(this), checked);
+    }
+>>>>>>> add layer name id to broswer menu
 
 		var map = this._map,
 		    p1 = map.mouseEventToContainerPoint(e.touches[0]),
@@ -44942,7 +45340,38 @@ var TouchZoom = Handler.extend({
 			this._moved = true;
 		}
 
+<<<<<<< HEAD
 		cancelAnimFrame(this._animRequest);
+=======
+    labelContainer.appendChild(label);
+    label.appendChild(holder);
+    holder.appendChild(input);
+    if(obj.overlay && !obj.group) {
+      holder.appendChild(elements.icon);
+      holder.appendChild(elements.reportBtn);
+      name.style.margin = '0 1em';
+      name.style.width = '12em';
+      name.className = 'layer-name';
+      label.className = 'label';
+    }
+    holder.appendChild(name);
+    if(obj.overlay && obj.group) {
+      label.style.width = '100%';
+      label.style.marginBottom = '3px';
+      input.style.marginLeft = '3.8em';
+      name.style.marginLeft = '9.6em';
+      name.style.color = '#717171';
+      name.className = 'layer-list-name';
+      labelContainer.appendChild(separator);
+    }
+    if(obj.overlay && !obj.group) {
+      labelContainer.appendChild(elements.layerDesc);
+      labelContainer.className = 'clearfix layer-info-container';
+      labelContainer.id = 'menu-' + obj.layer.layerCode;
+      labelContainer.appendChild(elements.dataInfo);
+      labelContainer.appendChild(separator);
+    }
+>>>>>>> add layer name id to broswer menu
 
 		var moveFn = bind(map._move, map, this._center, this._zoom, {pinch: true, round: false});
 		this._animRequest = requestAnimFrame(moveFn, this, true);
