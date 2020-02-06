@@ -3,8 +3,8 @@ var L;
   
 describe('One Liner Implementation', function() {
 
-  var map;
-  var leafletControl;
+  // var map;
+  // var leafletControl;
 
   beforeEach(function () {
     
@@ -30,12 +30,18 @@ describe('One Liner Implementation', function() {
 
   it('include specific layers', function() {
     
-    L.LayerGroup.EnvironmentalLayers({
-      include: ['eonetFiresLayer']
-    }).addTo(map);
-    
+    // var mapContainer = document.createElement('div');
+    // var map = L.map(mapContainer);
+    // var layer = L.LayerGroup.EnvironmentalLayers({
+    // });
+    // layer.addTo(map);
+
+    // console.log(map);
+
     // check that layer exists in menu
-    expect($("#menu-eonetFiresLayer"))
+    var obj = $("#menu-luftdaten");
+    // console.log(Object.keys(obj).length);
+    expect(obj).toExist();
   });
 
   xit('exclude specific layers', function() {

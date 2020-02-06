@@ -443,7 +443,7 @@ map
     if(obj.overlay && !obj.group) {
       labelContainer.appendChild(elements.layerDesc);
       labelContainer.className = 'clearfix layer-info-container';
-      labelContainer.id = 'menu-' + obj.layer.layerCode;
+      labelContainer.id = 'menu-' + obj.name.replace(/ /g,"_");
       labelContainer.appendChild(elements.dataInfo);
       labelContainer.appendChild(separator);
     }

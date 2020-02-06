@@ -3,13 +3,17 @@
 <head>
  
   <title>Leaflet Environmental Layers</title>
+
+  <script>
+  </script>
   
   <script src="../../../node_modules/leaflet/dist/leaflet.js"></script>
+  <!-- <script src="/node_modules/leaflet/dist/leaflet-src.js"></script> -->
 
-  <link href="../../../node_modules/leaflet/dist/leaflet.css" rel="stylesheet" />
-  <link href="../../../dist/LeafletEnvironmentalLayers.css" rel="stylesheet" />
-  <link href="../../../node_modules\@fortawesome\fontawesome-free\css\all.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="../../../example/styles.css">
+  <script>
+  
+  
+  </script>
 
   </head>
 
@@ -19,12 +23,16 @@
 
     <script>
     
-      map = L.map("map");
-      leafletControl = new L.control.layersBrowser();
-      leafletControl.addTo(map);
+      var bounds = new L.LatLngBounds(
+        new L.LatLng(84.67351257, -172.96875),
+        new L.LatLng(-54.36775852, 178.59375)
+      );
+      var map = L.map("map", {
+        maxBounds: bounds,
+        maxBoundsViscosity: 0.75
+      }).setView([43, -83], 3);
 
       L.LayerGroup.EnvironmentalLayers({
-        display: ['openaq'],
       }).addTo(map);
 
 
