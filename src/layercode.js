@@ -146,12 +146,11 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
       }
 
       if (this.layer == 'skytruth') {
-        var redDotIcon =new L.icon.skyTruthIcon();
         var lat = data.lat;
         var lng = data.lng;
         var title = data.title;
         var url = data.link;
-        var defaultMarker = L.marker([lat, lng], {icon: redDotIcon});
+        var defaultMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 8, weight: 2, fillOpacity: 0.6, color: '#d20000', fillColor: '#f00' });
         var minimalMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#f00' });
         var content = '<a href='+url+'>' +title + '</a><br>' +
         '<br><strong> lat: ' + lat +
@@ -474,19 +473,6 @@ L.Icon.FracTrackerIcon = L.Icon.extend({
 
 L.icon.fracTrackerIcon = function() {
   return new L.Icon.FracTrackerIcon();
-};
-
-L.Icon.SkyTruthIcon = L.Icon.extend({
-  options: {
-    iconUrl: 'https://www.clker.com/cliparts/T/G/b/7/r/A/red-dot.svg',
-    iconSize: [30, 20],
-    iconAnchor: [20, 0],
-    popupAnchor: [-5, -5],
-  },
-});
-
-L.icon.skyTruthIcon = function() {
-  return new L.Icon.SkyTruthIcon();
 };
 
 L.Icon.OdorReportIcon = L.Icon.extend({
