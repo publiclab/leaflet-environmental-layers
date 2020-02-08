@@ -30,6 +30,7 @@
     "babel-plugin-transform-remove-strict-mode": "0.0.2",
     "bootstrap": "^4.1.1",
     "browserify": "latest",
+    "cypress": "^4.0.0",
     "eslint": "^6.7.2",
     "eslint-config-google": "^0.14.0",
     "grunt": "^1.0.4",
