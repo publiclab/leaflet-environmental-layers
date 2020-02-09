@@ -46,9 +46,7 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
       var self = this;
       var info = require('./info.json');
       (function() {
-        var script = document.createElement('SCRIPT');
-        script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-        script.type = 'text/javascript';
+        var $ = window.jQuery;
         var zoom = self._map.getZoom(); var origin = self._map.getCenter();
         var extents = info.toxicReleaseLayer.extents;
         var latLngbounds = extents.bounds;
@@ -60,22 +58,17 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
         if (!bounds.contains(new L.LatLng(origin.lat, origin.lng))) {
           return;
         }
-
-        script.onload = function() {
-          var $ = window.jQuery;
-          var TRI_url = info.toxicReleaseLayer.api_url + parseInt(origin.lat)+'/PREF_LONGITUDE/BEGINNING/'+parseInt(-1*origin.lng)+'/rows/0:300/JSON';
+        var TRI_url = info.toxicReleaseLayer.api_url + parseInt(origin.lat)+'/PREF_LONGITUDE/BEGINNING/'+parseInt(-1*origin.lng)+'/rows/0:300/JSON';
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(true);
+        }
+        $.getJSON(TRI_url, function(data) {
+          // console.log(parseInt(origin.lat) +" and "+parseInt(origin.lng)) ;
+          self.parseData(data);
           if (typeof self._map.spin === 'function') {
-            self._map.spin(true);
+            self._map.spin(false);
           }
-          $.getJSON(TRI_url, function(data) {
-            // console.log(parseInt(origin.lat) +" and "+parseInt(origin.lng)) ;
-            self.parseData(data);
-            if (typeof self._map.spin === 'function') {
-              self._map.spin(false);
-            }
-          });
-        };
-        document.getElementsByTagName('head')[0].appendChild(script);
+        });
       })();
     },
 

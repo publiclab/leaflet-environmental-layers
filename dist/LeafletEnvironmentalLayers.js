@@ -29894,9 +29894,8 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
       var self = this;
       var info = require('./info.json');
       (function() {
-        var script = document.createElement('SCRIPT');
-        script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-        script.type = 'text/javascript';
+        var $ = window.jQuery;
+        // var countLayers = 0;
         var northeast = self._map.getBounds().getNorthEast();
         var southwest = self._map.getBounds().getSouthWest();
 
@@ -29904,39 +29903,33 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
         if (currentMapZoom < info.OSMLandfillMineQuarryLayer.extents.minZoom) {
           return;
         }
-
-        script.onload = function() {
-          var $ = window.jQuery;
-          var countLayers = 0;
-          for (var key in self._colorOptions) {
-            // Generate URL for each type
-            var LMQ_url = info.OSMLandfillMineQuarryLayer.api_url + '?*[landuse=' + key + '][bbox=' + (southwest.lng) + ',' + (southwest.lat) + ',' + (northeast.lng) + ',' + (northeast.lat) + ']';
-            if (typeof self._map.spin === 'function') {
-              self._map.spin(true);
-            }
-            $.ajax({
-              url: LMQ_url,
-              dataType: 'xml',
-              success: function(data) {
-                self.parseData(data);
-              },
-            });
-            /* The structure of the document is as follows:
-                            <node id="node_id", lat="", lon="">
-                            . Rest of nodes here
-                            .
-                            <way id="">
-                                <nd ref="node_id">
-                                . Rest of nodes here, with the node_id defined beforehand
-                                .
-                                <tag k="key", v="value">
-                                . Each object has different keys so it is hard to create a uniform popup
-                                .
-                            .. More ways
-                        */
+        for (var key in self._colorOptions) {
+          // Generate URL for each type
+          var LMQ_url = info.OSMLandfillMineQuarryLayer.api_url + '?*[landuse=' + key + '][bbox=' + (southwest.lng) + ',' + (southwest.lat) + ',' + (northeast.lng) + ',' + (northeast.lat) + ']';
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(true);
           }
-        };
-        document.getElementsByTagName('head')[0].appendChild(script);
+          $.ajax({
+            url: LMQ_url,
+            dataType: 'xml',
+            success: function(data) {
+              self.parseData(data);
+            },
+          });
+          /* The structure of the document is as follows:
+                          <node id="node_id", lat="", lon="">
+                          . Rest of nodes here
+                          .
+                          <way id="">
+                              <nd ref="node_id">
+                              . Rest of nodes here, with the node_id defined beforehand
+                              .
+                              <tag k="key", v="value">
+                              . Each object has different keys so it is hard to create a uniform popup
+                              .
+                          .. More ways
+                      */
+        }
       })();
     },
 
@@ -30091,24 +30084,17 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
     requestData: function() {
       var self = this;
       (function() {
-        var script = document.createElement('SCRIPT');
-        script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-        script.type = 'text/javascript';
-
-        script.onload = function() {
-          var $ = window.jQuery;
-          var PFAS_URL = 'https://spreadsheets.google.com/feeds/list/1cjQ3H_DX-0dhVL5kMEesFEKaoJKLfC2wWAhokMnJxV4/1/public/values?alt=json';
+        var $ = window.jQuery;
+        var PFAS_URL = 'https://spreadsheets.google.com/feeds/list/1cjQ3H_DX-0dhVL5kMEesFEKaoJKLfC2wWAhokMnJxV4/1/public/values?alt=json';
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(true);
+        }
+        $.getJSON(PFAS_URL, function(data) {
+          self.parseData(data.feed.entry);
           if (typeof self._map.spin === 'function') {
-            self._map.spin(true);
+            self._map.spin(false);
           }
-          $.getJSON(PFAS_URL, function(data) {
-            self.parseData(data.feed.entry);
-            if (typeof self._map.spin === 'function') {
-              self._map.spin(false);
-            }
-          });
-        };
-        document.getElementsByTagName('head')[0].appendChild(script);
+        });
       })();
     },
 
@@ -30200,6 +30186,7 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
         this.addMarker(data[i]);
       }
     },
+
   },
 );
 
@@ -30384,9 +30371,7 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
       var self = this;
       var info = require('./info.json');
       (function() {
-        var script = document.createElement('SCRIPT');
-        script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-        script.type = 'text/javascript';
+        var $ = window.jQuery;
         var zoom = self._map.getZoom(); var origin = self._map.getCenter();
         var extents = info.toxicReleaseLayer.extents;
         var latLngbounds = extents.bounds;
@@ -30398,22 +30383,17 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
         if (!bounds.contains(new L.LatLng(origin.lat, origin.lng))) {
           return;
         }
-
-        script.onload = function() {
-          var $ = window.jQuery;
-          var TRI_url = info.toxicReleaseLayer.api_url + parseInt(origin.lat)+'/PREF_LONGITUDE/BEGINNING/'+parseInt(-1*origin.lng)+'/rows/0:300/JSON';
+        var TRI_url = info.toxicReleaseLayer.api_url + parseInt(origin.lat)+'/PREF_LONGITUDE/BEGINNING/'+parseInt(-1*origin.lng)+'/rows/0:300/JSON';
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(true);
+        }
+        $.getJSON(TRI_url, function(data) {
+          // console.log(parseInt(origin.lat) +" and "+parseInt(origin.lng)) ;
+          self.parseData(data);
           if (typeof self._map.spin === 'function') {
-            self._map.spin(true);
+            self._map.spin(false);
           }
-          $.getJSON(TRI_url, function(data) {
-            // console.log(parseInt(origin.lat) +" and "+parseInt(origin.lng)) ;
-            self.parseData(data);
-            if (typeof self._map.spin === 'function') {
-              self._map.spin(false);
-            }
-          });
-        };
-        document.getElementsByTagName('head')[0].appendChild(script);
+        });
       })();
     },
 
@@ -30776,20 +30756,14 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
   requestData: function() {
     var self = this;
     (function() {
-      var script = document.createElement('SCRIPT');
-      script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-      script.type = 'text/javascript';
-      script.onload = function() {
-        var $ = window.jQuery;
-        var ssURL = self.options.url || '';
-        self._map.spin(true);
-        // start fetching data from the URL
-        $.getJSON(ssURL, function(data) {
-          self.parseData(data.feed.entry);
-          self._map.spin(false);
-        });
-      };
-      document.getElementsByTagName('head')[0].appendChild(script);
+      var $ = window.jQuery;
+      var ssURL = self.options.url || '';
+      self._map.spin(true);
+      // start fetching data from the URL
+      $.getJSON(ssURL, function(data) {
+        self.parseData(data.feed.entry);
+        self._map.spin(false);
+      });
     })();
   },
 
