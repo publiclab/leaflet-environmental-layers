@@ -18,7 +18,7 @@ module.exports = function(grunt) {
             },
             babel: {
               files: {
-                "dist/util/layersBrowser.js": "dist/util/layersBrowser_babel.js"
+                "dist/util/layersBrowser.js": "dist/util/layersBrowser_babel.js",
               }
             }
         },
@@ -43,9 +43,7 @@ module.exports = function(grunt) {
           dist: {
             files: {
               "dist/util/layersBrowser_babel.js": "src/util/layersBrowser.js",
-              'dist/fracTrackerMobileLayer_babel.js': 'src/fracTrackerMobileLayer.js',
-              'dist/AllLayers_babel.js': 'src/AllLayers.js',
-              'dist/PLpeopleLayer_babel.js': 'src/PLpeopleLayer.js',
+              'dist/LeafletEnvironmentalLayers_babel.js': 'dist/LeafletEnvironmentalLayers.js',
               // 'node_modules/leaflet.blurred-location-display/dist/BlurredLocationDisplay_babel.js' : 'node_modules/leaflet.blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js'
             }
           }
@@ -55,10 +53,8 @@ module.exports = function(grunt) {
           src: [
             'src/*.js',
             'src/util/*.js',
-            'dist/*babel.js',
+            'dist/LeafletEnvironmentalLayers_babel.js',
             'dist/util/*.js',
-            // 'dist/util/*.js',
-            // 'dist/*.js',
           ],
           options: {
             specs: "spec/javascripts/*spec.js",
@@ -67,8 +63,10 @@ module.exports = function(grunt) {
               'node_modules/jasmine-jquery/lib/jasmine-jquery.js',
               'node_modules/jasmine-ajax/lib/mock-ajax.js',
               'node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js',
-              // 'node_modules/leaflet/dist/leaflet-src.js',
-              // 'node_modules/leaflet.blurred-location-display/dist/BlurredLocationDisplay.js',
+              'node_modules/leaflet.blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js',
+              // 'node_modules/leaflet/dist/window.js',
+              // 'node_modules/leaflet/dist/leaflet.js',
+              // 'node_modules/esri-leaflet/dist/esri-leaflet.js',
             ],
             keepRunner: true,
             polyfills: [

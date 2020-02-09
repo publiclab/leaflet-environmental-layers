@@ -64,14 +64,6 @@
       }).setView([43, -83], 3);
       map.options.minZoom = 3;
 
-      var baselayer1 = L.tileLayer(
-        'https://api.tiles.mapbox.com/v4/mapbox.emerald/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2FnYXJwcmVldDk3IiwiYSI6ImNqaXhlZjgwaDJtb3EzcW1zdDdwMzJkODcifQ.MA2YIv6VpGLLAo-QYUudTA',
-        {
-          attribution:
-                  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        },
-      ).addTo(map);
-
       /* This is required, make this optional! */
       // var oms = omsUtil(map, {
       //   keepSpiderfied: true,
@@ -82,11 +74,11 @@
           'Standard': baselayer1
         },
         // simpleLayerControl: true,
-        // addLayersToMap: true,
-        include: ['purpleairmarker', 'skytruth', 'fractracker', 'odorreport', 'asian', 'clouds', 'eonetFiresLayer', 'Unearthing'],
+        addLayersToMap: true,
+        include: ['eonetFiresLayer', 'Unearthing'],
         // exclude: ['mapknitter', 'clouds'],
-        display: ['eonetFiresLayer'],
-        // hash: true,
+        // display: ['eonetFiresLayer'],
+        hash: true,
         embed: true,
         // hostname: 'domain name goes here'
       }).addTo(map);

@@ -12,7 +12,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       layers0: ['PLpeople', 'purpleLayer', 'toxicReleaseLayer', 'pfasLayer', 'aqicnLayer', 'osmLandfillMineQuarryLayer', 'Unearthing'],
       layers1: ['purpleairmarker', 'skytruth', 'fractracker', 'odorreport', 'mapknitter', 'openaq', 'luftdaten', 'opensense'],
       layers2: ['Power', 'Petroleum', 'Telecom', 'Water'],
-      layers3: ['wisconsin'],
+      layers3: [],
       layers4: ['income', 'americanIndian', 'asian', 'black', 'multi', 'hispanic', 'nonWhite', 'white', 'plurality'],
       layers5: ['clouds', 'cloudsClassic', 'precipitation', 'precipitationClassic', 'rain', 'rainClassic', 'snow', 'pressure', 'pressureContour', 'temperature', 'wind', 'city'],
       layers6: ['eonetFiresLayer', 'fracTrackerMobile'],
@@ -144,8 +144,8 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
           if(!this.groupedOverlayMaps.Justicemap) {
             this.groupedOverlayMaps.Justicemap = { category: 'group', layers: {} };
           }
-          // this.overlayMaps[layer] = window['L']['tileLayer']['provider']('JusticeMap.'+layer);
-          // this.groupedOverlayMaps.Justicemap.layers[layer] = this.overlayMaps[layer];
+          this.overlayMaps[layer] = window['L']['tileLayer']['provider']('JusticeMap.'+layer);
+          this.groupedOverlayMaps.Justicemap.layers[layer] = this.overlayMaps[layer];
         }
         else if (this.options.layers5.includes(layer)) {
           if(!this.groupedOverlayMaps['Open Weather Map']) {
@@ -176,8 +176,6 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
           console.log('Incorrect Layer Name');
         }
       }
-
-      console.log(this.groupedOverlayMaps);
 
       var leafletControl = this.options.simpleLayerControl ? 
       L.control.layers(baseMaps, this.overlayMaps).addTo(map) :
