@@ -3,8 +3,8 @@
   
 describe('One Liner Implementation', function() {
 
-  // var mapContainer;
-  // var map;
+  var mapContainer;
+  var map;
   // var lel;
 
   beforeAll(function() {
@@ -13,11 +13,14 @@ describe('One Liner Implementation', function() {
   beforeEach(function () {
     // mapContainer = document.createElement('div');
     // map = L.map(mapContainer, { }).setView([43, -83], 8);
+
+    loadFixtures('leaflet.html');
+    mapContainer = $("#map");
   });
 
   afterEach(function() {
-    // mapContainer = undefined;
-    // map = undefined;
+    mapContainer.html('');
+    map = undefined;
   })
 
   it('leaflet is created', function() {
@@ -59,14 +62,13 @@ describe('One Liner Implementation', function() {
   });
 
   it('simpleLayerControl shows simple menu', function() {
-    var mapContainer = document.createElement('div');
-    var map = L.map(mapContainer, { }).setView([43, -83], 8);
-    var lel = L.LayerGroup.EnvironmentalLayers({
-      simpleLayerControl: true,  // and this is causing
-    });
-    lel.addTo(map);
+    var map = L.map("map", { }).setView([43, -83], 8);
+    L.LayerGroup.EnvironmentalLayers({
+      simpleLayerControl: true,  // and this is causing issues too
+    }).addTo(map);
     
-    expect(mapContainer.querySelector('.leaflet-control-container .leaflet-control-layers-menu')).not.toExist();
+    expect(document.querySelector('#map .leaflet-control-container .leaflet-control-layers-menu')).not.toExist();
+
   });
 
   xit('embed shows embed control', function() {
@@ -76,23 +78,20 @@ describe('One Liner Implementation', function() {
       embed: true,
     }).addTo(map);
     
-    expect(mapContainer.querySelector('.leaflet-control-container .leaflet-control-embed-link')).toExist();
+    expect(document.querySelector('#map .leaflet-control-container .leaflet-control-embed-link')).toExist();
   });
 
   it('addLayersToMap shows all included layers', function() {
-    var mapContainer2 = document.createElement('div');
-    mapContainer2.id = "#map2";
-    var map2 = L.map(mapContainer2, { }).setView([43, -83], 8);
-    var lel2 = L.LayerGroup.EnvironmentalLayers({
+    var map = L.map("map2", { }).setView([43, -83], 8);
+    L.LayerGroup.EnvironmentalLayers({
       include: ['eonetFiresLayer', 'Unearthing'],
       addLayersToMap: true,  // This is somehow causing issues in the next tests
       // simpleLayerControl: false,
-    });
-    lel2.addTo(map2);
+    }).addTo(map);
 
-    expect(mapContainer2.querySelector('.leaflet-control-container .leaflet-control-layers-menu')).toExist();
-    expect(mapContainer2.querySelector('#menu-EONET_Fires .leaflet-control-layers-selector').checked).toBe(true);
-    expect(mapContainer2.querySelector('#menu-Unearthing .leaflet-control-layers-selector').checked).toBe(true);
+    expect(document.querySelector('#map2 .leaflet-control-container .leaflet-control-layers-menu')).toExist();
+    expect(document.querySelector('#map2 #menu-EONET_Fires .leaflet-control-layers-selector').checked).toBe(true);
+    expect(document.querySelector('#map2 #menu-Unearthing .leaflet-control-layers-selector').checked).toBe(true);
   });
 
 });

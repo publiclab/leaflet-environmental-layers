@@ -13,7 +13,7 @@
 
   <!-- Bootstrap --> 
   <link rel="stylesheet" href="../node_modules\bootstrap\dist\css\bootstrap.min.css">
-  <script src="../node_modules\jquery\dist\jquery.min.js"></script>
+  <script src="../node_modules\jquery\dist\jquery.slim.min.js"></script>
   <script src="../node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
   
   <script src="../node_modules/leaflet/dist/leaflet.js"></script>
@@ -25,6 +25,8 @@
   <script src="../dist/LeafletEnvironmentalLayers.js"></script>
   <script src="../src/windRoseLayer.js"></script>
   <script src="../node_modules/leaflet-fullhash/leaflet-fullHash.js"></script>
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 
   <script src="../node_modules/heatmap.js/build/heatmap.min.js"></script>
   <script src="../node_modules/leaflet-heatmap/leaflet-heatmap.js"></script>
@@ -45,16 +47,29 @@
   <script src="../lib/leaflet-fullUrlHash.js"></script>
 
   <link href="../node_modules\@fortawesome\fontawesome-free\css\all.min.css" rel="stylesheet" />
-  <script src="../node_modules/leaflet-google-places-autocomplete/src/js/leaflet-gplaces-autocomplete.js"></script>
-  <link rel="stylesheet" href="../node_modules/leaflet-google-places-autocomplete/src/css/leaflet-gplaces-autocomplete.css">
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOLUQngEmJv0_zcG1xkGq-CXIPpLQY8iQ&libraries=places"></script>
   <link rel="stylesheet" href="styles.css">
+
+  <style>
+    #map {
+      position: relative;
+      height: 400px;
+    }
+  </style>
+
+<style>
+  #map2 {
+    position: relative;
+    height: 400px;
+    width: 100%;
+  }
+</style>
 
   </head>
 
   <body>
-    <div id="map" style="position: relative; height: 50vh;"></div>
-    <div id="map2" style="height: 50vh;"></div>
+    <div id="map"></div>
+
+    <div id="map2"></div>
 
     <script>
 
@@ -62,30 +77,57 @@
         new L.LatLng(84.67351257, -172.96875),
         new L.LatLng(-54.36775852, 178.59375)
       );
-
       var map = L.map("map", {
         maxBounds: bounds,
-        maxBoundsViscosity: 0.75,
+        maxBoundsViscosity: 0.75
       }).setView([43, -83], 3);
       map.options.minZoom = 3;
 
+      var lel = L.LayerGroup.EnvironmentalLayers({
+        // baseLayers: {
+        //   'Standard': baselayer1
+        // },
+        simpleLayerControl: true,
+        addLayersToMap: true,
+        include: ['eonetFiresLayer', 'Unearthing'],
+        // exclude: ['mapknitter', 'clouds'],
+        // display: ['eonetFiresLayer'],
+        hash: false,
+        embed: true,
+        // hostname: 'domain name goes here'
+      }).addTo(map);
+      
+
+    </script>
+    
+
+    <script>
+
+      var bounds2 = new L.LatLngBounds(
+        new L.LatLng(84.67351257, -172.96875),
+        new L.LatLng(-54.36775852, 178.59375)
+      );
       var map2 = L.map("map2", {
         maxBounds: bounds,
-        maxBoundsViscosity: 0.75,
+        maxBoundsViscosity: 0.75
       }).setView([43, -83], 3);
       map2.options.minZoom = 3;
 
-      L.LayerGroup.EnvironmentalLayers({
-        include: ['odorreport', 'asian', 'clouds', 'eonetFiresLayer', 'Unearthing', 'PLpeople'],
-        addLayersToMap: true,
-        hash: false,
-      }).addTo(map);
-
-      L.LayerGroup.EnvironmentalLayers({
+      var lel2 = L.LayerGroup.EnvironmentalLayers({
+        // baseLayers: {
+        //   'Standard': baselayer1
+        // },
         // simpleLayerControl: true,
-        // include: ['odorreport', 'asian', 'clouds', 'eonetFiresLayer', 'Unearthing', 'PLpeople'],
+        // addLayersToMap: true,
+        include: ['eonetFiresLayer', 'Unearthing'],
+        // exclude: ['mapknitter', 'clouds'],
+        // display: ['clouds'],
         hash: false,
+        embed: true,
+        // hostname: 'domain name goes here'
       }).addTo(map2);
+      
+      
 
     </script>
     
