@@ -58,26 +58,22 @@
         new L.LatLng(84.67351257, -172.96875),
         new L.LatLng(-54.36775852, 178.59375)
       );
+
       var map = L.map("map", {
         maxBounds: bounds,
         maxBoundsViscosity: 0.75
       }).setView([43, -83], 3);
       map.options.minZoom = 3;
 
-      /* This is required, make this optional! */
-      // var oms = omsUtil(map, {
-      //   keepSpiderfied: true,
-      //   circleSpiralSwitchover: 0
-      // });
       L.LayerGroup.EnvironmentalLayers({
         baseLayers: {
           'Standard': baselayer1
         },
         // simpleLayerControl: true,
         addLayersToMap: true,
-        include: ['eonetFiresLayer', 'Unearthing'],
+        include: ['odorreport', 'asian', 'clouds', 'eonetFiresLayer', 'Unearthing', 'PLpeople'],
         // exclude: ['mapknitter', 'clouds'],
-        // display: ['eonetFiresLayer'],
+        display: ['eonetFiresLayer'],
         hash: true,
         embed: true,
         // hostname: 'domain name goes here'

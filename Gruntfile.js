@@ -64,8 +64,6 @@ module.exports = function(grunt) {
               'node_modules/jasmine-ajax/lib/mock-ajax.js',
               'node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js',
               'node_modules/leaflet.blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js',
-              // 'node_modules/leaflet/dist/window.js',
-              // 'node_modules/leaflet/dist/leaflet.js',
               // 'node_modules/esri-leaflet/dist/esri-leaflet.js',
             ],
             keepRunner: true,

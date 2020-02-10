@@ -389,7 +389,6 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     label.style.display = 'inline-block';
     var checked = this._map.hasLayer(obj.layer);
     var input;
-map
     if (obj.overlay) {
       input = document.createElement('input');
       input.type = 'checkbox';

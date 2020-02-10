@@ -41655,7 +41655,10 @@ var TouchZoom = Handler.extend({
     label.style.display = 'inline-block';
     var checked = this._map.hasLayer(obj.layer);
     var input;
+<<<<<<< HEAD
 
+=======
+>>>>>>> basic one liner tests work
     if (obj.overlay) {
       input = document.createElement('input');
       input.type = 'checkbox';
