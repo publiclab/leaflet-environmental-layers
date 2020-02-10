@@ -12,16 +12,16 @@ module.exports = function(grunt) {
         },
 
         browserify: {
-            dist: {
-                src: ['node_modules/jquery/dist/jquery.min.js', 'node_modules/leaflet/dist/leaflet.js', 'src/leafletEnvironmentalLayers.js', 'src/util/*.js'],
-                dest: 'dist/LeafletEnvironmentalLayers.js'
-            },
-            babel: {
-              files: {
-                "dist/util/layersBrowser.js": "dist/util/layersBrowser_babel.js",
-              }
+          dist: {
+              src: ['node_modules/jquery/dist/jquery.min.js', 'node_modules/leaflet/dist/leaflet.js', 'src/leafletEnvironmentalLayers.js', 'src/util/*.js'],
+              dest: 'dist/LeafletEnvironmentalLayers.js'
+          },
+          babel: {
+            files: {
+              "dist/util/layersBrowser.js": "dist/util/layersBrowser_babel.js"
             }
-        },
+          }
+      },
 
         copy: {
           dist: {
@@ -34,27 +34,34 @@ module.exports = function(grunt) {
         babel: {
           options: {
             sourceMap: true,
-            "presets": ['@babel/env'],
+            presets: ['@babel/preset-env'],
             "plugins": [
               "transform-object-rest-spread",
-              "transform-remove-strict-mode",
-            ],
+              "transform-remove-strict-mode"
+            ]        
           },
           dist: {
             files: {
+              // "dist/LeafletEnvironmentalLayers_babel.js": "dist/LeafletEnvironmentalLayers.js",
               "dist/util/layersBrowser_babel.js": "src/util/layersBrowser.js",
-              'dist/LeafletEnvironmentalLayers_babel.js': 'dist/LeafletEnvironmentalLayers.js',
-              // 'node_modules/leaflet.blurred-location-display/dist/BlurredLocationDisplay_babel.js' : 'node_modules/leaflet.blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js'
+              'dist/fracTrackerMobileLayer.js': 'src/fracTrackerMobileLayer.js',
+              "dist/AllLayers_babel.js": "src/AllLayers.js",
             }
           }
         },
 
         jasmine: {
           src: [
-            'src/*.js',
-            'src/util/*.js',
-            'dist/LeafletEnvironmentalLayers_babel.js',
-            'dist/util/*.js',
+            // 'src/*.js',
+            // 'src/util/*.js',
+            // 'dist/*babel.js',
+            // 'dist/util/*.js',
+            'src/util/embedControl.js',
+            'src/util/modeControl.js',
+            'dist/LeafletEnvironmentalLayers.js',
+            'dist/util/layersBrowser.js',
+            'dist/AllLayers_babel.js',
+            'dist/fracTrackerMobileLayer.js'
           ],
           options: {
             specs: "spec/javascripts/*spec.js",
@@ -62,8 +69,9 @@ module.exports = function(grunt) {
               'node_modules/jquery/dist/jquery.js',
               'node_modules/jasmine-jquery/lib/jasmine-jquery.js',
               'node_modules/jasmine-ajax/lib/mock-ajax.js',
+              // 'dist/leaflet_babel.js',
               'node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js',
-              'node_modules/leaflet.blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js',
+              // 'node_modules/leaflet.blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js',
               // 'node_modules/esri-leaflet/dist/esri-leaflet.js',
             ],
             keepRunner: true,

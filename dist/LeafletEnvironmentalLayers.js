@@ -25526,9 +25526,12 @@ LatLngBounds.prototype = {
 			obj = toLatLngBounds(obj);
 		}
 
+<<<<<<< HEAD
 		var sw = this._southWest,
 		    ne = this._northEast,
 		    sw2, ne2;
+=======
+>>>>>>> test shorter transpile files
 
 		if (obj instanceof LatLngBounds) {
 			sw2 = obj.getSouthWest();
@@ -38684,9 +38687,6 @@ L.LayerGroup.EnvironmentalLayers = function(options) {
 };
 
 },{}],9:[function(require,module,exports){
-// require('leaflet-blurred-location') ;
-// require('leaflet-blurred-location-display') ;
-
 L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
 
   {
@@ -40272,6 +40272,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
 			this._drawFirst = next;
 		}
 
+<<<<<<< HEAD
 		order.prev = this._drawLast;
 		this._drawLast.next = order;
 
@@ -40280,6 +40281,36 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
 
 		this._requestRedraw(layer);
 	},
+=======
+},{"./info.json":14,"jquery":2,"leaflet":6}],17:[function(require,module,exports){
+require('./purpleLayer.js');
+require('./toxicReleaseLayer.js');
+require('leaflet-providers');
+require('./openWeatherMapLayer.js');
+require('./aqicnLayer.js');
+require('./osmLandfillMineQuarryLayer.js');
+require('./wisconsinLayer.js');
+require('./fracTrackerMobileLayer.js');
+require('./pfasLayer.js');
+require('./unearthing.js');
+require('./indigenousLayers.js');
+require('./PLpeopleLayer.js');
+require('./layercode.js');
+require('./eonetFiresLayer');
+require('./AllLayers.js');
+
+},{"./AllLayers.js":8,"./PLpeopleLayer.js":9,"./aqicnLayer.js":10,"./eonetFiresLayer":11,"./fracTrackerMobileLayer.js":12,"./indigenousLayers.js":13,"./layercode.js":16,"./openWeatherMapLayer.js":18,"./osmLandfillMineQuarryLayer.js":19,"./pfasLayer.js":20,"./purpleLayer.js":21,"./toxicReleaseLayer.js":22,"./unearthing.js":23,"./wisconsinLayer.js":32,"leaflet-providers":5}],18:[function(require,module,exports){
+L.OWM = L.TileLayer.extend({
+  options: {
+    appId: '4c6704566155a7d0d5d2f107c5156d6e', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
+    baseUrl: 'https://{s}.tile.openweathermap.org/map/{layername}/{z}/{x}/{y}.png',
+    maxZoom: 18,
+    showLegend: true,
+    legendImagePath: null,
+    legendPosition: 'bottomleft',
+    attribution: 'Weather from <a href="https://openweathermap.org/" alt="World Map and worldwide Weather Forecast online">OpenWeatherMap</a>',
+  },
+>>>>>>> test shorter transpile files
 
 	_bringToBack: function (layer) {
 		var order = layer._order;
@@ -41655,10 +41686,6 @@ var TouchZoom = Handler.extend({
     label.style.display = 'inline-block';
     var checked = this._map.hasLayer(obj.layer);
     var input;
-<<<<<<< HEAD
-
-=======
->>>>>>> basic one liner tests work
     if (obj.overlay) {
       input = document.createElement('input');
       input.type = 'checkbox';
