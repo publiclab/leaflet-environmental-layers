@@ -1,13 +1,16 @@
 {
   "name": "leaflet-environmental-layers",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "",
   "main": "index.js",
   "directories": {
     "example": "example"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublishOnly": "yarn install && grunt build",
+    "postversion": "echo \"The version is bumped in this commit\"",
+    "postpublish": "echo \"The version is bumped :)\""
   },
   "repository": {
     "type": "git",
