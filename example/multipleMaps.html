@@ -77,13 +77,16 @@
 
       L.LayerGroup.EnvironmentalLayers({
         include: ['odorreport', 'asian', 'clouds', 'eonetFiresLayer', 'Unearthing', 'PLpeople'],
+        addLayersToMap: true,
+        simpleLayerControl: true,
       }).addTo(map);
+      console.log("done map 1");
 
       L.LayerGroup.EnvironmentalLayers({
-        simpleLayerControl: true,
-        addLayersToMap: true,
-        include: ['odorreport', 'asian', 'clouds', 'eonetFiresLayer', 'Unearthing', 'PLpeople'],
+        // include: ['odorreport', 'asian', 'clouds', 'eonetFiresLayer', 'Unearthing', 'PLpeople'],
+        display: ['odorreport', 'clouds', 'eonetFiresLayer', 'Unearthing'], 
       }).addTo(map2);
+      console.log("done map 2");
 
     </script>
     
