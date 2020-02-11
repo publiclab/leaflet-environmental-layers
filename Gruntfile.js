@@ -33,11 +33,9 @@ module.exports = function(grunt) {
 
         babel: {
           options: {
-            sourceMaps: false,
+            sourceMaps: true,
             presets: ['@babel/preset-env'],
             plugins: [
-              // "transform-remove-console",
-              // "transform-object-rest-spread",
               "transform-remove-strict-mode",
             ]        
           },
@@ -45,8 +43,6 @@ module.exports = function(grunt) {
             files: {
               "dist/LeafletEnvironmentalLayers_babel.js": "dist/LeafletEnvironmentalLayers.js",
               "dist/util/layersBrowser_babel.js": "src/util/layersBrowser.js",
-              // 'dist/fracTrackerMobileLayer.js': 'src/fracTrackerMobileLayer.js',
-              // "dist/AllLayers_babel.js": "src/AllLayers.js",
             }
           }
         },
@@ -57,12 +53,6 @@ module.exports = function(grunt) {
             'src/util/*.js',
             'dist/*babel.js',
             'dist/util/*.js',
-            // 'src/util/embedControl.js',
-            // 'src/util/modeControl.js',
-            // 'dist/LeafletEnvironmentalLayers.js',
-            // 'dist/util/layersBrowser.js',
-            // 'dist/AllLayers_babel.js',
-            // 'dist/fracTrackerMobileLayer.js'
           ],
           options: {
             specs: "spec/javascripts/*spec.js",
