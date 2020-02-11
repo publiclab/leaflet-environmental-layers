@@ -66,14 +66,11 @@
       map.options.minZoom = 3;
 
       L.LayerGroup.EnvironmentalLayers({
-        baseLayers: {
-          'Standard': baselayer1
-        },
         // simpleLayerControl: true,
         addLayersToMap: true,
         include: ['odorreport', 'asian', 'clouds', 'eonetFiresLayer', 'Unearthing', 'PLpeople'],
         // exclude: ['mapknitter', 'clouds'],
-        display: ['eonetFiresLayer'],
+        // display: ['eonetFiresLayer'],
         hash: true,
         embed: true,
         // hostname: 'domain name goes here'

@@ -213,17 +213,6 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
           }
         }
       } // or turn on nothing
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-      console.log("LAYER NOT ADDED");
-=======
->>>>>>> leaflet not fully loading
-      
->>>>>>> add layer name id to broswer menu
-=======
->>>>>>> rewrite init defaults
     },
 
     onRemove: function(map) {},
