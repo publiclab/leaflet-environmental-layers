@@ -2,12 +2,10 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 
   {
     options: {
-      default: {
-        simpleLayerControl: false,
-        hash: false,
-        embed: false,
-        addLayersToMap: false, // activates layers on map by default if true.
-      },
+      simpleLayerControl: false,
+      hash: false,
+      embed: false,
+      addLayersToMap: false, // activates layers on map by default if true.
       currentHash: location.hash,
       // Source of Truth of Layers name .
       // please put name of Layers carefully in the the appropriate layer group.
@@ -38,15 +36,11 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
     },
 
     initialize: function(param) {
+      L.Util.setOptions(this, param);
       param = param || {};
 
-      this.options.hash = param.hash || this.options.default.hash;
-      this.options.baseLayers = param.baseLayers || this.options.default.baseLayers;
-      this.options.addLayersToMap = param.addLayersToMap || this.options.default.addLayersToMap;
-      this.options.embed = param.embed || this.options.default.embed;
-      this.options.hostname = param.hostname || this.options.default.hostname;
-      this.options.simpleLayerControl = param.simpleLayerControl || this.options.default.simpleLayerControl;
-      
+      this.options.addLayersToMap = !!param.include ? param.addLayersToMap : false;
+
       param.all = [...this.options.layers0, ...this.options.layers1, ...this.options.layers2, ...this.options.layers3, ...this.options.layers4, ...this.options.layers5, ...this.options.layers6];
       if (!param.include || !param.include.length) {
         param.include = param.all;
