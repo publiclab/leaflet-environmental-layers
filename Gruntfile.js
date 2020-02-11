@@ -35,9 +35,10 @@ module.exports = function(grunt) {
           options: {
             sourceMaps: false,
             presets: ['@babel/preset-env'],
-            "plugins": [
-              "transform-object-rest-spread",
-              "transform-remove-strict-mode"
+            plugins: [
+              // "transform-remove-console",
+              // "transform-object-rest-spread",
+              "transform-remove-strict-mode",
             ]        
           },
           dist: {
