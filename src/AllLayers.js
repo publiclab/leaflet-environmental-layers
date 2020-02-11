@@ -5,8 +5,8 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       simpleLayerControl: false,
       hash: false,
       embed: false,
-      currentHash: location.hash,
       addLayersToMap: false, // activates layers on map by default if true.
+      currentHash: location.hash,
       // Source of Truth of Layers name .
       // please put name of Layers carefully in the the appropriate layer group.
       layers0: ['PLpeople', 'purpleLayer', 'toxicReleaseLayer', 'pfasLayer', 'aqicnLayer', 'osmLandfillMineQuarryLayer', 'Unearthing'],
@@ -36,16 +36,11 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
     },
 
     initialize: function(param) {
+      L.Util.setOptions(this, param);
       param = param || {};
-      if (!!param.hash) {
-        this.options.hash = param.hash;
-      }
-      if (!!param.baseLayers) {
-        this.options.baseLayers = param.baseLayers;
-      }
-      if (!!param.include) {
-        this.options.addLayersToMap = param.addLayersToMap;
-      }
+
+      this.options.addLayersToMap = !!param.include ? param.addLayersToMap : false;
+
       param.all = [...this.options.layers0, ...this.options.layers1, ...this.options.layers2, ...this.options.layers3, ...this.options.layers4, ...this.options.layers5, ...this.options.layers6];
       if (!param.include || !param.include.length) {
         param.include = param.all;
@@ -58,15 +53,6 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 
       this.options.layers = param;
 
-      if (!!param.embed) {
-        this.options.embed = param.embed;
-      }
-      if (!!param.hostname) {
-        this.options.hostname = param.hostname;
-      }
-      if (!!param.simpleLayerControl) {
-        this.options.simpleLayerControl = param.simpleLayerControl;
-      }
     },
 
     onAdd: function(map) {
@@ -227,7 +213,6 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
           }
         }
       } // or turn on nothing
-      
     },
 
     onRemove: function(map) {},
