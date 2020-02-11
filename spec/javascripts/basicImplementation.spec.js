@@ -1,4 +1,4 @@
-xdescribe('Basic LEL Implementation', function() {
+describe('Basic LEL Implementation', function() {
 
   var mapContainer;
   var map;

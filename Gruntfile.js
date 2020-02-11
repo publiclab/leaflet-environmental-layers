@@ -33,7 +33,7 @@ module.exports = function(grunt) {
 
         babel: {
           options: {
-            sourceMap: true,
+            sourceMaps: false,
             presets: ['@babel/preset-env'],
             "plugins": [
               "transform-object-rest-spread",
