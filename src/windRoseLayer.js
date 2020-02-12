@@ -1,3 +1,4 @@
+
 function myWindroseMarker(data) {
   var content = '<canvas id="id_' + data.id + '" width="50" height="50"></canvas>';
   var icon = L.divIcon({html: content, iconSize: [50, 50], className: 'owm-div-windrose'});
