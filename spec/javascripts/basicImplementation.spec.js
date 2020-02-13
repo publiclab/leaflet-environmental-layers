@@ -3,6 +3,10 @@ describe('Basic LEL Implementation', function() {
   var mapContainer;
   var map;
 
+  beforeAll(function () {
+    spyOn(window, 'wisconsinLayer').and.returnValue(new L.LayerGroup()); // needed because L.esri won't load in jasmine
+  });
+
   beforeEach(function () {
     mapContainer = document.createElement('div');
     map = L.map(mapContainer, { }).setView([43, -83], 8);
