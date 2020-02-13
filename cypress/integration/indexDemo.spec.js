@@ -53,7 +53,39 @@ describe('My First Test', function() {
     cy.get('.leaflet-control-embed').should('exist')
     cy.get('.leaflet-control-embed-link').should('exist')
     cy.get('.fas.fa-code').should('exist')
-    cy.get('.fas.fa-code').should('have.css', 'font-family').and('match', /Font Awesome 5 Free/)
-    // cy.get('.fa-code:before').should('have.css', 'content').and('match', /\\f121/)
+    cy.get('.fas.fa-code').should('have.css', 'font-family', '"Font Awesome 5 Free"')
+  })
+
+  it('embed code calls window prompt', function() {
+    cy.window().then((win) => {
+      cy.stub(win, 'prompt').as('windowPrompt')
+      let path = win.location.pathname
+      let currentHash = win.location.hash
+      let match = '<iframe style="border:none;" width="100%" height="900px" src="//publiclab.github.io' + path + currentHash + '"></iframe>'
+      cy.get('.leaflet-control-embed').click()
+      cy.get('@windowPrompt').should('called')
+      cy.get('@windowPrompt').should('be.calledWith', 'Use this HTML code to embed this map on another site.', match)
+    })
+  })
+
+  it('has layers menu control', function() {
+    cy.get('.leaflet-control-layers').should('exist')
+    cy.get('.leaflet-control-layers-toggle').should('exist')
+    cy.get('.leaflet-control-layers-menu').should('exist')
+    cy.get('.leaflet-control-layers-menu').find('.leaflet-control-layers-base')
+    cy.get('.leaflet-control-layers-menu')
+      .find('.leaflet-control-layers-overlays')
+      .should('have.css', 'overflow', 'hidden scroll')
+    cy.get('.leaflet-control-layers-menu').contains('h3', 'Environmental data near here')
+    cy.get('.leaflet-control-layers-overlays').find('.layer-info-container').should('have.length', 21)
+  })
+
+  it('displays layers menu on hover', function() {
+    cy.get('.leaflet-control-layers').should('not.have.class', 'leaflet-control-layers-expanded')
+    cy.get('.leaflet-control-layers-toggle').should('have.css', 'display', 'block')
+    cy.get('.leaflet-control-layers-menu').should('have.css', 'display', 'none')
+    cy.get('.leaflet-control-layers').trigger('mouseover').should('have.class', 'leaflet-control-layers-expanded')
+    cy.get('.leaflet-control-layers-toggle').should('not.have.css', 'display', 'block')
+    cy.get('.leaflet-control-layers-menu').should('have.css', 'display', 'block')
   })
 })
