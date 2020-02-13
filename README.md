@@ -230,12 +230,14 @@ The optional options object can be passed in with any of the following propertie
 #### Dependencies
 
 ```
-  <!-- Bootstrap --> 
-  <link rel="stylesheet" href="../node_modules\bootstrap\dist\css\bootstrap.min.css">
   <script src="../node_modules\jquery\dist\jquery.min.js"></script>
   <script src="../node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
+<<<<<<< HEAD
   <!-- Layer menu styles -->
   <link href="node_modules/leaflet-environmental-layers/dist/LeafletEnvironmentalLayers.css" rel="stylesheet" />
+=======
+  <link rel="stylesheet" href="../node_modules\bootstrap\dist\css\bootstrap.min.css">
+>>>>>>> clean up dependencies in map examples and readme
 ```
 
 #### Usage example
@@ -302,14 +304,60 @@ The optional options object can be passed in with any of the following propertie
       var FracTracker_mobile = L.geoJSON.fracTrackerMobile();
 
 
+<<<<<<< HEAD
 ### _To use Purple Layer_
 	<script src="../node_modules/heatmap.js/build/heatmap.min.js"></script>
 	<script src="../node_modules/leaflet-heatmap/leaflet-heatmap.js"></script>
+=======
+    <script src="../node_modules\jquery\dist\jquery.min.js"></script>
+    <script src="../dist/LeafletEnvironmentalLayers.js"></script>
+    <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet" />
+    <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet" />
+    <link href="../node_modules\@fortawesome\fontawesome-free\css\all.min.css" rel="stylesheet" />
+
+### Layers Menu
+    
+    <script src="../node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../node_modules\bootstrap\dist\css\bootstrap.min.css">
+
+  These are not required if you use the old menu `simpleLayerControl: true`
+>>>>>>> clean up dependencies in map examples and readme
 
 
+<<<<<<< HEAD
 ### _Real Time Layers_
 
 #### city (by openWeather)
+=======
+    <script src="https://unpkg.com/esri-leaflet@2.2.3/dist/esri-leaflet.js"></script>
+    <script src="https://unpkg.com/esri-leaflet-renderers@2.0.6"></script>
+
+    var Wisconsin_NM = wisconsinLayer(map) ;
+
+### To use Fractracker Mobile Layer :
+
+    var FracTracker_mobile = L.geoJSON.fracTrackerMobile();
+
+### To use Purple Layer :
+
+		<script src="../node_modules/heatmap.js/build/heatmap.min.js"></script>
+		<script src="../node_modules/leaflet-heatmap/leaflet-heatmap.js"></script>
+
+### To use PLpeople Layer :
+These must be loaded before "../dist/LeafletEnvironmentalLayers.js"
+
+    <script src="../node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js"></script>
+    <script src="../node_modules/leaflet.blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js"></script>
+
+### To use Unearthing Layer :
+
+    <script src="../lib/glify.js"></script>
+
+
+## Real Time Layers :
+
+1.) city (by openWeather)
+>>>>>>> clean up dependencies in map examples and readme
 
         var city = L.OWM.current({intervall: 15, minZoom: 3});
 
@@ -348,11 +396,69 @@ The optional options object can be passed in with any of the following propertie
     var OpenInfraMap_Water = L.tileLayer('https://tiles-{s}.openinframap.org/water/{z}/{x}/{y}.png',{
       maxZoom: 18,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>'
+<<<<<<< HEAD
     });
+=======
+    });   
+
+## Add hash support for easy sharing of map :    
+
+### Steps To add :
+
+1.) Add link :
+
+    <script src="../lib/leaflet-fullUrlHash.js"></script>
+
+2.) Once you have initialized the map (an instance of L.Map), add the following code :
+
+     // Assuming your map instance is in a variable called map and an object with all the map layers is
+    in a variable called allMapLayers
+    var hash = new L.FullHash(map, allMapLayers);    
+
+
+ ## Add all LEL Layers at once:
+
+ 	  L.LayerGroup.EnvironmentalLayers().addTo(map);
+
+## Add all layers except some specific layers:
+
+	  L.LayerGroup.EnvironmentalLayers({
+      exclude: ['mapknitter', 'clouds'],
+    }).addTo(map);
+
+## Add only a limited list of layers:
+
+	  L.LayerGroup.EnvironmentalLayers({
+      include: ['mapknitter', 'clouds'],
+    }).addTo(map);
+
+## Add some layers and turn them on by default:
+
+    L.LayerGroup.EnvironmentalLayers({
+      addLayersToMap: true,    // by default this is FALSE
+      include: ['mapknitter', 'clouds'],
+    }).addTo(map);
+
+## Turn on display of only specified layers:
+
+    L.LayerGroup.EnvironmentalLayers({
+      display: ['mapknitter', 'clouds'],
+    }).addTo(map);
+
+  Other layers can be turned on from the layer menu but only the listed layers will be displayed on the map on page load.
+>>>>>>> clean up dependencies in map examples and readme
 
 ### _Spreadsheet-based layers_
 
+<<<<<<< HEAD
 We can source locations from a spreadsheet in a format like this:
+=======
+    L.LayerGroup.EnvironmentalLayers({
+      baseLayers: {               // Grayscale base map is used by default when this is undefined 
+        'Standard': baselayer1
+      },
+    }).addTo(map);
+>>>>>>> clean up dependencies in map examples and readme
 
 | Title  | Latitude | Longitude   | Notes             |
 |--------|----------|-------------|-------------------|
@@ -360,7 +466,13 @@ We can source locations from a spreadsheet in a format like this:
 | Second | 29.760371 | -95.504828 | The second marker |
 | Third  | 29.917755 | -95.283494 | The third marker  |
 
+<<<<<<< HEAD
 The layer is constructed like this:
+=======
+	  L.LayerGroup.EnvironmentalLayers({
+	    hash: true,             // by default this is FALSE
+    }).addTo(map);
+>>>>>>> clean up dependencies in map examples and readme
 
 ```js
 var layer = L.SpreadsheetLayer({
@@ -377,13 +489,21 @@ var layer = L.SpreadsheetLayer({
 layer.addTo(map);
 ```
 
+<<<<<<< HEAD
 Read more here: https://github.com/publiclab/leaflet-environmental-layers/blob/master/src/util/googleSpreadsheetLayer.js
+=======
+    L.LayerGroup.EnvironmentalLayers({
+      embed: true,                  // by default this is FALSE
+      hostname: 'placeholder.org'   // by default this is set to 'publiclab.github.io'
+    }).addTo(map);
+>>>>>>> clean up dependencies in map examples and readme
 
 We're going to try spinning this out into its own library; see: https://github.com/publiclab/leaflet-environmental-layers/issues/121
 
 ## Contributing
 Please read [CONTRIBUTING.md](https://github.com/publiclab/leaflet-environmental-layers/blob/master/CONTRIBUTING.md) for details on our code of conduct, the process for submitting pull requests, and steps to add new layers.
 
+<<<<<<< HEAD
 ## Reach out to the maintainers
 Reach out to the maintainers here: https://github.com/orgs/publiclab/teams/maintainers
 
@@ -391,3 +511,14 @@ Reach out to the maintainers here: https://github.com/orgs/publiclab/teams/maint
 Public Lab is a community and non-profit democratizing science to address environmental issues that affect people.
 
 [_^back to top_](#leaflet-environmental-layers-lel)
+=======
+## New Layers Menu
+
+  The layer menu used by default groups similar layers together, displays more information about the layers and filters them when out of bounds.
+
+  ### To use Leaflet's simple layer control:
+
+    L.LayerGroup.EnvironmentalLayers({
+      simpleLayerControl: true,   // by default this is FALSE
+    }).addTo(map);
+>>>>>>> clean up dependencies in map examples and readme
