@@ -72,15 +72,15 @@ When specifying layers to include or exclude, use [their names as listed in the 
 <script src="../node_modules/leaflet.blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js"></script>
 
 <!-- Required for all maps -->
-<script src="../node_modules\jquery\dist\jquery.min.js"></script>
+<script src="../node_modules/jquery/dist/jquery.min.js"></script>
 <script src="../dist/LeafletEnvironmentalLayers.js"></script>
 <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet" />
 <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet" />
-<link href="../node_modules\@fortawesome\fontawesome-free\css\all.min.css" rel="stylesheet" />
+<link href="../node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" />
 
 <!-- Bootstrap - not needed if you use simpleLayerControl:true -->
-<script src="../node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
-<link rel="stylesheet" href="../node_modules\bootstrap\dist\css\bootstrap.min.css">
+<script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
 
 <!-- Required for setting hash:true -->
 <script src="../lib/leaflet-fullUrlHash.js"></script>
@@ -248,24 +248,31 @@ The optional options object can be passed in with any of the following propertie
         var hash = new L.FullHash(map, allMapLayers);  
 
 ### _Add the layers menu_
+
 #### Prerequisites
+
 - Bootstrap
 - jQuery
+
 #### Dependencies
 
-```
-  <!-- jQuery --> 
-  <script src="../node_modules\jquery\dist\jquery.min.js"></script>
+- Install Bootstrap(Required for the layers menu)
+- Install @fortawesome/fontawesome-free
+- Add the following to the head of the HTML file that would contain the map
 
-  <!-- Bootstrap --> 
-  <script src="../node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
-  <link rel="stylesheet" href="../node_modules\bootstrap\dist\css\bootstrap.min.css">
-  
-  <!-- Required includes -->
-  <script src="../dist/LeafletEnvironmentalLayers.js"></script>
-  <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet" />
-  <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet" />
-  <link href="../node_modules\@fortawesome\fontawesome-free\css\all.min.css" rel="stylesheet" />
+```
+<!-- jQuery --> 
+<script src="../node_modules\jquery\dist\jquery.min.js"></script>
+
+<!-- Bootstrap --> 
+<script src="../node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
+<link rel="stylesheet" href="../node_modules\bootstrap\dist\css\bootstrap.min.css">
+
+<!-- Required includes -->
+<script src="../dist/LeafletEnvironmentalLayers.js"></script>
+<link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet" />
+<link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet" />
+<link href="../node_modules\@fortawesome\fontawesome-free\css\all.min.css" rel="stylesheet" />
 ```
 
 #### Usage example
@@ -339,8 +346,7 @@ The optional options object can be passed in with any of the following propertie
         <script src="../node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js"></script>
         <script src="../node_modules/leaflet.blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js"></script>
 
-
-### _Real Time Layers_
+### _Real Time Layers
 
 #### city (by openWeather)
 
