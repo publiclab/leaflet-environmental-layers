@@ -1,6 +1,6 @@
 {
   "name": "leaflet-environmental-layers",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "",
   "main": "index.js",
   "directories": {
@@ -8,7 +8,10 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "prepublishOnly": "yarn install && grunt build",
+    "postversion": "echo \"The version is bumped in this commit\"",
+    "postpublish": "echo \"The version is bumped :)\""
   },
   "repository": {
     "type": "git",

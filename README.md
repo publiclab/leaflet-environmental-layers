@@ -119,7 +119,7 @@ Dependencies:
 ```
   <!-- Bootstrap --> 
   <link rel="stylesheet" href="../node_modules\bootstrap\dist\css\bootstrap.min.css">
-  <script src="../node_modules\jquery\dist\jquery.slim.min.js"></script>
+  <script src="../node_modules\jquery\dist\jquery.min.js"></script>
   <script src="../node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
 ```
 
@@ -352,7 +352,7 @@ We're going to try spinning this out into its own library; see: https://github.c
   ### Dependencies
       
         <link rel="stylesheet" href="../node_modules\bootstrap\dist\css\bootstrap.min.css">
-        <script src="../node_modules\jquery\dist\jquery.slim.min.js"></script>
+        <script src="../node_modules\jquery\dist\jquery.min.js"></script>
         <script src="../node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
         <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet" />
     
