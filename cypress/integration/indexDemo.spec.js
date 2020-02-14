@@ -1,7 +1,13 @@
-describe('My First Test', function() {
+describe('Loads demo page', function() {
   it('Visits demo page', function() {
-    // cy.stub(this.EonetFiresLayer)
-    cy.visit('/example/index.html');
+    cy.openWindow('/example/index.html#lat=43.00&lon=-83.00&zoom=3&layers=Standard');
+  })
+
+  it('changes hash on map movement', function() {
+    cy.window().its('map').invoke('setView',[38.694, -97.921], 6)
+    cy.wait(2000).then(() => {
+      cy.hash().should('equal', '#lat=38.694&lon=-97.921&zoom=6&layers=Standard')
+    })
   })
 
   it('has search control', function() {
@@ -56,7 +62,7 @@ describe('My First Test', function() {
     cy.get('.fas.fa-code').should('have.css', 'font-family', '"Font Awesome 5 Free"')
   })
 
-  it('embed code calls window prompt', function() {
+  it('displays embed code when embed button is clicked', function() {
     cy.window().then((win) => {
       cy.stub(win, 'prompt').as('windowPrompt')
       let path = win.location.pathname
@@ -77,7 +83,9 @@ describe('My First Test', function() {
       .find('.leaflet-control-layers-overlays')
       .should('have.css', 'overflow', 'hidden scroll')
     cy.get('.leaflet-control-layers-menu').contains('h3', 'Environmental data near here')
-    cy.get('.leaflet-control-layers-overlays').find('.layer-info-container').should('have.length', 21)
+    cy.get('.leaflet-control-layers-overlays')
+      .find('.layer-info-container')
+      .should('have.length', 21) // Checks if all overlay layer groups are added
   })
 
   it('displays layers menu on hover', function() {
