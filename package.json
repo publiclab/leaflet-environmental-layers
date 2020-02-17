@@ -8,7 +8,11 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "cypress:open": "cypress open",
+    "start": "http-server -p 8080 -c-1",
+    "start:ci": "http-server -p 8080 -c-1 --silent",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "cy:run:chrome": "cypress run --browser chrome",
     "prepublishOnly": "yarn install && grunt build",
     "postversion": "echo \"The version is bumped in this commit\"",
     "postpublish": "echo \"The version is bumped :)\""
@@ -47,6 +51,7 @@
     "grunt-contrib-uglify": "^2.2.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-template-jasmine-requirejs": "^0.2.3",
+    "http-server": "^0.12.1",
     "jasmine": "^2.5.3",
     "jasmine-ajax": "^3.3.1",
     "jasmine-jquery": "^2.1.1",
