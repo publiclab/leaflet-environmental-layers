@@ -389,7 +389,6 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     label.style.display = 'inline-block';
     var checked = this._map.hasLayer(obj.layer);
     var input;
-
     if (obj.overlay) {
       input = document.createElement('input');
       input.type = 'checkbox';
@@ -443,6 +442,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     if(obj.overlay && !obj.group) {
       labelContainer.appendChild(elements.layerDesc);
       labelContainer.className = 'clearfix layer-info-container';
+      labelContainer.id = 'menu-' + obj.name.replace(/ /g,"_");
       labelContainer.appendChild(elements.dataInfo);
       labelContainer.appendChild(separator);
     }

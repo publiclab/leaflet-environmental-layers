@@ -1,6 +1,3 @@
-require('jquery');
-require('leaflet');
-
 require('./purpleLayer.js');
 require('./toxicReleaseLayer.js');
 require('leaflet-providers');
