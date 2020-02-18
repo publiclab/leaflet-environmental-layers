@@ -66,7 +66,11 @@ L.LayerGroup.unearthing = L.LayerGroup.extend(
     },
 
     onRemove: function(map) {
-      this._map.removeLayer(pointsLayer);
+      if (typeof pointsLayer === 'undefined') {
+        console.log('pointsLayer is not defined');
+      } else {
+        this._map.removeLayer(pointsLayer);
+      } 
     },
   },
 );

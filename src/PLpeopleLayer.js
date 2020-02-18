@@ -1,6 +1,3 @@
-// require('leaflet-blurred-location') ;
-// require('leaflet-blurred-location-display') ;
-
 L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
 
   {

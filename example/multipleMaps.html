@@ -13,7 +13,7 @@
 
   <!-- Bootstrap --> 
   <link rel="stylesheet" href="../node_modules\bootstrap\dist\css\bootstrap.min.css">
-  <script src="../node_modules\jquery\dist\jquery.slim.min.js"></script>
+  <script src="../node_modules\jquery\dist\jquery.min.js"></script>
   <script src="../node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
   
   <script src="../node_modules/leaflet/dist/leaflet.js"></script>
@@ -25,8 +25,6 @@
   <script src="../dist/LeafletEnvironmentalLayers.js"></script>
   <script src="../src/windRoseLayer.js"></script>
   <script src="../node_modules/leaflet-fullhash/leaflet-fullHash.js"></script>
-  
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 
   <script src="../node_modules/heatmap.js/build/heatmap.min.js"></script>
   <script src="../node_modules/leaflet-heatmap/leaflet-heatmap.js"></script>
@@ -79,13 +77,16 @@
 
       L.LayerGroup.EnvironmentalLayers({
         include: ['odorreport', 'asian', 'clouds', 'eonetFiresLayer', 'Unearthing', 'PLpeople'],
+        addLayersToMap: true,
+        simpleLayerControl: true,
       }).addTo(map);
+      console.log("done map 1");
 
       L.LayerGroup.EnvironmentalLayers({
-        simpleLayerControl: true,
-        addLayersToMap: true,
-        include: ['odorreport', 'asian', 'clouds', 'eonetFiresLayer', 'Unearthing', 'PLpeople'],
+        // include: ['odorreport', 'asian', 'clouds', 'eonetFiresLayer', 'Unearthing', 'PLpeople'],
+        // display: ['odorreport', 'clouds', 'eonetFiresLayer', 'Unearthing'], 
       }).addTo(map2);
+      console.log("done map 2");
 
     </script>
     
