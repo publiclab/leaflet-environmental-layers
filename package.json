@@ -1,13 +1,21 @@
 {
   "name": "leaflet-environmental-layers",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "",
   "main": "index.js",
   "directories": {
     "example": "example"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "http-server -p 8080 -c-1",
+    "start:ci": "http-server -p 8080 -c-1 --silent",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "cy:run:chrome": "cypress run --browser chrome",
+    "prepublishOnly": "yarn install && grunt build",
+    "postversion": "echo \"The version is bumped in this commit\"",
+    "postpublish": "echo \"The version is bumped :)\""
   },
   "repository": {
     "type": "git",
@@ -23,13 +31,15 @@
   },
   "homepage": "https://github.com/publiclab/leaflet-environmental-layers#readme",
   "devDependencies": {
-    "@babel/core": "^7.7.7",
-    "@babel/preset-env": "^7.7.7",
+    "@babel/core": "^7.8.4",
+    "@babel/plugin-transform-for-of": "^7.8.4",
+    "@babel/preset-env": "^7.8.4",
     "@fortawesome/fontawesome-free": "^5.11.2",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-plugin-transform-remove-strict-mode": "0.0.2",
     "bootstrap": "^4.1.1",
     "browserify": "latest",
+    "cypress": "^4.0.0",
     "eslint": "^6.7.2",
     "eslint-config-google": "^0.14.0",
     "grunt": "^1.0.4",
@@ -42,6 +52,7 @@
     "grunt-contrib-uglify": "^2.2.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-template-jasmine-requirejs": "^0.2.3",
+    "http-server": "^0.12.1",
     "jasmine": "^2.5.3",
     "jasmine-ajax": "^3.3.1",
     "jasmine-jquery": "^2.1.1",
@@ -50,6 +61,7 @@
     "resig-class": "^1.0.0"
   },
   "dependencies": {
+    "esri-leaflet": "^2.3.3",
     "jquery": "^3.3.1",
     "leaflet": "^1.3.1",
     "leaflet-blurred-location": "^1.7.0",

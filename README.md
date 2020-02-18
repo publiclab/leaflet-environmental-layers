@@ -36,6 +36,7 @@ A leaflet plugin that has a collection of layers containing environmental data p
 | addLayersToMap      | Boolean | false                 | If set to true, adds all layers in the `include` option to the map by default. |
 | include             | Array   | Array                 | If provided, adds the given layers to the layer menu or layers control. If not provided, adds all the layers to the layer menu or layers control. |
 | exclude             | Array   | -                     | If provided, excludes the given layers from the layer menu or layers control. |
+| display             | Array   | -                 | If provided, displays the given layers by default on the map. |
 | hash                | Boolean | false                 | If true, provides hash support for the map. |
 | embed               | Boolean | false                 | If true, adds an embed control that generates code to the map for embedding the map on other sites. |
 | hostname            | String  | 'publiclab.github.io' | Uses the value in place of hostname in the URL generated in the embed code. |
@@ -228,10 +229,14 @@ The optional options object can be passed in with any of the following propertie
 - jQuery
 #### Dependencies
 
-    <!-- Bootstrap --> 
-    <link rel="stylesheet" href="node_modules\bootstrap\dist\css\bootstrap.min.css">
-    <script src="node_modules\jquery\dist\jquery.slim.min.js"></script>
-    <script src="node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
+```
+  <!-- Bootstrap --> 
+  <link rel="stylesheet" href="../node_modules\bootstrap\dist\css\bootstrap.min.css">
+  <script src="../node_modules\jquery\dist\jquery.min.js"></script>
+  <script src="../node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
+  <!-- Layer menu styles -->
+  <link href="node_modules/leaflet-environmental-layers/dist/LeafletEnvironmentalLayers.css" rel="stylesheet" />
+```
 
 #### Usage example
 ```js

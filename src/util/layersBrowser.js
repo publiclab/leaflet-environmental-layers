@@ -389,7 +389,6 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     label.style.display = 'inline-block';
     var checked = this._map.hasLayer(obj.layer);
     var input;
-
     if (obj.overlay) {
       input = document.createElement('input');
       input.type = 'checkbox';
@@ -443,6 +442,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     if(obj.overlay && !obj.group) {
       labelContainer.appendChild(elements.layerDesc);
       labelContainer.className = 'clearfix layer-info-container';
+      labelContainer.id = 'menu-' + obj.name.replace(/ /g,"_");
       labelContainer.appendChild(elements.dataInfo);
       labelContainer.appendChild(separator);
     }
@@ -458,7 +458,6 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   _hideOutOfBounds: function(obj, elements) {
     var self = this;
     var map = this._map;
-    var isPageRefreshed = 0;
     var data = this._getLayerData(obj);
     var layerName;
     if(obj.name && !obj.group) {
@@ -468,12 +467,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     }
     this._hideElements(obj, data, layerName, elements); // Filter layer list on initialization
     map.on('moveend', function() { // Update layer list on map movement
-      if (isPageRefreshed < 2 && window.performance.navigation.type !== 1) {
-        isPageRefreshed++;  // Track page moveend events to prevent errors on map.removeLayer when a page is reloaded
-      }
-      if(isPageRefreshed > 1) {
         self._hideElements(obj, data, layerName, elements, true);
-      }
     });
   },
 
@@ -491,8 +485,8 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
         if((bounds && !bounds.intersects(currentBounds) && map.hasLayer(layerName) && removeFrmMap) ||
           ( zoom && (currentZoom < zoom) && map.hasLayer(layerName) && removeFrmMap)) {
           elements[i].style.display = 'none';
-            // Remove layer from map if active
-            map.removeLayer(layerName);
+          // Remove layer from map if active
+          map.removeLayer(layerName);
         } else if((bounds && !bounds.intersects(currentBounds)) || (zoom && (currentZoom < zoom))) {
           elements[i].style.display = 'none';
           this._existingLayers(obj, false, removeFrmMap);
