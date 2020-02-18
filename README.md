@@ -8,18 +8,18 @@
 A leaflet plugin that has a collection of layers containing environmental data pulled in from different sources. See this [demo page](https://publiclab.github.io/leaflet-environmental-layers/example/index.html#lat=43.00&lon=-4.07&zoom=3&layers=Standard) for a simple demonstration of the plugin.
 
 ## Table of Contents
-1. [What is LEL](#leaflet-environmental-layers-(LEL))
-2. [Installation](##installation)
-3. [Usage](##usage)
-4. [Dependencies](##dependencies)
-5. [Getting started](##getting-started)
-6. [Features](##features)
-7. [Layers](##layers)
-8. [Adding LEL features individually](##adding-LEL-features-individually)
-9. [Adding layers individually](##adding-layers-individually)
-10. [Contributing](##contributing)
-11. [Reach out to the maintainers](##reach-out-to-the-maintainers)
-12. [About PublicLab](##about-publicLab)
+1. [What is LEL](#leaflet-environmental-layers-lel)
+2. [Installation](#installation)
+3. [Usage](#usage)
+4. [Dependencies](#dependencies)
+5. [Getting started](#getting-started)
+6. [Features](#features)
+7. [Layers](#layers)
+8. [Adding LEL features individually](#adding-LEL-features-individually)
+9. [Adding layers individually](#adding-layers-individually)
+10. [Contributing](#contributing)
+11. [Reach out to the maintainers](#reach-out-to-the-maintainers)
+12. [About PublicLab](#about-publicLab)
 
 ## Installation
   
@@ -390,4 +390,4 @@ Reach out to the maintainers here: https://github.com/orgs/publiclab/teams/maint
 ## About PublicLab
 Public Lab is a community and non-profit democratizing science to address environmental issues that affect people.
 
-[_^back to top_](#leaflet-environmental-layers-(LEL))
+[_^back to top_](#leaflet-environmental-layers-lel)
