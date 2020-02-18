@@ -246,13 +246,13 @@ The optional options object can be passed in with any of the following propertie
   };
 
   var overlayMaps = {
-    'Wisconsin Non-Metal': Wisconsin_NM,
-    'Indigenous Lands': {
+    'wisconsin': Wisconsin_NM,  // Assuming 'Wisconsin_NM' is the variable that holds the wisconsin layer object
+    'indigenousLands': {
       category: 'group', // Let's the control know if this should be rendered as a group
       layers: { // Layers making the group
-        'Territories': IndigenousLandsTerritories,
-        'Languages': IndigenousLandsLanguages,
-        'Treaties': IndigenousLandsTreaties,
+        'Territories': IndigenousLandsTerritories,  // Assuming 'IndigenousLandsTerritories' is the variable that holds the respective layer object
+        'Languages': IndigenousLandsLanguages,  // Assuming 'IndigenousLandsLanguages' is the variable that holds the respective layer object
+        'Treaties': IndigenousLandsTreaties,  // Assuming 'IndigenousLandsTreaties' is the variable that holds the respective layer object
       },
     },
   };
