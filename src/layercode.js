@@ -34,36 +34,6 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
       this._layers = {};
     },
 
-    populatePopUp: function(e) {
-      if (this.layer == 'opensense') {
-        if (e) {
-          var popup = e.target.getPopup();
-          var $ = window.jQuery;
-          var url = 'https://api.opensensemap.org/boxes/' + e.target.options.boxId;
-          $.getJSON(url, function(data) {
-            var popUpContent = '';
-            if (data.name && data.grouptag) {
-              popUpContent += '<h3>' + data.name + ',' + data.grouptag + '</h3>';
-            }
-            else if (data.name) {
-              popUpContent += '<h3>' + data.name + '</h3>';
-            }
-            for (var i in data.sensors) {
-              if (data.sensors[i].lastMeasurement) {
-                popUpContent += '<span><b>' + data.sensors[i].title + ': </b>' +
-                  data.sensors[i].lastMeasurement.value +
-                  data.sensors[i].unit + '</span><br>';
-              }
-            }
-            if (data.lastMeasurementAt) {
-              popUpContent += '<br><small>Measured at <i>' + data.lastMeasurementAt + '</i>';
-            }
-            popup.setContent(popUpContent);
-          });
-        }
-      }
-    },
-
 
     requestData: function() {
       var self = this;
@@ -371,16 +341,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
           this.addLayer(marker);
         }
       }
-      else {
-        var marker = this.getMarker(data);
-        var key = i;
-        if (!this._layers[key]) {
-          this._layers[key] = marker;
-          marker.on('click', this.populatePopUp);
-          this.addLayer(marker);
-        }
-      }
-    },
+      
 
     parseData: function(data) {
       if (this.layer == 'fractracker') {
@@ -547,7 +508,6 @@ L.Icon.OpenSenseIcon = L.Icon.extend({
   options: {
     iconUrl: 'https://banner2.kisspng.com/20180409/qcw/kisspng-computer-icons-font-awesome-computer-software-user-cubes-5acb63cb589078.9265215315232787953628.jpg',
     iconSize: [10, 10],
-    popupAnchor: [1, -34],
   },
 });
 
