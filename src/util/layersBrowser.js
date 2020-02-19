@@ -190,6 +190,8 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       baseLayersCount += !obj.overlay ? 1 : 0;
     }
 
+    this._showGroupTitle(); // Show group title when atleast one of its layers is active
+    
     map.on('moveend', function() {
       if(this.options.newLayers.length > 0) {
         this._layersLink.style.marginLeft = '2.9em';
@@ -200,6 +202,8 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
         this._alertBadge.style.display = 'none';
         this._alertBadge.innerHTML = '';
       }
+      
+      this._showGroupTitle(); // Show group title when atleast one of its layers is active
     }, this);
 
     // Hide base layers section if there's only one layer.
@@ -348,6 +352,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       var elements = this._createLayerInfoElements(obj);
 
       var titleHolder = document.createElement('div');
+      titleHolder.id = 'groupName-' + obj.group; 
       titleHolder.className = 'clearfix layer-info-container';
       titleHolder.appendChild(layerGroup);
       layerGroup.appendChild(chevron);
@@ -359,7 +364,9 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
 
       var separator = this._createSeparator();
 
-      this._hideOutOfBounds(obj, [titleHolder, separator]);
+      if(this._grpTitleVisible && !this._grpTitleVisible[obj.group]) { // Hide group title only if none of its layers are active
+        this._hideOutOfBounds(obj, [titleHolder, separator]);
+      }
       
       var container = obj.overlay ? this._overlaysList : this._baseLayersList;
       container.appendChild(titleHolder);
@@ -493,12 +500,32 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
           ( zoom && (currentZoom < zoom) && !map.hasLayer(layerName))) {
           elements[i].style.display = 'none';
           this._existingLayers(obj, false, isNotGlobal);
+        } else if(obj.group) {
+          this._grpTitleVisible = this._grpTitleVisible || {};
+          this._grpTitleVisible[obj.group] = true;  // Keep track of group titles to be visible when its layers are active
+          elements[i].style.display = 'block';
+          this._existingLayers(obj, true, isNotGlobal);
         } else {
           elements[i].style.display = 'block';
           this._existingLayers(obj, true, isNotGlobal);
         }
       };
     };
+  },
+
+  _showGroupTitle: function() {
+    for(var i in this._grpTitleVisible) {
+      if(this._grpTitleVisible[i]) {
+        var groupName = 'groupName-' + i;
+        var grpHolder = document.getElementById(groupName);
+        var grpSelector = grpHolder && grpHolder.nextElementSibling;
+        if(grpHolder) {
+          grpHolder.style.display = 'block';
+          grpSelector.style.display = 'block';
+        }
+      }
+    }
+    this._grpTitleVisible = {}; // Reset list of group titles that need to be visible
   },
 
   _existingLayers: function(obj, doesExist, isNotGlobal) { 
