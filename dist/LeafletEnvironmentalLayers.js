@@ -30655,9 +30655,16 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     });
   },
 
-  _hideElements: function(obj, data, layerName, elements, removeLayer) {
+/**
+ * 
+ * @param {Object} obj - layer object
+ * @param {Object} data - layer information from layerData.json
+ * @param {string} layerName 
+ * @param {Object[]} elements - Reference to DOM elements
+ * @param {boolean} isNotGlobal - true if the layer passed in is not a globally available layer
+ */
+  _hideElements: function(obj, data, layerName, elements, isNotGlobal) {
     var map = this._map;
-    var removeFrmMap = removeLayer;
     var currentBounds = map.getBounds();
     var currentZoom = map.getZoom();
     var bounds;
@@ -30666,35 +30673,30 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       bounds = data.extents && data.extents.bounds && L.latLngBounds(data.extents.bounds);
       zoom =  data.extents && data.extents.minZoom && data.extents.minZoom;
       for(var i in elements) {
-        if((bounds && !bounds.intersects(currentBounds) && map.hasLayer(layerName) && removeFrmMap) ||
-          ( zoom && (currentZoom < zoom) && map.hasLayer(layerName) && removeFrmMap)) {
+        if((bounds && !bounds.intersects(currentBounds) && !map.hasLayer(layerName)) ||
+          ( zoom && (currentZoom < zoom) && !map.hasLayer(layerName))) {
           elements[i].style.display = 'none';
-          // Remove layer from map if active
-          map.removeLayer(layerName);
-        } else if((bounds && !bounds.intersects(currentBounds)) || (zoom && (currentZoom < zoom))) {
-          elements[i].style.display = 'none';
-          this._existingLayers(obj, false, removeFrmMap);
+          this._existingLayers(obj, false, isNotGlobal);
         } else {
           elements[i].style.display = 'block';
-          this._existingLayers(obj, true, removeFrmMap);
+          this._existingLayers(obj, true, isNotGlobal);
         }
       };
     };
   },
 
-  _existingLayers: function(obj, doesExist, isInitialized) { 
-    if(doesExist && isInitialized && !this.options.existingLayers[obj.name]) { // Check if there is a new layer in current bounds
+  _existingLayers: function(obj, doesExist, isNotGlobal) { 
+    if(doesExist && isNotGlobal && !this.options.existingLayers[obj.name]) { // Check if there is a new layer in current bounds
       this.options.newLayers = [...this.options.newLayers, obj.name];
       this.options.existingLayers[obj.name] = true;
     } else if(doesExist) {
       this.options.existingLayers[obj.name] = true; // layer exists upon inititalization
-    } else if(isInitialized && this.options.existingLayers[obj.name]) { // Remove from new layers if the layer no longer exists within current bounds
+    } else if(isNotGlobal && this.options.existingLayers[obj.name]) { // Remove from new layers if the layer no longer exists within current bounds
       this.options.newLayers = this.options.newLayers.filter(layer => layer !== obj.name);
       this.options.existingLayers[obj.name] = false;
     } else {
       this.options.existingLayers[obj.name] = false; // layer does not exist upon inititalization
     }
-
   },
 
   _getLayerData: function(obj) {
