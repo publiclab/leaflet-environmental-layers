@@ -26436,8 +26436,13 @@ L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
     },
 
     onAdd: function(map) {
-      map.on('moveend', this.requestData, this);
+      var info = require('./info.json');
       this._map = map;
+      map.on('moveend', function() {
+        if(this._map && this._map.getZoom() > info.fracTrackerMobile.extents.minZoom - 1) {
+          this.requestData();
+        }
+      }, this);
       this.requestData();
     },
 
@@ -26528,7 +26533,7 @@ L.geoJSON.fracTrackerMobile = function(options) {
   return new L.GeoJSON.FracTrackerMobile(options);
 };
 
-},{}],12:[function(require,module,exports){
+},{"./info.json":13}],12:[function(require,module,exports){
 L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
 
   {
@@ -26547,8 +26552,13 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
     },
 
     onAdd: function(map) {
-      map.on('moveend', this.requestData, this);
+      var info = require('./layerData.json');
       this._map = map;
+      map.on('moveend', function() {
+        if(this._map && this._map.getZoom() > info.indigenousLands.extents.minZoom - 1) {
+          this.requestData();
+        }
+      }, this);
       this.requestData();
     },
 
@@ -26665,7 +26675,7 @@ L.layerGroup.indigenousLayers = function(name, options) {
   return new L.LayerGroup.IndigenousLayers(name, options);
 };
 
-},{}],13:[function(require,module,exports){
+},{"./layerData.json":14}],13:[function(require,module,exports){
 module.exports={
    "wisconsin": {
       "name": "Wisconsin Non-Metallic Mining",
@@ -26864,10 +26874,6 @@ module.exports={
     "layer_desc": "User reports",
     "icon": "#e4458b",
     "extents": {
-      "bounds": [
-        [-44.087585028245165, -148.88671875000003],
-        [76.63922560965888, 140.62500000000003]
-      ],
       "minZoom": 5,
       "maxZoom": 15
     }
@@ -27138,9 +27144,25 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
     },
 
     onAdd: function(map) {
-      map.on('moveend', this.requestData, this);
+      var info = require('./layerData.json');
       this._map = map;
-      this.requestData();
+      switch(this.layer) {
+        case this.layer:
+          if (this.layer === 'fractracker' || this.layer === 'skytruth' || 
+              this.layer === 'odorreport' || this.layer === 'mapknitter') {
+                map.on('moveend', function() {
+                  if(this._map && this._map.getZoom() > info[this.layer].extents.minZoom - 1) {
+                    this.requestData();
+                  }
+                }, this);
+              }
+        default:
+          if (this.layer === 'luftdaten' || this.layer === 'openaq' || 
+              this.layer === 'opensense' || this.layer === 'purpleairmarker') {
+                map.on('moveend', this.requestData, this);
+              }
+          this.requestData();
+      }
     },
 
     onRemove: function(map) {
@@ -27688,7 +27710,7 @@ L.icon.purpleAirMarkerIcon = function() {
   return new L.Icon.PurpleAirMarkerIcon();
 };
 
-},{"./info.json":13,"jquery":2,"leaflet":5}],16:[function(require,module,exports){
+},{"./info.json":13,"./layerData.json":14,"jquery":2,"leaflet":5}],16:[function(require,module,exports){
 require('./purpleLayer.js');
 require('./toxicReleaseLayer.js');
 require('leaflet-providers');
@@ -29716,8 +29738,13 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
     },
 
     onAdd: function(map) {
-      map.on('moveend', this.requestData, this);
+      var info = require('./info.json');
       this._map = map;
+      map.on('moveend', function() {
+        if(this._map && this._map.getZoom() > info.toxicReleaseLayer.extents.minZoom - 1) {
+          this.requestData();
+        }
+      }, this);
       this.requestData();
     },
 
@@ -30374,6 +30401,8 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       baseLayersCount += !obj.overlay ? 1 : 0;
     }
 
+    this._showGroupTitle(); // Show group title when atleast one of its layers is active
+    
     map.on('moveend', function() {
       if(this.options.newLayers.length > 0) {
         this._layersLink.style.marginLeft = '2.9em';
@@ -30384,6 +30413,8 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
         this._alertBadge.style.display = 'none';
         this._alertBadge.innerHTML = '';
       }
+      
+      this._showGroupTitle(); // Show group title when atleast one of its layers is active
     }, this);
 
     // Hide base layers section if there's only one layer.
@@ -30532,6 +30563,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       var elements = this._createLayerInfoElements(obj);
 
       var titleHolder = document.createElement('div');
+      titleHolder.id = 'groupName-' + obj.group; 
       titleHolder.className = 'clearfix layer-info-container';
       titleHolder.appendChild(layerGroup);
       layerGroup.appendChild(chevron);
@@ -30543,7 +30575,9 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
 
       var separator = this._createSeparator();
 
-      this._hideOutOfBounds(obj, [titleHolder, separator]);
+      if(this._grpTitleVisible && !this._grpTitleVisible[obj.group]) { // Hide group title only if none of its layers are active
+        this._hideOutOfBounds(obj, [titleHolder, separator]);
+      }
       
       var container = obj.overlay ? this._overlaysList : this._baseLayersList;
       container.appendChild(titleHolder);
@@ -30655,14 +30689,14 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     });
   },
 
-/**
- * 
- * @param {Object} obj - layer object
- * @param {Object} data - layer information from layerData.json
- * @param {string} layerName 
- * @param {Object[]} elements - Reference to DOM elements
- * @param {boolean} isNotGlobal - true if the layer passed in is not a globally available layer
- */
+  /**
+   * 
+   * @param {Object} obj - layer object
+   * @param {Object} data - layer information from layerData.json
+   * @param {string} layerName 
+   * @param {Object[]} elements - Reference to DOM elements
+   * @param {boolean} isNotGlobal - true if the layer passed in is not a globally available layer
+   */
   _hideElements: function(obj, data, layerName, elements, isNotGlobal) {
     var map = this._map;
     var currentBounds = map.getBounds();
@@ -30677,12 +30711,32 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
           ( zoom && (currentZoom < zoom) && !map.hasLayer(layerName))) {
           elements[i].style.display = 'none';
           this._existingLayers(obj, false, isNotGlobal);
+        } else if(obj.group) {
+          this._grpTitleVisible = this._grpTitleVisible || {};
+          this._grpTitleVisible[obj.group] = true;  // Keep track of group titles to be visible when its layers are active
+          elements[i].style.display = 'block';
+          this._existingLayers(obj, true, isNotGlobal);
         } else {
           elements[i].style.display = 'block';
           this._existingLayers(obj, true, isNotGlobal);
         }
       };
     };
+  },
+
+  _showGroupTitle: function() {
+    for(var i in this._grpTitleVisible) {
+      if(this._grpTitleVisible[i]) {
+        var groupName = 'groupName-' + i;
+        var grpHolder = document.getElementById(groupName);
+        var grpSelector = grpHolder && grpHolder.nextElementSibling;
+        if(grpHolder) {
+          grpHolder.style.display = 'block';
+          grpSelector.style.display = 'block';
+        }
+      }
+    }
+    this._grpTitleVisible = {}; // Reset list of group titles that need to be visible
   },
 
   _existingLayers: function(obj, doesExist, isNotGlobal) { 

@@ -18,9 +18,25 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
     },
 
     onAdd: function(map) {
-      map.on('moveend', this.requestData, this);
+      var info = require('./layerData.json');
       this._map = map;
-      this.requestData();
+      switch(this.layer) {
+        case this.layer:
+          if (this.layer === 'fractracker' || this.layer === 'skytruth' || 
+              this.layer === 'odorreport' || this.layer === 'mapknitter') {
+                map.on('moveend', function() {
+                  if(this._map && this._map.getZoom() > info[this.layer].extents.minZoom - 1) {
+                    this.requestData();
+                  }
+                }, this);
+              }
+        default:
+          if (this.layer === 'luftdaten' || this.layer === 'openaq' || 
+              this.layer === 'opensense' || this.layer === 'purpleairmarker') {
+                map.on('moveend', this.requestData, this);
+              }
+          this.requestData();
+      }
     },
 
     onRemove: function(map) {
