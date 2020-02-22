@@ -1,0 +1,191 @@
+{
+  "features": [
+    {
+      "geometry": {
+        "geometries": [
+          {
+            "coordinates": [
+              -79.7817854812552,
+              40.2440561036286
+            ],
+            "type": "Point"
+          }
+        ],
+        "type": "GeometryCollection"
+      },
+      "id": 2140,
+      "properties": {
+        "created_by": {
+          "geometry": null,
+          "id": 1863,
+          "properties": {
+            "active": true,
+            "bio": null,
+            "confirmed_at": null,
+            "current_login_at": "2020-01-02T16:51:46.255412",
+            "email": "ramo.lord@gmail.com",
+            "first_name": "Ramo",
+            "id": 1863,
+            "last_login_at": "2020-01-02T16:51:45.711628",
+            "last_name": "Lord",
+            "login_count": 5,
+            "organization_name": "PET",
+            "picture": null,
+            "screen_name": "Ramo Lord",
+            "title": null
+          },
+          "type": "Feature"
+        },
+        "created_on": "2020-01-02T11:57:09.562999",
+        "creator_id": 1863,
+        "description": "",
+        "id": 2140,
+        "images": [
+          {
+            "geometry": null,
+            "id": 3952,
+            "properties": {
+              "created_on": "2020-01-02T11:57:09.237104",
+              "creator_id": 1863,
+              "credit": null,
+              "credit_link": null,
+              "filename": "JPEG_20200102_120420_8731093533336933616.jpg",
+              "filesize": "1037822",
+              "filetype": "multipart/form-data",
+              "icon": "https://api.fractracker.org/static/usercontent/FS_a2b2e91c495a401e8192c643c2b59990_icon.jpg",
+              "icon_retina": "https://api.fractracker.org/static/usercontent/FS_a2b2e91c495a401e8192c643c2b59990_icon@2x.jpg",
+              "id": 3952,
+              "last_modified_by_id": 1863,
+              "modified_on": "2020-01-02T11:57:09.237149",
+              "original": "https://api.fractracker.org/static/usercontent/FS_a2b2e91c495a401e8192c643c2b59990_original.jpg",
+              "square": "https://api.fractracker.org/static/usercontent/FS_a2b2e91c495a401e8192c643c2b59990_square.jpg",
+              "square_retina": "https://api.fractracker.org/static/usercontent/FS_a2b2e91c495a401e8192c643c2b59990_square@2x.jpg",
+              "thumbnail": "https://api.fractracker.org/static/usercontent/FS_a2b2e91c495a401e8192c643c2b59990_thumbnail.jpg",
+              "thumbnail_retina": "https://api.fractracker.org/static/usercontent/FS_a2b2e91c495a401e8192c643c2b59990_thumbnail@2x.jpg"
+            },
+            "type": "Feature"
+          }
+        ],
+        "industries": [
+          {
+            "geometry": null,
+            "id": 1,
+            "properties": {
+              "description": "",
+              "icon_url": null,
+              "id": 1,
+              "name": "Wells"
+            },
+            "type": "Feature"
+          }
+        ],
+        "is_public": true,
+        "last_modified_by": null,
+        "last_modified_by_id": null,
+        "moderation": null,
+        "modified_on": "2020-01-02T11:57:09.563028",
+        "report_date": "2020-01-02T00:00:00",
+        "senses": [
+          {
+            "geometry": null,
+            "id": 1,
+            "properties": {
+              "description": null,
+              "icon_url": null,
+              "id": 1,
+              "name": "Sight"
+            },
+            "type": "Feature"
+          }
+        ],
+        "title": "Janitor UT #5",
+        "workflow_state": null
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "geometries": [
+          {
+            "coordinates": [
+              -105.196358798167,
+              40.1137236586954
+            ],
+            "type": "Point"
+          }
+        ],
+        "type": "GeometryCollection"
+      },
+      "id": 2139,
+      "properties": {
+        "created_by": {
+          "geometry": null,
+          "id": 2180,
+          "properties": {
+            "active": true,
+            "bio": null,
+            "confirmed_at": null,
+            "current_login_at": "2019-11-13T10:37:52.153575",
+            "email": "canyoncreekrentals@gmail.com",
+            "first_name": null,
+            "id": 2180,
+            "last_login_at": "2019-11-13T10:37:50.264323",
+            "last_name": null,
+            "login_count": 2,
+            "organization_name": null,
+            "picture": null,
+            "screen_name": null,
+            "title": null
+          },
+          "type": "Feature"
+        },
+        "created_on": "2019-12-12T07:10:59.720421",
+        "creator_id": 2180,
+        "description": "67th and nimbus NE corner ",
+        "id": 2139,
+        "images": [],
+        "industries": [
+          {
+            "geometry": null,
+            "id": 1,
+            "properties": {
+              "description": "",
+              "icon_url": null,
+              "id": 1,
+              "name": "Wells"
+            },
+            "type": "Feature"
+          }
+        ],
+        "is_public": true,
+        "last_modified_by": null,
+        "last_modified_by_id": null,
+        "moderation": null,
+        "modified_on": "2019-12-12T07:10:59.720458",
+        "report_date": "2019-12-12T00:00:00",
+        "senses": [
+          {
+            "geometry": null,
+            "id": 1,
+            "properties": {
+              "description": null,
+              "icon_url": null,
+              "id": 1,
+              "name": "Sight"
+            },
+            "type": "Feature"
+          }
+        ],
+        "title": "new digging? well equipment in field ",
+        "workflow_state": "Published"
+      },
+      "type": "Feature"
+    }
+  ],
+  "properties": {
+    "num_results": 881,
+    "page": 1,
+    "total_pages": 221
+  },
+  "type": "FeatureCollection"
+  }
