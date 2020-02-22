@@ -26166,6 +26166,12 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
             self._map.spin(false);
           }
         });
+
+        setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
       })();
     },
 
@@ -26373,6 +26379,12 @@ L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
             self._map.spin(false);
           }
         });
+
+        setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
       })();
     },
 
@@ -26474,6 +26486,10 @@ L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
 
       })().done(function(data) {
         self.parseData(data);
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(false);
+        }
+      }).error(function() {
         if (typeof self._map.spin === 'function') {
           self._map.spin(false);
         }
@@ -26587,6 +26603,12 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
             self._map.spin(false);
           }
         });
+
+        setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
       })();
     },
 
@@ -29458,6 +29480,11 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
             self._map.spin(false);
           }
         });
+        setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
       })();
     },
 
@@ -29615,6 +29642,11 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
             self._map.spin(false);
           }
         });
+        setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
       })();
     },
 
@@ -29757,6 +29789,11 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
             self._map.spin(false);
           }
         });
+        setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
       })();
     },
 
@@ -30131,6 +30168,11 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
         self.parseData(data.feed.entry);
         self._map.spin(false);
       });
+      setTimeout(function() {
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(false);
+        }
+      }, 10000);
     })();
   },
 

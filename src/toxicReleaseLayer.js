@@ -69,6 +69,11 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
             self._map.spin(false);
           }
         });
+        setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
       })();
     },
 
