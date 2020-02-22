@@ -41,20 +41,23 @@ L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
 
     requestData: function() {
       var self = this;
-
       (function() {
         var $ = window.jQuery;
         var EonetFire_url = 'https://eonet.sci.gsfc.nasa.gov/api/v2.1/categories/8';
-        if (typeof self._map.spin === 'function') {
+        if (typeof (self._map.spin) === 'function') {
           self._map.spin(true);
         }
-
         $.getJSON(EonetFire_url, function(data) {
           self.parseData(data);
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
         });
+        setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
       })();
     },
 

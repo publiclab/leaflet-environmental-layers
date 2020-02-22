@@ -57,6 +57,11 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
               self._map.spin(false);
             }
           });
+          setTimeout(function() {
+            if (typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            }
+          }, 10000);
         };
         document.getElementsByTagName('head')[0].appendChild(script);
       })();

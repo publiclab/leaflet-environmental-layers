@@ -50,6 +50,10 @@ L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
         if (typeof self._map.spin === 'function') {
           self._map.spin(false);
         }
+      }).error(function() {
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(false);
+        }
       });
     },
 

@@ -26188,6 +26188,11 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
             self._map.spin(false);
           }
         });
+        setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
       })();
     },
 
@@ -26381,20 +26386,23 @@ L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
 
     requestData: function() {
       var self = this;
-
       (function() {
         var $ = window.jQuery;
         var EonetFire_url = 'https://eonet.sci.gsfc.nasa.gov/api/v2.1/categories/8';
-        if (typeof self._map.spin === 'function') {
+        if (typeof (self._map.spin) === 'function') {
           self._map.spin(true);
         }
-
         $.getJSON(EonetFire_url, function(data) {
           self.parseData(data);
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
         });
+        setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
       })();
     },
 
@@ -26496,6 +26504,10 @@ L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
 
       })().done(function(data) {
         self.parseData(data);
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(false);
+        }
+      }).error(function() {
         if (typeof self._map.spin === 'function') {
           self._map.spin(false);
         }
@@ -26609,6 +26621,11 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
             self._map.spin(false);
           }
         });
+        setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
       })();
     },
 
@@ -29495,6 +29512,11 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
               self._map.spin(false);
             }
           });
+          setTimeout(function() {
+            if (typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            }
+          }, 10000);
         };
         document.getElementsByTagName('head')[0].appendChild(script);
       })();
@@ -29653,6 +29675,11 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
             self._map.spin(false);
           }
         });
+        setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
       })();
     },
 
@@ -29800,6 +29827,11 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
               self._map.spin(false);
             }
           });
+          setTimeout(function() {
+            if (typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            }
+          }, 10000);
         };
         document.getElementsByTagName('head')[0].appendChild(script);
       })();
@@ -30176,6 +30208,11 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
           self.parseData(data.feed.entry);
           self._map.spin(false);
         });
+        setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
       };
       document.getElementsByTagName('head')[0].appendChild(script);
     })();
