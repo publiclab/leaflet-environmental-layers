@@ -9,7 +9,7 @@ describe('FractrackerMobile layer', function() {
         })
       })
       
-      cy.get('#menu-FracTracker_mobile label').click({ force: true })
+      cy.get('#menu-fracTrackerMobile label').click({ force: true })
       cy.get('.leaflet-overlay-pane svg g').children().should('have.length', 2)
     }) 
   })
@@ -50,7 +50,7 @@ describe('FractrackerMobile layer', function() {
   })
 
   it('removes markers from the map and the layer name from the hash when clicked again', function() {
-    cy.get('#menu-FracTracker_mobile label').click({ force: true })
+    cy.get('#menu-fracTrackerMobile label').click({ force: true })
     cy.hash().should('eq', '#lat=41.624&lon=-91.626&zoom=5&layers=Standard')
     cy.get('.leaflet-marker-pane').children().should('have.length', 0)
     cy.get('.leaflet-overlay-pane svg g').children().should('have.length', 0)
