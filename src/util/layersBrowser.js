@@ -190,6 +190,16 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       baseLayersCount += !obj.overlay ? 1 : 0;
     }
 
+    map.on('overlayremove', function(e) {
+      var layerInfo = this._getLayerData(e);
+      var selector = '#menu-' + e.name + ' .layer-name';
+      var listLayerSelector = '#' + e.name + ' .layer-list-name';
+      var layerTitle = e.group ? document.querySelector(listLayerSelector) : document.querySelector(selector);
+      if (layerTitle.innerHTML !== (' ' + layerInfo.name) || layerTitle.innerHTML !== (' ' + e.name)) {
+        layerTitle.innerHTML = e.group ? ' ' + e.name : ' ' + layerInfo.name;
+      }
+    }, this)
+
     map.on('moveend', function() {
       if(this.options.newLayers.length > 0) {
         this._layersLink.style.marginLeft = '2.9em';
@@ -437,6 +447,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     }
     holder.appendChild(name);
     if(obj.overlay && obj.group) {
+      labelContainer.id = obj.name;
       label.style.width = '100%';
       label.style.marginBottom = '3px';
       input.style.marginLeft = '3.8em';

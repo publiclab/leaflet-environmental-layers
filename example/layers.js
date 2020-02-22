@@ -129,8 +129,8 @@ var overlayMaps = {
   'purpleair': {
     category: 'group',
     layers: {
-      'PurpleAirLayer-HeatMap': PurpleLayer,
-      'PurpleAirMarkerLayer': PurpleAirMarkerLayer,
+      'purpleLayer': PurpleLayer,
+      'purpleairmarker': PurpleAirMarkerLayer,
     }
   },
   'skytruth': SkyTruth,

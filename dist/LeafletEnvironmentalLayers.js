@@ -26142,6 +26142,8 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+          self.onError('aqicnLayer')
         });
       })();
     },
@@ -26349,6 +26351,8 @@ L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+          self.onError('eonetFiresLayer')
         });
       })();
     },
@@ -26454,6 +26458,8 @@ L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
         if (typeof self._map.spin === 'function') {
           self._map.spin(false);
         }
+      }).fail(function() {
+        self.onError('fracTrackerMobile')
       });
     },
 
@@ -26563,6 +26569,8 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+            self.onError(self.layer, true)
         });
       })();
     },
@@ -27101,6 +27109,8 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
           if (self._map && typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+          self.layer === 'purpleairmarker' ? self.onError(self.layer, true) : self.onError(self.layer);
         });
       })();
     },
@@ -27567,7 +27577,7 @@ require('./layercode.js');
 require('./eonetFiresLayer');
 require('./AllLayers.js');
 
-},{"./AllLayers.js":7,"./PLpeopleLayer.js":8,"./aqicnLayer.js":9,"./eonetFiresLayer":10,"./fracTrackerMobileLayer.js":11,"./indigenousLayers.js":12,"./layercode.js":14,"./openWeatherMapLayer.js":16,"./osmLandfillMineQuarryLayer.js":17,"./pfasLayer.js":18,"./purpleLayer.js":19,"./toxicReleaseLayer.js":20,"./unearthing.js":21,"./wisconsinLayer.js":30,"leaflet-providers":4}],16:[function(require,module,exports){
+},{"./AllLayers.js":7,"./PLpeopleLayer.js":8,"./aqicnLayer.js":9,"./eonetFiresLayer":10,"./fracTrackerMobileLayer.js":11,"./indigenousLayers.js":12,"./layercode.js":14,"./openWeatherMapLayer.js":16,"./osmLandfillMineQuarryLayer.js":17,"./pfasLayer.js":18,"./purpleLayer.js":19,"./toxicReleaseLayer.js":20,"./unearthing.js":21,"./wisconsinLayer.js":31,"leaflet-providers":4}],16:[function(require,module,exports){
 L.OWM = L.TileLayer.extend({
   options: {
     appId: '4c6704566155a7d0d5d2f107c5156d6e', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
@@ -29130,7 +29140,7 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
         }
         for (var key in self._colorOptions) {
           // Generate URL for each type
-          var LMQ_url = info.OSMLandfillMineQuarryLayer.api_url + '?*[landuse=' + key + '][bbox=' + (southwest.lng) + ',' + (southwest.lat) + ',' + (northeast.lng) + ',' + (northeast.lat) + ']';
+          var LMQ_url = info.osmLandfillMineQuarryLayer.api_url + '?*[landuse=' + key + '][bbox=' + (southwest.lng) + ',' + (southwest.lat) + ',' + (northeast.lng) + ',' + (northeast.lat) + ']';
           if (typeof self._map.spin === 'function') {
             self._map.spin(true);
           }
@@ -29140,6 +29150,8 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
             success: function(data) {
               self.parseData(data);
             },
+          }).fail(function() {
+            self.onError('osmLandfillMineQuarryLayer')
           });
           /* The structure of the document is as follows:
                           <node id="node_id", lat="", lon="">
@@ -29319,6 +29331,8 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+          self.onError('pfaslayer')
         });
       })();
     },
@@ -29476,6 +29490,8 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+          self.onError('purpleLayer', true);
         });
       })();
     },
@@ -29618,6 +29634,8 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+          self.onError('toxicReleaseLayer')
         });
       })();
     },
@@ -30044,6 +30062,33 @@ L.spreadsheetLayer = function(options) {
 };
 
 },{}],26:[function(require,module,exports){
+L.Layer.include({
+  onError: function(layer, group) {
+    console.log( "Failed to fetch data!" );
+    var selector = '#menu-' + layer + ' .layer-name';
+    var listLayerSelector = '#' + layer + ' .layer-list-name';
+    var layerTitle, icon, warning;
+    if (group) {
+      layerTitle = document.querySelector(listLayerSelector);
+      icon = '#' + layer + ' .layer-list-name .fa-exclamation-triangle';
+      warning =  document.querySelector(icon);
+    } else {
+      layerTitle = document.querySelector(selector);
+      icon =  '#menu-' + layer + ' .layer-name .fa-exclamation-triangle';
+      warning =  document.querySelector(icon);
+    }
+    
+    if (this._map && typeof this._map.spin === 'function') {
+      this._map.spin(false);
+    }
+    
+    if(!layerTitle.contains(warning)) { // Add icon only once
+      layerTitle.innerHTML += '<i style="color: #d47d12;" class="fas fa-exclamation-triangle .text-warning"></i>';
+    }
+    
+  },
+});
+},{}],27:[function(require,module,exports){
 L.Control.LayersBrowser = L.Control.Layers.extend({
   options: {
     collapsed: true,
@@ -30235,6 +30280,16 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       baseLayersPresent = baseLayersPresent || !obj.overlay;
       baseLayersCount += !obj.overlay ? 1 : 0;
     }
+
+    map.on('overlayremove', function(e) {
+      var layerInfo = this._getLayerData(e);
+      var selector = '#menu-' + e.name + ' .layer-name';
+      var listLayerSelector = '#' + e.name + ' .layer-list-name';
+      var layerTitle = e.group ? document.querySelector(listLayerSelector) : document.querySelector(selector);
+      if (layerTitle.innerHTML !== (' ' + layerInfo.name) || layerTitle.innerHTML !== (' ' + e.name)) {
+        layerTitle.innerHTML = e.group ? ' ' + e.name : ' ' + layerInfo.name;
+      }
+    }, this)
 
     map.on('moveend', function() {
       if(this.options.newLayers.length > 0) {
@@ -30483,6 +30538,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     }
     holder.appendChild(name);
     if(obj.overlay && obj.group) {
+      labelContainer.id = obj.name;
       label.style.width = '100%';
       label.style.marginBottom = '3px';
       input.style.marginLeft = '3.8em';
@@ -30582,7 +30638,7 @@ L.control.layersBrowser = function(baseLayers, overlays, options) {
   return new L.Control.LayersBrowser(baseLayers, overlays, options);
 };
 
-},{"../info.json":13}],27:[function(require,module,exports){
+},{"../info.json":13}],28:[function(require,module,exports){
 L.Control.LegendControl = L.Control.extend({
   options: {
     position: 'bottomleft',
@@ -30639,7 +30695,7 @@ L.control.legendControl = function(options) {
   return new L.Control.LegendControl(options);
 };
 
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 L.Control.MinimalMode = L.Control.extend({
 
     options: {
@@ -30724,7 +30780,7 @@ L.Control.MinimalMode = L.Control.extend({
     return new L.Control.MinimalMode(options);
   };
   
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 omsUtil = function(map, options) {
   var oms = new OverlappingMarkerSpiderfier(map, options);
 
@@ -30741,7 +30797,7 @@ omsUtil = function(map, options) {
   return oms;
 };
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 wisconsinLayer = function(map) {
   
   var info = require('./info.json');
@@ -30776,4 +30832,4 @@ wisconsinLayer = function(map) {
   return Wisconsin_NM;
 };
 
-},{"./info.json":13}]},{},[6,15,22,23,24,25,26,27,28,29]);
+},{"./info.json":13}]},{},[6,15,22,23,24,25,26,27,28,29,30]);
