@@ -43,7 +43,7 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
         var southwest = self._map.getBounds().getSouthWest();
 
         var currentMapZoom = self._map.getZoom();
-        if (currentMapZoom < info.OSMLandfillMineQuarryLayer.extents.minZoom) {
+        if (currentMapZoom < info.osmLandfillMineQuarryLayer.extents.minZoom) {
           return;
         }
         for (var key in self._colorOptions) {

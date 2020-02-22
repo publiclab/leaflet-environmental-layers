@@ -8,18 +8,18 @@
 A leaflet plugin that has a collection of layers containing environmental data pulled in from different sources. See this [demo page](https://publiclab.github.io/leaflet-environmental-layers/example/index.html#lat=43.00&lon=-4.07&zoom=3&layers=Standard) for a simple demonstration of the plugin.
 
 ## Table of Contents
-1. [What is LEL](#leaflet-environmental-layers-(LEL))
-2. [Installation](##installation)
-3. [Usage](##usage)
-4. [Dependencies](##dependencies)
-5. [Getting started](##getting-started)
-6. [Features](##features)
-7. [Layers](##layers)
-8. [Adding LEL features individually](##adding-LEL-features-individually)
-9. [Adding layers individually](##adding-layers-individually)
-10. [Contributing](##contributing)
-11. [Reach out to the maintainers](##reach-out-to-the-maintainers)
-12. [About PublicLab](##about-publicLab)
+1. [What is LEL](#leaflet-environmental-layers-lel)
+2. [Installation](#installation)
+3. [Usage](#usage)
+4. [Dependencies](#dependencies)
+5. [Getting started](#getting-started)
+6. [Features](#features)
+7. [Layers](#layers)
+8. [Adding LEL features individually](#adding-LEL-features-individually)
+9. [Adding layers individually](#adding-layers-individually)
+10. [Contributing](#contributing)
+11. [Reach out to the maintainers](#reach-out-to-the-maintainers)
+12. [About PublicLab](#about-publicLab)
 
 ## Installation
   
@@ -246,13 +246,13 @@ The optional options object can be passed in with any of the following propertie
   };
 
   var overlayMaps = {
-    'Wisconsin Non-Metal': Wisconsin_NM,
-    'Indigenous Lands': {
+    'wisconsin': Wisconsin_NM,  // Assuming 'Wisconsin_NM' is the variable that holds the wisconsin layer object
+    'indigenousLands': {
       category: 'group', // Let's the control know if this should be rendered as a group
       layers: { // Layers making the group
-        'Territories': IndigenousLandsTerritories,
-        'Languages': IndigenousLandsLanguages,
-        'Treaties': IndigenousLandsTreaties,
+        'Territories': IndigenousLandsTerritories,  // Assuming 'IndigenousLandsTerritories' is the variable that holds the respective layer object
+        'Languages': IndigenousLandsLanguages,  // Assuming 'IndigenousLandsLanguages' is the variable that holds the respective layer object
+        'Treaties': IndigenousLandsTreaties,  // Assuming 'IndigenousLandsTreaties' is the variable that holds the respective layer object
       },
     },
   };
@@ -266,8 +266,8 @@ The optional options object can be passed in with any of the following propertie
 
 - `baseMaps` and `overlayMaps` are object literals that have layer names as keys and [Layer](https://leafletjs.com/reference-1.6.0.html#layer) objects as values. Read more about [Leaflet's Control.Layers](https://leafletjs.com/reference-1.6.0.html#control-layers).
 - `baseMaps` will be hidden if only one base map is provided
-- The layer information displayed for each layer is stored in `layerData.json`
-- The layer name(key) in the `overlayMaps` object is not case-sensitive and can have spaces but the characters should match with those in `layerData.json`
+- The layer information displayed for each layer is stored in `info.json`
+- The layer name(key) in the `overlayMaps` object should match the keys in `info.json`
 - The layers are filtered according to the map view
 - When there are new layers present in the map view when moving around a badge is displayed near the layer control icon on the top right showing the number of new layers in the view
 
@@ -390,4 +390,4 @@ Reach out to the maintainers here: https://github.com/orgs/publiclab/teams/maint
 ## About PublicLab
 Public Lab is a community and non-profit democratizing science to address environmental issues that affect people.
 
-[_^back to top_](#leaflet-environmental-layers-(LEL))
+[_^back to top_](#leaflet-environmental-layers-lel)

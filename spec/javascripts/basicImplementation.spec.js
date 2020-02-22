@@ -28,7 +28,7 @@ describe('Basic LEL Implementation', function() {
       include: ['eonetFiresLayer']
     }).addTo(map);
 
-    expect(mapContainer.querySelector('#menu-EONET_Fires')).toExist();
+    expect(mapContainer.querySelector('#menu-eonetFiresLayer')).toExist();
   });
 
   it('exclude specific layers', function() {
@@ -36,7 +36,7 @@ describe('Basic LEL Implementation', function() {
       exclude: ['eonetFiresLayer']
     }).addTo(map);
     
-    expect(mapContainer.querySelector('#menu-EONET_Fires')).not.toExist();
+    expect(mapContainer.querySelector('#menu-eonetFiresLayer')).not.toExist();
     expect(mapContainer.querySelector('#menu-Unearthing')).toExist();
   });
 
@@ -45,7 +45,7 @@ describe('Basic LEL Implementation', function() {
       display: ['eonetFiresLayer'],
     }).addTo(map);
 
-    expect(mapContainer.querySelector('#menu-EONET_Fires .leaflet-control-layers-selector').checked).toBe(true);
+    expect(mapContainer.querySelector('#menu-eonetFiresLayer .leaflet-control-layers-selector').checked).toBe(true);
     expect(mapContainer.querySelector('#menu-Unearthing .leaflet-control-layers-selector').checked).toBe(false);
   });
 
@@ -56,7 +56,7 @@ describe('Basic LEL Implementation', function() {
     }).addTo(map);
 
     expect(mapContainer.querySelector('.leaflet-control-container .leaflet-control-layers-menu')).toExist();
-    expect(mapContainer.querySelector('#menu-EONET_Fires .leaflet-control-layers-selector').checked).toBe(true);
+    expect(mapContainer.querySelector('#menu-eonetFiresLayer .leaflet-control-layers-selector').checked).toBe(true);
     expect(mapContainer.querySelector('#menu-Unearthing .leaflet-control-layers-selector').checked).toBe(true);
   });
 
