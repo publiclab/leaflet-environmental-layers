@@ -16,7 +16,7 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
     },
 
     onAdd: function(map) {
-      var info = require('./layerData.json');
+      var info = require('./info.json');
       this._map = map;
       map.on('moveend', function() {
         if(this._map && this._map.getZoom() > info.indigenousLands.extents.minZoom - 1) {

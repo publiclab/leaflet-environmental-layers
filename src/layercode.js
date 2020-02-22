@@ -18,7 +18,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
     },
 
     onAdd: function(map) {
-      var info = require('./layerData.json');
+      var info = require('./info.json');
       this._map = map;
       switch(this.layer) {
         case this.layer:

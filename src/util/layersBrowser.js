@@ -487,7 +487,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   /**
    * 
    * @param {Object} obj - layer object
-   * @param {Object} data - layer information from layerData.json
+   * @param {Object} data - layer information from info.json
    * @param {string} layerName 
    * @param {Object[]} elements - Reference to DOM elements
    * @param {boolean} isNotGlobal - true if the layer passed in is not a globally available layer
