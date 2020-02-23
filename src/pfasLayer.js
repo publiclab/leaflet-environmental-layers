@@ -46,17 +46,18 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
         if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
+        var timeout = setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
         $.getJSON(PFAS_URL, function(data) {
           self.parseData(data.feed.entry);
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+          clearTimeout(timeout);
         });
-        setTimeout(function() {
-          if (typeof self._map.spin === 'function') {
-            self._map.spin(false);
-          }
-        }, 10000);
       })();
     },
 

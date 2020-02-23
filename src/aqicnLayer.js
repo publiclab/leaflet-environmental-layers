@@ -36,18 +36,18 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
         if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
-        $.getJSON(AQI_url, function(regionalData) {
-          self.parseData(regionalData);
-          if (typeof self._map.spin === 'function') {
-            self._map.spin(false);
-          }
-        });
-
-        setTimeout(function() {
+        var timeout = setTimeout(function() {
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
         }, 10000);
+        $.getJSON(AQI_url, function(regionalData) {
+          self.parseData(regionalData);
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+            clearTimeout(timeout);
+          }
+        });
       })();
     },
 

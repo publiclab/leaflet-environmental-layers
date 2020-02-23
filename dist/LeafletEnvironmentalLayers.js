@@ -26160,18 +26160,18 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
         if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
-        $.getJSON(AQI_url, function(regionalData) {
-          self.parseData(regionalData);
-          if (typeof self._map.spin === 'function') {
-            self._map.spin(false);
-          }
-        });
-
-        setTimeout(function() {
+        var timeout = setTimeout(function() {
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
         }, 10000);
+        $.getJSON(AQI_url, function(regionalData) {
+          self.parseData(regionalData);
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+            clearTimeout(timeout);
+          }
+        });
       })();
     },
 
@@ -26372,19 +26372,18 @@ L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
         if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
-
+        var timeout = setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
         $.getJSON(EonetFire_url, function(data) {
           self.parseData(data);
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+          clearTimeout(timeout);
         });
-
-        setTimeout(function() {
-          if (typeof self._map.spin === 'function') {
-            self._map.spin(false);
-          }
-        }, 10000);
       })();
     },
 
@@ -26597,18 +26596,18 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
         if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
+        var timeout = setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
         $.getJSON(ILL_url, function(data) {
           self.parseData(data);
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+          clearTimeout(timeout);
         });
-
-        setTimeout(function() {
-          if (typeof self._map.spin === 'function') {
-            self._map.spin(false);
-          }
-        }, 10000);
       })();
     },
 
@@ -29474,17 +29473,18 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
         if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
+        var timeout = setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
         $.getJSON(PFAS_URL, function(data) {
           self.parseData(data.feed.entry);
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+          clearTimeout(timeout);
         });
-        setTimeout(function() {
-          if (typeof self._map.spin === 'function') {
-            self._map.spin(false);
-          }
-        }, 10000);
       })();
     },
 
@@ -29636,17 +29636,18 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
         if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
+        var timeout = setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
         $.getJSON(PurpleLayer_url, function(data) {
           self.parseData(data);
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+          clearTimeout(timeout);
         });
-        setTimeout(function() {
-          if (typeof self._map.spin === 'function') {
-            self._map.spin(false);
-          }
-        }, 10000);
       })();
     },
 
@@ -29782,18 +29783,19 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
         if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
+        var timeout = setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
         $.getJSON(TRI_url, function(data) {
           // console.log(parseInt(origin.lat) +" and "+parseInt(origin.lng)) ;
           self.parseData(data);
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+          clearTimeout(timeout);
         });
-        setTimeout(function() {
-          if (typeof self._map.spin === 'function') {
-            self._map.spin(false);
-          }
-        }, 10000);
       })();
     },
 
@@ -30163,16 +30165,17 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
       var $ = window.jQuery;
       var ssURL = self.options.url || '';
       self._map.spin(true);
-      // start fetching data from the URL
-      $.getJSON(ssURL, function(data) {
-        self.parseData(data.feed.entry);
-        self._map.spin(false);
-      });
-      setTimeout(function() {
+      var timeout = setTimeout(function() {
         if (typeof self._map.spin === 'function') {
           self._map.spin(false);
         }
       }, 10000);
+      // start fetching data from the URL
+      $.getJSON(ssURL, function(data) {
+        self.parseData(data.feed.entry);
+        self._map.spin(false);
+        clearTimeout(timeout);
+      });
     })();
   },
 

@@ -50,18 +50,18 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
         if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
+        var timeout = setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
         $.getJSON(ILL_url, function(data) {
           self.parseData(data);
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+          clearTimeout(timeout);
         });
-
-        setTimeout(function() {
-          if (typeof self._map.spin === 'function') {
-            self._map.spin(false);
-          }
-        }, 10000);
       })();
     },
 

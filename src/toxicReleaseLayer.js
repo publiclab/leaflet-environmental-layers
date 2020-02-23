@@ -62,18 +62,19 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
         if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
+        var timeout = setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
         $.getJSON(TRI_url, function(data) {
           // console.log(parseInt(origin.lat) +" and "+parseInt(origin.lng)) ;
           self.parseData(data);
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+          clearTimeout(timeout);
         });
-        setTimeout(function() {
-          if (typeof self._map.spin === 'function') {
-            self._map.spin(false);
-          }
-        }, 10000);
       })();
     },
 
