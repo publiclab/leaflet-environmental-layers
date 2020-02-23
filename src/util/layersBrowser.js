@@ -190,6 +190,8 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       baseLayersCount += !obj.overlay ? 1 : 0;
     }
 
+    this._showGroupTitle(); // Show group title when atleast one of its layers is active
+    
     map.on('moveend', function() {
       if(this.options.newLayers.length > 0) {
         this._layersLink.style.marginLeft = '2.9em';
@@ -200,6 +202,8 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
         this._alertBadge.style.display = 'none';
         this._alertBadge.innerHTML = '';
       }
+      
+      this._showGroupTitle(); // Show group title when atleast one of its layers is active
     }, this);
 
     // Hide base layers section if there's only one layer.
@@ -222,7 +226,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
 
   _createLayerInfoElements: function(obj) {
     var data = this._getLayerData(obj);
-    
+   
     var icon = document.createElement('div');
     icon.className = 'rounded-circle layer-icon';
     icon.style.width = '10px';
@@ -304,6 +308,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     dataInfoBtn.appendChild(infoIcon);
 
     return {
+      name: data && data.name,
       icon: icon,
       reportBtn: reportBtn,
       layerDesc: layerDesc,
@@ -324,7 +329,6 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       layerGroup.setAttribute('aria-controls', obj.group)
 
       var groupName = document.createElement('span');
-      groupName.innerHTML = obj.group;
       groupName.className = 'layer-group-name';
       groupName.style.margin = '0 1em';
       groupName.style.fontSize = '1.2em';
@@ -346,8 +350,10 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       });
 
       var elements = this._createLayerInfoElements(obj);
+      groupName.innerHTML = elements.name;
 
       var titleHolder = document.createElement('div');
+      titleHolder.id = 'groupName-' + obj.group; 
       titleHolder.className = 'clearfix layer-info-container';
       titleHolder.appendChild(layerGroup);
       layerGroup.appendChild(chevron);
@@ -359,7 +365,9 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
 
       var separator = this._createSeparator();
 
-      this._hideOutOfBounds(obj, [titleHolder, separator]);
+      if(this._grpTitleVisible && !this._grpTitleVisible[obj.group]) { // Hide group title only if none of its layers are active
+        this._hideOutOfBounds(obj, [titleHolder, separator]);
+      }
       
       var container = obj.overlay ? this._overlaysList : this._baseLayersList;
       container.appendChild(titleHolder);
@@ -405,7 +413,6 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     L.DomEvent.on(input, 'click', this._onInputClick, this);
 
     var name = document.createElement('span');
-    name.innerHTML = ' ' + obj.name;
     name.style.fontWeight = 'bold';
     name.style.display = 'inline-block';
     
@@ -413,6 +420,12 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
 
     var elements = this._createLayerInfoElements(obj);
     var separator = this._createSeparator();
+    if(obj.group) {
+      name.innerHTML = ' ' + obj.name;
+    } else {
+      name.innerHTML = ' ' + elements.name;
+    }
+    
 
     // Helps from preventing layer control flicker when checkboxes are disabled
     // https://github.com/Leaflet/Leaflet/issues/2771
@@ -471,9 +484,16 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     });
   },
 
-  _hideElements: function(obj, data, layerName, elements, removeLayer) {
+  /**
+   * 
+   * @param {Object} obj - layer object
+   * @param {Object} data - layer information from info.json
+   * @param {string} layerName 
+   * @param {Object[]} elements - Reference to DOM elements
+   * @param {boolean} isNotGlobal - true if the layer passed in is not a globally available layer
+   */
+  _hideElements: function(obj, data, layerName, elements, isNotGlobal) {
     var map = this._map;
-    var removeFrmMap = removeLayer;
     var currentBounds = map.getBounds();
     var currentZoom = map.getZoom();
     var bounds;
@@ -482,39 +502,54 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       bounds = data.extents && data.extents.bounds && L.latLngBounds(data.extents.bounds);
       zoom =  data.extents && data.extents.minZoom && data.extents.minZoom;
       for(var i in elements) {
-        if((bounds && !bounds.intersects(currentBounds) && map.hasLayer(layerName) && removeFrmMap) ||
-          ( zoom && (currentZoom < zoom) && map.hasLayer(layerName) && removeFrmMap)) {
+        if((bounds && !bounds.intersects(currentBounds) && !map.hasLayer(layerName)) ||
+          ( zoom && (currentZoom < zoom) && !map.hasLayer(layerName))) {
           elements[i].style.display = 'none';
-          // Remove layer from map if active
-          map.removeLayer(layerName);
-        } else if((bounds && !bounds.intersects(currentBounds)) || (zoom && (currentZoom < zoom))) {
-          elements[i].style.display = 'none';
-          this._existingLayers(obj, false, removeFrmMap);
+          this._existingLayers(obj, false, isNotGlobal);
+        } else if(obj.group) {
+          this._grpTitleVisible = this._grpTitleVisible || {};
+          this._grpTitleVisible[obj.group] = true;  // Keep track of group titles to be visible when its layers are active
+          elements[i].style.display = 'block';
+          this._existingLayers(obj, true, isNotGlobal);
         } else {
           elements[i].style.display = 'block';
-          this._existingLayers(obj, true, removeFrmMap);
+          this._existingLayers(obj, true, isNotGlobal);
         }
       };
     };
   },
 
-  _existingLayers: function(obj, doesExist, isInitialized) { 
-    if(doesExist && isInitialized && !this.options.existingLayers[obj.name]) { // Check if there is a new layer in current bounds
+  _showGroupTitle: function() {
+    for(var i in this._grpTitleVisible) {
+      if(this._grpTitleVisible[i]) {
+        var groupName = 'groupName-' + i;
+        var grpHolder = document.getElementById(groupName);
+        var grpSelector = grpHolder && grpHolder.nextElementSibling;
+        if(grpHolder) {
+          grpHolder.style.display = 'block';
+          grpSelector.style.display = 'block';
+        }
+      }
+    }
+    this._grpTitleVisible = {}; // Reset list of group titles that need to be visible
+  },
+
+  _existingLayers: function(obj, doesExist, isNotGlobal) { 
+    if(doesExist && isNotGlobal && !this.options.existingLayers[obj.name]) { // Check if there is a new layer in current bounds
       this.options.newLayers = [...this.options.newLayers, obj.name];
       this.options.existingLayers[obj.name] = true;
     } else if(doesExist) {
       this.options.existingLayers[obj.name] = true; // layer exists upon inititalization
-    } else if(isInitialized && this.options.existingLayers[obj.name]) { // Remove from new layers if the layer no longer exists within current bounds
+    } else if(isNotGlobal && this.options.existingLayers[obj.name]) { // Remove from new layers if the layer no longer exists within current bounds
       this.options.newLayers = this.options.newLayers.filter(layer => layer !== obj.name);
       this.options.existingLayers[obj.name] = false;
     } else {
       this.options.existingLayers[obj.name] = false; // layer does not exist upon inititalization
     }
-
   },
 
   _getLayerData: function(obj) {
-    var layerData = require('../layerData.json');
+    var layerData = require('../info.json');
     var data;
     for (let j in layerData) {
       if((obj.group && obj.group.replace(/\s/g, '').toLowerCase() === j.toLowerCase()) ||
