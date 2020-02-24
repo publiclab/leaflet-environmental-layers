@@ -72,15 +72,15 @@ When specifying layers to include or exclude, use [their names as listed in the 
 <script src="../node_modules/leaflet.blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js"></script>
 
 <!-- Required for all maps -->
-<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../node_modules\jquery\dist\jquery.min.js"></script>
 <script src="../dist/LeafletEnvironmentalLayers.js"></script>
 <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet" />
 <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet" />
-<link href="../node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" />
+<link href="../node_modules\@fortawesome\fontawesome-free\css\all.min.css" rel="stylesheet" />
 
 <!-- Bootstrap - not needed if you use simpleLayerControl:true -->
-<script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+<script src="../node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
+<link rel="stylesheet" href="../node_modules\bootstrap\dist\css\bootstrap.min.css">
 
 <!-- Required for setting hash:true -->
 <script src="../lib/leaflet-fullUrlHash.js"></script>
@@ -167,11 +167,11 @@ Click on the button at the bottom on the left side of a map to generate an embed
 The information of each layer can be found here: [Layer Information](https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library)
 
 
-| Layer Name                  | Color   |
-| --------------------------- | ------- |
-| `PLpeople`                    | N/A     |
-| `wisconsin`                   | N/A     |
-| `fracTrackerMobile`           | N/A     |
+| Layer Name                    | Color     |
+| ----------------------------- | --------- |
+| `PLpeople`                    | N/A       |
+| `wisconsin`                   | N/A       |
+| `fracTrackerMobile`           | N/A       |
 | `purpleLayer`                 | `#8b0000` |
 | `purpleairmarker`             | `#800080` |
 | `skytruth`                    | `#ff0000` |
@@ -212,10 +212,10 @@ The information of each layer can be found here: [Layer Information](https://pub
 | `aqicnLayer`                  | `#000000` |
 | `openaq`                      | `#000000` |
 | `luftdaten`                   | `#000000` |
-| `opensense`                   | N/A     |
-| `osmLandfillMineQuarryLayer`  | N/A     |
+| `opensense`                   | N/A       |
+| `osmLandfillMineQuarryLayer`  | N/A       |
 | `eonetFiresLayer`             | `#78fffa` |
-| `Unearthing`                  | N/A     |
+| `Unearthing`                  | N/A       |
 
 
 ## Adding LEL features individually
