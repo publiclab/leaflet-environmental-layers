@@ -1,7 +1,7 @@
 describe('Eonet fires layer', function() {
   it('adds markers on click', function() {
     cy.openWindow('/example/index.html#lat=43.00&lon=-83.00&zoom=3&layers=Standard')
-    cy.wait(5000)
+    cy.wait(200)
     cy.window().then((win) => {
       cy.fixture('eonetFiresLayer').then((data) => {
         cy.stub(win.EonetFiresLayer, 'requestData', function() {
@@ -9,7 +9,7 @@ describe('Eonet fires layer', function() {
         })
       })
       
-      cy.get('#menu-EONET_Fires label').click({ force: true })
+      cy.get('#menu-eonetFiresLayer label').click({ force: true })
       cy.get('.leaflet-marker-pane').children().should('have.length', 4)
     }) 
   })
@@ -38,7 +38,7 @@ describe('Eonet fires layer', function() {
   })
 
   it('removes markers from the map and the layer name from the hash when clicked again', function() {
-    cy.get('#menu-EONET_Fires label').click({ force: true })
+    cy.get('#menu-eonetFiresLayer label').click({ force: true })
     cy.hash().should('eq', '#lat=43.00&lon=-82.97&zoom=3&layers=Standard')
     cy.get('.leaflet-marker-pane').children().should('have.length', 0)
     cy.get('.leaflet-overlay-pane svg g').children().should('have.length', 0)

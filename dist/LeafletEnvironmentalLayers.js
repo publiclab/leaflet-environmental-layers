@@ -26417,8 +26417,13 @@ L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
     },
 
     onAdd: function(map) {
-      map.on('moveend', this.requestData, this);
+      var info = require('./info.json');
       this._map = map;
+      map.on('moveend', function() {
+        if(this._map && this._map.getZoom() > info.fracTrackerMobile.extents.minZoom - 1) {
+          this.requestData();
+        }
+      }, this);
       this.requestData();
     },
 
@@ -26511,7 +26516,7 @@ L.geoJSON.fracTrackerMobile = function(options) {
   return new L.GeoJSON.FracTrackerMobile(options);
 };
 
-},{}],12:[function(require,module,exports){
+},{"./info.json":13}],12:[function(require,module,exports){
 L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
 
   {
@@ -26530,8 +26535,13 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
     },
 
     onAdd: function(map) {
-      map.on('moveend', this.requestData, this);
+      var info = require('./info.json');
       this._map = map;
+      map.on('moveend', function() {
+        if(this._map && this._map.getZoom() > info.indigenousLands.extents.minZoom - 1) {
+          this.requestData();
+        }
+      }, this);
       this.requestData();
     },
 
@@ -26650,7 +26660,7 @@ L.layerGroup.indigenousLayers = function(name, options) {
   return new L.LayerGroup.IndigenousLayers(name, options);
 };
 
-},{}],13:[function(require,module,exports){
+},{"./info.json":13}],13:[function(require,module,exports){
 module.exports={
   "aqicnLayer": {
     "name": "Air Quality Index",
@@ -27008,9 +27018,25 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
     },
 
     onAdd: function(map) {
-      map.on('moveend', this.requestData, this);
+      var info = require('./info.json');
       this._map = map;
-      this.requestData();
+      switch(this.layer) {
+        case this.layer:
+          if (this.layer === 'fractracker' || this.layer === 'skytruth' || 
+              this.layer === 'odorreport' || this.layer === 'mapknitter') {
+                map.on('moveend', function() {
+                  if(this._map && this._map.getZoom() > info[this.layer].extents.minZoom - 1) {
+                    this.requestData();
+                  }
+                }, this);
+              }
+        default:
+          if (this.layer === 'luftdaten' || this.layer === 'openaq' || 
+              this.layer === 'opensense' || this.layer === 'purpleairmarker') {
+                map.on('moveend', this.requestData, this);
+              }
+          this.requestData();
+      }
     },
 
     onRemove: function(map) {
@@ -29594,8 +29620,13 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
     },
 
     onAdd: function(map) {
-      map.on('moveend', this.requestData, this);
+      var info = require('./info.json');
       this._map = map;
+      map.on('moveend', function() {
+        if(this._map && this._map.getZoom() > info.toxicReleaseLayer.extents.minZoom - 1) {
+          this.requestData();
+        }
+      }, this);
       this.requestData();
     },
 
@@ -30291,6 +30322,8 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       }
     }, this)
 
+    this._showGroupTitle(); // Show group title when atleast one of its layers is active
+    
     map.on('moveend', function() {
       if(this.options.newLayers.length > 0) {
         this._layersLink.style.marginLeft = '2.9em';
@@ -30301,6 +30334,8 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
         this._alertBadge.style.display = 'none';
         this._alertBadge.innerHTML = '';
       }
+      
+      this._showGroupTitle(); // Show group title when atleast one of its layers is active
     }, this);
 
     // Hide base layers section if there's only one layer.
@@ -30450,6 +30485,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       groupName.innerHTML = elements.name;
 
       var titleHolder = document.createElement('div');
+      titleHolder.id = 'groupName-' + obj.group; 
       titleHolder.className = 'clearfix layer-info-container';
       titleHolder.appendChild(layerGroup);
       layerGroup.appendChild(chevron);
@@ -30461,7 +30497,9 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
 
       var separator = this._createSeparator();
 
-      this._hideOutOfBounds(obj, [titleHolder, separator]);
+      if(this._grpTitleVisible && !this._grpTitleVisible[obj.group]) { // Hide group title only if none of its layers are active
+        this._hideOutOfBounds(obj, [titleHolder, separator]);
+      }
       
       var container = obj.overlay ? this._overlaysList : this._baseLayersList;
       container.appendChild(titleHolder);
@@ -30579,9 +30617,16 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     });
   },
 
-  _hideElements: function(obj, data, layerName, elements, removeLayer) {
+  /**
+   * 
+   * @param {Object} obj - layer object
+   * @param {Object} data - layer information from info.json
+   * @param {string} layerName 
+   * @param {Object[]} elements - Reference to DOM elements
+   * @param {boolean} isNotGlobal - true if the layer passed in is not a globally available layer
+   */
+  _hideElements: function(obj, data, layerName, elements, isNotGlobal) {
     var map = this._map;
-    var removeFrmMap = removeLayer;
     var currentBounds = map.getBounds();
     var currentZoom = map.getZoom();
     var bounds;
@@ -30590,35 +30635,50 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       bounds = data.extents && data.extents.bounds && L.latLngBounds(data.extents.bounds);
       zoom =  data.extents && data.extents.minZoom && data.extents.minZoom;
       for(var i in elements) {
-        if((bounds && !bounds.intersects(currentBounds) && map.hasLayer(layerName) && removeFrmMap) ||
-          ( zoom && (currentZoom < zoom) && map.hasLayer(layerName) && removeFrmMap)) {
+        if((bounds && !bounds.intersects(currentBounds) && !map.hasLayer(layerName)) ||
+          ( zoom && (currentZoom < zoom) && !map.hasLayer(layerName))) {
           elements[i].style.display = 'none';
-          // Remove layer from map if active
-          map.removeLayer(layerName);
-        } else if((bounds && !bounds.intersects(currentBounds)) || (zoom && (currentZoom < zoom))) {
-          elements[i].style.display = 'none';
-          this._existingLayers(obj, false, removeFrmMap);
+          this._existingLayers(obj, false, isNotGlobal);
+        } else if(obj.group) {
+          this._grpTitleVisible = this._grpTitleVisible || {};
+          this._grpTitleVisible[obj.group] = true;  // Keep track of group titles to be visible when its layers are active
+          elements[i].style.display = 'block';
+          this._existingLayers(obj, true, isNotGlobal);
         } else {
           elements[i].style.display = 'block';
-          this._existingLayers(obj, true, removeFrmMap);
+          this._existingLayers(obj, true, isNotGlobal);
         }
       };
     };
   },
 
-  _existingLayers: function(obj, doesExist, isInitialized) { 
-    if(doesExist && isInitialized && !this.options.existingLayers[obj.name]) { // Check if there is a new layer in current bounds
+  _showGroupTitle: function() {
+    for(var i in this._grpTitleVisible) {
+      if(this._grpTitleVisible[i]) {
+        var groupName = 'groupName-' + i;
+        var grpHolder = document.getElementById(groupName);
+        var grpSelector = grpHolder && grpHolder.nextElementSibling;
+        if(grpHolder) {
+          grpHolder.style.display = 'block';
+          grpSelector.style.display = 'block';
+        }
+      }
+    }
+    this._grpTitleVisible = {}; // Reset list of group titles that need to be visible
+  },
+
+  _existingLayers: function(obj, doesExist, isNotGlobal) { 
+    if(doesExist && isNotGlobal && !this.options.existingLayers[obj.name]) { // Check if there is a new layer in current bounds
       this.options.newLayers = [...this.options.newLayers, obj.name];
       this.options.existingLayers[obj.name] = true;
     } else if(doesExist) {
       this.options.existingLayers[obj.name] = true; // layer exists upon inititalization
-    } else if(isInitialized && this.options.existingLayers[obj.name]) { // Remove from new layers if the layer no longer exists within current bounds
+    } else if(isNotGlobal && this.options.existingLayers[obj.name]) { // Remove from new layers if the layer no longer exists within current bounds
       this.options.newLayers = this.options.newLayers.filter(layer => layer !== obj.name);
       this.options.existingLayers[obj.name] = false;
     } else {
       this.options.existingLayers[obj.name] = false; // layer does not exist upon inititalization
     }
-
   },
 
   _getLayerData: function(obj) {
