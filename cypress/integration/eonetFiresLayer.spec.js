@@ -1,6 +1,6 @@
 describe('Eonet fires layer', function() {
   it('adds markers on click', function() {
-    cy.openWindow('/example/index.html#lat=43.00&lon=-83.00&zoom=3&layers=Standard')
+    cy.openWindow('/example/index.html#lat=43.00&lon=-80.00&zoom=4&layers=Standard')
     cy.wait(200)
     cy.window().then((win) => {
       cy.fixture('eonetFiresLayer').then((data) => {
@@ -15,7 +15,7 @@ describe('Eonet fires layer', function() {
   })
 
   it('should have the layer name added to the hash', function() {
-    cy.hash().should('eq', '#lat=43.00&lon=-82.97&zoom=3&layers=Standard,eonetFiresLayer')
+    cy.hash().should('eq', '#lat=43.00&lon=-80.00&zoom=4&layers=Standard,eonetFiresLayer')
   })
 
   it('has default markers in default mode', function() {
@@ -39,7 +39,7 @@ describe('Eonet fires layer', function() {
 
   it('removes markers from the map and the layer name from the hash when clicked again', function() {
     cy.get('#menu-eonetFiresLayer label').click({ force: true })
-    cy.hash().should('eq', '#lat=43.00&lon=-82.97&zoom=3&layers=Standard')
+    cy.hash().should('eq', '#lat=43.00&lon=-80.00&zoom=4&layers=Standard')
     cy.get('.leaflet-marker-pane').children().should('have.length', 0)
     cy.get('.leaflet-overlay-pane svg g').children().should('have.length', 0)
   })
