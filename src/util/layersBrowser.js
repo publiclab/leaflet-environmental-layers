@@ -195,7 +195,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       var selector = '#menu-' + e.name + ' .layer-name';
       var listLayerSelector = '#' + e.name + ' .layer-list-name';
       var layerTitle = e.group ? document.querySelector(listLayerSelector) : document.querySelector(selector);
-      if (layerTitle.innerHTML !== (' ' + layerInfo.name) || layerTitle.innerHTML !== (' ' + e.name)) {
+      if (layerTitle && (layerTitle.innerHTML !== (' ' + layerInfo.name) || layerTitle.innerHTML !== (' ' + e.name))) {
         layerTitle.innerHTML = e.group ? ' ' + e.name : ' ' + layerInfo.name;
       }
     }, this)
