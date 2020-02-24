@@ -52,7 +52,7 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
             self._map.spin(false);
           }
         }).fail(function() {
-          self.onError('pfaslayer')
+          self.onError('pfasLayer')
         });
       })();
     },
