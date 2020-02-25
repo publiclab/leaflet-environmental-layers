@@ -53,6 +53,7 @@ L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
             self._map.spin(false);
           }
         }, 10000);
+        
         $.getJSON(EonetFire_url, function(data) {
           self.parseData(data);
           if (typeof self._map.spin === 'function') {
