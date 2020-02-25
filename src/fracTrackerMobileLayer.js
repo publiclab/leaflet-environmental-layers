@@ -12,7 +12,7 @@ L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
       var info = require('./info.json');
       this._map = map;
       map.on('moveend', function() {
-        if(this._map && this._map.getZoom() > info.fracTrackerMobile.extents.minZoom - 1) {
+        if (this._map && this._map.getZoom() > info.fracTrackerMobile.extents.minZoom - 1) {
           this.requestData();
         }
       }, this);
@@ -40,7 +40,6 @@ L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
         var top = northEast.lat;
         var bottom = southWest.lat;
         var polygon = left + ' ' + top + ',' + right + ' ' + top + ',' + right + ' ' + bottom + ',' + left + ' ' + bottom + ',' + left + ' ' + top;
-        
         var $ = window.jQuery;
         var fractrackerMobile_url = 'https://cors-anywhere.herokuapp.com/https://api.fractracker.org/v1/data/report?page=1&results_per_page=250&q={"filters":[{"name":"geometry","op":"intersects","val":"SRID=4326;POLYGON((' + polygon +'))"}],"order_by":[{"field":"report_date","direction":"desc"},{"field":"id","direction":"desc"}]}';
 
@@ -49,17 +48,18 @@ L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
         }
 
         return $.getJSON(fractrackerMobile_url);
-
       })().done(function(data) {
         self.parseData(data);
         if (typeof self._map.spin === 'function') {
           self._map.spin(false);
-        }
-      }).error(function() {
-        if (typeof self._map.spin === 'function') {
-          self._map.spin(false);
+          clearTimeout(timeout);
         }
       });
+      var timeout = setTimeout(function() {
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(true);
+        }
+      }, 10000);
     },
 
     parseData: function(data) {
@@ -79,11 +79,11 @@ L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
       var dateModified = new Date(data.properties.modified_on).toUTCString();
       var organizationName = data.properties.created_by.organization_name ? data.properties.created_by.organization_name : '';
       var imageUrl = data.properties.images[0] && data.properties.images[0].properties.square;
-      var imageElement = imageUrl ? '<img src="'  + imageUrl + '" alt="User image" width="100%" />' : '';
+      var imageElement = imageUrl ? '<img src="' + imageUrl + '" alt="User image" width="100%" />' : '';
       var marker;
       if (!isNaN((lat)) && !isNaN((lng)) ) {
-        marker = new L.circleMarker([lat, lng], { radius: 5, color: '#e4458b'})
-        .bindPopup(imageElement + '<br><strong>'+ description + '</strong><br>Lat : ' + lat + '<br>Lon : '+ lng + '<br>Reported on : ' + date + '<br>Modified on : ' + dateModified + '<br>' + organizationName);
+        marker = new L.circleMarker([lat, lng], {radius: 5, color: '#e4458b'})
+          .bindPopup(imageElement + '<br><strong>'+ description + '</strong><br>Lat : ' + lat + '<br>Lon : '+ lng + '<br>Reported on : ' + date + '<br>Modified on : ' + dateModified + '<br>' + organizationName);
       }
       return marker;
     },
