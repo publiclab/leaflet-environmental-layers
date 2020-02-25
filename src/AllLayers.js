@@ -151,10 +151,15 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
           if (layer === 'city') {
             layer = 'current';
             obj = {intervall: 15, minZoom: 3};
+            this.overlayMaps[layer] = window['L']['OWM'][layer](obj).on('owmloadingend', function() {
+              this.onError(layer, true);
+            })
+          } else {
+            this.overlayMaps[layer] = window['L']['OWM'][layer](obj).on('tileerror', function() {
+              this.onError(layer, true);
+            });
           }
-          this.overlayMaps[layer] = window['L']['OWM'][layer](obj).on('tileerror', function() {
-            this.onError(layer, true);
-          });
+          
           this.groupedOverlayMaps['Open Weather Map'].layers[layer] = this.overlayMaps[layer];
         }
         else if (this.options.layers6.includes(layer)) {
@@ -190,13 +195,13 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 
       if (!!this.options.addLayersToMap) {  // turn on all layers
         for (let layer of this.options.layers.include) {
-          map.addLayer(this.overlayMaps[layer]);
+          layer === 'city' ? map.addLayer(this.overlayMaps['current']) : map.addLayer(this.overlayMaps[layer]);
         }
       } else if (!!this.options.layers.display) {  // turn on only layers in display
         for (let layer of this.options.layers.display) {
           // make sure the layer exists in the display list
           if (this.options.layers.include.includes(layer)) {
-            map.addLayer(this.overlayMaps[layer]);
+            layer === 'city' ? map.addLayer(this.overlayMaps['current']) : map.addLayer(this.overlayMaps[layer]);
           } else {
             console.log("Layer specified does not exist.");
           }

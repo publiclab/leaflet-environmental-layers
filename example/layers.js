@@ -142,7 +142,9 @@ var wind = L.OWM.wind({}).on('tileerror', function() {
 });
 
 
-var city = L.OWM.current({intervall: 15, minZoom: 3});
+var city = L.OWM.current({intervall: 15, minZoom: 3}).on('owmloadingend', function() {
+  this.onError('Cities-zoomIn', true);
+});
 var windrose = L.OWM.current({
   intervall: 15,
   minZoom: 3,
@@ -152,7 +154,9 @@ var windrose = L.OWM.current({
   imageLoadingBgUrl: 'https://openweathermap.org/img/w0/iwind.png',
 });
 windrose.on('owmlayeradd', windroseAdded, windrose);
-
+windrose.on('owmloadingend', function() {
+  this.onError('windrose-zoomIn', true);
+});
 var IndigenousLandsTerritories = L.layerGroup.indigenousLayers('Territories');
 var IndigenousLandsLanguages = L.layerGroup.indigenousLayers('Languages');
 var IndigenousLandsTreaties = L.layerGroup.indigenousLayers('Treaties');
