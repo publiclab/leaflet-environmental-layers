@@ -31,6 +31,7 @@ L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
             obj["longitude"] = parseFloat(data.items[i].longitude) ;
             obj["name"] = data.items[i].doc_title ;
             obj["joined_time_ago"] = TimeAgo().inWords("2019-09-16T19:23:51Z"); // will change to data.items[i].created_at when it is available
+            obj["image_url"] = "https://images.unsplash.com/photo-1432958576632-8a39f6b97dc7?ixlib=rb-1.2.1&w=1000&q=80"; // will change to data.items[i].doc_image_url when it is available
             parsed_data[parsed_data.length] = obj ;
           }
         }
@@ -40,8 +41,11 @@ L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
       function popupDisplay(obj) {
         var popup_content = "";
         // if (image_url) popup_content += "<img src='" + options.host + image_url + "' class='popup-thumb' />"; // not available in the api yet
-        popup_content += "<h5><a href='https://publiclab.org" + obj.url + "'>@" + obj.name + "</a></h5>";
-        popup_content += "<div>Joined " + obj.joined_time_ago + "</div>";
+        popup_content += "<div class='popup-two-column'>";
+          if (obj.image_url) popup_content += "<div class='popup-shrink-column'><img src='" + obj.image_url + "' class='profile-thumb' /></div>";
+          popup_content += "<div class='popup-stretch-column'><h5><a href='https://publiclab.org" + obj.url + "'>@" + obj.name + "</a></h5>";
+          popup_content += "<div>Joined " + obj.joined_time_ago + "</div></div>";
+        popup_content += "</div>";
         return popup_content
       }
 
