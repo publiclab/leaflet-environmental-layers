@@ -40,7 +40,6 @@ L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
 
       function popupDisplay(obj) {
         var popup_content = "";
-        // if (image_url) popup_content += "<img src='" + options.host + image_url + "' class='popup-thumb' />"; // not available in the api yet
         popup_content += "<div class='popup-two-column'>";
           if (obj.image_url) popup_content += "<div class='popup-shrink-column'><img src='" + obj.image_url + "' class='profile-thumb' /></div>";
           popup_content += "<div class='popup-stretch-column'><h5><a href='https://publiclab.org" + obj.url + "'>@" + obj.name + "</a></h5>";
