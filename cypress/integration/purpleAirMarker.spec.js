@@ -1,7 +1,7 @@
 describe('Purple layer - markers', function() {
   it('adds markers on click', function() {
     cy.openWindow('/example/index.html#lat=43.769&lon=-97.487&zoom=8&layers=Standard')
-    cy.wait(300)
+    cy.wait(500)
     cy.window().then((win) => {
       cy.fixture('purpleMarker').then((data) => {
         cy.stub(win.PurpleAirMarkerLayer, 'requestData', function() {
