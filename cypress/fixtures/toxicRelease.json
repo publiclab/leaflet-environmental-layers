@@ -1,0 +1,23 @@
+[
+  {
+    "TRI_FACILITY_ID": 1,
+    "PREF_LATITUDE": 35.490165,
+    "PREF_LONGITUDE": 97.504792,
+    "FACILITY_NAME": "null",
+    "CITY_NAME": "Oklahoma City",
+    "MAIL_STREET_ADDRESS": "null",
+    "ASGN_PUBLIC_PHONE": "null"
+    
+    
+  },
+  {
+    "TRI_FACILITY_ID": 2,
+    "PREF_LATITUDE": 37.414295,
+    "PREF_LONGITUDE": 88.894181,
+    "FACILITY_NAME": "null",
+    "CITY_NAME": "Vienna",
+    "MAIL_STREET_ADDRESS": "null",
+    "ASGN_PUBLIC_PHONE": "null"
+  
+  }
+]
