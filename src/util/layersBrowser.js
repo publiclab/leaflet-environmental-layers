@@ -426,11 +426,11 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       name.innerHTML = ' ' + elements.name;
     }
     
-
+    var layerContainer = document.createElement('div');
     // Helps from preventing layer control flicker when checkboxes are disabled
     // https://github.com/Leaflet/Leaflet/issues/2771
     var holder = document.createElement('div');
-
+    layerContainer.appendChild(labelContainer);
     labelContainer.appendChild(label);
     label.appendChild(holder);
     holder.appendChild(input);
@@ -450,22 +450,22 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       name.style.marginLeft = '9.6em';
       name.style.color = '#717171';
       name.className = 'layer-list-name';
-      labelContainer.appendChild(separator);
+      layerContainer.appendChild(separator);
     }
     if(obj.overlay && !obj.group) {
       labelContainer.appendChild(elements.layerDesc);
       labelContainer.className = 'clearfix layer-info-container';
-      labelContainer.id = 'menu-' + obj.name.replace(/ /g,"_");
+      layerContainer.id = 'menu-' + obj.name.replace(/ /g,"_");
       labelContainer.appendChild(elements.dataInfo);
-      labelContainer.appendChild(separator);
+      layerContainer.appendChild(separator);
     }
-
-    this._hideOutOfBounds(obj, [labelContainer, separator]);
+    labelContainer.style.padding = '0.4em 0';
+    this._hideOutOfBounds(obj, [layerContainer, separator]);
     
     var container = obj.overlay ? this._overlaysList : this._baseLayersList;
-    container.appendChild(labelContainer);
+    container.appendChild(layerContainer);
     this._checkDisabledLayers();
-    return labelContainer;
+    return layerContainer;
   },
 
   _hideOutOfBounds: function(obj, elements) {
