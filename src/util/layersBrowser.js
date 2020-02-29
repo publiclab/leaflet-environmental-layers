@@ -232,6 +232,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   _createSeparator: function() {
     var separator = document.createElement('div');
     separator.className = 'leaflet-control-layers-separator';
+    separator.style.margin = '0';
 
     return separator;
   },
@@ -374,6 +375,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       titleHolder.appendChild(groupName);
       titleHolder.appendChild(elements.layerDesc);
       titleHolder.appendChild(elements.dataInfo);
+      titleHolder.style.padding = '0.4em 0';
 
       var separator = this._createSeparator();
 
