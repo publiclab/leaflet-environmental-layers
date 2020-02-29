@@ -366,7 +366,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       groupName.innerHTML = elements.name;
 
       var titleHolder = document.createElement('div');
-      titleHolder.id = 'groupName-' + obj.group; 
+      titleHolder.id = 'menu-' + obj.group; 
       titleHolder.className = 'clearfix layer-info-container';
       titleHolder.appendChild(layerGroup);
       layerGroup.appendChild(chevron);
@@ -536,7 +536,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   _showGroupTitle: function() {
     for(var i in this._grpTitleVisible) {
       if(this._grpTitleVisible[i]) {
-        var groupName = 'groupName-' + i;
+        var groupName = 'menu-' + i;
         var grpHolder = document.getElementById(groupName);
         var grpSelector = grpHolder && grpHolder.nextElementSibling;
         if(grpHolder) {
@@ -569,8 +569,8 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       let elem = document.querySelector(selector);
       if(elem){
         elem.style.background = backgroundProp
-      } else {
-        selector = '#groupName-' + layerName + '.layer-info-container';
+      } else {  // Group names
+        selector = '#menu-' + layerName + '.layer-info-container';
         elem = document.querySelector(selector);
         elem.style.background = backgroundProp;
       }
