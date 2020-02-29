@@ -18,6 +18,10 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     this._lastZIndex = 0;
     this._handlingClick = false;
 
+    // Layer names to be highlighted
+    // 'obj.group' for groups and 'obj.name' for the rest
+    this._newLayerContainers = [];
+
     for (var i in baseLayers) {
       this._addLayer(baseLayers[i], i);
     }
@@ -50,6 +54,13 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     this._layersLink.style.marginLeft = '0';
     return this;
   },
+
+  collapse: function () {
+    L.DomUtil.removeClass(this._container, 'leaflet-control-layers-expanded');
+    this._highlightLayers('none');
+    this._newLayerContainers = [];
+		return this;
+	},
 
   _initLayout: function() {
     var className = 'leaflet-control-layers';
@@ -197,6 +208,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
         this._layersLink.style.marginLeft = '2.9em';
         this._alertBadge.style.display = 'flex';
         this._alertBadge.innerHTML = this.options.newLayers.length;
+        this._highlightLayers('#ffffc6');
       } else {
         this._layersLink.style.marginLeft = '0';
         this._alertBadge.style.display = 'none';
@@ -537,6 +549,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   _existingLayers: function(obj, doesExist, isNotGlobal) { 
     if(doesExist && isNotGlobal && !this.options.existingLayers[obj.name]) { // Check if there is a new layer in current bounds
       this.options.newLayers = [...this.options.newLayers, obj.name];
+      this._newLayerContainers = obj.group ? [...this._newLayerContainers, obj.group] : [...this._newLayerContainers, obj.name]
       this.options.existingLayers[obj.name] = true;
     } else if(doesExist) {
       this.options.existingLayers[obj.name] = true; // layer exists upon inititalization
@@ -546,6 +559,20 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     } else {
       this.options.existingLayers[obj.name] = false; // layer does not exist upon inititalization
     }
+  },
+
+  _highlightLayers: function(backgroundProp) {
+    this._newLayerContainers.map(layerName => {
+      let selector = '#menu-' + layerName + ' .layer-info-container';
+      let elem = document.querySelector(selector);
+      if(elem){
+        elem.style.background = backgroundProp
+      } else {
+        selector = '#groupName-' + layerName + '.layer-info-container';
+        elem = document.querySelector(selector);
+        elem.style.background = backgroundProp;
+      }
+    })
   },
 
   _getLayerData: function(obj) {
