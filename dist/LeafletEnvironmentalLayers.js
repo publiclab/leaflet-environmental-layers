@@ -26003,12 +26003,14 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       var leafletControl = this.options.simpleLayerControl ? 
       L.control.layers(baseMaps, this.overlayMaps).addTo(map) :
       L.control.layersBrowser(baseMaps, this.groupedOverlayMaps).addTo(map);
-      
+
       // set the map menu to the correct size
-      map.on('resize', function () {
+      if (typeof leafletControl.setLayerBrowserSize === 'function') {
+        map.on('resize', function () {
+          leafletControl.setLayerBrowserSize(map);
+        });
         leafletControl.setLayerBrowserSize(map);
-      });
-      leafletControl.setLayerBrowserSize(map);
+      }
 
       var modeControl = new L.control.minimalMode(leafletControl);
       modeControl.addTo(map);
