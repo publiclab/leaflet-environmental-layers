@@ -3,7 +3,7 @@ describe('Layers menu filters and displays layers on map', function() {
     cy.openWindow('/example/index.html#lat=43.00&lon=-83.00&zoom=3&layers=Standard')
     cy.wait(200)
     cy.get('.leaflet-control-layers').trigger('mouseover')
-    cy.get('.layer-info-container').should('have.css', 'display', 'block').then((layers) => {
+    cy.get('[data-cy=layer]').should('have.css', 'display', 'block').then((layers) => {
       const layersArray = Array.prototype.slice.call(layers)
       expect(layersArray.filter(layer => layer.style.display === 'block').length).to.equal(9)
     })
@@ -20,7 +20,7 @@ describe('Layers menu filters and displays layers on map', function() {
 
   it('adds layers to the menu on map movement', function() {
     cy.get('.leaflet-control-layers').trigger('mouseover')
-    cy.get('.layer-info-container').should('have.css', 'display', 'block').then((layers) => {
+    cy.get('[data-cy=layer]').should('have.css', 'display', 'block').then((layers) => {
       const layersArray = Array.prototype.slice.call(layers)
       expect(layersArray.filter(layer => layer.style.display === 'block').length).to.equal(14)
     })
@@ -37,7 +37,7 @@ describe('Layers menu filters and displays layers on map', function() {
     cy.window().its('map').invoke('setView',[43.00, -83.00], 3)
     cy.wait(300)
     cy.get('.leaflet-control-layers').trigger('mouseover')
-    cy.get('.layer-info-container').should('have.css', 'display', 'block').then((layers) => {
+    cy.get('[data-cy=layer]').should('have.css', 'display', 'block').then((layers) => {
       const layersArray = Array.prototype.slice.call(layers)
       expect(layersArray.filter(layer => layer.style.display === 'block').length).to.equal(9)
     })

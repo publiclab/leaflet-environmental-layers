@@ -30445,6 +30445,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       var titleHolder = document.createElement('div');
       titleHolder.id = 'menu-' + obj.group; 
       titleHolder.className = 'clearfix layer-info-container';
+      titleHolder.setAttribute('data-cy', 'layer');
       titleHolder.appendChild(layerGroup);
       layerGroup.appendChild(chevron);
       layerGroup.appendChild(elements.icon);
@@ -30547,6 +30548,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       labelContainer.appendChild(elements.layerDesc);
       labelContainer.className = 'clearfix layer-info-container';
       layerContainer.id = 'menu-' + obj.name.replace(/ /g,"_");
+      layerContainer.setAttribute('data-cy', 'layer');
       labelContainer.appendChild(elements.dataInfo);
       layerContainer.appendChild(separator);
     }
