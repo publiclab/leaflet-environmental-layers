@@ -1,6 +1,6 @@
 L.Control.LayersBrowser = L.Control.Layers.extend({
   options: {
-    collapsed: true,
+    collapsed: false,
     position: 'topright',
     autoZIndex: true,
     hideSingleBase: true,
@@ -31,6 +31,26 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
         this._addLayer(overlays[i], i, true);
       }
     }
+  },
+
+  setLayerBrowserSize: function(map) {
+    var mapobj = map._container;
+    var width = mapobj.offsetWidth;
+
+    var mapSizeArray = [
+      ['xs', 0, 380],
+      ['sm', 380, 590],
+      ['md', 590, 880],
+      ['lg', 880, 10000]
+    ];
+
+    mapSizeArray.forEach((sizeMinMax) => {
+      if(width >= sizeMinMax[1] && width < sizeMinMax[2]) {
+        mapobj.classList.add(sizeMinMax[0]);
+      } else {
+        mapobj.classList.remove(sizeMinMax[0]);
+      }
+    });
   },
 
   expand: function() {
