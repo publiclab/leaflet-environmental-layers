@@ -30083,7 +30083,7 @@ L.spreadsheetLayer = function(options) {
 },{}],26:[function(require,module,exports){
 L.Control.LayersBrowser = L.Control.Layers.extend({
   options: {
-    collapsed: false,
+    collapsed: true,
     position: 'topright',
     autoZIndex: true,
     hideSingleBase: true,

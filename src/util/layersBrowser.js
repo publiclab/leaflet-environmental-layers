@@ -1,6 +1,6 @@
 L.Control.LayersBrowser = L.Control.Layers.extend({
   options: {
-    collapsed: false,
+    collapsed: true,
     position: 'topright',
     autoZIndex: true,
     hideSingleBase: true,
