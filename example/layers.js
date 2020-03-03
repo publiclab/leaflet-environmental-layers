@@ -262,6 +262,12 @@ var hash = new L.FullHash(map, allMapLayers);
 var leafletControl = new L.control.layersBrowser(baseMaps, overlayMaps);
 leafletControl.addTo(map);
 
+// only use this if you are using the layersBrowser
+map.on('resize', function () {
+  leafletControl.setLayerBrowserSize(map);
+});
+leafletControl.setLayerBrowserSize(map);
+
 var modeControl = new L.control.minimalMode(leafletControl);
 modeControl.addTo(map);
 
