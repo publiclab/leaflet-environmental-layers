@@ -30,14 +30,14 @@ The library consists of multiple layers. It needs to add several other layers. T
 
 ### Steps to add a new layer :
 1. Find an issue labelled <i>new layer</i>.
-2. Go through the documentaion provided to understand how the API works.
+2. Go through the documentation provided to understand how the API works.
 3. Here's a [codepen example](https://codepen.io/rkpattnaik780/full/MxMRBP) that consists of a base layer and [Luftdaten Layer](https://github.com/publiclab/leaflet-environmental-layers/issues/88) as an overlay. You can check its full implementation [here](https://github.com/publiclab/leaflet-environmental-layers/pull/137).
 
-### Steps to test a new layer :
-1. Make a fixture file in html for the layer.
-2. Load the fixture and test for markers and polygons using jasmine testing framework.
-3. Run `grunt jasmine` to run tests and ensure they pass before making a commit.
-4. [Here](https://github.com/publiclab/leaflet-environmental-layers/pull/206/files) is an example PR for writing tests. 
+### Steps to test a new layer:
+1. Create a fixture for the layer in `./cypress/fixtures`.
+2. Add a spec file for the new layer in `./cypress/integration`. Please refer to one of the existing spec files for reference.
+3. Run `npm run start` to start a local server.
+4. Run `npm run cy:run:chrome` to run the tests.
 
 ### Some sample PRs to be referred for adding new layers:
 * OSM landfill mine quarry : [#94](https://github.com/publiclab/leaflet-environmental-layers/pull/94)
