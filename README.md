@@ -46,46 +46,42 @@ A leaflet plugin that has a collection of layers containing environmental data p
 - Install @fortawesome/fontawesome-free
 - Add the following to the head of the HTML file that would contain the map
 
-        <!-- Bootstrap --> 
-        <link rel="stylesheet" href="node_modules\bootstrap\dist\css\bootstrap.min.css">
-        <script src="node_modules\jquery\dist\jquery.slim.min.js"></script>
-        <script src="node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
+        <!-- Required for PLpeople layer - must load before dist/LeafletEnvironmentalLayers.js -->
+        <script src="../node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js"></script>
+        <script src="../node_modules/leaflet.blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js"></script>
         
-        <!-- Leaflet --> 
-        <link href="node_modules/leaflet/dist/leaflet.css" rel="stylesheet" />
-        <script src="node_modules/leaflet/dist/leaflet.js"></script>
-
-        <!-- Blurred Location -->
-        <script src="node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js"></script>
-        <script src="node_modules/leaflet.blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js"></script>
-
-        <!-- Leaflet Environmental Layers -->
-        <link href="node_modules/leaflet-environmental-layers/dist/LeafletEnvironmentalLayers.css" rel="stylesheet" />
-        <script src="node_modules/leaflet-environmental-layers/dist/LeafletEnvironmentalLayers.js"></script>
-        <link rel="stylesheet" href="node_modules\leaflet-environmental-layers\example\styles.css">
+        <!-- Required for all maps -->
+        <script src="../node_modules\jquery\dist\jquery.min.js"></script>
+        <script src="../dist/LeafletEnvironmentalLayers.js"></script>
+        <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet" />
+        <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet" />
+        <link href="../node_modules\@fortawesome\fontawesome-free\css\all.min.css" rel="stylesheet" />
         
-        <!-- Leaflet Spin -->
-        <script src="node_modules/leaflet-spin/example/spin/dist/spin.min.js"></script>
-        <script src="node_modules/leaflet-spin/example/leaflet.spin.min.js"></script>
+        <!-- Bootstrap - not needed if you use simpleLayerControl:true -->
+        <script src="../node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
+        <link rel="stylesheet" href="../node_modules\bootstrap\dist\css\bootstrap.min.css">
+        
+        <!-- Required for setting hash:true -->
+        <script src="../lib/leaflet-fullUrlHash.js"></script>
 
-        <!-- Layer dependencies -->
-        <script src="node_modules/heatmap.js/build/heatmap.min.js"></script>
-        <script src="node_modules/leaflet-heatmap/leaflet-heatmap.js"></script>
-        <script src="node_modules/leaflet-environmental-layers/src/windRoseLayer.js"></script>
-
-        <!-- Other dependencies -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-        <link href="node_modules\@fortawesome\fontawesome-free\css\all.min.css" rel="stylesheet" />
-        <script src="https://unpkg.com/esri-leaflet@2.2.3/dist/esri-leaflet.js"></script>
-        <script src="https://unpkg.com/esri-leaflet-renderers@2.0.6"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/OverlappingMarkerSpiderfier-Leaflet/0.2.6/oms.min.js"></script>
-        <script src="node_modules\leaflet-environmental-layers\lib\glify.js"></script>
-        <script src="node_modules\leaflet-environmental-layers\lib\leaflet-fullUrlHash.js"></script>
-
-        <!-- Leaflet Google Places Autocomplete -->
+        <!-- Required for search control -->
         <script src="../node_modules/leaflet-google-places-autocomplete/src/js/leaflet-gplaces-autocomplete.js"></script>
         <link rel="stylesheet" href="../node_modules/leaflet-google-places-autocomplete/src/css/leaflet-gplaces-autocomplete.css">
-        <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOLUQngEmJv0_zcG1xkGq-CXIPpLQY8iQ&libraries=places"></script>
+
+        <!-- Required for purpleLayer -->
+        <script src="../node_modules/heatmap.js/build/heatmap.min.js"></script>
+        <script src="../node_modules/leaflet-heatmap/leaflet-heatmap.js"></script>
+        
+        <!-- Required for wisconsin Layer -->
+        <script src="https://unpkg.com/esri-leaflet@2.2.3/dist/esri-leaflet.js"></script>
+        <script src="https://unpkg.com/esri-leaflet-renderers@2.0.6"></script>
+
+        <!-- Required for windRose Layer -->
+        <script src="../src/windRoseLayer.js"></script>
+
+        <!-- Required for Unearthing Layer -->
+        <script src="../lib/glify.js"></script>
 
 ## Getting started
 ### _Installation Instructions_
@@ -95,11 +91,13 @@ A leaflet plugin that has a collection of layers containing environmental data p
 
 ### _Instructions for a developer_
 1. Install grunt - https://gruntjs.com/installing-grunt.
-2. Make the changes you are working on in respective /src files.
+2. Make the changes you are working on in the respective /src files.
 3. Run `grunt build` to generate files in the /dist directory.
 4. Run `grunt transpile` to transpile es6 code and copy files needed to run the tests to the /dist directory.
 5. Run `grunt jasmine` to run tests on the LEL layers and ensure they pass.
-6. Test your changes on a browser by opening `examples/index.html`.
+6. Run `npm run start` to start a local server.
+7. Run `npm run cy:run:chrome` to run e2e and integration tests.
+8. Test your changes on a browser by opening `examples/index.html`.
 
 ## Features
 
@@ -146,6 +144,7 @@ The information of each layer can be found here: [Layer Information](https://pub
 
 | Layer Name                  | Color   |
 | --------------------------- | ------- |
+| PLpeople                    | N/A     |
 | wisconsin                   | N/A     |
 | fracTrackerMobile           | N/A     |
 | purpleLayer                 | #8b0000 |
@@ -215,7 +214,7 @@ The optional options object can be passed in with any of the following propertie
 ### _Add hash support for easy sharing of map_    
 #### Add link
 
-        <script src="node_modules/leaflet-environmental-layers/lib/leaflet-fullUrlHash.js"></script>
+        <script src="../lib/leaflet-fullUrlHash.js"></script>
 
 #### Creation
 
@@ -230,12 +229,18 @@ The optional options object can be passed in with any of the following propertie
 #### Dependencies
 
 ```
-  <!-- Bootstrap --> 
-  <link rel="stylesheet" href="../node_modules\bootstrap\dist\css\bootstrap.min.css">
+  <!-- jQuery --> 
   <script src="../node_modules\jquery\dist\jquery.min.js"></script>
+
+  <!-- Bootstrap --> 
   <script src="../node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
-  <!-- Layer menu styles -->
-  <link href="node_modules/leaflet-environmental-layers/dist/LeafletEnvironmentalLayers.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../node_modules\bootstrap\dist\css\bootstrap.min.css">
+  
+  <!-- Required includes -->
+  <script src="../dist/LeafletEnvironmentalLayers.js"></script>
+  <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet" />
+  <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet" />
+  <link href="../node_modules\@fortawesome\fontawesome-free\css\all.min.css" rel="stylesheet" />
 ```
 
 #### Usage example
@@ -279,17 +284,12 @@ The optional options object can be passed in with any of the following propertie
     L.control.minimalMode(layersControl).addTo(map);
 
 ### _Add search control_
+
   LEL uses [leaflet-google-places-autocomplete](https://github.com/Twista/leaflet-google-places-autocomplete) for the search control feature.
 
 
 
 ## Adding layers individually
-### _General (required for all layers)_
-
-      <script src="node_modules/leaflet-environmental-layers/dist/LeafletEnvironmentalLayers.js"></script>
-      <link href="node_modules/leaflet/dist/leaflet.css" rel="stylesheet">
-	  <script src="node_modules/leaflet-spin/example/spin/dist/spin.min.js"></script>  <!-- Compulsory to add --> 
-      <script src="node_modules/leaflet-spin/example/leaflet.spin.min.js"></script>
 
 ### _To use Wisconsin Non-Metallic Layer_
 #### Add
@@ -301,10 +301,18 @@ The optional options object can be passed in with any of the following propertie
 ### _To use Fractracker Mobile Layer_
       var FracTracker_mobile = L.geoJSON.fracTrackerMobile();
 
-
 ### _To use Purple Layer_
 	<script src="../node_modules/heatmap.js/build/heatmap.min.js"></script>
 	<script src="../node_modules/leaflet-heatmap/leaflet-heatmap.js"></script>
+
+### _To use Unearthing Layer_
+	<script src="../lib/glify.js"></script>
+
+### _To use PLpeople Layer_
+  These must be included in the file before /dist/LeafletEnvironmentalLayers.js:
+
+        <script src="../node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js"></script>
+        <script src="../node_modules/leaflet.blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js"></script>
 
 
 ### _Real Time Layers_
@@ -316,10 +324,9 @@ The optional options object can be passed in with any of the following propertie
 #### WindRose (by openWeather)
       
       <script src="../src/windRoseLayer.js"></script>
-       <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet">
 
-     var windrose = L.OWM.current({intervall: 15, minZoom: 3, markerFunction: myWindroseMarker, popup: false, clusterSize:       50,imageLoadingBgUrl: 'https://openweathermap.org/img/w0/iwind.png' });
-    windrose.on('owmlayeradd', windroseAdded, windrose);
+      var windrose = L.OWM.current({intervall: 15, minZoom: 3, markerFunction: myWindroseMarker, popup: false, clusterSize:       50,imageLoadingBgUrl: 'https://openweathermap.org/img/w0/iwind.png' });
+      windrose.on('owmlayeradd', windroseAdded, windrose);
 
 ### _Open Infra Map_
 #### OpenInfraMap_Power Layer
