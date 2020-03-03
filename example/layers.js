@@ -264,9 +264,9 @@ leafletControl.addTo(map);
 
 // only use this if you are using the layersBrowser
 map.on('resize', function () {
-  leafletControl.setLayerBrowserSize(map);
+  leafletControl.setLayersBrowserSize(map);
 });
-leafletControl.setLayerBrowserSize(map);
+leafletControl.setLayersBrowserSize(map);
 
 var modeControl = new L.control.minimalMode(leafletControl);
 modeControl.addTo(map);

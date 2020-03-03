@@ -26005,11 +26005,11 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       L.control.layersBrowser(baseMaps, this.groupedOverlayMaps).addTo(map);
 
       // set the map menu to the correct size
-      if (typeof leafletControl.setLayerBrowserSize === 'function') {
+      if (typeof leafletControl.setLayersBrowserSize === 'function') {
         map.on('resize', function () {
-          leafletControl.setLayerBrowserSize(map);
+          leafletControl.setLayersBrowserSize(map);
         });
-        leafletControl.setLayerBrowserSize(map);
+        leafletControl.setLayersBrowserSize(map);
       }
 
       var modeControl = new L.control.minimalMode(leafletControl);
@@ -27601,7 +27601,7 @@ require('./layercode.js');
 require('./eonetFiresLayer');
 require('./AllLayers.js');
 
-},{"./AllLayers.js":7,"./PLpeopleLayer.js":8,"./aqicnLayer.js":9,"./eonetFiresLayer":10,"./fracTrackerMobileLayer.js":11,"./indigenousLayers.js":12,"./layercode.js":14,"./openWeatherMapLayer.js":16,"./osmLandfillMineQuarryLayer.js":17,"./pfasLayer.js":18,"./purpleLayer.js":19,"./toxicReleaseLayer.js":20,"./unearthing.js":21,"./wisconsinLayer.js":31,"leaflet-providers":4}],16:[function(require,module,exports){
+},{"./AllLayers.js":7,"./PLpeopleLayer.js":8,"./aqicnLayer.js":9,"./eonetFiresLayer":10,"./fracTrackerMobileLayer.js":11,"./indigenousLayers.js":12,"./layercode.js":14,"./openWeatherMapLayer.js":16,"./osmLandfillMineQuarryLayer.js":17,"./pfasLayer.js":18,"./purpleLayer.js":19,"./toxicReleaseLayer.js":20,"./unearthing.js":21,"./wisconsinLayer.js":30,"leaflet-providers":4}],16:[function(require,module,exports){
 L.OWM = L.TileLayer.extend({
   options: {
     appId: '4c6704566155a7d0d5d2f107c5156d6e', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
@@ -30118,7 +30118,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     }
   },
 
-  setLayerBrowserSize: function(map) {
+  setLayersBrowserSize: function(map) {
     var mapobj = map._container;
     var width = mapobj.offsetWidth;
 
@@ -30728,41 +30728,6 @@ L.control.legendControl = function(options) {
 };
 
 },{}],28:[function(require,module,exports){
-// set the map menu to the correct size
-// based on width of leaflet-container, not screen size
-
-// window.onresize = function(event) {
-//   checkMapSize();
-// };
-
-// $(document).ready(() => {
-//   checkMapSize(); // on page load
-// });
-
-// function checkMapSize() {
-//   Array.from(document.getElementsByClassName("leaflet-container")).forEach((mapobj) => {
-//     setMapSize(mapobj, mapobj.offsetWidth);
-//   })
-// }
-
-// function setMapSize(mapobj, width) {
-//   var mapSizeArray = [
-//     ['xs', 0, 380],
-//     ['sm', 380, 590],
-//     ['md', 590, 880],
-//     ['lg', 880, 10000]
-//   ];
-
-//   mapSizeArray.forEach((sizeMinMax) => {
-//     if(width >= sizeMinMax[1] && width < sizeMinMax[2]) {
-//       mapobj.classList.add(sizeMinMax[0]);
-//     } else {
-//       mapobj.classList.remove(sizeMinMax[0]);
-//     }
-//   });
-// }
-
-},{}],29:[function(require,module,exports){
 L.Control.MinimalMode = L.Control.extend({
 
     options: {
@@ -30847,7 +30812,7 @@ L.Control.MinimalMode = L.Control.extend({
     return new L.Control.MinimalMode(options);
   };
   
-},{}],30:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 omsUtil = function(map, options) {
   var oms = new OverlappingMarkerSpiderfier(map, options);
 
@@ -30864,7 +30829,7 @@ omsUtil = function(map, options) {
   return oms;
 };
 
-},{}],31:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 wisconsinLayer = function(map) {
   
   var info = require('./info.json');
@@ -30899,4 +30864,4 @@ wisconsinLayer = function(map) {
   return Wisconsin_NM;
 };
 
-},{"./info.json":13}]},{},[6,15,22,23,24,25,26,27,28,29,30]);
+},{"./info.json":13}]},{},[6,15,22,23,24,25,26,27,28,29]);

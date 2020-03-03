@@ -33,7 +33,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     }
   },
 
-  setLayerBrowserSize: function(map) {
+  setLayersBrowserSize: function(map) {
     var mapobj = map._container;
     var width = mapobj.offsetWidth;
 
