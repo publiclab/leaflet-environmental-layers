@@ -95,11 +95,13 @@ A leaflet plugin that has a collection of layers containing environmental data p
 
 ### _Instructions for a developer_
 1. Install grunt - https://gruntjs.com/installing-grunt.
-2. Make the changes you are working on in respective /src files.
+2. Make the changes you are working on in the respective /src files.
 3. Run `grunt build` to generate files in the /dist directory.
 4. Run `grunt transpile` to transpile es6 code and copy files needed to run the tests to the /dist directory.
 5. Run `grunt jasmine` to run tests on the LEL layers and ensure they pass.
-6. Test your changes on a browser by opening `examples/index.html`.
+6. Run `npm run start` to start a local server.
+7. Run `npm run cy:run:chrome` to run e2e and integration tests.
+8. Test your changes on a browser by opening `examples/index.html`.
 
 ## Features
 
