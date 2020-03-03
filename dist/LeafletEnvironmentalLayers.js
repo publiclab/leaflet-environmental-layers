@@ -26004,6 +26004,14 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       L.control.layers(baseMaps, this.overlayMaps).addTo(map) :
       L.control.layersBrowser(baseMaps, this.groupedOverlayMaps).addTo(map);
 
+      // set the map menu to the correct size
+      if (typeof leafletControl.setLayersBrowserSize === 'function') {
+        map.on('resize', function () {
+          leafletControl.setLayersBrowserSize(map);
+        });
+        leafletControl.setLayersBrowserSize(map);
+      }
+
       var modeControl = new L.control.minimalMode(leafletControl);
       modeControl.addTo(map);
 
@@ -30108,6 +30116,26 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
         this._addLayer(overlays[i], i, true);
       }
     }
+  },
+
+  setLayersBrowserSize: function(map) {
+    var mapobj = map._container;
+    var width = mapobj.offsetWidth;
+
+    var mapSizeArray = [
+      ['xs', 0, 380],
+      ['sm', 380, 590],
+      ['md', 590, 880],
+      ['lg', 880, 10000]
+    ];
+
+    mapSizeArray.forEach((sizeMinMax) => {
+      if(width >= sizeMinMax[1] && width < sizeMinMax[2]) {
+        mapobj.classList.add(sizeMinMax[0]);
+      } else {
+        mapobj.classList.remove(sizeMinMax[0]);
+      }
+    });
   },
 
   expand: function() {

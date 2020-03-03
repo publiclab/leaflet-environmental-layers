@@ -33,6 +33,26 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     }
   },
 
+  setLayersBrowserSize: function(map) {
+    var mapobj = map._container;
+    var width = mapobj.offsetWidth;
+
+    var mapSizeArray = [
+      ['xs', 0, 380],
+      ['sm', 380, 590],
+      ['md', 590, 880],
+      ['lg', 880, 10000]
+    ];
+
+    mapSizeArray.forEach((sizeMinMax) => {
+      if(width >= sizeMinMax[1] && width < sizeMinMax[2]) {
+        mapobj.classList.add(sizeMinMax[0]);
+      } else {
+        mapobj.classList.remove(sizeMinMax[0]);
+      }
+    });
+  },
+
   expand: function() {
     L.DomUtil.addClass(this._container, 'leaflet-control-layers-expanded');
     this._section.style.height = null;
