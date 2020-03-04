@@ -135,6 +135,8 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
           if (self._map && typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+          self.layer === 'purpleairmarker' ? self.onError(self.layer, true) : self.onError(self.layer);
         });
       })();
     },

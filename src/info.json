@@ -196,7 +196,7 @@
       "maxZoom": 15
     }
   },
-  "pfaslayer": {
+  "pfasLayer": {
     "name": "PFAS",
     "url": "https://pfasproject.com/",
     "report_url": "mailto:pfasproject@gmail.com",
@@ -274,7 +274,7 @@
       "maxZoom": 15
     }
   },
-  "unearthing": {
+  "Unearthing": {
     "name": "Unearthing Providence",
     "url": "https://publiclab.org/unearthing-pvd",
     "api_url": "",

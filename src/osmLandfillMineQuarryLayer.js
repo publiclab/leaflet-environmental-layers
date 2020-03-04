@@ -48,7 +48,7 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
         }
         for (var key in self._colorOptions) {
           // Generate URL for each type
-          var LMQ_url = info.OSMLandfillMineQuarryLayer.api_url + '?*[landuse=' + key + '][bbox=' + (southwest.lng) + ',' + (southwest.lat) + ',' + (northeast.lng) + ',' + (northeast.lat) + ']';
+          var LMQ_url = info.osmLandfillMineQuarryLayer.api_url + '?*[landuse=' + key + '][bbox=' + (southwest.lng) + ',' + (southwest.lat) + ',' + (northeast.lng) + ',' + (northeast.lat) + ']';
           if (typeof self._map.spin === 'function') {
             self._map.spin(true);
           }
@@ -58,6 +58,8 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
             success: function(data) {
               self.parseData(data);
             },
+          }).fail(function() {
+            self.onError('osmLandfillMineQuarryLayer')
           });
           /* The structure of the document is as follows:
                           <node id="node_id", lat="", lon="">
