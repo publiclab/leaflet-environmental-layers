@@ -9,7 +9,7 @@ describe('Pfas layer', function() {
         })
       })
       
-      cy.get('#menu-pfaslayer label').click({ force: true })
+      cy.get('#menu-pfasLayer label').click({ force: true })
       cy.get('.leaflet-marker-pane img').should('have.length', 2)
     }) 
   })
@@ -44,7 +44,7 @@ describe('Pfas layer', function() {
   })
 
   it('removes markers from the map and the layer name from the hash when clicked again', function() {
-    cy.get('#menu-pfaslayer label').click({ force: true })
+    cy.get('#menu-pfasLayer label').click({ force: true })
     cy.hash().should('eq', '#lat=43.000&lon=-92.000&zoom=5&layers=Standard')
     cy.get('.leaflet-marker-pane img').should('have.length', 0)
     cy.get('.leaflet-overlay-pane svg g').children().should('have.length', 0)

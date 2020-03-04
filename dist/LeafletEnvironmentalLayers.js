@@ -25866,18 +25866,26 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       OpenInfraMap_Power: L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+      }).on('tileerror', function() {
+        this.onError('Power', true)
       }),
       OpenInfraMap_Petroleum: L.tileLayer('https://tiles-{s}.openinframap.org/petroleum/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+      }).on('tileerror', function() {
+        this.onError('Petroleum', true)
       }),
       OpenInfraMap_Telecom: L.tileLayer('https://tiles-{s}.openinframap.org/telecoms/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+      }).on('tileerror', function() {
+        this.onError('Telecom', true)
       }),
       OpenInfraMap_Water: L.tileLayer('https://tiles-{s}.openinframap.org/water/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+      }).on('tileerror', function() {
+        this.onError('Water', true)
       }),
     },
 
@@ -25973,7 +25981,9 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
           if(!this.groupedOverlayMaps.Justicemap) {
             this.groupedOverlayMaps.Justicemap = { category: 'group', layers: {} };
           }
-          this.overlayMaps[layer] = window['L']['tileLayer']['provider']('JusticeMap.'+layer);
+          this.overlayMaps[layer] = window['L']['tileLayer']['provider']('JusticeMap.'+layer).on('tileerror', function() {
+            this.onError(layer, true);
+          });
           this.groupedOverlayMaps.Justicemap.layers[layer] = this.overlayMaps[layer];
         }
         else if (this.options.layers5.includes(layer)) {
@@ -25987,8 +25997,15 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
           if (layer === 'city') {
             layer = 'current';
             obj = {intervall: 15, minZoom: 3};
+            this.overlayMaps[layer] = window['L']['OWM'][layer](obj).on('owmloadingend', function() {
+              this.onError(layer, true);
+            })
+          } else {
+            this.overlayMaps[layer] = window['L']['OWM'][layer](obj).on('tileerror', function() {
+              this.onError(layer, true);
+            });
           }
-          this.overlayMaps[layer] = window['L']['OWM'][layer](obj);
+          
           this.groupedOverlayMaps['Open Weather Map'].layers[layer] = this.overlayMaps[layer];
         }
         else if (this.options.layers6.includes(layer)) {
@@ -26032,13 +26049,13 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 
       if (!!this.options.addLayersToMap) {  // turn on all layers
         for (let layer of this.options.layers.include) {
-          map.addLayer(this.overlayMaps[layer]);
+          layer === 'city' ? map.addLayer(this.overlayMaps['current']) : map.addLayer(this.overlayMaps[layer]);
         }
       } else if (!!this.options.layers.display) {  // turn on only layers in display
         for (let layer of this.options.layers.display) {
           // make sure the layer exists in the display list
           if (this.options.layers.include.includes(layer)) {
-            map.addLayer(this.overlayMaps[layer]);
+            layer === 'city' ? map.addLayer(this.overlayMaps['current']) : map.addLayer(this.overlayMaps[layer]);
           } else {
             console.log("Layer specified does not exist.");
           }
@@ -26150,6 +26167,8 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+          self.onError('aqicnLayer')
         });
       })();
     },
@@ -26357,6 +26376,8 @@ L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+          self.onError('eonetFiresLayer')
         });
       })();
     },
@@ -26467,6 +26488,8 @@ L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
         if (typeof self._map.spin === 'function') {
           self._map.spin(false);
         }
+      }).fail(function() {
+        self.onError('fracTrackerMobile')
       });
     },
 
@@ -26581,6 +26604,8 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+            self.onError(self.layer, true)
         });
       })();
     },
@@ -26859,7 +26884,7 @@ module.exports={
       "maxZoom": 15
     }
   },
-  "pfaslayer": {
+  "pfasLayer": {
     "name": "PFAS",
     "url": "https://pfasproject.com/",
     "report_url": "mailto:pfasproject@gmail.com",
@@ -26937,7 +26962,7 @@ module.exports={
       "maxZoom": 15
     }
   },
-  "unearthing": {
+  "Unearthing": {
     "name": "Unearthing Providence",
     "url": "https://publiclab.org/unearthing-pvd",
     "api_url": "",
@@ -27135,6 +27160,8 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
           if (self._map && typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+          self.layer === 'purpleairmarker' ? self.onError(self.layer, true) : self.onError(self.layer);
         });
       })();
     },
@@ -27601,7 +27628,7 @@ require('./layercode.js');
 require('./eonetFiresLayer');
 require('./AllLayers.js');
 
-},{"./AllLayers.js":7,"./PLpeopleLayer.js":8,"./aqicnLayer.js":9,"./eonetFiresLayer":10,"./fracTrackerMobileLayer.js":11,"./indigenousLayers.js":12,"./layercode.js":14,"./openWeatherMapLayer.js":16,"./osmLandfillMineQuarryLayer.js":17,"./pfasLayer.js":18,"./purpleLayer.js":19,"./toxicReleaseLayer.js":20,"./unearthing.js":21,"./wisconsinLayer.js":30,"leaflet-providers":4}],16:[function(require,module,exports){
+},{"./AllLayers.js":7,"./PLpeopleLayer.js":8,"./aqicnLayer.js":9,"./eonetFiresLayer":10,"./fracTrackerMobileLayer.js":11,"./indigenousLayers.js":12,"./layercode.js":14,"./openWeatherMapLayer.js":16,"./osmLandfillMineQuarryLayer.js":17,"./pfasLayer.js":18,"./purpleLayer.js":19,"./toxicReleaseLayer.js":20,"./unearthing.js":21,"./wisconsinLayer.js":31,"leaflet-providers":4}],16:[function(require,module,exports){
 L.OWM = L.TileLayer.extend({
   options: {
     appId: '4c6704566155a7d0d5d2f107c5156d6e', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
@@ -29164,7 +29191,7 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
         }
         for (var key in self._colorOptions) {
           // Generate URL for each type
-          var LMQ_url = info.OSMLandfillMineQuarryLayer.api_url + '?*[landuse=' + key + '][bbox=' + (southwest.lng) + ',' + (southwest.lat) + ',' + (northeast.lng) + ',' + (northeast.lat) + ']';
+          var LMQ_url = info.osmLandfillMineQuarryLayer.api_url + '?*[landuse=' + key + '][bbox=' + (southwest.lng) + ',' + (southwest.lat) + ',' + (northeast.lng) + ',' + (northeast.lat) + ']';
           if (typeof self._map.spin === 'function') {
             self._map.spin(true);
           }
@@ -29174,6 +29201,8 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
             success: function(data) {
               self.parseData(data);
             },
+          }).fail(function() {
+            self.onError('osmLandfillMineQuarryLayer')
           });
           /* The structure of the document is as follows:
                           <node id="node_id", lat="", lon="">
@@ -29353,6 +29382,8 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+          self.onError('pfasLayer')
         });
       })();
     },
@@ -29510,6 +29541,8 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+          self.onError('purpleLayer', true);
         });
       })();
     },
@@ -29657,6 +29690,8 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+          self.onError('toxicReleaseLayer')
         });
       })();
     },
@@ -29747,6 +29782,7 @@ L.LayerGroup.unearthing = L.LayerGroup.extend(
 
     requestData: function(map) {
       this.pointsLayer = {};
+      var self = this;
       var points = this.pointsLayer;
       var setP = this.setPoints;
       $.get('https://publiclab.github.io/unearthing-pvd/RI_mfgs.json')
@@ -29787,7 +29823,9 @@ L.LayerGroup.unearthing = L.LayerGroup.extend(
             },
           });
           setP(points.glLayer);
-        });
+        }).fail(function() {
+          self.onError('Unearthing');
+        })
     },
 
     setPoints: function(points) {
@@ -30083,6 +30121,41 @@ L.spreadsheetLayer = function(options) {
 };
 
 },{}],26:[function(require,module,exports){
+L.Layer.include({
+  onError: function(layerName, group) {
+    this._tiles ? console.log('There was an error in fetching some tiles') : console.log( "Failed to fetch data!" );
+    var selector = '#menu-' + layerName + ' .layer-name';
+    var listLayerSelector = '#' + layerName + ' .layer-list-name';
+    var layerTitle, icon, warning;
+    if (group) {
+      layerTitle = document.querySelector(listLayerSelector);
+      icon = '#' + layerName + ' .layer-list-name .fa-exclamation-triangle';
+      warning =  document.querySelector(icon);
+    } else {
+      layerTitle = document.querySelector(selector);
+      icon =  '#menu-' + layerName + ' .layer-name .fa-exclamation-triangle';
+      warning =  document.querySelector(icon);
+    }
+    
+    // Workaround for layers 'city' and 'windrose' from Open Weather Map
+    if((layerName === 'city' || layerName === 'current' || layerName === 'Cities-zoomIn' || layerName === 'windrose-zoomIn') && !this._requests.city) {
+      if(layerTitle && layerTitle.contains(warning)) { // Add icon only once
+        layerTitle.innerHTML = ' ' + layerName;
+      }
+      return;
+    }
+    
+    if (this._map && typeof this._map.spin === 'function') {
+      this._map.spin(false);
+    }
+    
+    if(layerTitle && !layerTitle.contains(warning)) { // Add icon only once
+      layerTitle.innerHTML += '<i style="color: #d47d12;" class="fas fa-exclamation-triangle .text-warning"></i>';
+    }
+    
+  },
+});
+},{}],27:[function(require,module,exports){
 L.Control.LayersBrowser = L.Control.Layers.extend({
   options: {
     collapsed: true,
@@ -30294,6 +30367,16 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       baseLayersPresent = baseLayersPresent || !obj.overlay;
       baseLayersCount += !obj.overlay ? 1 : 0;
     }
+
+    map.on('overlayremove', function(e) {
+      var layerInfo = this._getLayerData(e);
+      var selector = '#menu-' + e.name + ' .layer-name';
+      var listLayerSelector = '#' + e.name + ' .layer-list-name';
+      var layerTitle = e.group ? document.querySelector(listLayerSelector) : document.querySelector(selector);
+      if (layerTitle && (layerTitle.innerHTML !== (' ' + layerInfo.name) || layerTitle.innerHTML !== (' ' + e.name))) {
+        layerTitle.innerHTML = e.group ? ' ' + e.name : ' ' + layerInfo.name;
+      }
+    }, this)
 
     this._showGroupTitle(); // Show group title when atleast one of its layers is active
     
@@ -30549,6 +30632,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     }
     holder.appendChild(name);
     if(obj.overlay && obj.group) {
+      labelContainer.id = obj.name;
       label.style.width = '100%';
       label.style.marginBottom = '3px';
       input.style.marginLeft = '3.8em';
@@ -30670,7 +30754,7 @@ L.control.layersBrowser = function(baseLayers, overlays, options) {
   return new L.Control.LayersBrowser(baseLayers, overlays, options);
 };
 
-},{"../info.json":13}],27:[function(require,module,exports){
+},{"../info.json":13}],28:[function(require,module,exports){
 L.Control.LegendControl = L.Control.extend({
   options: {
     position: 'bottomleft',
@@ -30727,7 +30811,7 @@ L.control.legendControl = function(options) {
   return new L.Control.LegendControl(options);
 };
 
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 L.Control.MinimalMode = L.Control.extend({
 
     options: {
@@ -30812,7 +30896,7 @@ L.Control.MinimalMode = L.Control.extend({
     return new L.Control.MinimalMode(options);
   };
   
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 omsUtil = function(map, options) {
   var oms = new OverlappingMarkerSpiderfier(map, options);
 
@@ -30829,7 +30913,7 @@ omsUtil = function(map, options) {
   return oms;
 };
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 wisconsinLayer = function(map) {
   
   var info = require('./info.json');
@@ -30861,7 +30945,11 @@ wisconsinLayer = function(map) {
      }
   });
 
+  Wisconsin_NM.on('requesterror', function(e){
+    this.onError('wisconsin');
+ });
+    
   return Wisconsin_NM;
 };
 
-},{"./info.json":13}]},{},[6,15,22,23,24,25,26,27,28,29]);
+},{"./info.json":13}]},{},[6,15,22,23,24,25,26,27,28,29,30]);
