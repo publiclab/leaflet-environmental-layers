@@ -125,6 +125,11 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         if (self._map && typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
+        var timeout = setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
         $.getJSON(Layer_URL, function(data) {
           if (self.layer == 'fractracker')
           { self.parseData(data.feed.entry); }
@@ -134,6 +139,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
           { self.parseData(data); }
           if (self._map && typeof self._map.spin === 'function') {
             self._map.spin(false);
+            clearTimeout(timeout);
           }
         });
       })();

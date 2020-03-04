@@ -26461,7 +26461,11 @@ L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
         if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
-
+        var timeout = setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
         return $.getJSON(fractrackerMobile_url);
       })().done(function(data) {
         self.parseData(data);
@@ -26470,11 +26474,6 @@ L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
           clearTimeout(timeout);
         }
       });
-      var timeout = setTimeout(function() {
-        if (typeof self._map.spin === 'function') {
-          self._map.spin(true);
-        }
-      }, 10000);
     },
 
     parseData: function(data) {
@@ -27138,6 +27137,11 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         if (self._map && typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
+        var timeout = setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
         $.getJSON(Layer_URL, function(data) {
           if (self.layer == 'fractracker')
           { self.parseData(data.feed.entry); }
@@ -27147,6 +27151,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
           { self.parseData(data); }
           if (self._map && typeof self._map.spin === 'function') {
             self._map.spin(false);
+            clearTimeout(timeout);
           }
         });
       })();
@@ -29181,11 +29186,17 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
           if (typeof self._map.spin === 'function') {
             self._map.spin(true);
           }
+          var timeout = setTimeout(function() {
+            if (typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            }
+          }, 10000);
           $.ajax({
             url: LMQ_url,
             dataType: 'xml',
             success: function(data) {
               self.parseData(data);
+              clearTimeout(timeout);
             },
           });
           /* The structure of the document is as follows:
@@ -30872,7 +30883,7 @@ wisconsinLayer = function(map) {
     }
   });
 
-  Wisconsin_NM.on('add', function(e){
+  Wisconsin_NM.on('add', function(e) {
      if(map.getZoom() < info.wisconsin.extents.minZoom){
        return;
      }

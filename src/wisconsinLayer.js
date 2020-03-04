@@ -23,7 +23,7 @@ wisconsinLayer = function(map) {
     }
   });
 
-  Wisconsin_NM.on('add', function(e){
+  Wisconsin_NM.on('add', function(e) {
      if(map.getZoom() < info.wisconsin.extents.minZoom){
        return;
      }

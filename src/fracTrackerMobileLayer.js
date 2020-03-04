@@ -46,7 +46,11 @@ L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
         if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
-
+        var timeout = setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
         return $.getJSON(fractrackerMobile_url);
       })().done(function(data) {
         self.parseData(data);
@@ -55,11 +59,6 @@ L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
           clearTimeout(timeout);
         }
       });
-      var timeout = setTimeout(function() {
-        if (typeof self._map.spin === 'function') {
-          self._map.spin(true);
-        }
-      }, 10000);
     },
 
     parseData: function(data) {
