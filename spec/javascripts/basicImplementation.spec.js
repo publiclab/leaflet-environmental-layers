@@ -25,10 +25,12 @@ describe('Basic LEL Implementation', function() {
 
   it('include specific layers', function() {
     L.LayerGroup.EnvironmentalLayers({
-      include: ['eonetFiresLayer']
+      include: ['eonetFiresLayer', 'Unearthing'],
+      display: ['eonetFiresLayer']
     }).addTo(map);
 
     expect(mapContainer.querySelector('#menu-eonetFiresLayer')).toExist();
+    expect(mapContainer.querySelector('#menu-Unearthing')).toExist();
   });
 
   it('exclude specific layers', function() {

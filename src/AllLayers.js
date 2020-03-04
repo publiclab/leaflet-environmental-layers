@@ -175,6 +175,14 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       L.control.layers(baseMaps, this.overlayMaps).addTo(map) :
       L.control.layersBrowser(baseMaps, this.groupedOverlayMaps).addTo(map);
 
+      // set the map menu to the correct size
+      if (typeof leafletControl.setLayersBrowserSize === 'function') {
+        map.on('resize', function () {
+          leafletControl.setLayersBrowserSize(map);
+        });
+        leafletControl.setLayersBrowserSize(map);
+      }
+
       var modeControl = new L.control.minimalMode(leafletControl);
       modeControl.addTo(map);
 
