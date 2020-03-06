@@ -211,7 +211,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     }
 
     map.on('overlayremove', function(e) {
-      const mapId = this._map._container.id;
+      const mapId = this._map && this._map._container.id;
       var layerInfo = this._getLayerData(e);
       var selector = '#' + mapId + '-menu-' + e.name + ' .layer-name';
       var listLayerSelector = '#' + mapId + '-' + e.name + ' .layer-list-name';
