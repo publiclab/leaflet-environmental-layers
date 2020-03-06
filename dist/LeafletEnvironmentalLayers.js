@@ -30176,8 +30176,8 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     this._lastZIndex = 0;
     this._handlingClick = false;
 
-    // Layer names to be highlighted
-    // 'obj.group' for groups and 'obj.name' for the rest
+    // List of layers/layergroups to be highlighted
+    // Layers names listed are values of 'obj.group' for groups and 'obj.name' for the rest
     this._newLayerContainers = [];
 
     for (var i in baseLayers) {
@@ -30756,12 +30756,13 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
 
   _highlightLayers: function(backgroundProp) {
     this._newLayerContainers.map(layerName => {
-      let selector = '#menu-' + layerName + ' .layer-info-container';
+      const mapId = this._map._container.id;
+      let selector = '#' + mapId + ' #menu-' + layerName + ' .layer-info-container';
       let elem = document.querySelector(selector);
       if(elem){
         elem.style.background = backgroundProp
       } else {  // Group names
-        selector = '#menu-' + layerName + '.layer-info-container';
+        selector = '#' + mapId + ' #menu-' + layerName + '.layer-info-container';
         elem = document.querySelector(selector);
         elem.style.background = backgroundProp;
       }
