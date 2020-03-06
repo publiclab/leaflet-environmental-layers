@@ -58,7 +58,7 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
           }
           clearTimeout(timeout);
         }).fail(function() {
-          self.onError('pfasLayer')
+          self.onError('pfasLayer');
         });
       })();
     },

@@ -80,7 +80,7 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
           }
           clearTimeout(timeout);
         }).fail(function() {
-          self.onError('toxicReleaseLayer')
+          self.onError('toxicReleaseLayer');
         });
       })();
     },

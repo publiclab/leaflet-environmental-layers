@@ -60,8 +60,7 @@ L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
           }
           clearTimeout(timeout);
         }).fail(function() {
-          self.onError('eonetFiresLayer')
-
+          self.onError('eonetFiresLayer');
         });
       })();
     },

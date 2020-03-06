@@ -65,7 +65,7 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
               clearTimeout(timeout);
             },
           }).fail(function() {
-            self.onError('osmLandfillMineQuarryLayer')
+            self.onError('osmLandfillMineQuarryLayer');
           });
           /* The structure of the document is as follows:
                           <node id="node_id", lat="", lon="">

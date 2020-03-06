@@ -67,7 +67,7 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
           }
           clearTimeout(timeout);
         }).fail(function() {
-            self.onError(self.layer, true)
+            self.onError(self.layer, true);
         });
       })();
     },
