@@ -17,30 +17,6 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       layers5: ['clouds', 'cloudsClassic', 'precipitation', 'precipitationClassic', 'rain', 'rainClassic', 'snow', 'pressure', 'pressureContour', 'temperature', 'wind', 'city'],
       layers6: ['eonetFiresLayer', 'fracTrackerMobile'],
 
-      OpenInfraMap_Power: L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
-      }).on('tileerror', function() {
-        this.onError('Power', true)
-      }),
-      OpenInfraMap_Petroleum: L.tileLayer('https://tiles-{s}.openinframap.org/petroleum/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
-      }).on('tileerror', function() {
-        this.onError('Petroleum', true)
-      }),
-      OpenInfraMap_Telecom: L.tileLayer('https://tiles-{s}.openinframap.org/telecoms/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
-      }).on('tileerror', function() {
-        this.onError('Telecom', true)
-      }),
-      OpenInfraMap_Water: L.tileLayer('https://tiles-{s}.openinframap.org/water/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
-      }).on('tileerror', function() {
-        this.onError('Water', true)
-      }),
     },
 
     initialize: function(param) {
@@ -60,6 +36,31 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       }
 
       this.options.layers = param;
+
+      this._OpenInfraMap_Power = L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+      }).on('tileerror', function() {
+        this.onError('Power', true)
+      })
+      this._OpenInfraMap_Petroleum = L.tileLayer('https://tiles-{s}.openinframap.org/petroleum/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+      }).on('tileerror', function() {
+        this.onError('Petroleum', true)
+      })
+      this._OpenInfraMap_Telecom = L.tileLayer('https://tiles-{s}.openinframap.org/telecoms/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+      }).on('tileerror', function() {
+        this.onError('Telecom', true)
+      })
+      this._OpenInfraMap_Water = L.tileLayer('https://tiles-{s}.openinframap.org/water/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+      }).on('tileerror', function() {
+        this.onError('Water', true)
+      });
 
     },
 
@@ -110,19 +111,19 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
           
           switch (layer) {
           case 'Power':
-            this.overlayMaps[layer] = this.options.OpenInfraMap_Power;
+            this.overlayMaps[layer] = this._OpenInfraMap_Power;
             this.groupedOverlayMaps.OpenInfraMap.layers[layer] = this.overlayMaps[layer];
             break;
           case 'Petroleum':
-            this.overlayMaps[layer] = this.options.OpenInfraMap_Petroleum;
+            this.overlayMaps[layer] = this._OpenInfraMap_Petroleum;
             this.groupedOverlayMaps.OpenInfraMap.layers[layer] = this.overlayMaps[layer];
             break;
           case 'Telecom':
-            this.overlayMaps[layer] = this.options.OpenInfraMap_Telecom;
+            this.overlayMaps[layer] = this._OpenInfraMap_Telecom;
             this.groupedOverlayMaps.OpenInfraMap.layers[layer] = this.overlayMaps[layer];
             break;
           case 'Water':
-            this.overlayMaps[layer] = this.options.OpenInfraMap_Water;
+            this.overlayMaps[layer] = this._OpenInfraMap_Water;
             this.groupedOverlayMaps.OpenInfraMap.layers[layer] = this.overlayMaps[layer];
             break;
           }

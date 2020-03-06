@@ -25863,30 +25863,6 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       layers5: ['clouds', 'cloudsClassic', 'precipitation', 'precipitationClassic', 'rain', 'rainClassic', 'snow', 'pressure', 'pressureContour', 'temperature', 'wind', 'city'],
       layers6: ['eonetFiresLayer', 'fracTrackerMobile'],
 
-      OpenInfraMap_Power: L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
-      }).on('tileerror', function() {
-        this.onError('Power', true)
-      }),
-      OpenInfraMap_Petroleum: L.tileLayer('https://tiles-{s}.openinframap.org/petroleum/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
-      }).on('tileerror', function() {
-        this.onError('Petroleum', true)
-      }),
-      OpenInfraMap_Telecom: L.tileLayer('https://tiles-{s}.openinframap.org/telecoms/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
-      }).on('tileerror', function() {
-        this.onError('Telecom', true)
-      }),
-      OpenInfraMap_Water: L.tileLayer('https://tiles-{s}.openinframap.org/water/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
-      }).on('tileerror', function() {
-        this.onError('Water', true)
-      }),
     },
 
     initialize: function(param) {
@@ -25906,6 +25882,31 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       }
 
       this.options.layers = param;
+
+      this._OpenInfraMap_Power = L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+      }).on('tileerror', function() {
+        this.onError('Power', true)
+      })
+      this._OpenInfraMap_Petroleum = L.tileLayer('https://tiles-{s}.openinframap.org/petroleum/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+      }).on('tileerror', function() {
+        this.onError('Petroleum', true)
+      })
+      this._OpenInfraMap_Telecom = L.tileLayer('https://tiles-{s}.openinframap.org/telecoms/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+      }).on('tileerror', function() {
+        this.onError('Telecom', true)
+      })
+      this._OpenInfraMap_Water = L.tileLayer('https://tiles-{s}.openinframap.org/water/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+      }).on('tileerror', function() {
+        this.onError('Water', true)
+      });
 
     },
 
@@ -25956,19 +25957,19 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
           
           switch (layer) {
           case 'Power':
-            this.overlayMaps[layer] = this.options.OpenInfraMap_Power;
+            this.overlayMaps[layer] = this._OpenInfraMap_Power;
             this.groupedOverlayMaps.OpenInfraMap.layers[layer] = this.overlayMaps[layer];
             break;
           case 'Petroleum':
-            this.overlayMaps[layer] = this.options.OpenInfraMap_Petroleum;
+            this.overlayMaps[layer] = this._OpenInfraMap_Petroleum;
             this.groupedOverlayMaps.OpenInfraMap.layers[layer] = this.overlayMaps[layer];
             break;
           case 'Telecom':
-            this.overlayMaps[layer] = this.options.OpenInfraMap_Telecom;
+            this.overlayMaps[layer] = this._OpenInfraMap_Telecom;
             this.groupedOverlayMaps.OpenInfraMap.layers[layer] = this.overlayMaps[layer];
             break;
           case 'Water':
-            this.overlayMaps[layer] = this.options.OpenInfraMap_Water;
+            this.overlayMaps[layer] = this._OpenInfraMap_Water;
             this.groupedOverlayMaps.OpenInfraMap.layers[layer] = this.overlayMaps[layer];
             break;
           }
@@ -30123,17 +30124,18 @@ L.spreadsheetLayer = function(options) {
 },{}],26:[function(require,module,exports){
 L.Layer.include({
   onError: function(layerName, group) {
-    this._tiles ? console.log('There was an error in fetching some tiles') : console.log( "Failed to fetch data!" );
-    var selector = '#menu-' + layerName + ' .layer-name';
-    var listLayerSelector = '#' + layerName + ' .layer-list-name';
+    const mapId = this._map._container.id;
+    this._tiles ? console.log('There was an error in fetching some tiles') : console.log('Failed to fetch data!');
+    var selector = '#' + mapId + '-menu-' + layerName + ' .layer-name';
+    var listLayerSelector = '#' + mapId + '-' + layerName + ' .layer-list-name';
     var layerTitle, icon, warning;
     if (group) {
       layerTitle = document.querySelector(listLayerSelector);
-      icon = '#' + layerName + ' .layer-list-name .fa-exclamation-triangle';
+      icon = '#' + mapId + '-' + layerName + ' .layer-list-name .fa-exclamation-triangle';
       warning =  document.querySelector(icon);
     } else {
       layerTitle = document.querySelector(selector);
-      icon =  '#menu-' + layerName + ' .layer-name .fa-exclamation-triangle';
+      icon =  '#' + mapId + '-menu-' + layerName + ' .layer-name .fa-exclamation-triangle';
       warning =  document.querySelector(icon);
     }
     
@@ -30369,9 +30371,10 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     }
 
     map.on('overlayremove', function(e) {
+      const mapId = this._map._container.id;
       var layerInfo = this._getLayerData(e);
-      var selector = '#menu-' + e.name + ' .layer-name';
-      var listLayerSelector = '#' + e.name + ' .layer-list-name';
+      var selector = '#' + mapId + '-menu-' + e.name + ' .layer-name';
+      var listLayerSelector = '#' + mapId + '-' + e.name + ' .layer-list-name';
       var layerTitle = e.group ? document.querySelector(listLayerSelector) : document.querySelector(selector);
       if (layerTitle && (layerTitle.innerHTML !== (' ' + layerInfo.name) || layerTitle.innerHTML !== (' ' + e.name))) {
         layerTitle.innerHTML = e.group ? ' ' + e.name : ' ' + layerInfo.name;
@@ -30510,7 +30513,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   _createGroup: function(obj) {
     if(obj.group) {
       var layerGroup = document.createElement('a');
-      layerGroup.href = '#' + obj.group.replace(/\s/g, '');
+      layerGroup.href = '#' + this._map._container.id + '-' + obj.group.replace(/\s/g, '');
       layerGroup.setAttribute('data-toggle', 'collapse');
       layerGroup.setAttribute('role', 'button');
       layerGroup.setAttribute('aria-expanded', 'false');
@@ -30541,7 +30544,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       groupName.innerHTML = elements.name;
 
       var titleHolder = document.createElement('div');
-      titleHolder.id = 'groupName-' + obj.group; 
+      titleHolder.id = this._map._container.id +'-groupName-' + obj.group; 
       titleHolder.className = 'clearfix layer-info-container';
       titleHolder.appendChild(layerGroup);
       layerGroup.appendChild(chevron);
@@ -30567,7 +30570,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   _createGroupHolder: function(obj) {
     var groupName;
     if(obj.group) {
-      groupName =  obj.group.replace(/\s/g, '');
+      groupName = this._map._container.id + '-' + obj.group.replace(/\s/g, '');
     }
     var groupHolder = document.createElement('div');
     groupHolder.className = 'layers-sub-list collapse';
@@ -30632,7 +30635,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     }
     holder.appendChild(name);
     if(obj.overlay && obj.group) {
-      labelContainer.id = obj.name;
+      labelContainer.id = this._map._container.id + '-' + obj.name;
       label.style.width = '100%';
       label.style.marginBottom = '3px';
       input.style.marginLeft = '3.8em';
@@ -30644,7 +30647,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     if(obj.overlay && !obj.group) {
       labelContainer.appendChild(elements.layerDesc);
       labelContainer.className = 'clearfix layer-info-container';
-      labelContainer.id = 'menu-' + obj.name.replace(/ /g,"_");
+      labelContainer.id = this._map._container.id + '-menu-' + obj.name.replace(/ /g,"_");
       labelContainer.appendChild(elements.dataInfo);
       labelContainer.appendChild(separator);
     }
