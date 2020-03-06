@@ -29,5 +29,9 @@ wisconsinLayer = function(map) {
      }
   });
 
+  Wisconsin_NM.on('requesterror', function(e){
+    this.onError('wisconsin');
+ });
+    
   return Wisconsin_NM;
 };

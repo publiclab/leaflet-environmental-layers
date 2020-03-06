@@ -1,0 +1,31 @@
+{
+  "results": [
+    {
+      "id": 10,
+      "url": "https://odorlog.api.ushahidi.io/api/v3/posts/10",
+      "title": "Olor a basura",
+      "values": {
+        "bcc29002-c4d3-4c2c-92c7-1c9032c3b0fd": [
+          {
+          "lon": -4.71691,
+          "lat": 41.659939
+          }
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "url": "https://odorlog.api.ushahidi.io/api/v3/posts/6",
+      "title": "REPORTE_0001_RIO GUADARRAMA, COLLADO VILLALBA, MADRID.",
+      "values": {
+        "bcc29002-c4d3-4c2c-92c7-1c9032c3b0fd": [
+          {
+          "lon": -3.994408,
+          "lat": 40.61856
+          }
+        ]
+      }
+    } 
+  ],
+  "total_count": 2
+}

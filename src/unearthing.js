@@ -18,6 +18,7 @@ L.LayerGroup.unearthing = L.LayerGroup.extend(
 
     requestData: function(map) {
       this.pointsLayer = {};
+      var self = this;
       var points = this.pointsLayer;
       var setP = this.setPoints;
       $.get('https://publiclab.github.io/unearthing-pvd/RI_mfgs.json')
@@ -58,7 +59,9 @@ L.LayerGroup.unearthing = L.LayerGroup.extend(
             },
           });
           setP(points.glLayer);
-        });
+        }).fail(function() {
+          self.onError('Unearthing');
+        })
     },
 
     setPoints: function(points) {

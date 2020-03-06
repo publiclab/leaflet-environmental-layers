@@ -33,6 +33,26 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     }
   },
 
+  setLayersBrowserSize: function(map) {
+    var mapobj = map._container;
+    var width = mapobj.offsetWidth;
+
+    var mapSizeArray = [
+      ['xs', 0, 380],
+      ['sm', 380, 590],
+      ['md', 590, 880],
+      ['lg', 880, 10000]
+    ];
+
+    mapSizeArray.forEach((sizeMinMax) => {
+      if(width >= sizeMinMax[1] && width < sizeMinMax[2]) {
+        mapobj.classList.add(sizeMinMax[0]);
+      } else {
+        mapobj.classList.remove(sizeMinMax[0]);
+      }
+    });
+  },
+
   expand: function() {
     L.DomUtil.addClass(this._container, 'leaflet-control-layers-expanded');
     this._section.style.height = null;
@@ -189,6 +209,16 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       baseLayersPresent = baseLayersPresent || !obj.overlay;
       baseLayersCount += !obj.overlay ? 1 : 0;
     }
+
+    map.on('overlayremove', function(e) {
+      var layerInfo = this._getLayerData(e);
+      var selector = '#menu-' + e.name + ' .layer-name';
+      var listLayerSelector = '#' + e.name + ' .layer-list-name';
+      var layerTitle = e.group ? document.querySelector(listLayerSelector) : document.querySelector(selector);
+      if (layerTitle && (layerTitle.innerHTML !== (' ' + layerInfo.name) || layerTitle.innerHTML !== (' ' + e.name))) {
+        layerTitle.innerHTML = e.group ? ' ' + e.name : ' ' + layerInfo.name;
+      }
+    }, this)
 
     this._showGroupTitle(); // Show group title when atleast one of its layers is active
     
@@ -444,6 +474,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     }
     holder.appendChild(name);
     if(obj.overlay && obj.group) {
+      labelContainer.id = obj.name;
       label.style.width = '100%';
       label.style.marginBottom = '3px';
       input.style.marginLeft = '3.8em';

@@ -56,44 +56,95 @@ var OpenSenseLayer = L.layerGroup.layerCode('opensense');
 var OpenInfraMap_Power = L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png', {
   maxZoom: 18,
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+}).on('tileerror', function() {
+  console.log('There was an error in fetching some tiles')
+  this.onError('Power', true);
 });
 var OpenInfraMap_Petroleum = L.tileLayer('https://tiles-{s}.openinframap.org/petroleum/{z}/{x}/{y}.png', {
   maxZoom: 18,
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+}).on('tileerror', function() {
+  this.onError('Petroleum', true);
 });
 var OpenInfraMap_Telecom = L.tileLayer('https://tiles-{s}.openinframap.org/telecoms/{z}/{x}/{y}.png', {
   maxZoom: 18,
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+}).on('tileerror', function() {
+  this.onError('Telecom', true);
 });
 var OpenInfraMap_Water = L.tileLayer('https://tiles-{s}.openinframap.org/water/{z}/{x}/{y}.png', {
   maxZoom: 18,
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+}).on('tileerror', function() {
+  this.onError('Water', true);
 });
 
-var Justicemap_income = L.tileLayer.provider('JusticeMap.income');
-var JusticeMap_americanIndian = L.tileLayer.provider('JusticeMap.americanIndian');
-var JusticeMap_asian = L.tileLayer.provider('JusticeMap.asian');
-var JusticeMap_black = L.tileLayer.provider('JusticeMap.black');
-var JusticeMap_multi = L.tileLayer.provider('JusticeMap.multi');
-var JusticeMap_hispanic = L.tileLayer.provider('JusticeMap.hispanic');
-var JusticeMap_nonWhite = L.tileLayer.provider('JusticeMap.nonWhite');
-var JusticeMap_white = L.tileLayer.provider('JusticeMap.white');
-var JusticeMap_plurality = L.tileLayer.provider('JusticeMap.plurality');
+var Justicemap_income = L.tileLayer.provider('JusticeMap.income').on('tileerror', function() {
+  this.onError('income', true);
+});
+var JusticeMap_americanIndian = L.tileLayer.provider('JusticeMap.americanIndian').on('tileerror', function() {
+  this.onError('americanIndian', true);
+});
+var JusticeMap_asian = L.tileLayer.provider('JusticeMap.asian').on('tileerror', function() {
+  this.onError('asian', true);
+});
+var JusticeMap_black = L.tileLayer.provider('JusticeMap.black').on('tileerror', function() {
+  this.onError('black', true);
+});
+var JusticeMap_multi = L.tileLayer.provider('JusticeMap.multi').on('tileerror', function() {
+  this.onError('multi', true);
+});
+var JusticeMap_hispanic = L.tileLayer.provider('JusticeMap.hispanic').on('tileerror', function() {
+  this.onError('hispanic', true);
+});
+var JusticeMap_nonWhite = L.tileLayer.provider('JusticeMap.nonWhite').on('tileerror', function() {
+  this.onError('nonWhite', true);
+});
+var JusticeMap_white = L.tileLayer.provider('JusticeMap.white').on('tileerror', function() {
+  this.onError('white', true);
+});
+var JusticeMap_plurality = L.tileLayer.provider('JusticeMap.plurality').on('tileerror', function() {
+  this.onError('plurality', true);
+});
 
-var clouds = L.OWM.clouds({showLegend: true, opacity: 0.5});
-var cloudscls = L.OWM.cloudsClassic({});
-var precipitation = L.OWM.precipitation({});
-var precipitationcls = L.OWM.precipitationClassic({});
-var rain = L.OWM.rain({});
-var raincls = L.OWM.rainClassic({});
-var snow = L.OWM.snow({});
-var pressure = L.OWM.pressure({});
-var pressurecntr = L.OWM.pressureContour({});
-var temp = L.OWM.temperature({});
-var wind = L.OWM.wind({});
+var clouds = L.OWM.clouds({showLegend: true, opacity: 0.5}).on('tileerror', function() {
+  this.onError('Clouds', true);
+});
+var cloudscls = L.OWM.cloudsClassic({}).on('tileerror', function() {
+  this.onError('cloudsClassic', true);
+});
+var precipitation = L.OWM.precipitation({}).on('tileerror', function() {
+  this.onError('precipitation', true);
+});
+var precipitationcls = L.OWM.precipitationClassic({}).on('tileerror', function() {
+  this.onError('precipitationClassic', true);
+});
+var rain = L.OWM.rain({}).on('tileerror', function() {
+  this.onError('rain', true);
+});
+var raincls = L.OWM.rainClassic({}).on('tileerror', function() {
+  this.onError('rainClassic', true);
+});
+var snow = L.OWM.snow({}).on('tileerror', function() {
+  this.onError('snow', true);
+});
+var pressure = L.OWM.pressure({}).on('tileerror', function() {
+  this.onError('pressure', true);
+});
+var pressurecntr = L.OWM.pressureContour({}).on('tileerror', function() {
+  this.onError('pressureContour-zoomIn', true);
+});
+var temp = L.OWM.temperature({}).on('tileerror', function() {
+  this.onError('temp', true);
+});
+var wind = L.OWM.wind({}).on('tileerror', function() {
+  this.onError('wind', true);
+});
 
 
-var city = L.OWM.current({intervall: 15, minZoom: 3});
+var city = L.OWM.current({intervall: 15, minZoom: 3}).on('owmloadingend', function() {
+  this.onError('Cities-zoomIn', true);
+});
 var windrose = L.OWM.current({
   intervall: 15,
   minZoom: 3,
@@ -103,7 +154,9 @@ var windrose = L.OWM.current({
   imageLoadingBgUrl: 'https://openweathermap.org/img/w0/iwind.png',
 });
 windrose.on('owmlayeradd', windroseAdded, windrose);
-
+windrose.on('owmloadingend', function() {
+  this.onError('windrose-zoomIn', true);
+});
 var IndigenousLandsTerritories = L.layerGroup.indigenousLayers('Territories');
 var IndigenousLandsLanguages = L.layerGroup.indigenousLayers('Languages');
 var IndigenousLandsTreaties = L.layerGroup.indigenousLayers('Treaties');
@@ -129,8 +182,8 @@ var overlayMaps = {
   'purpleair': {
     category: 'group',
     layers: {
-      'PurpleAirLayer-HeatMap': PurpleLayer,
-      'PurpleAirMarkerLayer': PurpleAirMarkerLayer,
+      'purpleLayer': PurpleLayer,
+      'purpleairmarker': PurpleAirMarkerLayer,
     }
   },
   'skytruth': SkyTruth,
@@ -172,21 +225,21 @@ var overlayMaps = {
     category: 'group',
     layers: {
       'Clouds': clouds,
-      'clouds (classic)': cloudscls,
+      'cloudsClassic': cloudscls,
       'precipitation': precipitation,
-      'precipitation (classic)': precipitationcls,
+      'precipitationClassic': precipitationcls,
       'rain': rain,
-      'rain (classic)': raincls,
+      'rainClassic': raincls,
       'snow': snow,
       'pressure': pressure,
-      'pressure contour (zoom in)': pressurecntr,
+      'pressureContour-zoomIn': pressurecntr,
       'temp': temp,
       'wind': wind,
-      'Cities (zoom in)': city,
-      'windrose (zoom in)': windrose,
+      'Cities-zoomIn': city,
+      'windrose-zoomIn': windrose,
     },
   },
-  'pfaslayer': PFASTracker,
+  'pfasLayer': PFASTracker,
   
   'aqicnLayer': AQICNLayer,
   'openaq': OpenAqLayer,
@@ -194,7 +247,7 @@ var overlayMaps = {
   'opensense': OpenSenseLayer,
   'osmLandfillMineQuarryLayer': OSMLandfillMineQuarryLayer,
   'eonetFiresLayer': EonetFiresLayer,
-  'unearthing': Unearthing
+  'Unearthing': Unearthing
 };
 
 var allMapLayers = {
@@ -261,6 +314,12 @@ var hash = new L.FullHash(map, allMapLayers);
 // var leafletControl = new L.control.layers(baseMaps, overlayMaps);
 var leafletControl = new L.control.layersBrowser(baseMaps, overlayMaps);
 leafletControl.addTo(map);
+
+// only use this if you are using the layersBrowser
+map.on('resize', function () {
+  leafletControl.setLayersBrowserSize(map);
+});
+leafletControl.setLayersBrowserSize(map);
 
 var modeControl = new L.control.minimalMode(leafletControl);
 modeControl.addTo(map);

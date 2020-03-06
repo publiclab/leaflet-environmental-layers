@@ -58,6 +58,8 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
             self._map.spin(false);
           }
           clearTimeout(timeout);
+        }).fail(function() {
+          self.onError('purpleLayer', true);
         });
       })();
     },
