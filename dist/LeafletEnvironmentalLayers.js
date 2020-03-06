@@ -30176,6 +30176,10 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     this._lastZIndex = 0;
     this._handlingClick = false;
 
+    // List of layers/layergroups to be highlighted
+    // Layers names listed are values of 'obj.group' for groups and 'obj.name' for the rest
+    this._newLayerContainers = [];
+
     for (var i in baseLayers) {
       this._addLayer(baseLayers[i], i);
     }
@@ -30228,6 +30232,13 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     this._layersLink.style.marginLeft = '0';
     return this;
   },
+
+  collapse: function () {
+    L.DomUtil.removeClass(this._container, 'leaflet-control-layers-expanded');
+    this._highlightLayers('none');
+    this._newLayerContainers = [];
+		return this;
+	},
 
   _initLayout: function() {
     var className = 'leaflet-control-layers';
@@ -30385,6 +30396,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
         this._layersLink.style.marginLeft = '2.9em';
         this._alertBadge.style.display = 'flex';
         this._alertBadge.innerHTML = this.options.newLayers.length;
+        this._highlightLayers('#ffffc6');
       } else {
         this._layersLink.style.marginLeft = '0';
         this._alertBadge.style.display = 'none';
@@ -30408,6 +30420,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   _createSeparator: function() {
     var separator = document.createElement('div');
     separator.className = 'leaflet-control-layers-separator';
+    separator.style.margin = '0';
 
     return separator;
   },
@@ -30541,8 +30554,9 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       groupName.innerHTML = elements.name;
 
       var titleHolder = document.createElement('div');
-      titleHolder.id = 'groupName-' + obj.group; 
+      titleHolder.id = 'menu-' + obj.group; 
       titleHolder.className = 'clearfix layer-info-container';
+      titleHolder.setAttribute('data-cy', 'layer'); // Cypress selector
       titleHolder.appendChild(layerGroup);
       layerGroup.appendChild(chevron);
       layerGroup.appendChild(elements.icon);
@@ -30550,6 +30564,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       titleHolder.appendChild(groupName);
       titleHolder.appendChild(elements.layerDesc);
       titleHolder.appendChild(elements.dataInfo);
+      titleHolder.style.padding = '0.4em 0';
 
       var separator = this._createSeparator();
 
@@ -30614,11 +30629,11 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       name.innerHTML = ' ' + elements.name;
     }
     
-
+    var layerContainer = document.createElement('div');
     // Helps from preventing layer control flicker when checkboxes are disabled
     // https://github.com/Leaflet/Leaflet/issues/2771
     var holder = document.createElement('div');
-
+    layerContainer.appendChild(labelContainer);
     labelContainer.appendChild(label);
     label.appendChild(holder);
     holder.appendChild(input);
@@ -30639,22 +30654,23 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       name.style.marginLeft = '9.6em';
       name.style.color = '#717171';
       name.className = 'layer-list-name';
-      labelContainer.appendChild(separator);
+      layerContainer.appendChild(separator);
     }
     if(obj.overlay && !obj.group) {
       labelContainer.appendChild(elements.layerDesc);
       labelContainer.className = 'clearfix layer-info-container';
-      labelContainer.id = 'menu-' + obj.name.replace(/ /g,"_");
+      layerContainer.id = 'menu-' + obj.name.replace(/ /g,"_");
+      layerContainer.setAttribute('data-cy', 'layer');  // Cypress selector
       labelContainer.appendChild(elements.dataInfo);
-      labelContainer.appendChild(separator);
+      layerContainer.appendChild(separator);
     }
-
-    this._hideOutOfBounds(obj, [labelContainer, separator]);
+    labelContainer.style.padding = '0.4em 0';
+    this._hideOutOfBounds(obj, [layerContainer, separator]);
     
     var container = obj.overlay ? this._overlaysList : this._baseLayersList;
-    container.appendChild(labelContainer);
+    container.appendChild(layerContainer);
     this._checkDisabledLayers();
-    return labelContainer;
+    return layerContainer;
   },
 
   _hideOutOfBounds: function(obj, elements) {
@@ -30711,7 +30727,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   _showGroupTitle: function() {
     for(var i in this._grpTitleVisible) {
       if(this._grpTitleVisible[i]) {
-        var groupName = 'groupName-' + i;
+        var groupName = 'menu-' + i;
         var grpHolder = document.getElementById(groupName);
         var grpSelector = grpHolder && grpHolder.nextElementSibling;
         if(grpHolder) {
@@ -30726,6 +30742,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   _existingLayers: function(obj, doesExist, isNotGlobal) { 
     if(doesExist && isNotGlobal && !this.options.existingLayers[obj.name]) { // Check if there is a new layer in current bounds
       this.options.newLayers = [...this.options.newLayers, obj.name];
+      this._newLayerContainers = obj.group ? [...this._newLayerContainers, obj.group] : [...this._newLayerContainers, obj.name]
       this.options.existingLayers[obj.name] = true;
     } else if(doesExist) {
       this.options.existingLayers[obj.name] = true; // layer exists upon inititalization
@@ -30735,6 +30752,21 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     } else {
       this.options.existingLayers[obj.name] = false; // layer does not exist upon inititalization
     }
+  },
+
+  _highlightLayers: function(backgroundProp) {
+    this._newLayerContainers.map(layerName => {
+      const mapId = this._map._container.id;
+      let selector = '#' + mapId + ' #menu-' + layerName + ' .layer-info-container';
+      let elem = document.querySelector(selector);
+      if(elem){
+        elem.style.background = backgroundProp
+      } else {  // Group names
+        selector = '#' + mapId + ' #menu-' + layerName + '.layer-info-container';
+        elem = document.querySelector(selector);
+        elem.style.background = backgroundProp;
+      }
+    })
   },
 
   _getLayerData: function(obj) {

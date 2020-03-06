@@ -4,7 +4,6 @@ describe('Toxic Release layer', function() {
     cy.wait(300)
     cy.window().then((win) => {
       cy.fixture('toxicRelease').then((data) => {
-        console.log(data)
         cy.stub(win.ToxicRelease, 'requestData', function() {
           win.ToxicRelease.parseData(data);
         })
