@@ -8,7 +8,7 @@ describe('Odor report layer', function() {
           win.OdorReport.parseData(data);
         })
       })
-      cy.get('#menu-odorreport label').click({ force: true })
+      cy.get('#map-menu-odorreport label').click({ force: true })
       cy.get('.leaflet-marker-pane').children().should('have.length', 2)
     }) 
   })
@@ -43,7 +43,7 @@ describe('Odor report layer', function() {
   })
 
   it('removes markers from the map and the layer name from the hash when clicked again', function() {
-    cy.get('#menu-odorreport label').click({ force: true })
+    cy.get('#map-menu-odorreport label').click({ force: true })
     cy.hash().should('eq', '#lat=40.499&lon=-5.010&zoom=8&layers=Standard')
     cy.get('.leaflet-marker-pane').children().should('have.length', 0)
     cy.get('.leaflet-overlay-pane svg g').children().should('have.length', 0)

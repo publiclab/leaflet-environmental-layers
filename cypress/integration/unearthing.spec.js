@@ -4,7 +4,7 @@ describe('Unearthing layer', function() {
     cy.wait(300)
     cy.window().then((win) => {
       const stub = cy.stub(win.Unearthing, 'requestData')
-      cy.get('#menu-Unearthing label').click({ force: true }).then(() => {
+      cy.get('#map-menu-Unearthing label').click({ force: true }).then(() => {
         expect(stub).to.be.called
       })
     }) 
@@ -15,7 +15,7 @@ describe('Unearthing layer', function() {
   })
 
   it('removes layer name from the hash when clicked again', function() {
-    cy.get('#menu-Unearthing label').click({ force: true })
+    cy.get('#map-menu-Unearthing label').click({ force: true })
     cy.hash().should('eq', '#lat=51.15&lon=13.45&zoom=4&layers=Standard')
   })
 })  
