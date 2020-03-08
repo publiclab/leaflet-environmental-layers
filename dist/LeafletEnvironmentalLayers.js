@@ -30758,14 +30758,15 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   },
 
   _highlightLayers: function(backgroundProp) {
+    console.log(this._newLayerContainers)
     this._newLayerContainers.map(layerName => {
       const mapId = this._map._container.id;
-      let selector = '#' + mapId + ' #menu-' + layerName + ' .layer-info-container';
+      let selector = '#' + mapId + '-menu-' + layerName + ' .layer-info-container';
       let elem = document.querySelector(selector);
       if(elem){
         elem.style.background = backgroundProp
       } else {  // Group names
-        selector = '#' + mapId + ' #menu-' + layerName + '.layer-info-container';
+        selector = '#' + mapId + '-menu-' + layerName + '.layer-info-container';
         elem = document.querySelector(selector);
         elem.style.background = backgroundProp;
       }
