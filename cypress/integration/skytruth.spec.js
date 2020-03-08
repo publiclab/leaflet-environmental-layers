@@ -1,7 +1,7 @@
 describe('Skytruth layer', function() {
   it('adds markers on click', function() {
     cy.openWindow('/example/index.html#lat=41.6283&lon=-91.7235&zoom=10&layers=Standard')
-    cy.wait(6000)
+    cy.wait(300)
     cy.window().then((win) => {
       cy.fixture('skytruth').then((data) => {
         cy.stub(win.SkyTruth, 'requestData', function() {

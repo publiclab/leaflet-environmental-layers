@@ -3,7 +3,7 @@ describe('Layers menu filters and displays layers on map', function() {
     cy.openWindow('/example/index.html#lat=43.00&lon=-83.00&zoom=3&layers=Standard')
     cy.wait(200)
     cy.get('.leaflet-control-layers').trigger('mouseover')
-    cy.get('.layer-info-container').should('have.css', 'display', 'block').then((layers) => {
+    cy.get('[data-cy=layer]').should('have.css', 'display', 'block').then((layers) => {
       const layersArray = Array.prototype.slice.call(layers)
       expect(layersArray.filter(layer => layer.style.display === 'block').length).to.equal(9)
     })
@@ -20,7 +20,7 @@ describe('Layers menu filters and displays layers on map', function() {
 
   it('adds layers to the menu on map movement', function() {
     cy.get('.leaflet-control-layers').trigger('mouseover')
-    cy.get('.layer-info-container').should('have.css', 'display', 'block').then((layers) => {
+    cy.get('[data-cy=layer]').should('have.css', 'display', 'block').then((layers) => {
       const layersArray = Array.prototype.slice.call(layers)
       expect(layersArray.filter(layer => layer.style.display === 'block').length).to.equal(14)
     })
@@ -37,7 +37,7 @@ describe('Layers menu filters and displays layers on map', function() {
     cy.window().its('map').invoke('setView',[43.00, -83.00], 3)
     cy.wait(300)
     cy.get('.leaflet-control-layers').trigger('mouseover')
-    cy.get('.layer-info-container').should('have.css', 'display', 'block').then((layers) => {
+    cy.get('[data-cy=layer]').should('have.css', 'display', 'block').then((layers) => {
       const layersArray = Array.prototype.slice.call(layers)
       expect(layersArray.filter(layer => layer.style.display === 'block').length).to.equal(9)
     })
@@ -47,13 +47,13 @@ describe('Layers menu filters and displays layers on map', function() {
     cy.window().its('map').invoke('setView',[38.565, -100.767], 5)
     cy.wait(300) 
     cy.get('.leaflet-control-layers').trigger('mouseover')
-    cy.get('#map-groupName-justiceMap a[data-toggle="collapse"]').click()
+    cy.get('#map-menu-justiceMap a[data-toggle="collapse"]').click()
     cy.get('div#map-justiceMap.layers-sub-list.collapse.show').children('div')
       .last('label').click()
       .find('input[type="checkbox"]').should('be.checked')
     cy.window().its('map').invoke('setView',[43.00, -83.00], 3)
     cy.wait(300)
-    cy.get('#map-groupName-justiceMap').should('have.css', 'display', 'block')
+    cy.get('#map-menu-justiceMap').should('have.css', 'display', 'block')
     cy.get('div#map-justiceMap.layers-sub-list.collapse.show').children('div')
       .last('label').should('have.css', 'display', 'block')
       cy.get('div#map-justiceMap.layers-sub-list.collapse.show').children('div')
@@ -66,7 +66,7 @@ describe('Layers menu filters and displays layers on map', function() {
       .find('input[type="checkbox"]').should('not.be.checked')
     cy.window().its('map').invoke('setView',[43.00, -85.00], 3)
     cy.wait(300)
-    cy.get('#map-groupName-justiceMap').should('have.css', 'display', 'none')
+    cy.get('#map-menu-justiceMap').should('have.css', 'display', 'none')
     cy.get('div#map-justiceMap.layers-sub-list.collapse.show').children('div')
       .last('label').should('have.css', 'display', 'none')
   })
