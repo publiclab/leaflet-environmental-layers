@@ -55,9 +55,9 @@ describe('Layers menu filters and displays layers on map', function() {
     cy.wait(300)
     cy.get('#map-menu-justiceMap').should('have.css', 'display', 'block')
     cy.get('div#map-justiceMap.layers-sub-list.collapse.show').children('div')
-      .last('label').should('have.css', 'display', 'block')
+      .last().should('have.css', 'display', 'block')
       cy.get('div#map-justiceMap.layers-sub-list.collapse.show').children('div')
-      .first('label').should('have.css', 'display', 'none')
+      .first().should('have.css', 'display', 'none')
   })
 
   it('filters out the layer on map move after it is unchecked', function() {
@@ -68,6 +68,6 @@ describe('Layers menu filters and displays layers on map', function() {
     cy.wait(300)
     cy.get('#map-menu-justiceMap').should('have.css', 'display', 'none')
     cy.get('div#map-justiceMap.layers-sub-list.collapse.show').children('div')
-      .last('label').should('have.css', 'display', 'none')
+      .last().should('have.css', 'display', 'none')
   })
 })
