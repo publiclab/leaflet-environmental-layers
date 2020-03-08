@@ -30714,7 +30714,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   _showGroupTitle: function() {
     for(var i in this._grpTitleVisible) {
       if(this._grpTitleVisible[i]) {
-        var groupName = 'groupName-' + i;
+        var groupName = this._map._container.id + '-groupName-' + i;
         var grpHolder = document.getElementById(groupName);
         var grpSelector = grpHolder && grpHolder.nextElementSibling;
         if(grpHolder) {
