@@ -1,7 +1,7 @@
 describe('Odor report layer', function() {
   it('adds markers on click', function() {
     cy.openWindow('/example/index.html#lat=40.499&lon=-5.010&zoom=8&layers=Standard')
-    cy.wait(6000)
+    cy.wait(300)
     cy.window().then((win) => {
       cy.fixture('odorreport').then((data) => {
         cy.stub(win.OdorReport, 'requestData', function() {
