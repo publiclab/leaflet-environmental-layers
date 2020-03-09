@@ -54,7 +54,6 @@ L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
         var fetchedData = $.getJSON(fractrackerMobile_url);
         return {fetchedData, timeout};
       })().done(function(data) {
-        console.log(data);
         self.parseData(data.fetchedData);
         if (typeof self._map.spin === 'function') {
           self._map.spin(false);
