@@ -8,7 +8,7 @@ describe('Skytruth layer', function() {
           win.SkyTruth.parseData(data);
         })
       })
-      cy.get('#menu-skytruth label').click({ force: true })
+      cy.get('#map-menu-skytruth label').click({ force: true })
       cy.get('.leaflet-marker-pane').children().should('have.length', 2)
     }) 
   })
@@ -43,7 +43,7 @@ describe('Skytruth layer', function() {
   })
 
   it('removes markers from the map and the layer name from the hash when clicked again', function() {
-    cy.get('#menu-skytruth label').click({ force: true })
+    cy.get('#map-menu-skytruth label').click({ force: true })
     cy.hash().should('eq', '#lat=41.6283&lon=-91.7235&zoom=10&layers=Standard')
     cy.get('.leaflet-marker-pane').children().should('have.length', 0)
     cy.get('.leaflet-overlay-pane svg g').children().should('have.length', 0)

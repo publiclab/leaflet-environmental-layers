@@ -9,7 +9,7 @@ describe('Toxic Release layer', function() {
         })
       })
       
-      cy.get('#menu-toxicReleaseLayer label').click({ force: true })
+      cy.get('#map-menu-toxicReleaseLayer label').click({ force: true })
       cy.get('.leaflet-marker-pane img').should('have.length', 2)
     }) 
   })
@@ -44,7 +44,7 @@ describe('Toxic Release layer', function() {
   })
 
   it('removes markers from the map and the layer name from the hash when clicked again', function() {
-    cy.get('#menu-toxicReleaseLayer label').click({ force: true })
+    cy.get('#map-menu-toxicReleaseLayer label').click({ force: true })
     cy.hash().should('not.include', ',toxicReleaseLayer')
     cy.get('.leaflet-marker-pane img').should('have.length', 0)
     cy.get('.leaflet-overlay-pane svg g').children().should('have.length', 0)

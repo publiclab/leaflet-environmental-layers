@@ -9,7 +9,7 @@ describe('Eonet fires layer', function() {
         })
       })
       
-      cy.get('#menu-eonetFiresLayer label').click({ force: true })
+      cy.get('#map-menu-eonetFiresLayer label').click({ force: true })
       cy.get('.leaflet-marker-pane').children().should('have.length', 4)
     }) 
   })
@@ -38,7 +38,7 @@ describe('Eonet fires layer', function() {
   })
 
   it('removes markers from the map and the layer name from the hash when clicked again', function() {
-    cy.get('#menu-eonetFiresLayer label').click({ force: true })
+    cy.get('#map-menu-eonetFiresLayer label').click({ force: true })
     cy.hash().should('eq', '#lat=43.00&lon=-80.00&zoom=4&layers=Standard')
     cy.get('.leaflet-marker-pane').children().should('have.length', 0)
     cy.get('.leaflet-overlay-pane svg g').children().should('have.length', 0)

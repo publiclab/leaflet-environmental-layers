@@ -8,7 +8,7 @@ describe('Purple layer - markers', function() {
           win.PurpleAirMarkerLayer.parseData(data);
         })
       })
-      cy.get('div#purpleair.layers-sub-list.collapse').children('div')
+      cy.get('div#map-purpleair.layers-sub-list.collapse').children('div')
       .last().find('label')
       .click({ force: true })
       cy.get('.leaflet-marker-pane img').should('have.length', 2)
@@ -45,7 +45,7 @@ describe('Purple layer - markers', function() {
   })
 
   it('removes markers from the map and the layer name from the hash when clicked again', function() {
-    cy.get('div#purpleair.layers-sub-list.collapse').children('div')
+    cy.get('div#map-purpleair.layers-sub-list.collapse').children('div')
       .last().find('label')
       .click({ force: true })
     cy.hash().should('not.include', ',purpleairmarker')

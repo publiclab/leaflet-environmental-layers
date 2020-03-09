@@ -8,7 +8,7 @@ describe('Purple layer - heatmap', function() {
           win.PurpleLayer.parseData(data);
         })
       })
-      cy.get('div#purpleair.layers-sub-list.collapse').children('div')
+      cy.get('div#map-purpleair.layers-sub-list.collapse').children('div')
       .first().find('label')
       .click({ force: true })
       cy.get('.leaflet-overlay-pane .heatmap-canvas').should('exist')
@@ -20,7 +20,7 @@ describe('Purple layer - heatmap', function() {
   })
 
   it('removes heatmap from the map and the layer name from the hash when clicked again', function() {
-    cy.get('div#purpleair.layers-sub-list.collapse').children('div')
+    cy.get('div#map-purpleair.layers-sub-list.collapse').children('div')
       .first().find('label')
       .click({ force: true })
     cy.hash().should('not.include', ',purpleLayer')

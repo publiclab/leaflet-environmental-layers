@@ -222,9 +222,10 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     }
 
     map.on('overlayremove', function(e) {
+      const mapId = this._map && this._map._container.id;
       var layerInfo = this._getLayerData(e);
-      var selector = '#menu-' + e.name + ' .layer-name';
-      var listLayerSelector = '#' + e.name + ' .layer-list-name';
+      var selector = '#' + mapId + '-menu-' + e.name + ' .layer-name';
+      var listLayerSelector = '#' + mapId + '-' + e.name + ' .layer-list-name';
       var layerTitle = e.group ? document.querySelector(listLayerSelector) : document.querySelector(selector);
       if (layerTitle && (layerTitle.innerHTML !== (' ' + layerInfo.name) || layerTitle.innerHTML !== (' ' + e.name))) {
         layerTitle.innerHTML = e.group ? ' ' + e.name : ' ' + layerInfo.name;
@@ -365,7 +366,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   _createGroup: function(obj) {
     if(obj.group) {
       var layerGroup = document.createElement('a');
-      layerGroup.href = '#' + obj.group.replace(/\s/g, '');
+      layerGroup.href = '#' + this._map._container.id + '-' + obj.group.replace(/\s/g, '');
       layerGroup.setAttribute('data-toggle', 'collapse');
       layerGroup.setAttribute('role', 'button');
       layerGroup.setAttribute('aria-expanded', 'false');
@@ -396,7 +397,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       groupName.innerHTML = elements.name;
 
       var titleHolder = document.createElement('div');
-      titleHolder.id = 'menu-' + obj.group; 
+      titleHolder.id = this._map._container.id +'-menu-' + obj.group; 
       titleHolder.className = 'clearfix layer-info-container';
       titleHolder.setAttribute('data-cy', 'layer'); // Cypress selector
       titleHolder.appendChild(layerGroup);
@@ -424,7 +425,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   _createGroupHolder: function(obj) {
     var groupName;
     if(obj.group) {
-      groupName =  obj.group.replace(/\s/g, '');
+      groupName = this._map._container.id + '-' + obj.group.replace(/\s/g, '');
     }
     var groupHolder = document.createElement('div');
     groupHolder.className = 'layers-sub-list collapse';
@@ -489,7 +490,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     }
     holder.appendChild(name);
     if(obj.overlay && obj.group) {
-      labelContainer.id = obj.name;
+      labelContainer.id = this._map._container.id + '-' + obj.name;
       label.style.width = '100%';
       label.style.marginBottom = '3px';
       input.style.marginLeft = '3.8em';
@@ -501,7 +502,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     if(obj.overlay && !obj.group) {
       labelContainer.appendChild(elements.layerDesc);
       labelContainer.className = 'clearfix layer-info-container';
-      layerContainer.id = 'menu-' + obj.name.replace(/ /g,"_");
+      labelContainer.id = this._map._container.id + '-menu-' + obj.name.replace(/ /g,"_");
       layerContainer.setAttribute('data-cy', 'layer');  // Cypress selector
       labelContainer.appendChild(elements.dataInfo);
       layerContainer.appendChild(separator);
@@ -569,7 +570,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   _showGroupTitle: function() {
     for(var i in this._grpTitleVisible) {
       if(this._grpTitleVisible[i]) {
-        var groupName = 'menu-' + i;
+        var groupName = this._map._container.id + '-menu-' + i;
         var grpHolder = document.getElementById(groupName);
         var grpSelector = grpHolder && grpHolder.nextElementSibling;
         if(grpHolder) {
@@ -599,12 +600,12 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   _highlightLayers: function(backgroundProp) {
     this._newLayerContainers.map(layerName => {
       const mapId = this._map._container.id;
-      let selector = '#' + mapId + ' #menu-' + layerName + ' .layer-info-container';
+      let selector = '#' + mapId + '-menu-' + layerName + ' .layer-info-container';
       let elem = document.querySelector(selector);
       if(elem){
         elem.style.background = backgroundProp
       } else {  // Group names
-        selector = '#' + mapId + ' #menu-' + layerName + '.layer-info-container';
+        selector = '#' + mapId + '-menu-' + layerName + '.layer-info-container';
         elem = document.querySelector(selector);
         elem.style.background = backgroundProp;
       }

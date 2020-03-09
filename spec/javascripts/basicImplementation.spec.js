@@ -9,6 +9,7 @@ describe('Basic LEL Implementation', function() {
 
   beforeEach(function () {
     mapContainer = document.createElement('div');
+    mapContainer.id = 'map';
     map = L.map(mapContainer, { }).setView([43, -83], 8);
   });
 
@@ -29,8 +30,8 @@ describe('Basic LEL Implementation', function() {
       display: ['eonetFiresLayer']
     }).addTo(map);
 
-    expect(mapContainer.querySelector('#menu-eonetFiresLayer')).toExist();
-    expect(mapContainer.querySelector('#menu-Unearthing')).toExist();
+    expect(mapContainer.querySelector('#map-menu-eonetFiresLayer')).toExist();
+    expect(mapContainer.querySelector('#map-menu-Unearthing')).toExist();
   });
 
   it('exclude specific layers', function() {
@@ -38,8 +39,8 @@ describe('Basic LEL Implementation', function() {
       exclude: ['eonetFiresLayer']
     }).addTo(map);
     
-    expect(mapContainer.querySelector('#menu-eonetFiresLayer')).not.toExist();
-    expect(mapContainer.querySelector('#menu-Unearthing')).toExist();
+    expect(mapContainer.querySelector('#map-menu-eonetFiresLayer')).not.toExist();
+    expect(mapContainer.querySelector('#map-menu-Unearthing')).toExist();
   });
 
   it('display shows layer', function() {
@@ -47,8 +48,8 @@ describe('Basic LEL Implementation', function() {
       display: ['eonetFiresLayer'],
     }).addTo(map);
 
-    expect(mapContainer.querySelector('#menu-eonetFiresLayer .leaflet-control-layers-selector').checked).toBe(true);
-    expect(mapContainer.querySelector('#menu-Unearthing .leaflet-control-layers-selector').checked).toBe(false);
+    expect(mapContainer.querySelector('#map-menu-eonetFiresLayer .leaflet-control-layers-selector').checked).toBe(true);
+    expect(mapContainer.querySelector('#map-menu-Unearthing .leaflet-control-layers-selector').checked).toBe(false);
   });
 
   it('addLayersToMap shows all included layers', function() {
@@ -58,8 +59,8 @@ describe('Basic LEL Implementation', function() {
     }).addTo(map);
 
     expect(mapContainer.querySelector('.leaflet-control-container .leaflet-control-layers-menu')).toExist();
-    expect(mapContainer.querySelector('#menu-eonetFiresLayer .leaflet-control-layers-selector').checked).toBe(true);
-    expect(mapContainer.querySelector('#menu-Unearthing .leaflet-control-layers-selector').checked).toBe(true);
+    expect(mapContainer.querySelector('#map-menu-eonetFiresLayer .leaflet-control-layers-selector').checked).toBe(true);
+    expect(mapContainer.querySelector('#map-menu-Unearthing .leaflet-control-layers-selector').checked).toBe(true);
   });
 
   it('simpleLayerControl shows simple menu', function() {

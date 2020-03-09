@@ -4,7 +4,7 @@ describe('OSM Landfill, Mines and Quarries layer', function() {
     cy.wait(300)
     cy.window().then((win) => {
       const stub = cy.stub(win.OSMLandfillMineQuarryLayer, 'requestData')
-      cy.get('#menu-osmLandfillMineQuarryLayer label').click({ force: true }).then(() => {
+      cy.get('#map-menu-osmLandfillMineQuarryLayer label').click({ force: true }).then(() => {
         expect(stub).to.be.called
       }) 
     }) 
@@ -15,7 +15,7 @@ describe('OSM Landfill, Mines and Quarries layer', function() {
   })
 
   it('removes layer name from the hash when clicked again', function() {
-    cy.get('#menu-osmLandfillMineQuarryLayer label').click({ force: true })
+    cy.get('#map-menu-osmLandfillMineQuarryLayer label').click({ force: true })
     cy.hash().should('eq', '#lat=42.7029&lon=-99.1509&zoom=11&layers=Standard')
   })
 })  

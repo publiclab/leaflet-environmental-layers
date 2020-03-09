@@ -9,7 +9,7 @@ describe('Aqicn layer', function() {
         })
       })
 
-      cy.get('#menu-aqicnLayer label').click({ force: true })
+      cy.get('#map-menu-aqicnLayer label').click({ force: true })
       cy.get('.leaflet-marker-pane').children().should('have.length', 2)
     }) 
   })
@@ -43,7 +43,7 @@ describe('Aqicn layer', function() {
   })
 
   it('removes markers from the map and the layer name from the hash when clicked again', function() {
-    cy.get('#menu-aqicnLayer label').click({ force: true })
+    cy.get('#map-menu-aqicnLayer label').click({ force: true })
     cy.hash().should('eq', '#lat=51.15&lon=13.45&zoom=4&layers=Standard')
     cy.get('.leaflet-marker-pane').children().should('have.length', 0)
     cy.get('.leaflet-overlay-pane svg g').children().should('have.length', 0)
