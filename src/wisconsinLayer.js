@@ -24,14 +24,14 @@ wisconsinLayer = function(map) {
   });
 
   Wisconsin_NM.on('add', function(e) {
-     if(map.getZoom() < info.wisconsin.extents.minZoom){
-       return;
-     }
+    if (map.getZoom() < info.wisconsin.extents.minZoom) {
+      return;
+    }
   });
 
-  Wisconsin_NM.on('requesterror', function(e){
+  Wisconsin_NM.on('requesterror', function(e) {
     this.onError('wisconsin');
- });
-    
+  });
+
   return Wisconsin_NM;
 };

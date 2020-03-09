@@ -20,7 +20,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
     onAdd: function(map) {
       var info = require('./info.json');
       this._map = map;
-      switch(this.layer) {
+      switch (this.layer) {
         case this.layer:
           if (this.layer === 'fractracker' || this.layer === 'skytruth' || 
               this.layer === 'odorreport' || this.layer === 'mapknitter') {

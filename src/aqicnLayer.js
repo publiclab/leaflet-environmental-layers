@@ -48,7 +48,7 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
             clearTimeout(timeout);
           }
         }).fail(function() {
-          self.onError('aqicnLayer')
+          self.onError('aqicnLayer');
         });
       })();
     },
@@ -93,9 +93,8 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
           markerColor = '#7e0023';
         }
       }
-
       var defaultMarker = L.marker([lat, lon], {icon: L.divIcon({className: clName, iconSize: [36, 25], iconAnchor: [18, 40], popupAnchor: [0, -25], html: aqi})});
-      var minimalMarker = L.circleMarker(L.latLng([lat, lon]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: markerColor });
+      var minimalMarker = L.circleMarker(L.latLng([lat, lon]), {radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: markerColor});
 
       marker = this._map && this._map._minimalMode ? minimalMarker : defaultMarker;
       return marker;
