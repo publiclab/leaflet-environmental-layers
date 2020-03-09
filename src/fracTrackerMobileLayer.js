@@ -51,13 +51,12 @@ L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
             self._map.spin(false);
           }
         }, 10000);
-        var fetchedData = $.getJSON(fractrackerMobile_url);
-        return {fetchedData, timeout};
-      })().done(function(data) {
-        self.parseData(data.fetchedData);
+        return {data: $.getJSON(fractrackerMobile_url), timeout};
+      })().done(function({data, timeout}) {
+        self.parseData(data);
         if (typeof self._map.spin === 'function') {
           self._map.spin(false);
-          clearTimeout(data.timeout);
+          clearTimeout(timeout);
         }
       }).fail(function() {
         self.onError('fracTrackerMobile');

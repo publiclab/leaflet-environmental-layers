@@ -19,7 +19,7 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
       var info = require('./info.json');
       this._map = map;
       map.on('moveend', function() {
-        if(this._map && this._map.getZoom() > info.indigenousLands.extents.minZoom - 1) {
+        if (this._map && this._map.getZoom() > info.indigenousLands.extents.minZoom - 1) {
           this.requestData();
         }
       }, this);
@@ -67,7 +67,7 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
           }
           clearTimeout(timeout);
         }).fail(function() {
-            self.onError(self.layer, true);
+          self.onError(self.layer, true);
         });
       })();
     },
