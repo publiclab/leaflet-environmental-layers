@@ -48,14 +48,19 @@ L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
         if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
-
+        var timeout = setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
         $.getJSON(EonetFire_url, function(data) {
           self.parseData(data);
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+          clearTimeout(timeout);
         }).fail(function() {
-          self.onError('eonetFiresLayer')
+          self.onError('eonetFiresLayer');
         });
       })();
     },
@@ -78,7 +83,7 @@ L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
       var source = data.sources && data.sources[0].url;
       var fire_marker;
       var defaultMarker = L.marker([lat, lng], {icon: fireIcon});
-      var minimalMarker = L.circleMarker(coords, { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#ff421d' });
+      var minimalMarker = L.circleMarker(coords, {radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#ff421d'});
       if (!isNaN((lat)) && !isNaN((lng)) ) {
         var content = '<strong>Event : </strong>' + title + '<br>Lat : ' + lat + '<br>Lon : '+ lng + '<br>Date : ' + date + '<br><i><a href=' + source + '>source<a></i>';
         fire_marker = this._map && this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);

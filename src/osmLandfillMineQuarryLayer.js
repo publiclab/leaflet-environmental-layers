@@ -52,14 +52,20 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
           if (typeof self._map.spin === 'function') {
             self._map.spin(true);
           }
+          var timeout = setTimeout(function() {
+            if (typeof self._map.spin === 'function') {
+              self._map.spin(false);
+            }
+          }, 10000);
           $.ajax({
             url: LMQ_url,
             dataType: 'xml',
             success: function(data) {
               self.parseData(data);
+              clearTimeout(timeout);
             },
           }).fail(function() {
-            self.onError('osmLandfillMineQuarryLayer')
+            self.onError('osmLandfillMineQuarryLayer');
           });
           /* The structure of the document is as follows:
                           <node id="node_id", lat="", lon="">

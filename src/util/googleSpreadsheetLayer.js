@@ -102,10 +102,16 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
       var $ = window.jQuery;
       var ssURL = self.options.url || '';
       self._map.spin(true);
+      var timeout = setTimeout(function() {
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(false);
+        }
+      }, 10000);
       // start fetching data from the URL
       $.getJSON(ssURL, function(data) {
         self.parseData(data.feed.entry);
         self._map.spin(false);
+        clearTimeout(timeout);
       });
     })();
   },

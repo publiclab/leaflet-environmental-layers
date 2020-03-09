@@ -20,7 +20,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
     onAdd: function(map) {
       var info = require('./info.json');
       this._map = map;
-      switch(this.layer) {
+      switch (this.layer) {
         case this.layer:
           if (this.layer === 'fractracker' || this.layer === 'skytruth' || 
               this.layer === 'odorreport' || this.layer === 'mapknitter') {
@@ -125,6 +125,11 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         if (self._map && typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
+        var timeout = setTimeout(function() {
+          if (typeof self._map.spin === 'function') {
+            self._map.spin(false);
+          }
+        }, 10000);
         $.getJSON(Layer_URL, function(data) {
           if (self.layer == 'fractracker')
           { self.parseData(data.feed.entry); }
@@ -134,6 +139,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
           { self.parseData(data); }
           if (self._map && typeof self._map.spin === 'function') {
             self._map.spin(false);
+            clearTimeout(timeout);
           }
         }).fail(function() {
           self.layer === 'purpleairmarker' ? self.onError(self.layer, true) : self.onError(self.layer);
