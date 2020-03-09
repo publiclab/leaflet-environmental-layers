@@ -27167,6 +27167,11 @@ L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
 
     requestData: function() {
       var self = this;
+      var timeout = setTimeout(function() {
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(false);
+        }
+      }, 10000);
 
       (function() {
         var bounds = self._map.getBounds();
@@ -27179,17 +27184,11 @@ L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
         var polygon = left + ' ' + top + ',' + right + ' ' + top + ',' + right + ' ' + bottom + ',' + left + ' ' + bottom + ',' + left + ' ' + top;
         var $ = window.jQuery;
         var fractrackerMobile_url = 'https://cors-anywhere.herokuapp.com/https://api.fractracker.org/v1/data/report?page=1&results_per_page=250&q={"filters":[{"name":"geometry","op":"intersects","val":"SRID=4326;POLYGON((' + polygon +'))"}],"order_by":[{"field":"report_date","direction":"desc"},{"field":"id","direction":"desc"}]}';
-
         if (typeof self._map.spin === 'function') {
           self._map.spin(true);
         }
-        var timeout = setTimeout(function() {
-          if (typeof self._map.spin === 'function') {
-            self._map.spin(false);
-          }
-        }, 10000);
-        return {data: $.getJSON(fractrackerMobile_url), timeout};
-      })().done(function({data, timeout}) {
+        return $.getJSON(fractrackerMobile_url);
+      })().done(function(data) {
         self.parseData(data);
         if (typeof self._map.spin === 'function') {
           self._map.spin(false);
