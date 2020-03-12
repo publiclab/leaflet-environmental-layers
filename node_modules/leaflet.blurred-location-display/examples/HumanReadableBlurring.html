@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <title>Human Readable Blurring</title>
+
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&language=en&key=AIzaSyDWgc7p4WWFsO3y0MTe50vF4l4NUPcPuwE"></script>
+
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+   
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+    <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet">
+
+    <script src="../node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js"></script>
+    <script src="../dist/Leaflet.BlurredLocationDisplay.js"></script>
+
+  </head>
+
+  <body>
+
+    <div>
+
+      <div style="text-align: center;">
+         <h1>Leaflet BlurredLocationDisplay <small>| by <a href="">Public Lab</a></small></h1>
+         <p>This page shows how different zoom levels and different precisons corresponds to different Human Readable blurring .  </p>
+         <hr />
+      </div>
+
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+           <h5>1.) At zoom level = 3 : </h5>
+            
+            <div style="background-color: #d6dfe0;">
+              <span style="color: Black"> Coordinate :  [23.1 , 77.1] </span> <br>
+             </div> 
+            
+             <br>
+             <strong><i> Human Readable placename : Country </i></strong> 
+            <div id="map1" class="leaflet-map" style="width: 100%; height: 400px;"></div>
+          </div>
+
+          <div class="col-md-4">
+            <h5>2.) At zoom level = 4 : </h5>
+           
+            <div style="background-color: #d6dfe0;">
+              <span style="color: Black"> Coordinate :  [23.1111 ,    77.1111]</span> <br>
+            </div>
+            
+            <br> 
+            <strong><i> Human Readable placename : country , state </i></strong> 
+            <div id="map2" class="leaflet-map" style="width: 100%; height: 400px;"></div>
+          </div>
+
+          <div class="col-md-4">
+           <h5>3.) At zoom level = 5 : </h5>
+           <div style="background-color: #d6dfe0;">
+            <span style="color: Black"> [23.1111 ,   77.1111]</span><br>
+           </div> 
+
+           <br>
+           <strong><i> Human Readable placename :country , state , province </i></strong> 
+           <div id="map3" class="leaflet-map" style="width: 100%; height: 400px;"></div>
+          </div>
+        </div>
+
+        <br><hr>
+
+        <div class="row">
+          <div class="col-md-4">
+           <h5>4.) At zoom level = 6 : </h5>
+            
+            <div style="background-color: #d6dfe0;">
+              <span style="color: Black"> Coordinate :  [23.11111111 , 77.11111111] </span> <br>
+             </div> 
+            
+             <br>
+             <strong><i> Human Readable placename : country , state , province , region </i></strong> 
+            <div id="map4" class="leaflet-map" style="width: 100%; height: 400px;"></div>
+          </div>
+
+          <div class="col-md-4">
+            <h5>5.) At zoom level = 11 : </h5>
+           
+            <div style="background-color: #d6dfe0;">
+              <span style="color: Black"> Coordinate :  [23.11111111 , 77.11111111]</span> <br>
+            </div>
+            
+            <br> 
+            <strong><i> Human Readable placename : neighbourhood </i></strong> 
+            <div id="map5" class="leaflet-map" style="width: 100%; height: 400px;"></div>
+          </div>
+
+          <div class="col-md-4">
+           <h5>6.) At zoom level = 13 : </h5>
+           <div style="background-color: #d6dfe0;">
+            <span style="color: Black"> [23.11111111 , 77.11111111]</span><br>
+           </div> 
+
+           <br>
+           <strong><i> Human Readable placename : Exact Block </i></strong> 
+           <div id="map6" class="leaflet-map" style="width: 100%; height: 400px;"></div>
+          </div>
+        </div>
+
+        <br><hr>
+      </div>
+
+    </div>
+
+    <script>
+      var options1 = {
+      	mapID: 'map1'
+      }
+      var options2 = {
+      	mapID: 'map2'
+      }
+      var options3 = {
+      	mapID: 'map3'
+      }
+      var options4 = {
+        mapID: 'map4'
+      }
+      var options5 = {
+        mapID: 'map5'
+      }
+      var options6 = {
+        mapID: 'map6'
+      }
+
+
+      var BlurredLocation1 = new BlurredLocation(options1) ;
+      
+      var BlurredLocation2 = new BlurredLocation(options2) ;
+
+      var BlurredLocation3 = new BlurredLocation(options3) ;
+
+      var BlurredLocation4 = new BlurredLocation(options4) ;
+      
+      var BlurredLocation5 = new BlurredLocation(options5) ;
+
+      var BlurredLocation6 = new BlurredLocation(options6) ;
+      
+    
+      var options_display1 = {
+        blurredLocation: BlurredLocation1,
+        locations: [[23.1 , 77.1]],
+        color_code_markers: true,
+        style: 'both' // or 'heatmap' or 'markers'
+      }
+      var options_display2 = {
+        blurredLocation: BlurredLocation2,
+        locations: [[23.1111 , 77.1111]],
+        color_code_markers: true,
+        style: 'both' // or 'heatmap' or 'markers'
+      }
+      var options_display3 = {
+        blurredLocation: BlurredLocation3,
+        locations: [[23.1111 , 77.1111]],
+        color_code_markers: true,
+        style: 'both' // or 'heatmap' or 'markers'
+      }
+
+       var options_display4 = {
+        blurredLocation: BlurredLocation4,
+        locations: [[23.11111111 , 77.11111111]],
+        color_code_markers: true,
+        style: 'both' // or 'heatmap' or 'markers'
+      }
+      var options_display5 = {
+        blurredLocation: BlurredLocation5,
+        locations: [[23.11111111 , 77.11111111]],
+        color_code_markers: true,
+        style: 'both' // or 'heatmap' or 'markers'
+      }
+      var options_display6 = {
+        blurredLocation: BlurredLocation6,
+        locations: [[23.11111111 , 77.11111111]],
+        color_code_markers: true,
+        style: 'both' // or 'heatmap' or 'markers'
+      }
+
+      var blurredLocationDisplay1 = new BlurredLocationDisplay(options_display1);
+      var blurredLocationDisplay2 = new BlurredLocationDisplay(options_display2);
+      var blurredLocationDisplay3 = new BlurredLocationDisplay(options_display3);
+      var blurredLocationDisplay4 = new BlurredLocationDisplay(options_display4);
+      var blurredLocationDisplay5 = new BlurredLocationDisplay(options_display5);
+      var blurredLocationDisplay6 = new BlurredLocationDisplay(options_display6);
+
+      BlurredLocation1.map.setView([23,77] , 3) ;
+      BlurredLocation2.map.setView([23,77] , 4) ;
+      BlurredLocation3.map.setView([23, 77] , 5) ;
+      BlurredLocation4.map.setView([23, 77] , 6) ;
+      BlurredLocation5.map.setView([23.1, 77.1] , 11) ;
+      BlurredLocation6.map.setView([23.1, 77.1] , 13) ;
+    </script>
+
+    <style>
+      html { background: #f8f8f8; margin-bottom: 100px;}
+      body { background: none; }
+    </style>
+
+
+  </body>
+</html>
