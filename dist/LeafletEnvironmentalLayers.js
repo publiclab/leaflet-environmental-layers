@@ -27008,9 +27008,9 @@ module.exports={
     "url": "http://publiclab.org",
     "data": {
       "type": "",
-      "disclaimer": "disclaimer"
+      "disclaimer": "Learn more about our method of <a href='https://publiclab.org/wiki/location-privacy/'>location privacy</a> and how our <a href='https://publiclab.org/notes/sagarpreet/04-02-2019/introducing-leaflet-blurred-location-display'>blurred location library</a> works."
     },
-    "description": "Long desc.",
+    "description": "Publiclab.org uses community science and open technology to allow users to share data on environmental issues.",
     "layer_desc": "Users from publiclab.org",
     "icon": "#096",
     "extents": {
@@ -30758,7 +30758,6 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   },
 
   _highlightLayers: function(backgroundProp) {
-    console.log(this._newLayerContainers)
     this._newLayerContainers.map(layerName => {
       const mapId = this._map._container.id;
       let selector = '#' + mapId + '-menu-' + layerName + ' .layer-info-container';
