@@ -222,7 +222,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
 
   _createLayerInfoElements: function(obj) {
     var data = this._getLayerData(obj);
-
+    
     var icon = document.createElement('div');
     icon.className = 'rounded-circle layer-icon';
     icon.style.width = '10px';
