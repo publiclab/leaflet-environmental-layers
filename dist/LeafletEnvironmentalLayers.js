@@ -30613,7 +30613,6 @@ L.Control.Info = L.Control.extend({
     // this._infoDisplay = L.DomUtil.create('div');
     // this._infoDisplay.classList.add(,  );
     // this._infoDisplay.style.backgroundColor = '#fff';
-    
     this._infoModal = L.DomUtil.create('div');
     this._infoModal.classList.add('modal', 'fade', 'leaflet-bar', 'leaflet-control-info');
     $(this._infoModal).attr('role', 'dialog');
@@ -30623,7 +30622,6 @@ L.Control.Info = L.Control.extend({
       this._infoModal.classList.add(this.options.classname);
     }
     // this._infoDisplay.appendChild(this._infoModal);
-
     this._infoDialog = L.DomUtil.create('div');
     this._infoDialog.classList.add('modal-dialog');
     this._infoModal.appendChild(this._infoDialog);
@@ -31127,6 +31125,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
 
   _createLayerInfoElements: function(obj) {
     var data = this._getLayerData(obj);
+
     var icon = document.createElement('div');
     icon.className = 'rounded-circle layer-icon';
     icon.style.width = '10px';
@@ -31185,7 +31184,6 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     var dataInfoBtn = document.createElement('button');
     dataInfoBtn.style.backgroundColor = 'transparent';
     dataInfoBtn.style.borderColor = 'transparent';
-    dataInfoBtn.setAttribute.dataToggle = 'modal';
     var infoIcon = document.createElement('i');
     infoIcon.className = 'fas fa-info-circle';
     infoIcon.style.fontSize = '1.2em';
@@ -31194,11 +31192,12 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     var infoModal;
     dataInfoBtn.addEventListener('click', function() {
       // Add only one instance of the modal for the map layer
-      if (!infoModal || !infoModal.options.mapHasControl) {
+      if(!infoModal || !infoModal.options.mapHasControl) {
         infoModal = new L.control.info({ 
           text: data && data.data.disclaimer,
-          classname: 'info-modal',
+          classname: 'info-modal'
         });
+
         infoModal.addTo(map);
       }
     });
