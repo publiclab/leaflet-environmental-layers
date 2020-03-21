@@ -9,7 +9,10 @@ L.Control.Info = L.Control.extend({
     this._infoModal.classList.add('modal', 'fade', 'leaflet-bar', 'leaflet-control-info');
     $(this._infoModal).attr('role', 'dialog');
     $(this._infoModal).attr('tapindex', '3');
+    $(this._infoModal).attr('aria-hidden', 'true');
     this._infoModal.style.backgroundColor = 'transparent';
+    this._infoModal.style.top = '50%';
+    this._infoModal.style.left = '50%';
     if (this.options.classname) {
       this._infoModal.classList.add(this.options.classname);
     }

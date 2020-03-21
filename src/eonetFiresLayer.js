@@ -54,6 +54,8 @@ L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+          self.onError('eonetFiresLayer')
         });
       })();
     },

@@ -1,0 +1,119 @@
+{
+  "title": "EONET Events: Wildfires",
+  "description": "Wildfires includes all nature of fire, including forest and plains fires, as well as urban and industrial fire events. Fires may be naturally caused or manmade.",
+  "link": "https://eonet.sci.gsfc.nasa.gov/api/v2.1/categories/8",
+  "events": [
+    {
+      "id": "EONET_4583",
+      "title": "Wildfire - Hualqui, Chile",
+      "description": "",
+      "link": "https://eonet.sci.gsfc.nasa.gov/api/v2.1/events/EONET_4583",
+      "categories": [
+        {
+          "id": 8,
+          "title": "Wildfires"
+        }
+      ],
+      "sources": [
+        {
+          "id": "PDC",
+          "url": "http://emops.pdc.org/emops/?hazard_id=103237"
+        }
+      ],
+      "geometries": [
+        {
+          "date": "2020-02-12T18:19:00Z",
+          "type": "Point",
+          "coordinates": [
+            -72.93736,
+            -36.97488
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EONET_4581",
+      "title": "Wildfire - Molina, Chile",
+      "description": "",
+      "link": "https://eonet.sci.gsfc.nasa.gov/api/v2.1/events/EONET_4581",
+      "categories": [
+        {
+          "id": 8,
+          "title": "Wildfires"
+        }
+      ],
+      "sources": [
+        {
+          "id": "PDC",
+          "url": "http://emops.pdc.org/emops/?hazard_id=103236"
+        }
+      ],
+      "geometries": [
+        {
+          "date": "2020-02-12T18:18:00Z",
+          "type": "Point",
+          "coordinates": [
+            -70.989940082,
+            -35.078969559
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EONET_4582",
+      "title": "Wildfire - Renaico, Chile",
+      "description": "",
+      "link": "https://eonet.sci.gsfc.nasa.gov/api/v2.1/events/EONET_4582",
+      "categories": [
+        {
+          "id": 8,
+          "title": "Wildfires"
+        }
+      ],
+      "sources": [
+        {
+          "id": "PDC",
+          "url": "http://emops.pdc.org/emops/?hazard_id=103235"
+        }
+      ],
+      "geometries": [
+        {
+          "date": "2020-02-12T18:17:00Z",
+          "type": "Point",
+          "coordinates": [
+            -72.663116693,
+            -37.690599087
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EONET_4584",
+      "title": "Wildfire - Penco, Chile",
+      "description": "",
+      "link": "https://eonet.sci.gsfc.nasa.gov/api/v2.1/events/EONET_4584",
+      "categories": [
+        {
+          "id": 8,
+          "title": "Wildfires"
+        }
+      ],
+      "sources": [
+        {
+          "id": "PDC",
+          "url": "http://emops.pdc.org/emops/?hazard_id=103234"
+        }
+      ],
+      "geometries": [
+        {
+          "date": "2020-02-12T18:15:00Z",
+          "type": "Point",
+          "coordinates": [
+            -72.98808,
+            -36.73282
+          ]
+        }
+      ]
+    }
+  ]
+}

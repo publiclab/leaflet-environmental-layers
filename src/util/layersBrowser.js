@@ -18,6 +18,10 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     this._lastZIndex = 0;
     this._handlingClick = false;
 
+    // List of layers/layergroups to be highlighted
+    // Layers names listed are values of 'obj.group' for groups and 'obj.name' for the rest
+    this._newLayerContainers = [];
+
     for (var i in baseLayers) {
       this._addLayer(baseLayers[i], i);
     }
@@ -31,6 +35,26 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
         this._addLayer(overlays[i], i, true);
       }
     }
+  },
+
+  setLayersBrowserSize: function(map) {
+    var mapobj = map._container;
+    var width = mapobj.offsetWidth;
+
+    var mapSizeArray = [
+      ['xs', 0, 380],
+      ['sm', 380, 590],
+      ['md', 590, 880],
+      ['lg', 880, 10000]
+    ];
+
+    mapSizeArray.forEach((sizeMinMax) => {
+      if(width >= sizeMinMax[1] && width < sizeMinMax[2]) {
+        mapobj.classList.add(sizeMinMax[0]);
+      } else {
+        mapobj.classList.remove(sizeMinMax[0]);
+      }
+    });
   },
 
   expand: function() {
@@ -50,6 +74,13 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     this._layersLink.style.marginLeft = '0';
     return this;
   },
+
+  collapse: function () {
+    L.DomUtil.removeClass(this._container, 'leaflet-control-layers-expanded');
+    this._highlightLayers('none');
+    this._newLayerContainers = [];
+		return this;
+	},
 
   _initLayout: function() {
     var className = 'leaflet-control-layers';
@@ -190,16 +221,32 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       baseLayersCount += !obj.overlay ? 1 : 0;
     }
 
+    map.on('overlayremove', function(e) {
+      const mapId = this._map && this._map._container.id;
+      var layerInfo = this._getLayerData(e);
+      var selector = '#' + mapId + '-menu-' + e.name + ' .layer-name';
+      var listLayerSelector = '#' + mapId + '-' + e.name + ' .layer-list-name';
+      var layerTitle = e.group ? document.querySelector(listLayerSelector) : document.querySelector(selector);
+      if (layerTitle && (layerTitle.innerHTML !== (' ' + layerInfo.name) || layerTitle.innerHTML !== (' ' + e.name))) {
+        layerTitle.innerHTML = e.group ? ' ' + e.name : ' ' + layerInfo.name;
+      }
+    }, this)
+
+    this._showGroupTitle(); // Show group title when atleast one of its layers is active
+    
     map.on('moveend', function() {
       if(this.options.newLayers.length > 0) {
         this._layersLink.style.marginLeft = '2.9em';
         this._alertBadge.style.display = 'flex';
         this._alertBadge.innerHTML = this.options.newLayers.length;
+        this._highlightLayers('#ffffc6');
       } else {
         this._layersLink.style.marginLeft = '0';
         this._alertBadge.style.display = 'none';
         this._alertBadge.innerHTML = '';
       }
+      
+      this._showGroupTitle(); // Show group title when atleast one of its layers is active
     }, this);
 
     // Hide base layers section if there's only one layer.
@@ -216,13 +263,14 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   _createSeparator: function() {
     var separator = document.createElement('div');
     separator.className = 'leaflet-control-layers-separator';
+    separator.style.margin = '0';
 
     return separator;
   },
 
   _createLayerInfoElements: function(obj) {
     var data = this._getLayerData(obj);
-    
+   
     var icon = document.createElement('div');
     icon.className = 'rounded-circle layer-icon';
     icon.style.width = '10px';
@@ -304,6 +352,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     dataInfoBtn.appendChild(infoIcon);
 
     return {
+      name: data && data.name,
       icon: icon,
       reportBtn: reportBtn,
       layerDesc: layerDesc,
@@ -317,14 +366,13 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   _createGroup: function(obj) {
     if(obj.group) {
       var layerGroup = document.createElement('a');
-      layerGroup.href = '#' + obj.group.replace(/\s/g, '');
+      layerGroup.href = '#' + this._map._container.id + '-' + obj.group.replace(/\s/g, '');
       layerGroup.setAttribute('data-toggle', 'collapse');
       layerGroup.setAttribute('role', 'button');
       layerGroup.setAttribute('aria-expanded', 'false');
       layerGroup.setAttribute('aria-controls', obj.group)
 
       var groupName = document.createElement('span');
-      groupName.innerHTML = obj.group;
       groupName.className = 'layer-group-name';
       groupName.style.margin = '0 1em';
       groupName.style.fontSize = '1.2em';
@@ -346,9 +394,12 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       });
 
       var elements = this._createLayerInfoElements(obj);
+      groupName.innerHTML = elements.name;
 
       var titleHolder = document.createElement('div');
+      titleHolder.id = this._map._container.id +'-menu-' + obj.group; 
       titleHolder.className = 'clearfix layer-info-container';
+      titleHolder.setAttribute('data-cy', 'layer'); // Cypress selector
       titleHolder.appendChild(layerGroup);
       layerGroup.appendChild(chevron);
       layerGroup.appendChild(elements.icon);
@@ -356,10 +407,13 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       titleHolder.appendChild(groupName);
       titleHolder.appendChild(elements.layerDesc);
       titleHolder.appendChild(elements.dataInfo);
+      titleHolder.style.padding = '0.4em 0';
 
       var separator = this._createSeparator();
 
-      this._hideOutOfBounds(obj, [titleHolder, separator]);
+      if(this._grpTitleVisible && !this._grpTitleVisible[obj.group]) { // Hide group title only if none of its layers are active
+        this._hideOutOfBounds(obj, [titleHolder, separator]);
+      }
       
       var container = obj.overlay ? this._overlaysList : this._baseLayersList;
       container.appendChild(titleHolder);
@@ -371,7 +425,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   _createGroupHolder: function(obj) {
     var groupName;
     if(obj.group) {
-      groupName =  obj.group.replace(/\s/g, '');
+      groupName = this._map._container.id + '-' + obj.group.replace(/\s/g, '');
     }
     var groupHolder = document.createElement('div');
     groupHolder.className = 'layers-sub-list collapse';
@@ -405,7 +459,6 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     L.DomEvent.on(input, 'click', this._onInputClick, this);
 
     var name = document.createElement('span');
-    name.innerHTML = ' ' + obj.name;
     name.style.fontWeight = 'bold';
     name.style.display = 'inline-block';
     
@@ -413,11 +466,17 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
 
     var elements = this._createLayerInfoElements(obj);
     var separator = this._createSeparator();
-
+    if(obj.group) {
+      name.innerHTML = ' ' + obj.name;
+    } else {
+      name.innerHTML = ' ' + elements.name;
+    }
+    
+    var layerContainer = document.createElement('div');
     // Helps from preventing layer control flicker when checkboxes are disabled
     // https://github.com/Leaflet/Leaflet/issues/2771
     var holder = document.createElement('div');
-
+    layerContainer.appendChild(labelContainer);
     labelContainer.appendChild(label);
     label.appendChild(holder);
     holder.appendChild(input);
@@ -431,28 +490,30 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     }
     holder.appendChild(name);
     if(obj.overlay && obj.group) {
+      labelContainer.id = this._map._container.id + '-' + obj.name;
       label.style.width = '100%';
       label.style.marginBottom = '3px';
       input.style.marginLeft = '3.8em';
       name.style.marginLeft = '9.6em';
       name.style.color = '#717171';
       name.className = 'layer-list-name';
-      labelContainer.appendChild(separator);
+      layerContainer.appendChild(separator);
     }
     if(obj.overlay && !obj.group) {
       labelContainer.appendChild(elements.layerDesc);
       labelContainer.className = 'clearfix layer-info-container';
-      labelContainer.id = 'menu-' + obj.name.replace(/ /g,"_");
+      labelContainer.id = this._map._container.id + '-menu-' + obj.name.replace(/ /g,"_");
+      layerContainer.setAttribute('data-cy', 'layer');  // Cypress selector
       labelContainer.appendChild(elements.dataInfo);
-      labelContainer.appendChild(separator);
+      layerContainer.appendChild(separator);
     }
-
-    this._hideOutOfBounds(obj, [labelContainer, separator]);
+    labelContainer.style.padding = '0.4em 0';
+    this._hideOutOfBounds(obj, [layerContainer, separator]);
     
     var container = obj.overlay ? this._overlaysList : this._baseLayersList;
-    container.appendChild(labelContainer);
+    container.appendChild(layerContainer);
     this._checkDisabledLayers();
-    return labelContainer;
+    return layerContainer;
   },
 
   _hideOutOfBounds: function(obj, elements) {
@@ -471,9 +532,16 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     });
   },
 
-  _hideElements: function(obj, data, layerName, elements, removeLayer) {
+  /**
+   * 
+   * @param {Object} obj - layer object
+   * @param {Object} data - layer information from info.json
+   * @param {string} layerName 
+   * @param {Object[]} elements - Reference to DOM elements
+   * @param {boolean} isNotGlobal - true if the layer passed in is not a globally available layer
+   */
+  _hideElements: function(obj, data, layerName, elements, isNotGlobal) {
     var map = this._map;
-    var removeFrmMap = removeLayer;
     var currentBounds = map.getBounds();
     var currentZoom = map.getZoom();
     var bounds;
@@ -482,39 +550,70 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       bounds = data.extents && data.extents.bounds && L.latLngBounds(data.extents.bounds);
       zoom =  data.extents && data.extents.minZoom && data.extents.minZoom;
       for(var i in elements) {
-        if((bounds && !bounds.intersects(currentBounds) && map.hasLayer(layerName) && removeFrmMap) ||
-          ( zoom && (currentZoom < zoom) && map.hasLayer(layerName) && removeFrmMap)) {
+        if((bounds && !bounds.intersects(currentBounds) && !map.hasLayer(layerName)) ||
+          ( zoom && (currentZoom < zoom) && !map.hasLayer(layerName))) {
           elements[i].style.display = 'none';
-          // Remove layer from map if active
-          map.removeLayer(layerName);
-        } else if((bounds && !bounds.intersects(currentBounds)) || (zoom && (currentZoom < zoom))) {
-          elements[i].style.display = 'none';
-          this._existingLayers(obj, false, removeFrmMap);
+          this._existingLayers(obj, false, isNotGlobal);
+        } else if(obj.group) {
+          this._grpTitleVisible = this._grpTitleVisible || {};
+          this._grpTitleVisible[obj.group] = true;  // Keep track of group titles to be visible when its layers are active
+          elements[i].style.display = 'block';
+          this._existingLayers(obj, true, isNotGlobal);
         } else {
           elements[i].style.display = 'block';
-          this._existingLayers(obj, true, removeFrmMap);
+          this._existingLayers(obj, true, isNotGlobal);
         }
       };
     };
   },
 
-  _existingLayers: function(obj, doesExist, isInitialized) { 
-    if(doesExist && isInitialized && !this.options.existingLayers[obj.name]) { // Check if there is a new layer in current bounds
+  _showGroupTitle: function() {
+    for(var i in this._grpTitleVisible) {
+      if(this._grpTitleVisible[i]) {
+        var groupName = this._map._container.id + '-menu-' + i;
+        var grpHolder = document.getElementById(groupName);
+        var grpSelector = grpHolder && grpHolder.nextElementSibling;
+        if(grpHolder) {
+          grpHolder.style.display = 'block';
+          grpSelector.style.display = 'block';
+        }
+      }
+    }
+    this._grpTitleVisible = {}; // Reset list of group titles that need to be visible
+  },
+
+  _existingLayers: function(obj, doesExist, isNotGlobal) { 
+    if(doesExist && isNotGlobal && !this.options.existingLayers[obj.name]) { // Check if there is a new layer in current bounds
       this.options.newLayers = [...this.options.newLayers, obj.name];
+      this._newLayerContainers = obj.group ? [...this._newLayerContainers, obj.group] : [...this._newLayerContainers, obj.name]
       this.options.existingLayers[obj.name] = true;
     } else if(doesExist) {
       this.options.existingLayers[obj.name] = true; // layer exists upon inititalization
-    } else if(isInitialized && this.options.existingLayers[obj.name]) { // Remove from new layers if the layer no longer exists within current bounds
+    } else if(isNotGlobal && this.options.existingLayers[obj.name]) { // Remove from new layers if the layer no longer exists within current bounds
       this.options.newLayers = this.options.newLayers.filter(layer => layer !== obj.name);
       this.options.existingLayers[obj.name] = false;
     } else {
       this.options.existingLayers[obj.name] = false; // layer does not exist upon inititalization
     }
+  },
 
+  _highlightLayers: function(backgroundProp) {
+    this._newLayerContainers.map(layerName => {
+      const mapId = this._map._container.id;
+      let selector = '#' + mapId + '-menu-' + layerName + ' .layer-info-container';
+      let elem = document.querySelector(selector);
+      if(elem){
+        elem.style.background = backgroundProp
+      } else {  // Group names
+        selector = '#' + mapId + '-menu-' + layerName + '.layer-info-container';
+        elem = document.querySelector(selector);
+        elem.style.background = backgroundProp;
+      }
+    })
   },
 
   _getLayerData: function(obj) {
-    var layerData = require('../layerData.json');
+    var layerData = require('../info.json');
     var data;
     for (let j in layerData) {
       if((obj.group && obj.group.replace(/\s/g, '').toLowerCase() === j.toLowerCase()) ||

@@ -17,22 +17,6 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       layers5: ['clouds', 'cloudsClassic', 'precipitation', 'precipitationClassic', 'rain', 'rainClassic', 'snow', 'pressure', 'pressureContour', 'temperature', 'wind', 'city'],
       layers6: ['eonetFiresLayer', 'fracTrackerMobile'],
 
-      OpenInfraMap_Power: L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
-      }),
-      OpenInfraMap_Petroleum: L.tileLayer('https://tiles-{s}.openinframap.org/petroleum/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
-      }),
-      OpenInfraMap_Telecom: L.tileLayer('https://tiles-{s}.openinframap.org/telecoms/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
-      }),
-      OpenInfraMap_Water: L.tileLayer('https://tiles-{s}.openinframap.org/water/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
-      }),
     },
 
     initialize: function(param) {
@@ -53,6 +37,31 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 
       this.options.layers = param;
 
+      this._OpenInfraMap_Power = L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+      }).on('tileerror', function() {
+        this.onError('Power', true)
+      })
+      this._OpenInfraMap_Petroleum = L.tileLayer('https://tiles-{s}.openinframap.org/petroleum/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+      }).on('tileerror', function() {
+        this.onError('Petroleum', true)
+      })
+      this._OpenInfraMap_Telecom = L.tileLayer('https://tiles-{s}.openinframap.org/telecoms/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+      }).on('tileerror', function() {
+        this.onError('Telecom', true)
+      })
+      this._OpenInfraMap_Water = L.tileLayer('https://tiles-{s}.openinframap.org/water/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+      }).on('tileerror', function() {
+        this.onError('Water', true)
+      });
+
     },
 
     onAdd: function(map) {
@@ -69,37 +78,26 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
           this.overlayMaps[layer] = window['L']['layerGroup'][layer]();
           switch(layer) {
             case 'purpleLayer':
-              if (!this.groupedOverlayMaps.PurpleAir) {
-                this.groupedOverlayMaps.PurpleAir = { category: 'group', layers: {} };
-                this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
+              if (!this.groupedOverlayMaps.purpleair) {
+                this.groupedOverlayMaps.purpleair = { category: 'group', layers: {} };
+                this.groupedOverlayMaps.purpleair.layers[layer] = this.overlayMaps[layer];
               } else {
-                this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
+                this.groupedOverlayMaps.purpleAir.layers[layer] = this.overlayMaps[layer];
               };
               break;
-            case 'toxicReleaseLayer':
-              this.groupedOverlayMaps['Toxic Release'] = this.overlayMaps[layer];
-              break;
-            case 'aqicnLayer':
-              this.groupedOverlayMaps['Air Quality Index'] = this.overlayMaps[layer];
-              break;
-            case 'osmLandfillMineQuarryLayer':
-              this.groupedOverlayMaps['OSM landfills, quarries'] = this.overlayMaps[layer];
-              break;
             default:
-              this.groupedOverlayMaps[layer] = this.overlayMaps[layer];  
-            this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
-              this.groupedOverlayMaps[layer] = this.overlayMaps[layer];  
+              this.groupedOverlayMaps[layer] = this.overlayMaps[layer]; 
           }
         }
         else if (this.options.layers1.includes(layer)) {
           this.overlayMaps[layer] = window['L']['layerGroup']['layerCode'](layer);
           switch(layer) {
             case 'purpleairmarker':
-              if (!this.groupedOverlayMaps.PurpleAir) {
-                this.groupedOverlayMaps.PurpleAir = { category: 'group', layers: {} };
-                this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
+              if (!this.groupedOverlayMaps.purpleair) {
+                this.groupedOverlayMaps.purpleair = { category: 'group', layers: {} };
+                this.groupedOverlayMaps.purpleair.layers[layer] = this.overlayMaps[layer];
               } else {
-                this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
+                this.groupedOverlayMaps.purpleair.layers[layer] = this.overlayMaps[layer];
               }
               break;
             default:
@@ -113,38 +111,34 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
           
           switch (layer) {
           case 'Power':
-            this.overlayMaps[layer] = this.options.OpenInfraMap_Power;
+            this.overlayMaps[layer] = this._OpenInfraMap_Power;
             this.groupedOverlayMaps.OpenInfraMap.layers[layer] = this.overlayMaps[layer];
             break;
           case 'Petroleum':
-            this.overlayMaps[layer] = this.options.OpenInfraMap_Petroleum;
+            this.overlayMaps[layer] = this._OpenInfraMap_Petroleum;
             this.groupedOverlayMaps.OpenInfraMap.layers[layer] = this.overlayMaps[layer];
             break;
           case 'Telecom':
-            this.overlayMaps[layer] = this.options.OpenInfraMap_Telecom;
+            this.overlayMaps[layer] = this._OpenInfraMap_Telecom;
             this.groupedOverlayMaps.OpenInfraMap.layers[layer] = this.overlayMaps[layer];
             break;
           case 'Water':
-            this.overlayMaps[layer] = this.options.OpenInfraMap_Water;
+            this.overlayMaps[layer] = this._OpenInfraMap_Water;
             this.groupedOverlayMaps.OpenInfraMap.layers[layer] = this.overlayMaps[layer];
             break;
           }
         }
         else if (this.options.layers3.includes(layer)) {
           this.overlayMaps[layer] = window[layer + 'Layer'](map);
-          switch(layer) {
-            case 'wisconsin':
-              this.groupedOverlayMaps['Wisconsin Non-metal'] = this.overlayMaps[layer];
-              break;
-            default:
-              this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
-          }
+          this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
         }
         else if (this.options.layers4.includes(layer)) {
           if(!this.groupedOverlayMaps.Justicemap) {
             this.groupedOverlayMaps.Justicemap = { category: 'group', layers: {} };
           }
-          this.overlayMaps[layer] = window['L']['tileLayer']['provider']('JusticeMap.'+layer);
+          this.overlayMaps[layer] = window['L']['tileLayer']['provider']('JusticeMap.'+layer).on('tileerror', function() {
+            this.onError(layer, true);
+          });
           this.groupedOverlayMaps.Justicemap.layers[layer] = this.overlayMaps[layer];
         }
         else if (this.options.layers5.includes(layer)) {
@@ -158,19 +152,20 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
           if (layer === 'city') {
             layer = 'current';
             obj = {intervall: 15, minZoom: 3};
+            this.overlayMaps[layer] = window['L']['OWM'][layer](obj).on('owmloadingend', function() {
+              this.onError(layer, true);
+            })
+          } else {
+            this.overlayMaps[layer] = window['L']['OWM'][layer](obj).on('tileerror', function() {
+              this.onError(layer, true);
+            });
           }
-          this.overlayMaps[layer] = window['L']['OWM'][layer](obj);
+          
           this.groupedOverlayMaps['Open Weather Map'].layers[layer] = this.overlayMaps[layer];
         }
         else if (this.options.layers6.includes(layer)) {
           this.overlayMaps[layer] = window['L']['geoJSON'][layer]();
-          switch(layer) {
-            case 'eonetFiresLayer':
-              this.groupedOverlayMaps['EONET Fires'] = this.overlayMaps[layer];
-              break;
-            default:
-              this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
-          }
+          this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
         }
         else {
           console.log('Incorrect Layer Name');
@@ -180,6 +175,14 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       var leafletControl = this.options.simpleLayerControl ? 
       L.control.layers(baseMaps, this.overlayMaps).addTo(map) :
       L.control.layersBrowser(baseMaps, this.groupedOverlayMaps).addTo(map);
+
+      // set the map menu to the correct size
+      if (typeof leafletControl.setLayersBrowserSize === 'function') {
+        map.on('resize', function () {
+          leafletControl.setLayersBrowserSize(map);
+        });
+        leafletControl.setLayersBrowserSize(map);
+      }
 
       var modeControl = new L.control.minimalMode(leafletControl);
       modeControl.addTo(map);
@@ -201,13 +204,13 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 
       if (!!this.options.addLayersToMap) {  // turn on all layers
         for (let layer of this.options.layers.include) {
-          map.addLayer(this.overlayMaps[layer]);
+          layer === 'city' ? map.addLayer(this.overlayMaps['current']) : map.addLayer(this.overlayMaps[layer]);
         }
       } else if (!!this.options.layers.display) {  // turn on only layers in display
         for (let layer of this.options.layers.display) {
           // make sure the layer exists in the display list
           if (this.options.layers.include.includes(layer)) {
-            map.addLayer(this.overlayMaps[layer]);
+            layer === 'city' ? map.addLayer(this.overlayMaps['current']) : map.addLayer(this.overlayMaps[layer]);
           } else {
             console.log("Layer specified does not exist.");
           }

@@ -28,8 +28,13 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
     },
 
     onAdd: function(map) {
-      map.on('moveend', this.requestData, this);
+      var info = require('./info.json');
       this._map = map;
+      map.on('moveend', function() {
+        if(this._map && this._map.getZoom() > info.toxicReleaseLayer.extents.minZoom - 1) {
+          this.requestData();
+        }
+      }, this);
       this.requestData();
     },
 
@@ -68,6 +73,8 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+          self.onError('toxicReleaseLayer')
         });
       })();
     },

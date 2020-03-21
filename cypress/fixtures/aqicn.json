@@ -1,0 +1,24 @@
+{
+  "data": [
+    {
+      "lat": 43.458591187681,
+      "lon": 11.888247347751,
+      "uid": 9437,
+      "aqi": "30",
+      "station": {
+        "name": "Acropoli, Arezzo, Italy",
+        "time": "2020-03-01T23:00:00+01:00"
+      }
+    },
+    {
+      "lat": 37.350923,
+      "lon": -6.0520363,
+      "uid": 8494,
+      "aqi": "20",
+      "station": {
+        "name": "Aljarafe, Mairena Del Aljarafe, Spain",
+        "time": "2020-03-03T05:00:00+01:00"
+      }
+    }
+  ]
+}

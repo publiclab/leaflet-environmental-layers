@@ -1,0 +1,36 @@
+[
+  {
+    "id": 1,
+    "sensor": {
+      "id": 1
+    },
+    "sensordatavalues": [
+      {
+        "value_type": "PM10",
+        "value": 2.2
+      }
+    ],
+    "location": {
+      "country": "Portugal",
+      "latitude": 39.55223,
+      "longitude": -8.97749
+    }
+  },
+  {
+    "id": 2,
+    "sensor": {
+      "id": 2
+    },
+    "sensordatavalues": [
+      {
+        "value_type": "PM10",
+        "value": 2.3
+      }
+    ],
+    "location": {
+      "country": "Scotland",
+      "latitude": 57.148041,
+      "longitude": -2.101436
+    }
+  }
+]

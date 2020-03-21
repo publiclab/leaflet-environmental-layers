@@ -26557,22 +26557,6 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       layers5: ['clouds', 'cloudsClassic', 'precipitation', 'precipitationClassic', 'rain', 'rainClassic', 'snow', 'pressure', 'pressureContour', 'temperature', 'wind', 'city'],
       layers6: ['eonetFiresLayer', 'fracTrackerMobile'],
 
-      OpenInfraMap_Power: L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
-      }),
-      OpenInfraMap_Petroleum: L.tileLayer('https://tiles-{s}.openinframap.org/petroleum/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
-      }),
-      OpenInfraMap_Telecom: L.tileLayer('https://tiles-{s}.openinframap.org/telecoms/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
-      }),
-      OpenInfraMap_Water: L.tileLayer('https://tiles-{s}.openinframap.org/water/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
-      }),
     },
 
     initialize: function(param) {
@@ -26593,6 +26577,31 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 
       this.options.layers = param;
 
+      this._OpenInfraMap_Power = L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+      }).on('tileerror', function() {
+        this.onError('Power', true)
+      })
+      this._OpenInfraMap_Petroleum = L.tileLayer('https://tiles-{s}.openinframap.org/petroleum/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+      }).on('tileerror', function() {
+        this.onError('Petroleum', true)
+      })
+      this._OpenInfraMap_Telecom = L.tileLayer('https://tiles-{s}.openinframap.org/telecoms/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+      }).on('tileerror', function() {
+        this.onError('Telecom', true)
+      })
+      this._OpenInfraMap_Water = L.tileLayer('https://tiles-{s}.openinframap.org/water/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
+      }).on('tileerror', function() {
+        this.onError('Water', true)
+      });
+
     },
 
     onAdd: function(map) {
@@ -26609,37 +26618,26 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
           this.overlayMaps[layer] = window['L']['layerGroup'][layer]();
           switch(layer) {
             case 'purpleLayer':
-              if (!this.groupedOverlayMaps.PurpleAir) {
-                this.groupedOverlayMaps.PurpleAir = { category: 'group', layers: {} };
-                this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
+              if (!this.groupedOverlayMaps.purpleair) {
+                this.groupedOverlayMaps.purpleair = { category: 'group', layers: {} };
+                this.groupedOverlayMaps.purpleair.layers[layer] = this.overlayMaps[layer];
               } else {
-                this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
+                this.groupedOverlayMaps.purpleAir.layers[layer] = this.overlayMaps[layer];
               };
               break;
-            case 'toxicReleaseLayer':
-              this.groupedOverlayMaps['Toxic Release'] = this.overlayMaps[layer];
-              break;
-            case 'aqicnLayer':
-              this.groupedOverlayMaps['Air Quality Index'] = this.overlayMaps[layer];
-              break;
-            case 'osmLandfillMineQuarryLayer':
-              this.groupedOverlayMaps['OSM landfills, quarries'] = this.overlayMaps[layer];
-              break;
             default:
-              this.groupedOverlayMaps[layer] = this.overlayMaps[layer];  
-            this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
-              this.groupedOverlayMaps[layer] = this.overlayMaps[layer];  
+              this.groupedOverlayMaps[layer] = this.overlayMaps[layer]; 
           }
         }
         else if (this.options.layers1.includes(layer)) {
           this.overlayMaps[layer] = window['L']['layerGroup']['layerCode'](layer);
           switch(layer) {
             case 'purpleairmarker':
-              if (!this.groupedOverlayMaps.PurpleAir) {
-                this.groupedOverlayMaps.PurpleAir = { category: 'group', layers: {} };
-                this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
+              if (!this.groupedOverlayMaps.purpleair) {
+                this.groupedOverlayMaps.purpleair = { category: 'group', layers: {} };
+                this.groupedOverlayMaps.purpleair.layers[layer] = this.overlayMaps[layer];
               } else {
-                this.groupedOverlayMaps.PurpleAir.layers[layer] = this.overlayMaps[layer];
+                this.groupedOverlayMaps.purpleair.layers[layer] = this.overlayMaps[layer];
               }
               break;
             default:
@@ -26653,38 +26651,34 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
           
           switch (layer) {
           case 'Power':
-            this.overlayMaps[layer] = this.options.OpenInfraMap_Power;
+            this.overlayMaps[layer] = this._OpenInfraMap_Power;
             this.groupedOverlayMaps.OpenInfraMap.layers[layer] = this.overlayMaps[layer];
             break;
           case 'Petroleum':
-            this.overlayMaps[layer] = this.options.OpenInfraMap_Petroleum;
+            this.overlayMaps[layer] = this._OpenInfraMap_Petroleum;
             this.groupedOverlayMaps.OpenInfraMap.layers[layer] = this.overlayMaps[layer];
             break;
           case 'Telecom':
-            this.overlayMaps[layer] = this.options.OpenInfraMap_Telecom;
+            this.overlayMaps[layer] = this._OpenInfraMap_Telecom;
             this.groupedOverlayMaps.OpenInfraMap.layers[layer] = this.overlayMaps[layer];
             break;
           case 'Water':
-            this.overlayMaps[layer] = this.options.OpenInfraMap_Water;
+            this.overlayMaps[layer] = this._OpenInfraMap_Water;
             this.groupedOverlayMaps.OpenInfraMap.layers[layer] = this.overlayMaps[layer];
             break;
           }
         }
         else if (this.options.layers3.includes(layer)) {
           this.overlayMaps[layer] = window[layer + 'Layer'](map);
-          switch(layer) {
-            case 'wisconsin':
-              this.groupedOverlayMaps['Wisconsin Non-metal'] = this.overlayMaps[layer];
-              break;
-            default:
-              this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
-          }
+          this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
         }
         else if (this.options.layers4.includes(layer)) {
           if(!this.groupedOverlayMaps.Justicemap) {
             this.groupedOverlayMaps.Justicemap = { category: 'group', layers: {} };
           }
-          this.overlayMaps[layer] = window['L']['tileLayer']['provider']('JusticeMap.'+layer);
+          this.overlayMaps[layer] = window['L']['tileLayer']['provider']('JusticeMap.'+layer).on('tileerror', function() {
+            this.onError(layer, true);
+          });
           this.groupedOverlayMaps.Justicemap.layers[layer] = this.overlayMaps[layer];
         }
         else if (this.options.layers5.includes(layer)) {
@@ -26698,19 +26692,20 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
           if (layer === 'city') {
             layer = 'current';
             obj = {intervall: 15, minZoom: 3};
+            this.overlayMaps[layer] = window['L']['OWM'][layer](obj).on('owmloadingend', function() {
+              this.onError(layer, true);
+            })
+          } else {
+            this.overlayMaps[layer] = window['L']['OWM'][layer](obj).on('tileerror', function() {
+              this.onError(layer, true);
+            });
           }
-          this.overlayMaps[layer] = window['L']['OWM'][layer](obj);
+          
           this.groupedOverlayMaps['Open Weather Map'].layers[layer] = this.overlayMaps[layer];
         }
         else if (this.options.layers6.includes(layer)) {
           this.overlayMaps[layer] = window['L']['geoJSON'][layer]();
-          switch(layer) {
-            case 'eonetFiresLayer':
-              this.groupedOverlayMaps['EONET Fires'] = this.overlayMaps[layer];
-              break;
-            default:
-              this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
-          }
+          this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
         }
         else {
           console.log('Incorrect Layer Name');
@@ -26720,6 +26715,14 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       var leafletControl = this.options.simpleLayerControl ? 
       L.control.layers(baseMaps, this.overlayMaps).addTo(map) :
       L.control.layersBrowser(baseMaps, this.groupedOverlayMaps).addTo(map);
+
+      // set the map menu to the correct size
+      if (typeof leafletControl.setLayersBrowserSize === 'function') {
+        map.on('resize', function () {
+          leafletControl.setLayersBrowserSize(map);
+        });
+        leafletControl.setLayersBrowserSize(map);
+      }
 
       var modeControl = new L.control.minimalMode(leafletControl);
       modeControl.addTo(map);
@@ -26741,13 +26744,13 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 
       if (!!this.options.addLayersToMap) {  // turn on all layers
         for (let layer of this.options.layers.include) {
-          map.addLayer(this.overlayMaps[layer]);
+          layer === 'city' ? map.addLayer(this.overlayMaps['current']) : map.addLayer(this.overlayMaps[layer]);
         }
       } else if (!!this.options.layers.display) {  // turn on only layers in display
         for (let layer of this.options.layers.display) {
           // make sure the layer exists in the display list
           if (this.options.layers.include.includes(layer)) {
-            map.addLayer(this.overlayMaps[layer]);
+            layer === 'city' ? map.addLayer(this.overlayMaps['current']) : map.addLayer(this.overlayMaps[layer]);
           } else {
             console.log("Layer specified does not exist.");
           }
@@ -26859,6 +26862,8 @@ L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+          self.onError('aqicnLayer')
         });
       })();
     },
@@ -27066,6 +27071,8 @@ L.GeoJSON.EonetFiresLayer = L.GeoJSON.extend(
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+          self.onError('eonetFiresLayer')
         });
       })();
     },
@@ -27130,8 +27137,13 @@ L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
     },
 
     onAdd: function(map) {
-      map.on('moveend', this.requestData, this);
+      var info = require('./info.json');
       this._map = map;
+      map.on('moveend', function() {
+        if(this._map && this._map.getZoom() > info.fracTrackerMobile.extents.minZoom - 1) {
+          this.requestData();
+        }
+      }, this);
       this.requestData();
     },
 
@@ -27171,6 +27183,8 @@ L.GeoJSON.FracTrackerMobile = L.GeoJSON.extend(
         if (typeof self._map.spin === 'function') {
           self._map.spin(false);
         }
+      }).fail(function() {
+        self.onError('fracTrackerMobile')
       });
     },
 
@@ -27222,7 +27236,7 @@ L.geoJSON.fracTrackerMobile = function(options) {
   return new L.GeoJSON.FracTrackerMobile(options);
 };
 
-},{}],12:[function(require,module,exports){
+},{"./info.json":13}],12:[function(require,module,exports){
 L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
 
   {
@@ -27241,8 +27255,13 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
     },
 
     onAdd: function(map) {
-      map.on('moveend', this.requestData, this);
+      var info = require('./info.json');
       this._map = map;
+      map.on('moveend', function() {
+        if(this._map && this._map.getZoom() > info.indigenousLands.extents.minZoom - 1) {
+          this.requestData();
+        }
+      }, this);
       this.requestData();
     },
 
@@ -27280,6 +27299,8 @@ L.LayerGroup.IndigenousLayers = L.LayerGroup.extend(
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+            self.onError(self.layer, true)
         });
       })();
     },
@@ -27359,162 +27380,10 @@ L.layerGroup.indigenousLayers = function(name, options) {
   return new L.LayerGroup.IndigenousLayers(name, options);
 };
 
-},{}],13:[function(require,module,exports){
+},{"./info.json":13}],13:[function(require,module,exports){
 module.exports={
-   "wisconsin": {
-      "name": "Wisconsin Non-Metallic Mining",
-      "url": "https://services.arcgis.com",
-      "api_url": "https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/Nonmetallic_and_Potential_frac_sand_mine_proposals_in_West_Central_Wisconsin/FeatureServer/0/",
-      "extents": {
-        "bounds": [
-                    [44.08758502824518, -91.40625],
-                    [43.068887774169625, -92.8125]
-                  ],
-         "minZoom": 10,
-         "maxZoom": 15
-       }
-    },
-
-   "unearthing": {
-      "name": "Unearthing Providence",
-      "url": "https://publiclab.org/unearthing-pvd",
-      "api_url": "",
-      "extents": {
-        "bounds": [
-                    [42.2102, -72.0204],
-                    [41.2272, -70.9618]
-                  ],
-         "minZoom": 6,
-         "maxZoom": 18
-       }
-    },
-
-    "skytruth": {
-      "name": "SkyTruth Alerts ",
-      "about": "SkyTruth Alerts delivers real-time updates about environmental incidents in your back yard (or whatever part of the world you know and love)." ,
-      "url": "https://alerts.skytruth.org/",
-      "api_url": "https://alerts1.skytruth.org/json",
-      "extents": {
-        "bounds": [
-                    [0, 0],
-                    [0, 0]
-                  ],
-         "minZoom": 10,
-         "maxZoom": 15
-       }
-    },
-
-    "odorreport": {
-      "name": " Odor Report Layer ",
-      "about": "To facilitate monitoring of bad odor events through the collection of data using a written odor log and an online map.",
-      "url": "https://odorlog.ushahidi.io/views/map",
-      "api_url": "https://odorlog.api.ushahidi.io/api/v3/posts/",
-      "extents": {
-        "bounds": [
-                    [0, 0],
-                    [0, 0]
-                  ],
-         "minZoom": 10,
-         "maxZoom": 15
-       }
-    },
-
-    "toxicReleaseLayer": {
-      "name": " Toxic Release Layer ",
-      "url": "https://www.epa.gov/enviro/tri-search",
-      "about": "The Toxics Release Inventory (TRI) Search retrieves data from the TRI database in Envirofacts.",
-      "api_url": "https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/",
-      "extents": {
-        "bounds": [
-                    [60.54377524118842, -21.708984375000004],
-                    [13.66733825965496, -148.27148437500003]
-                  ],
-         "minZoom": 5,
-         "maxZoom": 15
-       }
-    },
-
-
-    "fractracker": {
-      "name": " FracTracker Layer",
-      "url": "https://www.fractracker.org/about-us/",
-      "about": "FracTracker Alliance studies, maps, and communicates the risks of oil and gas development to protect our planet and support the renewable energy transformation.",
-      "api_url": "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json" ,
-      "extents": {
-        "bounds": [
-                    [0, 0],
-                    [0, 0]
-                  ],
-         "minZoom": 10,
-         "maxZoom": 15
-       }
-    },
-
-
-    "fracTrackerMobile": {
-      "name": " FracTracker Layer",
-      "url": "https://www.fractracker.org/about-us/",
-      "about": "FracTracker Alliance studies, maps, and communicates the risks of oil and gas development to protect our planet and support the renewable energy transformation.",
-       "extents": {
-        "bounds": [
-                    [51.536085601784755, -59.98535156250001],
-                    [27.800209937418252, -123.26660156250001]
-                  ],
-         "minZoom": 5,
-         "maxZoom": 15
-       }
-    },
-
-    "mapknitter": {
-      "name": " MapKnitter Layer ",
-      "url": "https://mapknitter.org/",
-      "about": "Balloon mapping is a low-cost way to take aerial photos using a camera, attached to a balloon, on a spool of string. People have done this from a few hundred feet up all the way to over 4,000 feet in the air.",
-      "api_url": "https://mapknitter.org/map/region/Gulf-Coast.json",
-     "extents": {
-        "bounds": [
-                    [0, 0],
-                    [0, 0]
-                  ],
-         "minZoom": 10,
-         "maxZoom": 15
-       }
-    },
-
-     "OSMLandfillMineQuarryLayer": {
-      "name": "OSMLandfillMineQuarry Layer ",
-      "url": "https://wiki.openstreetmap.org/wiki/Map_Features",
-      "about": "Landfill area:Place where waste is dumped. ",
-      "api_url": "http://www.overpass-api.de/api/xapi",
-      "extents": {
-        "bounds": [
-                    [0, 0],
-                    [0, 0]
-                  ],
-         "minZoom": 11,
-         "maxZoom": 15
-       }
-    },
-
-    "purpleairmarker": {
-      "name": "purpleairmarker Layer ",
-      "url": "https://www.purpleair.com",
-      "api_url": "https://www.purpleair.com/data.json",
-      "about": "",
-       "extents": {
-        "bounds": [
-                    [0, 0],
-                    [0, 0]
-                  ],
-         "minZoom": 8,
-         "maxZoom": 15
-       }
-    },
-
-}
-
-},{}],14:[function(require,module,exports){
-module.exports={
-  "airQualityIndex": {
+  "aqicnLayer": {
+    "name": "Air Quality Index",
     "url": "http://aqicn.org/json-api/doc/",
     "data": {
       "type": "RT",
@@ -27524,7 +27393,8 @@ module.exports={
     "layer_desc": "World-wide air quality information",
     "icon": "#096"
   },
-  "eonetFires": {
+  "eonetFiresLayer": {
+    "name": "EONET Fires",
     "url": "https://eonet.sci.gsfc.nasa.gov/",
     "data": {
       "type": "NRT",
@@ -27535,7 +27405,9 @@ module.exports={
     "icon": "#ff421d"
   },
   "fractracker": {
+    "name": "FracTracker",
     "url": "https://www.fractracker.org/",
+    "api_url": "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json" ,
     "data": {
       "type": "",
       "disclaimer": "Data from agency data sets to crowd-sourced data"
@@ -27549,24 +27421,23 @@ module.exports={
     }
   },
   "fracTrackerMobile": {
-    "url": "https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/FracTrackerMobileAppNPCAMesaVerdeNationalPark_051416/FeatureServer",
+    "name": "FracTracker Mobile",
+    "url": "https://www.fractracker.org/",
     "data": {
       "type": "",
       "disclaimer": "Data from agency data sets to crowd-sourced data"
     },
-    "description": "",
+    "description": "FracTracker Alliance studies, maps, and communicates the risks of oil and gas development to protect our planet and support the renewable energy transformation.",
     "layer_desc": "User reports",
     "icon": "#e4458b",
     "extents": {
-      "bounds": [
-        [-44.087585028245165, -148.88671875000003],
-        [76.63922560965888, 140.62500000000003]
-      ],
       "minZoom": 5,
       "maxZoom": 15
     }
   },
   "indigenousLands": {
+    "name": "Indigenous Lands",
+    "layers": ["Territories", "Languages", "Treaties"],
     "url": "https://native-land.ca/",
     "data": {
       "type": "Historical data",
@@ -27581,6 +27452,8 @@ module.exports={
     }
   },
   "justiceMap": {
+    "name": "Justice Map",
+    "layers": ["income", "americanIndian", "asian", "black", "multi", "hispanic", "nonWhite", "white", "plurality"],
     "url": "http://www.justicemap.org/index.php?giAdvanced=0#instruction_div",
     "data": {
       "type": "",
@@ -27599,6 +27472,7 @@ module.exports={
     }
   },
   "luftdaten": {
+    "name": "Luftdaten",
     "url": "https://maps.luftdaten.info",
     "data": {
       "type": "",
@@ -27609,12 +27483,14 @@ module.exports={
     "icon": "#4edd51"
   },
   "mapknitter": {
+    "name": "MapKnitter",
     "url": "https://mapknitter.org/",
+    "api_url": "https://mapknitter.org/map/region/Gulf-Coast.json",
     "data": {
       "type": "community submissions",
       "disclaimer": "Data from community submissions."
     },
-    "description": "MapKnitter can make maps from any image source, but it was designed for making maps with aerial photos from balloons and kites.",
+    "description": "MapKnitter can make maps from any image source, but it was designed for making maps with aerial photos from balloons and kites. Balloon mapping is a low-cost way to take aerial photos using a camera, attached to a balloon, on a spool of string. People have done this from a few hundred feet up all the way to over 4,000 feet in the air.",
     "layer_desc": "Map data from aerial photos from balloons and kites",
     "icon": "#ca283b",
     "extents": {
@@ -27623,7 +27499,9 @@ module.exports={
     }
   },
   "odorreport": {
+    "name": "Odor Reports",
     "url": "https://odorlog.ushahidi.io/views/map",
+    "api_url": "https://odorlog.api.ushahidi.io/api/v3/posts/",
     "report_url": "http://www.odorcomplaint.com/",
     "data": {
       "type": "",
@@ -27638,6 +27516,7 @@ module.exports={
     }
   },
   "openaq": {
+    "name": "OpenAQ",
     "url": "https://openaq.org/",
     "data": {
       "type": "RT",
@@ -27648,6 +27527,8 @@ module.exports={
     "icon": "#912d25"
   },
   "openInfraMap": {
+    "name": "Open Infra Map",
+    "layers": ["Power", "Petroleum", "Telecom", "Water"],
     "url": "https://openinframap.org/about.html",
     "contribute_url": "https://openinframap.org/about.html",
     "data": {
@@ -27659,6 +27540,7 @@ module.exports={
     "icon": "#b59f10"
   },
   "opensense": {
+    "name": "OpenSenseMap",
     "url": "https://opensensemap.org/",
     "report_url": "https://opensensemap.org/register",
     "data": {
@@ -27670,6 +27552,8 @@ module.exports={
     "icon": ""
   },
   "openWeatherMap": {
+    "name": "Open Weather Map",
+    "layers": ["clouds", "cloudsClassic", "precipitation", "precipitationClassic", "rain", "rainClassic", "snow", "pressure", "pressureContour", "temperature", "wind", "city"],
     "url": "https://openweathermap.org/guide",
     "data": {
       "type": "RT",
@@ -27679,8 +27563,10 @@ module.exports={
     "layer_desc": "Weather information",
     "icon": "#00a3fe"
   },
-  "osmlandfills,quarries": {
-    "url": "https://www.openstreetmap.org/about",
+  "osmLandfillMineQuarryLayer": {
+    "name": "Landfill, Mine, Quarry",
+    "url": "https://wiki.openstreetmap.org/wiki/Map_Features",
+    "api_url": "http://www.overpass-api.de/api/xapi",
     "data": {
       "type": "",
       "disclaimer": "OpenStreetMap emphasizes local knowledge. Contributors use aerial imagery, GPS devices, and low-tech field maps to verify that OSM is accurate and up to date. Our contributors include enthusiast mappers, GIS professionals, engineers running the OSM servers, humanitarians mapping disaster-affected areas, and many more."
@@ -27693,7 +27579,8 @@ module.exports={
       "maxZoom": 15
     }
   },
-  "pfaslayer": {
+  "pfasLayer": {
+    "name": "PFAS",
     "url": "https://pfasproject.com/",
     "report_url": "mailto:pfasproject@gmail.com",
     "data": {
@@ -27713,7 +27600,9 @@ module.exports={
     }
   },
   "purpleair": {
+    "name": "Purple Air",
     "url": "https://www.purpleair.com",
+    "api_url": "https://www.purpleair.com/data.json",
     "report_url": "https://www.purpleair.com/register",
     "data": {
       "type": "RT",
@@ -27721,10 +27610,21 @@ module.exports={
     },
     "description": "An air quality monitoring network built on a new generation of \"Internet of Things\" sensors",
     "layer_desc": "Air quality data from PurpleAir sensors",
-    "icon": "#7c22b5"
+    "icon": "#7c22b5",
+    "layers": {
+      "purpleLayer": {},
+      "purpleairmarker": {
+        "extents": {
+           "minZoom": 8,
+           "maxZoom": 15
+         }
+      }
+    }
   },
   "skytruth": {
+    "name": "SkyTruth Alerts",
     "url": "https://alerts.skytruth.org/",
+    "api_url": "https://alerts1.skytruth.org/json",
     "data": {
       "type": "",
       "disclaimer": "SkyTruth’s Alerts application reads environmental incidents from multiple websites"
@@ -27737,8 +27637,10 @@ module.exports={
       "maxZoom": 15
     }
   },
-  "toxicRelease": {
+  "toxicReleaseLayer": {
+    "name": "TRI",
     "url": "https://www.epa.gov/enviro/tri-search",
+    "api_url": "https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/",
     "data": {
       "type": "Historical data",
       "disclaimer": "The information submitted by facilities to the EPA and states is complied annually as the Toxics Release Inventory or TRI, and is stored in a publicly accessible database."
@@ -27755,8 +27657,10 @@ module.exports={
       "maxZoom": 15
     }
   },
-  "unearthing": {
+  "Unearthing": {
+    "name": "Unearthing Providence",
     "url": "https://publiclab.org/unearthing-pvd",
+    "api_url": "",
     "data": {
       "type": "Historical data",
       "disclaimer": "Social scientists and computer scientists at Brown University have assembled a unique database that contains information on every manufacturing facility that operated in Rhode Island since the early 1950s. The database also contains information on other environmentally risky land uses such as gas stations, dry cleaners, and auto repair shops as far back as 1936. We have also collected information on “green” land uses such as urban parks, playgrounds, schools and community gardens dating back to 1915."
@@ -27773,8 +27677,10 @@ module.exports={
       "maxZoom": 18
     }
   },
-  "wisconsinNon-metal": {
+  "wisconsin": {
+    "name": "Wisconsin Non-Metallic Mining",
     "url": "https://services.arcgis.com/jDGuO8tYggdCCnUJ/ArcGIS/rest/services/Nonmetallic_and_Potential_frac_sand_mine_proposals_in_West_Central_Wisconsin/FeatureServer/info/itemInfo?f=pjson",
+    "api_url": "https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/Nonmetallic_and_Potential_frac_sand_mine_proposals_in_West_Central_Wisconsin/FeatureServer/0/",
     "data": {
       "type": "",
       "disclaimer": "The information shown on this map was obtained from Wisconsin’s counties and cities in 2017 and thus may not be the most current, comprehensive data available. Source data for parcel polygons was collected between January–July of 2017. However, the tax roll year for most records is 2016, as the assessment cycle lags a year behind. To ensure the most current, comprehensive parcel data, consult the local government’s land information websites first, or contact the city or county land information office directly. The next release of the statewide parcel layer, V4, is tentatively scheduled for July 31, 2018."
@@ -27784,20 +27690,21 @@ module.exports={
     "icon": "#739ccf",
     "extents": {
       "bounds": [
-                  [43.689721907017194, -93.12835693359376],
-                  [45.60250901510299, -89.54956054687501]
+              [43.689721907017194, -93.12835693359376],
+              [45.60250901510299, -89.54956054687501]
                 ],
       "minZoom": 10,
       "maxZoom": 15
     }
   },
   "PLpeople": {
+    "name": "PLpeople",
     "url": "http://publiclab.org",
     "data": {
       "type": "",
-      "disclaimer": "disclaimer"
+      "disclaimer": "Learn more about our method of <a href='https://publiclab.org/wiki/location-privacy/'>location privacy</a> and how our <a href='https://publiclab.org/notes/sagarpreet/04-02-2019/introducing-leaflet-blurred-location-display'>blurred location library</a> works."
     },
-    "description": "Long desc.",
+    "description": "Publiclab.org uses community science and open technology to allow users to share data on environmental issues.",
     "layer_desc": "Users from publiclab.org",
     "icon": "#096",
     "extents": {
@@ -27810,8 +27717,7 @@ module.exports={
     }
   }
 }
-
-},{}],15:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 require('jquery');
 require('leaflet');
 
@@ -27832,9 +27738,25 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
     },
 
     onAdd: function(map) {
-      map.on('moveend', this.requestData, this);
+      var info = require('./info.json');
       this._map = map;
-      this.requestData();
+      switch(this.layer) {
+        case this.layer:
+          if (this.layer === 'fractracker' || this.layer === 'skytruth' || 
+              this.layer === 'odorreport' || this.layer === 'mapknitter') {
+                map.on('moveend', function() {
+                  if(this._map && this._map.getZoom() > info[this.layer].extents.minZoom - 1) {
+                    this.requestData();
+                  }
+                }, this);
+              }
+        default:
+          if (this.layer === 'luftdaten' || this.layer === 'openaq' || 
+              this.layer === 'opensense' || this.layer === 'purpleairmarker') {
+                map.on('moveend', this.requestData, this);
+              }
+          this.requestData();
+      }
     },
 
     onRemove: function(map) {
@@ -27913,10 +27835,10 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         }
         if (self.layer == 'purpleairmarker') {
           zoom = self._map.getZoom(), northwest = self._map.getBounds().getNorthWest(), southeast = self._map.getBounds().getSouthEast();
-          if (zoom < info.purpleairmarker.extents.minZoom) {
+          if (zoom < info.purpleair.layers.purpleairmarker.extents.minZoom) {
             return;
           }
-          Layer_URL = info.purpleairmarker.api_url + '?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat='+(northwest.lat)+'&selat='+(southeast.lat)+'&nwlng='+(northwest.lng)+'&selng='+(southeast.lng);
+          Layer_URL = info.purpleair.api_url + '?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat='+(northwest.lat)+'&selat='+(southeast.lat)+'&nwlng='+(northwest.lng)+'&selng='+(southeast.lng);
         }
 
 
@@ -27933,6 +27855,8 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
           if (self._map && typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+          self.layer === 'purpleairmarker' ? self.onError(self.layer, true) : self.onError(self.layer);
         });
       })();
     },
@@ -28382,7 +28306,7 @@ L.icon.purpleAirMarkerIcon = function() {
   return new L.Icon.PurpleAirMarkerIcon();
 };
 
-},{"./info.json":13,"jquery":2,"leaflet":5}],16:[function(require,module,exports){
+},{"./info.json":13,"jquery":2,"leaflet":5}],15:[function(require,module,exports){
 require('./purpleLayer.js');
 require('./toxicReleaseLayer.js');
 require('leaflet-providers');
@@ -28399,7 +28323,7 @@ require('./layercode.js');
 require('./eonetFiresLayer');
 require('./AllLayers.js');
 
-},{"./AllLayers.js":7,"./PLpeopleLayer.js":8,"./aqicnLayer.js":9,"./eonetFiresLayer":10,"./fracTrackerMobileLayer.js":11,"./indigenousLayers.js":12,"./layercode.js":15,"./openWeatherMapLayer.js":17,"./osmLandfillMineQuarryLayer.js":18,"./pfasLayer.js":19,"./purpleLayer.js":20,"./toxicReleaseLayer.js":21,"./unearthing.js":22,"./wisconsinLayer.js":31,"leaflet-providers":4}],17:[function(require,module,exports){
+},{"./AllLayers.js":7,"./PLpeopleLayer.js":8,"./aqicnLayer.js":9,"./eonetFiresLayer":10,"./fracTrackerMobileLayer.js":11,"./indigenousLayers.js":12,"./layercode.js":14,"./openWeatherMapLayer.js":16,"./osmLandfillMineQuarryLayer.js":17,"./pfasLayer.js":18,"./purpleLayer.js":19,"./toxicReleaseLayer.js":20,"./unearthing.js":21,"./wisconsinLayer.js":31,"leaflet-providers":4}],16:[function(require,module,exports){
 L.OWM = L.TileLayer.extend({
   options: {
     appId: '4c6704566155a7d0d5d2f107c5156d6e', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
@@ -29911,7 +29835,7 @@ L.OWM.Utils = {
 
 
 
-},{}],18:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
 
   {
@@ -29957,12 +29881,12 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
         var southwest = self._map.getBounds().getSouthWest();
 
         var currentMapZoom = self._map.getZoom();
-        if (currentMapZoom < info.OSMLandfillMineQuarryLayer.extents.minZoom) {
+        if (currentMapZoom < info.osmLandfillMineQuarryLayer.extents.minZoom) {
           return;
         }
         for (var key in self._colorOptions) {
           // Generate URL for each type
-          var LMQ_url = info.OSMLandfillMineQuarryLayer.api_url + '?*[landuse=' + key + '][bbox=' + (southwest.lng) + ',' + (southwest.lat) + ',' + (northeast.lng) + ',' + (northeast.lat) + ']';
+          var LMQ_url = info.osmLandfillMineQuarryLayer.api_url + '?*[landuse=' + key + '][bbox=' + (southwest.lng) + ',' + (southwest.lat) + ',' + (northeast.lng) + ',' + (northeast.lat) + ']';
           if (typeof self._map.spin === 'function') {
             self._map.spin(true);
           }
@@ -29972,6 +29896,8 @@ L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
             success: function(data) {
               self.parseData(data);
             },
+          }).fail(function() {
+            self.onError('osmLandfillMineQuarryLayer')
           });
           /* The structure of the document is as follows:
                           <node id="node_id", lat="", lon="">
@@ -30097,7 +30023,7 @@ L.layerGroup.osmLandfillMineQuarryLayer = function(options) {
   return new L.LayerGroup.OSMLandfillMineQuarryLayer(options);
 };
 
-},{"./info.json":13}],19:[function(require,module,exports){
+},{"./info.json":13}],18:[function(require,module,exports){
 L.Icon.PfasLayerIcon = L.Icon.extend({
   options: {
     iconUrl: 'https://openclipart.org/image/300px/svg_to_png/117253/1297044906.png',
@@ -30151,6 +30077,8 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend(
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+          self.onError('pfasLayer')
         });
       })();
     },
@@ -30253,7 +30181,7 @@ L.layerGroup.pfasLayer = function(options) {
 };
 
 
-},{}],20:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 require('heatmap.js');
 require('leaflet-heatmap');
 
@@ -30308,6 +30236,8 @@ L.LayerGroup.PurpleLayer = L.LayerGroup.extend(
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+          self.onError('purpleLayer', true);
         });
       })();
     },
@@ -30379,7 +30309,7 @@ L.layerGroup.purpleLayer = function(options) {
   return new L.LayerGroup.PurpleLayer(options);
 };
 
-},{"heatmap.js":1,"leaflet-heatmap":3}],21:[function(require,module,exports){
+},{"heatmap.js":1,"leaflet-heatmap":3}],20:[function(require,module,exports){
 L.Icon.ToxicReleaseIcon = L.Icon.extend({
   options: {
     iconUrl: 'https://www.clker.com/cliparts/r/M/L/o/R/i/green-dot.svg',
@@ -30410,8 +30340,13 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
     },
 
     onAdd: function(map) {
-      map.on('moveend', this.requestData, this);
+      var info = require('./info.json');
       this._map = map;
+      map.on('moveend', function() {
+        if(this._map && this._map.getZoom() > info.toxicReleaseLayer.extents.minZoom - 1) {
+          this.requestData();
+        }
+      }, this);
       this.requestData();
     },
 
@@ -30450,6 +30385,8 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
           if (typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+          self.onError('toxicReleaseLayer')
         });
       })();
     },
@@ -30519,7 +30456,7 @@ L.layerGroup.toxicReleaseLayer = function(options) {
   return new L.LayerGroup.ToxicReleaseLayer(options);
 };
 
-},{"./info.json":13}],22:[function(require,module,exports){
+},{"./info.json":13}],21:[function(require,module,exports){
 L.LayerGroup.unearthing = L.LayerGroup.extend(
 
   {
@@ -30540,6 +30477,7 @@ L.LayerGroup.unearthing = L.LayerGroup.extend(
 
     requestData: function(map) {
       this.pointsLayer = {};
+      var self = this;
       var points = this.pointsLayer;
       var setP = this.setPoints;
       $.get('https://publiclab.github.io/unearthing-pvd/RI_mfgs.json')
@@ -30580,7 +30518,9 @@ L.LayerGroup.unearthing = L.LayerGroup.extend(
             },
           });
           setP(points.glLayer);
-        });
+        }).fail(function() {
+          self.onError('Unearthing');
+        })
     },
 
     setPoints: function(points) {
@@ -30602,7 +30542,7 @@ L.layerGroup.Unearthing = function(options) {
   return new L.LayerGroup.unearthing(options);
 };
 
-},{}],23:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 L.Control.Info = L.Control.extend({
   options: {
     mapHasControl: false
@@ -30614,7 +30554,10 @@ L.Control.Info = L.Control.extend({
     this._infoModal.classList.add('modal', 'fade', 'leaflet-bar', 'leaflet-control-info');
     $(this._infoModal).attr('role', 'dialog');
     $(this._infoModal).attr('tapindex', '3');
+    $(this._infoModal).attr('aria-hidden', 'true');
     this._infoModal.style.backgroundColor = 'transparent';
+    this._infoModal.style.top = '50%';
+    this._infoModal.style.left = '50%';
     if (this.options.classname) {
       this._infoModal.classList.add(this.options.classname);
     }
@@ -30663,7 +30606,7 @@ L.control.info = function(options) {
   return new L.Control.Info(options);
 };
 
-},{}],24:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 L.Control.Embed = L.Control.extend({
 
   options: {
@@ -30715,7 +30658,7 @@ L.control.embed = function(options) {
   return new L.Control.Embed(options);
 };
 
-},{}],25:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 L.Control.Layers.include({
   getActiveOverlayNames: function() {
     var layers = [];
@@ -30731,7 +30674,7 @@ L.Control.Layers.include({
   },
 });
 
-},{}],26:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 L.SpreadsheetLayer = L.LayerGroup.extend({
   // options: {
   // Must be supplied:
@@ -30891,6 +30834,42 @@ L.spreadsheetLayer = function(options) {
   return new L.SpreadsheetLayer(options);
 };
 
+},{}],26:[function(require,module,exports){
+L.Layer.include({
+  onError: function(layerName, group) {
+    const mapId = this._map._container.id;
+    this._tiles ? console.log('There was an error in fetching some tiles') : console.log('Failed to fetch data!');
+    var selector = '#' + mapId + '-menu-' + layerName + ' .layer-name';
+    var listLayerSelector = '#' + mapId + '-' + layerName + ' .layer-list-name';
+    var layerTitle, icon, warning;
+    if (group) {
+      layerTitle = document.querySelector(listLayerSelector);
+      icon = '#' + mapId + '-' + layerName + ' .layer-list-name .fa-exclamation-triangle';
+      warning =  document.querySelector(icon);
+    } else {
+      layerTitle = document.querySelector(selector);
+      icon =  '#' + mapId + '-menu-' + layerName + ' .layer-name .fa-exclamation-triangle';
+      warning =  document.querySelector(icon);
+    }
+    
+    // Workaround for layers 'city' and 'windrose' from Open Weather Map
+    if((layerName === 'city' || layerName === 'current' || layerName === 'Cities-zoomIn' || layerName === 'windrose-zoomIn') && !this._requests.city) {
+      if(layerTitle && layerTitle.contains(warning)) { // Add icon only once
+        layerTitle.innerHTML = ' ' + layerName;
+      }
+      return;
+    }
+    
+    if (this._map && typeof this._map.spin === 'function') {
+      this._map.spin(false);
+    }
+    
+    if(layerTitle && !layerTitle.contains(warning)) { // Add icon only once
+      layerTitle.innerHTML += '<i style="color: #d47d12;" class="fas fa-exclamation-triangle .text-warning"></i>';
+    }
+    
+  },
+});
 },{}],27:[function(require,module,exports){
 L.Control.LayersBrowser = L.Control.Layers.extend({
   options: {
@@ -30912,6 +30891,10 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     this._lastZIndex = 0;
     this._handlingClick = false;
 
+    // List of layers/layergroups to be highlighted
+    // Layers names listed are values of 'obj.group' for groups and 'obj.name' for the rest
+    this._newLayerContainers = [];
+
     for (var i in baseLayers) {
       this._addLayer(baseLayers[i], i);
     }
@@ -30925,6 +30908,26 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
         this._addLayer(overlays[i], i, true);
       }
     }
+  },
+
+  setLayersBrowserSize: function(map) {
+    var mapobj = map._container;
+    var width = mapobj.offsetWidth;
+
+    var mapSizeArray = [
+      ['xs', 0, 380],
+      ['sm', 380, 590],
+      ['md', 590, 880],
+      ['lg', 880, 10000]
+    ];
+
+    mapSizeArray.forEach((sizeMinMax) => {
+      if(width >= sizeMinMax[1] && width < sizeMinMax[2]) {
+        mapobj.classList.add(sizeMinMax[0]);
+      } else {
+        mapobj.classList.remove(sizeMinMax[0]);
+      }
+    });
   },
 
   expand: function() {
@@ -30944,6 +30947,13 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     this._layersLink.style.marginLeft = '0';
     return this;
   },
+
+  collapse: function () {
+    L.DomUtil.removeClass(this._container, 'leaflet-control-layers-expanded');
+    this._highlightLayers('none');
+    this._newLayerContainers = [];
+		return this;
+	},
 
   _initLayout: function() {
     var className = 'leaflet-control-layers';
@@ -31084,16 +31094,32 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       baseLayersCount += !obj.overlay ? 1 : 0;
     }
 
+    map.on('overlayremove', function(e) {
+      const mapId = this._map && this._map._container.id;
+      var layerInfo = this._getLayerData(e);
+      var selector = '#' + mapId + '-menu-' + e.name + ' .layer-name';
+      var listLayerSelector = '#' + mapId + '-' + e.name + ' .layer-list-name';
+      var layerTitle = e.group ? document.querySelector(listLayerSelector) : document.querySelector(selector);
+      if (layerTitle && (layerTitle.innerHTML !== (' ' + layerInfo.name) || layerTitle.innerHTML !== (' ' + e.name))) {
+        layerTitle.innerHTML = e.group ? ' ' + e.name : ' ' + layerInfo.name;
+      }
+    }, this)
+
+    this._showGroupTitle(); // Show group title when atleast one of its layers is active
+    
     map.on('moveend', function() {
       if(this.options.newLayers.length > 0) {
         this._layersLink.style.marginLeft = '2.9em';
         this._alertBadge.style.display = 'flex';
         this._alertBadge.innerHTML = this.options.newLayers.length;
+        this._highlightLayers('#ffffc6');
       } else {
         this._layersLink.style.marginLeft = '0';
         this._alertBadge.style.display = 'none';
         this._alertBadge.innerHTML = '';
       }
+      
+      this._showGroupTitle(); // Show group title when atleast one of its layers is active
     }, this);
 
     // Hide base layers section if there's only one layer.
@@ -31110,13 +31136,14 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   _createSeparator: function() {
     var separator = document.createElement('div');
     separator.className = 'leaflet-control-layers-separator';
+    separator.style.margin = '0';
 
     return separator;
   },
 
   _createLayerInfoElements: function(obj) {
     var data = this._getLayerData(obj);
-    
+   
     var icon = document.createElement('div');
     icon.className = 'rounded-circle layer-icon';
     icon.style.width = '10px';
@@ -31198,6 +31225,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     dataInfoBtn.appendChild(infoIcon);
 
     return {
+      name: data && data.name,
       icon: icon,
       reportBtn: reportBtn,
       layerDesc: layerDesc,
@@ -31211,14 +31239,13 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   _createGroup: function(obj) {
     if(obj.group) {
       var layerGroup = document.createElement('a');
-      layerGroup.href = '#' + obj.group.replace(/\s/g, '');
+      layerGroup.href = '#' + this._map._container.id + '-' + obj.group.replace(/\s/g, '');
       layerGroup.setAttribute('data-toggle', 'collapse');
       layerGroup.setAttribute('role', 'button');
       layerGroup.setAttribute('aria-expanded', 'false');
       layerGroup.setAttribute('aria-controls', obj.group)
 
       var groupName = document.createElement('span');
-      groupName.innerHTML = obj.group;
       groupName.className = 'layer-group-name';
       groupName.style.margin = '0 1em';
       groupName.style.fontSize = '1.2em';
@@ -31240,9 +31267,12 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       });
 
       var elements = this._createLayerInfoElements(obj);
+      groupName.innerHTML = elements.name;
 
       var titleHolder = document.createElement('div');
+      titleHolder.id = this._map._container.id +'-menu-' + obj.group; 
       titleHolder.className = 'clearfix layer-info-container';
+      titleHolder.setAttribute('data-cy', 'layer'); // Cypress selector
       titleHolder.appendChild(layerGroup);
       layerGroup.appendChild(chevron);
       layerGroup.appendChild(elements.icon);
@@ -31250,10 +31280,13 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       titleHolder.appendChild(groupName);
       titleHolder.appendChild(elements.layerDesc);
       titleHolder.appendChild(elements.dataInfo);
+      titleHolder.style.padding = '0.4em 0';
 
       var separator = this._createSeparator();
 
-      this._hideOutOfBounds(obj, [titleHolder, separator]);
+      if(this._grpTitleVisible && !this._grpTitleVisible[obj.group]) { // Hide group title only if none of its layers are active
+        this._hideOutOfBounds(obj, [titleHolder, separator]);
+      }
       
       var container = obj.overlay ? this._overlaysList : this._baseLayersList;
       container.appendChild(titleHolder);
@@ -31265,7 +31298,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
   _createGroupHolder: function(obj) {
     var groupName;
     if(obj.group) {
-      groupName =  obj.group.replace(/\s/g, '');
+      groupName = this._map._container.id + '-' + obj.group.replace(/\s/g, '');
     }
     var groupHolder = document.createElement('div');
     groupHolder.className = 'layers-sub-list collapse';
@@ -31299,7 +31332,6 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     L.DomEvent.on(input, 'click', this._onInputClick, this);
 
     var name = document.createElement('span');
-    name.innerHTML = ' ' + obj.name;
     name.style.fontWeight = 'bold';
     name.style.display = 'inline-block';
     
@@ -31307,11 +31339,17 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
 
     var elements = this._createLayerInfoElements(obj);
     var separator = this._createSeparator();
-
+    if(obj.group) {
+      name.innerHTML = ' ' + obj.name;
+    } else {
+      name.innerHTML = ' ' + elements.name;
+    }
+    
+    var layerContainer = document.createElement('div');
     // Helps from preventing layer control flicker when checkboxes are disabled
     // https://github.com/Leaflet/Leaflet/issues/2771
     var holder = document.createElement('div');
-
+    layerContainer.appendChild(labelContainer);
     labelContainer.appendChild(label);
     label.appendChild(holder);
     holder.appendChild(input);
@@ -31325,28 +31363,30 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     }
     holder.appendChild(name);
     if(obj.overlay && obj.group) {
+      labelContainer.id = this._map._container.id + '-' + obj.name;
       label.style.width = '100%';
       label.style.marginBottom = '3px';
       input.style.marginLeft = '3.8em';
       name.style.marginLeft = '9.6em';
       name.style.color = '#717171';
       name.className = 'layer-list-name';
-      labelContainer.appendChild(separator);
+      layerContainer.appendChild(separator);
     }
     if(obj.overlay && !obj.group) {
       labelContainer.appendChild(elements.layerDesc);
       labelContainer.className = 'clearfix layer-info-container';
-      labelContainer.id = 'menu-' + obj.name.replace(/ /g,"_");
+      labelContainer.id = this._map._container.id + '-menu-' + obj.name.replace(/ /g,"_");
+      layerContainer.setAttribute('data-cy', 'layer');  // Cypress selector
       labelContainer.appendChild(elements.dataInfo);
-      labelContainer.appendChild(separator);
+      layerContainer.appendChild(separator);
     }
-
-    this._hideOutOfBounds(obj, [labelContainer, separator]);
+    labelContainer.style.padding = '0.4em 0';
+    this._hideOutOfBounds(obj, [layerContainer, separator]);
     
     var container = obj.overlay ? this._overlaysList : this._baseLayersList;
-    container.appendChild(labelContainer);
+    container.appendChild(layerContainer);
     this._checkDisabledLayers();
-    return labelContainer;
+    return layerContainer;
   },
 
   _hideOutOfBounds: function(obj, elements) {
@@ -31365,9 +31405,16 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     });
   },
 
-  _hideElements: function(obj, data, layerName, elements, removeLayer) {
+  /**
+   * 
+   * @param {Object} obj - layer object
+   * @param {Object} data - layer information from info.json
+   * @param {string} layerName 
+   * @param {Object[]} elements - Reference to DOM elements
+   * @param {boolean} isNotGlobal - true if the layer passed in is not a globally available layer
+   */
+  _hideElements: function(obj, data, layerName, elements, isNotGlobal) {
     var map = this._map;
-    var removeFrmMap = removeLayer;
     var currentBounds = map.getBounds();
     var currentZoom = map.getZoom();
     var bounds;
@@ -31376,39 +31423,70 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       bounds = data.extents && data.extents.bounds && L.latLngBounds(data.extents.bounds);
       zoom =  data.extents && data.extents.minZoom && data.extents.minZoom;
       for(var i in elements) {
-        if((bounds && !bounds.intersects(currentBounds) && map.hasLayer(layerName) && removeFrmMap) ||
-          ( zoom && (currentZoom < zoom) && map.hasLayer(layerName) && removeFrmMap)) {
+        if((bounds && !bounds.intersects(currentBounds) && !map.hasLayer(layerName)) ||
+          ( zoom && (currentZoom < zoom) && !map.hasLayer(layerName))) {
           elements[i].style.display = 'none';
-          // Remove layer from map if active
-          map.removeLayer(layerName);
-        } else if((bounds && !bounds.intersects(currentBounds)) || (zoom && (currentZoom < zoom))) {
-          elements[i].style.display = 'none';
-          this._existingLayers(obj, false, removeFrmMap);
+          this._existingLayers(obj, false, isNotGlobal);
+        } else if(obj.group) {
+          this._grpTitleVisible = this._grpTitleVisible || {};
+          this._grpTitleVisible[obj.group] = true;  // Keep track of group titles to be visible when its layers are active
+          elements[i].style.display = 'block';
+          this._existingLayers(obj, true, isNotGlobal);
         } else {
           elements[i].style.display = 'block';
-          this._existingLayers(obj, true, removeFrmMap);
+          this._existingLayers(obj, true, isNotGlobal);
         }
       };
     };
   },
 
-  _existingLayers: function(obj, doesExist, isInitialized) { 
-    if(doesExist && isInitialized && !this.options.existingLayers[obj.name]) { // Check if there is a new layer in current bounds
+  _showGroupTitle: function() {
+    for(var i in this._grpTitleVisible) {
+      if(this._grpTitleVisible[i]) {
+        var groupName = this._map._container.id + '-menu-' + i;
+        var grpHolder = document.getElementById(groupName);
+        var grpSelector = grpHolder && grpHolder.nextElementSibling;
+        if(grpHolder) {
+          grpHolder.style.display = 'block';
+          grpSelector.style.display = 'block';
+        }
+      }
+    }
+    this._grpTitleVisible = {}; // Reset list of group titles that need to be visible
+  },
+
+  _existingLayers: function(obj, doesExist, isNotGlobal) { 
+    if(doesExist && isNotGlobal && !this.options.existingLayers[obj.name]) { // Check if there is a new layer in current bounds
       this.options.newLayers = [...this.options.newLayers, obj.name];
+      this._newLayerContainers = obj.group ? [...this._newLayerContainers, obj.group] : [...this._newLayerContainers, obj.name]
       this.options.existingLayers[obj.name] = true;
     } else if(doesExist) {
       this.options.existingLayers[obj.name] = true; // layer exists upon inititalization
-    } else if(isInitialized && this.options.existingLayers[obj.name]) { // Remove from new layers if the layer no longer exists within current bounds
+    } else if(isNotGlobal && this.options.existingLayers[obj.name]) { // Remove from new layers if the layer no longer exists within current bounds
       this.options.newLayers = this.options.newLayers.filter(layer => layer !== obj.name);
       this.options.existingLayers[obj.name] = false;
     } else {
       this.options.existingLayers[obj.name] = false; // layer does not exist upon inititalization
     }
+  },
 
+  _highlightLayers: function(backgroundProp) {
+    this._newLayerContainers.map(layerName => {
+      const mapId = this._map._container.id;
+      let selector = '#' + mapId + '-menu-' + layerName + ' .layer-info-container';
+      let elem = document.querySelector(selector);
+      if(elem){
+        elem.style.background = backgroundProp
+      } else {  // Group names
+        selector = '#' + mapId + '-menu-' + layerName + '.layer-info-container';
+        elem = document.querySelector(selector);
+        elem.style.background = backgroundProp;
+      }
+    })
   },
 
   _getLayerData: function(obj) {
-    var layerData = require('../layerData.json');
+    var layerData = require('../info.json');
     var data;
     for (let j in layerData) {
       if((obj.group && obj.group.replace(/\s/g, '').toLowerCase() === j.toLowerCase()) ||
@@ -31424,7 +31502,7 @@ L.control.layersBrowser = function(baseLayers, overlays, options) {
   return new L.Control.LayersBrowser(baseLayers, overlays, options);
 };
 
-},{"../layerData.json":14}],28:[function(require,module,exports){
+},{"../info.json":13}],28:[function(require,module,exports){
 L.Control.LegendControl = L.Control.extend({
   options: {
     position: 'bottomleft',
@@ -31615,7 +31693,11 @@ wisconsinLayer = function(map) {
      }
   });
 
+  Wisconsin_NM.on('requesterror', function(e){
+    this.onError('wisconsin');
+ });
+    
   return Wisconsin_NM;
 };
 
-},{"./info.json":13}]},{},[6,16,23,24,25,26,27,28,29,30]);
+},{"./info.json":13}]},{},[6,15,22,23,24,25,26,27,28,29,30]);

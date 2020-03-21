@@ -18,9 +18,25 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
     },
 
     onAdd: function(map) {
-      map.on('moveend', this.requestData, this);
+      var info = require('./info.json');
       this._map = map;
-      this.requestData();
+      switch(this.layer) {
+        case this.layer:
+          if (this.layer === 'fractracker' || this.layer === 'skytruth' || 
+              this.layer === 'odorreport' || this.layer === 'mapknitter') {
+                map.on('moveend', function() {
+                  if(this._map && this._map.getZoom() > info[this.layer].extents.minZoom - 1) {
+                    this.requestData();
+                  }
+                }, this);
+              }
+        default:
+          if (this.layer === 'luftdaten' || this.layer === 'openaq' || 
+              this.layer === 'opensense' || this.layer === 'purpleairmarker') {
+                map.on('moveend', this.requestData, this);
+              }
+          this.requestData();
+      }
     },
 
     onRemove: function(map) {
@@ -99,10 +115,10 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         }
         if (self.layer == 'purpleairmarker') {
           zoom = self._map.getZoom(), northwest = self._map.getBounds().getNorthWest(), southeast = self._map.getBounds().getSouthEast();
-          if (zoom < info.purpleairmarker.extents.minZoom) {
+          if (zoom < info.purpleair.layers.purpleairmarker.extents.minZoom) {
             return;
           }
-          Layer_URL = info.purpleairmarker.api_url + '?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat='+(northwest.lat)+'&selat='+(southeast.lat)+'&nwlng='+(northwest.lng)+'&selng='+(southeast.lng);
+          Layer_URL = info.purpleair.api_url + '?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat='+(northwest.lat)+'&selat='+(southeast.lat)+'&nwlng='+(northwest.lng)+'&selng='+(southeast.lng);
         }
 
 
@@ -119,6 +135,8 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
           if (self._map && typeof self._map.spin === 'function') {
             self._map.spin(false);
           }
+        }).fail(function() {
+          self.layer === 'purpleairmarker' ? self.onError(self.layer, true) : self.onError(self.layer);
         });
       })();
     },
