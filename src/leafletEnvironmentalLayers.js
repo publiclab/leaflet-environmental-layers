@@ -1,6 +1,3 @@
-require('jquery');
-require('leaflet');
-
 require('./purpleLayer.js');
 require('./toxicReleaseLayer.js');
 require('leaflet-providers');
@@ -12,7 +9,7 @@ require('./fracTrackerMobileLayer.js');
 require('./pfasLayer.js');
 require('./unearthing.js');
 require('./indigenousLayers.js');
-// require('./PLpeopleLayer.js');
+require('./PLpeopleLayer.js');
 require('./layercode.js');
 require('./eonetFiresLayer');
 require('./AllLayers.js');

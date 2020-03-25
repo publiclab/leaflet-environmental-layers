@@ -4,7 +4,9 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     position: 'topright',
     autoZIndex: true,
     hideSingleBase: true,
-    overlays: {}
+    overlays: {},
+    existingLayers: {},
+    newLayers: []
   },
 
   initialize: function(baseLayers, overlays, options) {
@@ -42,6 +44,10 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       L.DomUtil.removeClass(this._section, 'leaflet-control-layers-scrollbar');
     }
     this._checkDisabledLayers();
+    this.options.newLayers = []; // Reset new layers list when the control is accessed
+    this._alertBadge.innerHTML = '';
+    this._alertBadge.style.display = 'none';
+    this._layersLink.style.marginLeft = '0';
     return this;
   },
 
@@ -96,6 +102,20 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     var link = this._layersLink = L.DomUtil.create('a', className + '-toggle', container);
     link.href = '#';
     link.title = 'Layers';
+    link.style.marginLeft = '0';
+
+    var alert = this._alertBadge = L.DomUtil.create('section', 'rounded-circle bg-danger text-white text-center'); // Badge to alert new layers within bounds
+    alert.style.display = 'none';
+    alert.style.position = 'relative';
+    alert.style.right = '55%';
+    alert.style.top = '25%';
+    alert.style.fontWeight = 'bold';
+    alert.style.width = '23px';
+    alert.style.height = '23px';
+    alert.style.justifyContent = 'center';
+    alert.style.alignItems = 'center';
+    alert.innerHTML = '';
+    link.appendChild(alert);
 
     if (L.Browser.touch) {
       L.DomEvent.on(link, 'click', L.DomEvent.stop);
@@ -147,17 +167,18 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     this._layerControlInputs = [];
     var baseLayersPresent; var overlaysPresent; var i; var obj; var baseLayersCount = 0;
 
+    var map = this._map;
     var group;
     
     for (i = 0; i < this._layers.length; i++) {
       var groupHolder;
       obj = this._layers[i];
-      if(group !== obj.group) {
+      if(obj.group && group !== obj.group) {
         this._createGroup(obj);
         groupHolder = this._createGroupHolder(obj);
       };
 
-      if(obj.group) {
+      if(groupHolder && obj.group) {
         groupHolder.appendChild(this._addItem(obj));
       } else {
         this._addItem(obj);
@@ -168,6 +189,18 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
       baseLayersPresent = baseLayersPresent || !obj.overlay;
       baseLayersCount += !obj.overlay ? 1 : 0;
     }
+
+    map.on('moveend', function() {
+      if(this.options.newLayers.length > 0) {
+        this._layersLink.style.marginLeft = '2.9em';
+        this._alertBadge.style.display = 'flex';
+        this._alertBadge.innerHTML = this.options.newLayers.length;
+      } else {
+        this._layersLink.style.marginLeft = '0';
+        this._alertBadge.style.display = 'none';
+        this._alertBadge.innerHTML = '';
+      }
+    }, this);
 
     // Hide base layers section if there's only one layer.
     if (this.options.hideSingleBase) {
@@ -207,9 +240,14 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     reportBtn.style.margin = '0 1em';
     reportBtn.style.lineHeight = '10px';
     reportBtn.style.color = '#717171';
+    reportBtn.style.minWidth = '95px';
 
     if(data && data.report_url) {
       reportBtn.setAttribute('href', data.report_url);
+      reportBtn.classList.remove('invisible');
+    } else if(data && data.contribute_url) {
+      reportBtn.setAttribute('href', data.contribute_url);
+      reportBtn.innerHTML = 'Contribute';
       reportBtn.classList.remove('invisible');
     }
 
@@ -351,7 +389,6 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     label.style.display = 'inline-block';
     var checked = this._map.hasLayer(obj.layer);
     var input;
-
     if (obj.overlay) {
       input = document.createElement('input');
       input.type = 'checkbox';
@@ -405,6 +442,7 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     if(obj.overlay && !obj.group) {
       labelContainer.appendChild(elements.layerDesc);
       labelContainer.className = 'clearfix layer-info-container';
+      labelContainer.id = 'menu-' + obj.name.replace(/ /g,"_");
       labelContainer.appendChild(elements.dataInfo);
       labelContainer.appendChild(separator);
     }
@@ -427,33 +465,52 @@ L.Control.LayersBrowser = L.Control.Layers.extend({
     } else {
       layerName = this.options.overlays && this.options.overlays[obj.group].layers[obj.name];
     }
-    this._hideElements(data, layerName, elements); // Filter layer list on initialization
+    this._hideElements(obj, data, layerName, elements); // Filter layer list on initialization
     map.on('moveend', function() { // Update layer list on map movement
-      self._hideElements(data, layerName, elements, true);
+        self._hideElements(obj, data, layerName, elements, true);
     });
   },
 
-  _hideElements: function(data, layerName, elements, removeLayer) {
+  _hideElements: function(obj, data, layerName, elements, removeLayer) {
     var map = this._map;
     var removeFrmMap = removeLayer;
     var currentBounds = map.getBounds();
     var currentZoom = map.getZoom();
     var bounds;
+    var zoom;
     if(data) {
-      bounds = L.latLngBounds(data.extents.bounds);
+      bounds = data.extents && data.extents.bounds && L.latLngBounds(data.extents.bounds);
+      zoom =  data.extents && data.extents.minZoom && data.extents.minZoom;
       for(var i in elements) {
-        if((!bounds.intersects(currentBounds) && map.hasLayer(layerName) && removeFrmMap) ||
-          (currentZoom < data.extents.minZoom && map.hasLayer(layerName) && removeFrmMap)) {
+        if((bounds && !bounds.intersects(currentBounds) && map.hasLayer(layerName) && removeFrmMap) ||
+          ( zoom && (currentZoom < zoom) && map.hasLayer(layerName) && removeFrmMap)) {
           elements[i].style.display = 'none';
-            // Remove layer from map if active
-            map.removeLayer(layerName);
-        } else if(!bounds.intersects(currentBounds) || currentZoom < data.extents.minZoom) {
+          // Remove layer from map if active
+          map.removeLayer(layerName);
+        } else if((bounds && !bounds.intersects(currentBounds)) || (zoom && (currentZoom < zoom))) {
           elements[i].style.display = 'none';
+          this._existingLayers(obj, false, removeFrmMap);
         } else {
           elements[i].style.display = 'block';
+          this._existingLayers(obj, true, removeFrmMap);
         }
       };
     };
+  },
+
+  _existingLayers: function(obj, doesExist, isInitialized) { 
+    if(doesExist && isInitialized && !this.options.existingLayers[obj.name]) { // Check if there is a new layer in current bounds
+      this.options.newLayers = [...this.options.newLayers, obj.name];
+      this.options.existingLayers[obj.name] = true;
+    } else if(doesExist) {
+      this.options.existingLayers[obj.name] = true; // layer exists upon inititalization
+    } else if(isInitialized && this.options.existingLayers[obj.name]) { // Remove from new layers if the layer no longer exists within current bounds
+      this.options.newLayers = this.options.newLayers.filter(layer => layer !== obj.name);
+      this.options.existingLayers[obj.name] = false;
+    } else {
+      this.options.existingLayers[obj.name] = false; // layer does not exist upon inititalization
+    }
+
   },
 
   _getLayerData: function(obj) {

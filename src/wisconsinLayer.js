@@ -1,4 +1,5 @@
 wisconsinLayer = function(map) {
+  
   var info = require('./info.json');
 
   var Wisconsin_NM = L.esri.featureLayer({
@@ -22,10 +23,11 @@ wisconsinLayer = function(map) {
     }
   });
 
-  // Wisconsin_NM.on('add', function(e){
-  //    if(map.getZoom() < info.wisconsin.extents.minZoom){
-  //      return;
-  //    }
-  // });
+  Wisconsin_NM.on('add', function(e){
+     if(map.getZoom() < info.wisconsin.extents.minZoom){
+       return;
+     }
+  });
+
   return Wisconsin_NM;
 };

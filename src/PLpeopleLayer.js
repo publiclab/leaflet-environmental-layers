@@ -1,6 +1,3 @@
-// require('leaflet-blurred-location') ;
-// require('leaflet-blurred-location-display') ;
-
 L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
 
   {
@@ -21,7 +18,7 @@ L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
         map: this._map,
       };
       this.BlurredLocation = new BlurredLocation(this.blurred_options);
-      this.locations = [[23.1, 77.1]]; // testing marker
+      // this.locations = [[23.1, 77.1]]; // testing marker
       this.options_display = {
         blurredLocation: this.BlurredLocation,
         locations: this.locations,
@@ -47,6 +44,6 @@ L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
 );
 
 
-L.layerGroup.pLpeopleLayer = function(options) {
+L.layerGroup.PLpeople = function(options) {
   return new L.LayerGroup.PLpeopleLayer(options);
 };

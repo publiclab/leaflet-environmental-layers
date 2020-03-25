@@ -36,7 +36,7 @@ var baselayer4 = L.tileLayer(
   },
 );
 
-// var PLpeople = L.layerGroup.pLpeopleLayer() ;
+var PLpeople = L.layerGroup.PLpeople();
 var PurpleLayer = L.layerGroup.purpleLayer();
 var ToxicRelease = L.layerGroup.toxicReleaseLayer();
 var PFASTracker = L.layerGroup.pfasLayer();
@@ -107,6 +107,7 @@ windrose.on('owmlayeradd', windroseAdded, windrose);
 var IndigenousLandsTerritories = L.layerGroup.indigenousLayers('Territories');
 var IndigenousLandsLanguages = L.layerGroup.indigenousLayers('Languages');
 var IndigenousLandsTreaties = L.layerGroup.indigenousLayers('Treaties');
+var Unearthing = L.layerGroup.Unearthing();
 
 var Wisconsin_NM = wisconsinLayer(map);
 var FracTracker_mobile = L.geoJSON.fracTrackerMobile();
@@ -121,7 +122,7 @@ var baseMaps = {
 };
 
 var overlayMaps = {
-  // "PLpeople" : PLpeople,
+  "PLpeople" : PLpeople,
   'Wisconsin Non-Metal': Wisconsin_NM,
   'Fractracker': Fractracker,
   'FracTracker mobile': FracTracker_mobile,
@@ -193,6 +194,7 @@ var overlayMaps = {
   'OpenSense ': OpenSenseLayer,
   'OSM Landfills, Quarries': OSMLandfillMineQuarryLayer,
   'EONET Fires': EonetFiresLayer,
+  'Unearthing': Unearthing
 };
 
 var allMapLayers = {
@@ -201,7 +203,7 @@ var allMapLayers = {
   'Streets': baselayer3,
   'Dark': baselayer4,
 
-  // "PLpeople" : PLpeople,
+  "PLpeople" : PLpeople,
   'wisconsin': Wisconsin_NM,
   'fracTrackerMobile': FracTracker_mobile,
   'purpleLayer': PurpleLayer,
@@ -247,6 +249,7 @@ var allMapLayers = {
   'opensense': OpenSenseLayer,
   'osmLandfillMineQuarryLayer': OSMLandfillMineQuarryLayer,
   'eonetFiresLayer': EonetFiresLayer,
+  'Unearthing': Unearthing
 };
 
 // var oms = omsUtil(map, {
@@ -258,6 +261,9 @@ var hash = new L.FullHash(map, allMapLayers);
 // var leafletControl = new L.control.layers(baseMaps, overlayMaps);
 var leafletControl = new L.control.layersBrowser(baseMaps, overlayMaps);
 leafletControl.addTo(map);
+
+var modeControl = new L.control.minimalMode(leafletControl);
+modeControl.addTo(map);
 
 var embedControl = new L.control.embed({
   // hostname: 'your domain name goes here'

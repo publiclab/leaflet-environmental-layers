@@ -46,9 +46,7 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
       var self = this;
       var info = require('./info.json');
       (function() {
-        var script = document.createElement('SCRIPT');
-        script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
-        script.type = 'text/javascript';
+        var $ = window.jQuery;
         var zoom = self._map.getZoom(); var origin = self._map.getCenter();
         var extents = info.toxicReleaseLayer.extents;
         var latLngbounds = extents.bounds;
@@ -60,22 +58,17 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
         if (!bounds.contains(new L.LatLng(origin.lat, origin.lng))) {
           return;
         }
-
-        script.onload = function() {
-          var $ = window.jQuery;
-          var TRI_url = info.toxicReleaseLayer.api_url + parseInt(origin.lat)+'/PREF_LONGITUDE/BEGINNING/'+parseInt(-1*origin.lng)+'/rows/0:300/JSON';
+        var TRI_url = info.toxicReleaseLayer.api_url + parseInt(origin.lat)+'/PREF_LONGITUDE/BEGINNING/'+parseInt(-1*origin.lng)+'/rows/0:300/JSON';
+        if (typeof self._map.spin === 'function') {
+          self._map.spin(true);
+        }
+        $.getJSON(TRI_url, function(data) {
+          // console.log(parseInt(origin.lat) +" and "+parseInt(origin.lng)) ;
+          self.parseData(data);
           if (typeof self._map.spin === 'function') {
-            self._map.spin(true);
+            self._map.spin(false);
           }
-          $.getJSON(TRI_url, function(data) {
-            // console.log(parseInt(origin.lat) +" and "+parseInt(origin.lng)) ;
-            self.parseData(data);
-            if (typeof self._map.spin === 'function') {
-              self._map.spin(false);
-            }
-          });
-        };
-        document.getElementsByTagName('head')[0].appendChild(script);
+        });
       })();
     },
 
@@ -88,9 +81,12 @@ L.LayerGroup.ToxicReleaseLayer = L.LayerGroup.extend(
       var city = data.CITY_NAME;
       var mail_street_addr = data.MAIL_STREET_ADDRESS;
       var contact = data.ASGN_PUBLIC_PHONE;
+      var defaultMarker = L.marker([lat, lng], {icon: greenDotIcon});
+      var minimalMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#6ccc00' });
+      var content = '<strong>Name : </strong>' + fac_name + '<br><strong> City :' + city +'</strong>' + '<br><strong> Street address : ' + mail_street_addr + '</strong><br><strong> Contact : ' + contact + '</strong><br>Lat :'+lat+'<br>Lon :'+lng +'<br><i>From the <a href=\'https://github.com/publiclab/leaflet-environmental-layers/pull/8\'>Toxic Release Inventory</a> (<a href=\'https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515\'>info<a>)</i>';
       var tri_marker;
       if (!isNaN((lat)) && !isNaN((lng)) ) {
-        tri_marker = L.marker([lat, lng], {icon: greenDotIcon}).bindPopup('<strong>Name : </strong>' + fac_name + '<br><strong> City :' + city +'</strong>' + '<br><strong> Street address : ' + mail_street_addr + '</strong><br><strong> Contact : ' + contact + '</strong><br>Lat :'+lat+'<br>Lon :'+lng +'<br><i>From the <a href=\'https://github.com/publiclab/leaflet-environmental-layers/pull/8\'>Toxic Release Inventory</a> (<a href=\'https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library?_=1528283515\'>info<a>)</i>');
+        tri_marker = this._map && this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
       }
       return tri_marker;
     },
