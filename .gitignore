@@ -99,3 +99,7 @@ typings/
 # cypress test screenshots and videos
 cypress/screenshots
 cypress/videos
+
+*.swp
+*.swo
+
