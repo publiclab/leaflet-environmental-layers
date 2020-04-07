@@ -5,20 +5,27 @@ L.Control.Info = L.Control.extend({
 
   initialize: function(options) {
     L.Util.setOptions(this, options);
-    this._infoDisplay = L.DomUtil.create('div');
-    this._infoDisplay.classList.add('leaflet-control-info', 'leaflet-bar', 'leaflet-control');
-    this._infoDisplay.style.backgroundColor = '#fff';
-    if(this.options.classname) {
-      this._infoDisplay.classList.add(this.options.classname);
+    if (this.options.classname) {
+      var infoModal = "<div  class='modal fade leaflet-bar leaflet-control-info"+ this.options.classname +"' role='dialog' tapindex='3' aria-hidden='true' >";
     }
-    this._textElement = L.DomUtil.create('span');
-    this._textElement.innerHTML = this.options.text;
-    this._textElement.classList.add('leaflet-control-info-text');
-    this._infoDisplay.appendChild(this._textElement);
-    this._closeButton = L.DomUtil.create('button');
-    this._closeButton.classList.add('leaflet-control-info-button');
-    this._closeButton.innerText = 'close';
-    this._infoDisplay.appendChild(this._closeButton);
+    else {
+      var infoModal = "<div  class='modal fade leaflet-bar leaflet-control-info' role='dialog' tapindex='3' aria-hidden='true' >";
+    }
+    infoModal += "<div class='modal-dialog'>";
+    infoModal += "<div class='modal-content'>";
+    infoModal += "<div class='modal-body'>";
+    infoModal += "<div class='leaflet-control-info-text'>";
+    infoModal += this.options.text;
+    infoModal += "</ div>";
+    infoModal += "</ div>";
+    infoModal += "<div class='modal-footer'>";
+    infoModal += "<button class='leaflet-control-info-button' data-dismiss='modal'>close</button>";
+    infoModal += "</ div>";
+    infoModal += "</ div>";
+    infoModal += "</ div>";
+    infoModal += "</ div>";
+    this._infoModal = infoModal;
+    $(this._infoModal).modal('show');
     this.onClose(map);
   },
 
