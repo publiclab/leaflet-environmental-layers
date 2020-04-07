@@ -25,6 +25,7 @@ L.Control.Info = L.Control.extend({
     infoModal += "</ div>";
     infoModal += "</ div>";
     this._infoModal = infoModal;
+
     $(this._infoModal).modal('show');
     this.onClose(map);
   },
