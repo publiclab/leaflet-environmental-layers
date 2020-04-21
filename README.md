@@ -23,73 +23,98 @@ A leaflet plugin that has a collection of layers containing environmental data p
 
 ## Installation
   
-        npm install leaflet-environmental-layers
+Install using NPM with: `npm install leaflet-environmental-layers`
+
+See [Dependencies](https://github.com/publiclab/leaflet-environmental-layers/#dependencies) below for what you need to include for basic usage and for individual layers.
 
 ## Usage
-      
-      L.LayerGroup.EnvironmentalLayers(options).addTo(map);
+
+Instantiate a collection of environmentally related Leaflet layers with the `L.LayerGroup.EnvironmentalLayers(options)` function:
+
+```js
+L.LayerGroup.EnvironmentalLayers({
+  // simpleLayerControl: true,
+  addLayersToMap: true,
+  include: ['odorreport', 'clouds', 'eonetFiresLayer', 'Unearthing', 'PLpeople'], // display only these layers
+  // exclude: ['mapknitter', 'clouds'], // layers to exclude (cannot be used at same time as 'include'
+  // display: ['eonetFiresLayer'], // which layers are actually shown as opposed to just being in the menu
+  hash: true,
+  embed: true,
+  // hostname: 'domain name goes here'
+}).addTo(map);
+```
+
+When specifying layers to include or exclude, use [their names as listed in the table below](https://github.com/publiclab/leaflet-environmental-layers/#layers).
+
+### Options
 
 | Option              | Type    |Default                | Description |
 |---------------------|---------|-----------------------|-------------|
-| baseLayers          | Object  | -                     | Passed in as `{ 'Standard': baselayer }` where `'Standard'` is the name given to the layer and `baselayer` is the variable containing the base tile layer(`L.tileLayer()`). It can have more than one base layer. At least one base layer should be added to the map instance. If no baseLayers are provided it is defaulted to a grey-scale base map. |
-| simpleLayerControl  | Boolean | false                 | If set to true, it will replace LEL's layer menu with leaflet's default layers control. |
-| addLayersToMap      | Boolean | false                 | If set to true, adds all layers in the `include` option to the map by default. |
-| include             | Array   | Array                 | If provided, adds the given layers to the layer menu or layers control. If not provided, adds all the layers to the layer menu or layers control. |
-| exclude             | Array   | -                     | If provided, excludes the given layers from the layer menu or layers control. |
-| display             | Array   | -                 | If provided, displays the given layers by default on the map. |
-| hash                | Boolean | false                 | If true, provides hash support for the map. |
-| embed               | Boolean | false                 | If true, adds an embed control that generates code to the map for embedding the map on other sites. |
-| hostname            | String  | 'publiclab.github.io' | Uses the value in place of hostname in the URL generated in the embed code. |
+| `baseLayers`          | Object  | -                     | Passed in as `{ 'Standard': baselayer }` where `'Standard'` is the name given to the layer and `baselayer` is the variable containing the base tile layer(`L.tileLayer()`). It can have more than one base layer. At least one base layer should be added to the map instance. If no baseLayers are provided it is defaulted to a grey-scale base map. |
+| `simpleLayerControl`  | Boolean | false                 | If set to true, it will replace LEL's layer menu with leaflet's default layers control. |
+| `addLayersToMap`      | Boolean | false                 | If set to true, adds all layers in the `include` option to the map by default. |
+| `include`             | Array   | Array                 | If provided, adds the given layers to the layer menu or layers control. If not provided, adds all the layers to the layer menu or layers control. |
+| `exclude`             | Array   | -                     | If provided, excludes the given layers from the layer menu or layers control. |
+| `display`             | Array   | -                 | If provided, displays the given layers by default on the map. |
+| `hash`                | Boolean | false                 | If true, provides hash support for the map. |
+| `embed`               | Boolean | false                 | If true, adds an embed control that generates code to the map for embedding the map on other sites. |
+| `hostname`            | String  | 'publiclab.github.io' | Uses the value in place of hostname in the URL generated in the embed code. |
 
 ## Dependencies
+
 - Install Bootstrap(Required for the layers menu)
 - Install @fortawesome/fontawesome-free
 - Add the following to the head of the HTML file that would contain the map
 
-        <!-- Required for PLpeople layer - must load before dist/LeafletEnvironmentalLayers.js -->
-        <script src="../node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js"></script>
-        <script src="../node_modules/leaflet.blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js"></script>
-        
-        <!-- Required for all maps -->
-        <script src="../node_modules\jquery\dist\jquery.min.js"></script>
-        <script src="../dist/LeafletEnvironmentalLayers.js"></script>
-        <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet" />
-        <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet" />
-        <link href="../node_modules\@fortawesome\fontawesome-free\css\all.min.css" rel="stylesheet" />
-        
-        <!-- Bootstrap - not needed if you use simpleLayerControl:true -->
-        <script src="../node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
-        <link rel="stylesheet" href="../node_modules\bootstrap\dist\css\bootstrap.min.css">
-        
-        <!-- Required for setting hash:true -->
-        <script src="../lib/leaflet-fullUrlHash.js"></script>
+```html
+<!-- Required for PLpeople layer - must load before dist/LeafletEnvironmentalLayers.js -->
+<script src="../node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js"></script>
+<script src="../node_modules/leaflet.blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js"></script>
 
-        <!-- Required for search control -->
-        <script src="../node_modules/leaflet-google-places-autocomplete/src/js/leaflet-gplaces-autocomplete.js"></script>
-        <link rel="stylesheet" href="../node_modules/leaflet-google-places-autocomplete/src/css/leaflet-gplaces-autocomplete.css">
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOLUQngEmJv0_zcG1xkGq-CXIPpLQY8iQ&libraries=places"></script>
+<!-- Required for all maps -->
+<script src="../node_modules\jquery\dist\jquery.min.js"></script>
+<script src="../dist/LeafletEnvironmentalLayers.js"></script>
+<link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet" />
+<link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet" />
+<link href="../node_modules\@fortawesome\fontawesome-free\css\all.min.css" rel="stylesheet" />
 
-        <!-- Required for purpleLayer -->
-        <script src="../node_modules/heatmap.js/build/heatmap.min.js"></script>
-        <script src="../node_modules/leaflet-heatmap/leaflet-heatmap.js"></script>
-        
-        <!-- Required for wisconsin Layer -->
-        <script src="https://unpkg.com/esri-leaflet@2.2.3/dist/esri-leaflet.js"></script>
-        <script src="https://unpkg.com/esri-leaflet-renderers@2.0.6"></script>
+<!-- Bootstrap - not needed if you use simpleLayerControl:true -->
+<script src="../node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
+<link rel="stylesheet" href="../node_modules\bootstrap\dist\css\bootstrap.min.css">
 
-        <!-- Required for windRose Layer -->
-        <script src="../src/windRoseLayer.js"></script>
+<!-- Required for setting hash:true -->
+<script src="../lib/leaflet-fullUrlHash.js"></script>
 
-        <!-- Required for Unearthing Layer -->
-        <script src="../lib/glify.js"></script>
+<!-- Required for search control -->
+<script src="../node_modules/leaflet-google-places-autocomplete/src/js/leaflet-gplaces-autocomplete.js"></script>
+<link rel="stylesheet" href="../node_modules/leaflet-google-places-autocomplete/src/css/leaflet-gplaces-autocomplete.css">
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOLUQngEmJv0_zcG1xkGq-CXIPpLQY8iQ&libraries=places"></script>
+
+<!-- Required for purpleLayer -->
+<script src="../node_modules/heatmap.js/build/heatmap.min.js"></script>
+<script src="../node_modules/leaflet-heatmap/leaflet-heatmap.js"></script>
+
+<!-- Required for wisconsin Layer -->
+<script src="https://unpkg.com/esri-leaflet@2.2.3/dist/esri-leaflet.js"></script>
+<script src="https://unpkg.com/esri-leaflet-renderers@2.0.6"></script>
+
+<!-- Required for windRose Layer -->
+<script src="../src/windRoseLayer.js"></script>
+
+<!-- Required for Unearthing Layer -->
+<script src="../lib/glify.js"></script>
+```
 
 ## Getting started
+
 ### _Installation Instructions_
+
 1. Clone this repository to your local environment.
 2. Run `npm install` to install all the necessary packages required.
 3. Open `examples/index.html` in your browser to look at the preview of the library.
 
 ### _Instructions for a developer_
+
 1. Install grunt - https://gruntjs.com/installing-grunt.
 2. Make the changes you are working on in the respective /src files.
 3. Run `grunt build` to generate files in the /dist directory.
@@ -144,53 +169,53 @@ The information of each layer can be found here: [Layer Information](https://pub
 
 | Layer Name                  | Color   |
 | --------------------------- | ------- |
-| PLpeople                    | N/A     |
-| wisconsin                   | N/A     |
-| fracTrackerMobile           | N/A     |
-| purpleLayer                 | #8b0000 |
-| purpleairmarker             | #800080 |
-| skytruth                    | #ff0000 |
-| fractracker                 | #ffff00 |
-| pfasLayer                   | #00ff00 |
-| toxicReleaseLayer           | #008000 |
-| odorreport                  | #ff00ff |
-| mapknitter                  | #D50039 |
-| Power                       | #ffc0cb |
-| Telecom                     | #0000ff |
-| Petroleum                   | #a52a2a |
-| Water                       | #4B0082 |
-| income                      | #006400 |
-| americanIndian              | #800000 |
-| asian                       | #ffa500 |
-| black                       | #FFD700 |
-| multi                       | #ffc0cb |
-| hispanic                    | #DCDCDC |
-| nonWhite                    | #808080 |
-| white                       | #a52a2a |
-| plurality                   | #800000 |
-| clouds                      | #80dfff |
-| cloudsClassic               | #b3f0ff |
-| precipitation               | #00ff55 |
-| precipitationClassic        | #00008b |
-| rain                        | #8080ff |
-| rainClassic                 | #1a1aff |
-| snow                        | #80ffe5 |
-| pressure                    | #e62e00 |
-| pressureContour             | #ff3300 |
-| temperature                 | #ff3300 |
-| wind                        | #00008b |
-| city                        | #b3ffff |
-| windrose                    | #008000 |
-| Territories                 | #000000 |
-| Languages                   | #000000 |
-| Treaties                    | #000000 |
-| aqicnLayer                  | #000000 |
-| openaq                      | #000000 |
-| luftdaten                   | #000000 |
-| opensense                   | N/A     |
-| osmLandfillMineQuarryLayer  | N/A     |
-| eonetFiresLayer             | #78fffa |
-| Unearthing                  | N/A     |
+| `PLpeople`                    | N/A     |
+| `wisconsin`                   | N/A     |
+| `fracTrackerMobile`           | N/A     |
+| `purpleLayer`                 | `#8b0000` |
+| `purpleairmarker`             | `#800080` |
+| `skytruth`                    | `#ff0000` |
+| `fractracker`                 | `#ffff00` |
+| `pfasLayer`                   | `#00ff00` |
+| `toxicReleaseLayer`           | `#008000` |
+| `odorreport`                  | `#ff00ff` |
+| `mapknitter`                  | `#D50039` |
+| `Power`                       | `#ffc0cb` |
+| `Telecom`                     | `#0000ff` |
+| `Petroleum`                   | `#a52a2a` |
+| `Water`                       | `#4B0082` |
+| `income`                      | `#006400` |
+| `americanIndian`              | `#800000` |
+| `asian`                       | `#ffa500` |
+| `black`                       | `#FFD700` |
+| `multi`                       | `#ffc0cb` |
+| `hispanic`                    | `#DCDCDC` |
+| `nonWhite`                    | `#808080` |
+| `white`                       | `#a52a2a` |
+| `plurality`                   | `#800000` |
+| `clouds`                      | `#80dfff` |
+| `cloudsClassic`               | `#b3f0ff` |
+| `precipitation`               | `#00ff55` |
+| `precipitationClassic`        | `#00008b` |
+| `rain`                        | `#8080ff` |
+| `rainClassic`                 | `#1a1aff` |
+| `snow`                        | `#80ffe5` |
+| `pressure`                    | `#e62e00` |
+| `pressureContour`             | `#ff3300` |
+| `temperature`                 | `#ff3300` |
+| `wind`                        | `#00008b` |
+| `city`                        | `#b3ffff` |
+| `windrose`                    | `#008000` |
+| `Territories`                 | `#000000` |
+| `Languages`                   | `#000000` |
+| `Treaties`                    | `#000000` |
+| `aqicnLayer`                  | `#000000` |
+| `openaq`                      | `#000000` |
+| `luftdaten`                   | `#000000` |
+| `opensense`                   | N/A     |
+| `osmLandfillMineQuarryLayer`  | N/A     |
+| `eonetFiresLayer`             | `#78fffa` |
+| `Unearthing`                  | N/A     |
 
 
 ## Adding LEL features individually
