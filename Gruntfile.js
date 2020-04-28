@@ -61,7 +61,7 @@ module.exports = function(grunt) {
               'node_modules/jasmine-jquery/lib/jasmine-jquery.js',
               'node_modules/jasmine-ajax/lib/mock-ajax.js',
               'node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js',
-              'node_modules/leaflet-google-places-autocomplete/src/js/leaflet-gplaces-autocomplete.js'
+              'node_modules/leaflet-google-places-autocomplete/src/js/leaflet-gplaces-autocomplete.js',
               'https://maps.googleapis.com/maps/api/js?key=AIzaSyAOLUQngEmJv0_zcG1xkGq-CXIPpLQY8iQ&libraries=places',
               // 'node_modules/leaflet.blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js',
               // 'node_modules/esri-leaflet/dist/esri-leaflet.js',
