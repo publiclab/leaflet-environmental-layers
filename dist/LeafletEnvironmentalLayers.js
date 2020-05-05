@@ -26062,6 +26062,15 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
           }
         }
       } // or turn on nothing
+    // Collapsible search control
+      new L.Control.GPlaceAutocomplete({
+        position: 'topleft',
+        collapsed_mode: true,
+        callback: function(place){
+          var loc = place.geometry.location;
+          map.setView( [loc.lat(), loc.lng()], 18);
+        }
+      }).addTo(map);
     },
 
     onRemove: function(map) {},
@@ -26094,10 +26103,41 @@ L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
         map: this._map,
       };
       this.BlurredLocation = new BlurredLocation(this.blurred_options);
-      // this.locations = [[23.1, 77.1]]; // testing marker
+      
+      function JSONparser(data)
+      {
+        parsed_data = [] ; 
+        if (!!data.items) {
+          for (i = 0 ; i < data.items.length ; i++) {
+            let obj = {} ;
+            obj["id"] = data.items[i].doc_id ;
+            obj["url"] = data.items[i].doc_url;
+            obj["latitude"] = parseFloat(data.items[i].latitude) ;
+            obj["longitude"] = parseFloat(data.items[i].longitude) ;
+            obj["name"] = data.items[i].doc_title ;
+            obj["joined_time_ago"] = TimeAgo().inWords("2019-09-16T19:23:51Z"); // will change to data.items[i].created_at when it is available
+            obj["image_url"] = "https://images.unsplash.com/photo-1432958576632-8a39f6b97dc7?ixlib=rb-1.2.1&w=1000&q=80"; // will change to data.items[i].doc_image_url when it is available
+            parsed_data[parsed_data.length] = obj ;
+          }
+        }
+        return parsed_data ; 
+      }
+
+      function popupDisplay(obj) {
+        var popup_content = "";
+        // if (image_url) popup_content += "<img src='" + options.host + image_url + "' class='popup-thumb' />"; // not available in the api yet
+        popup_content += "<div class='popup-two-column'>";
+          if (obj.image_url) popup_content += "<div class='popup-shrink-column'><img src='" + obj.image_url + "' class='profile-thumb' /></div>";
+          popup_content += "<div class='popup-stretch-column'><h5><a href='https://publiclab.org" + obj.url + "'>@" + obj.name + "</a></h5>";
+          popup_content += "<div>Joined " + obj.joined_time_ago + "</div></div>";
+        popup_content += "</div>";
+        return popup_content
+      }
+
       this.options_display = {
         blurredLocation: this.BlurredLocation,
-        locations: this.locations,
+        JSONparser: JSONparser,
+        popupDisplay: popupDisplay,
         source_url: 'https://publiclab.org/api/srch/nearbyPeople',
         color_code_markers: false, // by default this is false .
         style: 'both', // or 'heatmap' or 'markers' , by default is 'both'
@@ -26123,7 +26163,6 @@ L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
 L.layerGroup.PLpeople = function(options) {
   return new L.LayerGroup.PLpeopleLayer(options);
 };
-
 },{}],9:[function(require,module,exports){
 L.LayerGroup.AQICNLayer = L.LayerGroup.extend(
 
@@ -27629,7 +27668,7 @@ require('./layercode.js');
 require('./eonetFiresLayer');
 require('./AllLayers.js');
 
-},{"./AllLayers.js":7,"./PLpeopleLayer.js":8,"./aqicnLayer.js":9,"./eonetFiresLayer":10,"./fracTrackerMobileLayer.js":11,"./indigenousLayers.js":12,"./layercode.js":14,"./openWeatherMapLayer.js":16,"./osmLandfillMineQuarryLayer.js":17,"./pfasLayer.js":18,"./purpleLayer.js":19,"./toxicReleaseLayer.js":20,"./unearthing.js":21,"./wisconsinLayer.js":31,"leaflet-providers":4}],16:[function(require,module,exports){
+},{"./AllLayers.js":7,"./PLpeopleLayer.js":8,"./aqicnLayer.js":9,"./eonetFiresLayer":10,"./fracTrackerMobileLayer.js":11,"./indigenousLayers.js":12,"./layercode.js":14,"./openWeatherMapLayer.js":16,"./osmLandfillMineQuarryLayer.js":17,"./pfasLayer.js":18,"./purpleLayer.js":19,"./toxicReleaseLayer.js":20,"./unearthing.js":21,"./wisconsinLayer.js":32,"leaflet-providers":4}],16:[function(require,module,exports){
 L.OWM = L.TileLayer.extend({
   options: {
     appId: '4c6704566155a7d0d5d2f107c5156d6e', /* pass your own AppId as parameter when creating the layer. Get your own AppId at https://www.openweathermap.org/appid */
@@ -30949,6 +30988,64 @@ omsUtil = function(map, options) {
 };
 
 },{}],31:[function(require,module,exports){
+TimeAgo = function TimeAgo() {
+  var self = {};
+
+  // Public Methods
+  self.locales = {
+    prefix: '',
+    sufix: 'ago',
+
+    seconds: '1 minute',
+    minute: '1 minute',
+    minutes: '%d minutes',
+    hour: '1 hour',
+    hours: '%d hours',
+    day: '1 day',
+    days: '%d days',
+    month: '1 month',
+    months: '%d months',
+    year: '1 year',
+    years: '%d years'
+  };
+
+  self.inWords = function (timeAgo) {
+
+    var seconds = Math.floor((new Date() - new Date(timeAgo)) / 1000),
+      separator = this.locales.separator || ' ',
+      words = this.locales.prefix + separator,
+      interval = 0,
+      intervals = {
+        year: seconds / 31536000,
+        month: seconds / 2592000,
+        day: seconds / 86400,
+        hour: seconds / 3600,
+        minute: seconds / 60
+      };
+
+    var distance = this.locales.seconds;
+
+    for (var key in intervals) {
+      interval = Math.floor(intervals[key]);
+
+      if (interval > 1) {
+        distance = this.locales[key + 's'];
+        break;
+      } else if (interval === 1) {
+        distance = this.locales[key];
+        break;
+      }
+    }
+
+    distance = distance.replace(/%d/i, interval);
+    words += distance + separator + this.locales.sufix;
+
+    return words.trim();
+  };
+
+  return self;
+};
+},{}],32:[function(require,module,exports){
 wisconsinLayer = function(map) {
   
   var info = require('./info.json');
@@ -30987,4 +31084,4 @@ wisconsinLayer = function(map) {
   return Wisconsin_NM;
 };
 
-},{"./info.json":13}]},{},[6,15,22,23,24,25,26,27,28,29,30]);
+},{"./info.json":13}]},{},[6,15,22,23,24,25,26,27,28,29,30,31]);

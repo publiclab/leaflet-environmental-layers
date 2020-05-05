@@ -167,11 +167,11 @@ Click on the button at the bottom on the left side of a map to generate an embed
 The information of each layer can be found here: [Layer Information](https://publiclab.org/notes/sagarpreet/06-06-2018/leaflet-environmental-layer-library)
 
 
-| Layer Name                  | Color   |
-| --------------------------- | ------- |
-| `PLpeople`                    | N/A     |
-| `wisconsin`                   | N/A     |
-| `fracTrackerMobile`           | N/A     |
+| Layer Name                    | Color     |
+| ----------------------------- | --------- |
+| `PLpeople`                    | N/A       |
+| `wisconsin`                   | N/A       |
+| `fracTrackerMobile`           | N/A       |
 | `purpleLayer`                 | `#8b0000` |
 | `purpleairmarker`             | `#800080` |
 | `skytruth`                    | `#ff0000` |
@@ -212,10 +212,10 @@ The information of each layer can be found here: [Layer Information](https://pub
 | `aqicnLayer`                  | `#000000` |
 | `openaq`                      | `#000000` |
 | `luftdaten`                   | `#000000` |
-| `opensense`                   | N/A     |
-| `osmLandfillMineQuarryLayer`  | N/A     |
+| `opensense`                   | N/A       |
+| `osmLandfillMineQuarryLayer`  | N/A       |
 | `eonetFiresLayer`             | `#78fffa` |
-| `Unearthing`                  | N/A     |
+| `Unearthing`                  | N/A       |
 
 
 ## Adding LEL features individually
@@ -248,24 +248,31 @@ The optional options object can be passed in with any of the following propertie
         var hash = new L.FullHash(map, allMapLayers);  
 
 ### _Add the layers menu_
+
 #### Prerequisites
+
 - Bootstrap
 - jQuery
+
 #### Dependencies
 
-```
-  <!-- jQuery --> 
-  <script src="../node_modules\jquery\dist\jquery.min.js"></script>
+- Install Bootstrap(Required for the layers menu)
+- Install @fortawesome/fontawesome-free
+- Add the following to the head of the HTML file that would contain the map
 
-  <!-- Bootstrap --> 
-  <script src="../node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
-  <link rel="stylesheet" href="../node_modules\bootstrap\dist\css\bootstrap.min.css">
-  
-  <!-- Required includes -->
-  <script src="../dist/LeafletEnvironmentalLayers.js"></script>
-  <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet" />
-  <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet" />
-  <link href="../node_modules\@fortawesome\fontawesome-free\css\all.min.css" rel="stylesheet" />
+```
+<!-- jQuery --> 
+<script src="../node_modules\jquery\dist\jquery.min.js"></script>
+
+<!-- Bootstrap --> 
+<script src="../node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
+<link rel="stylesheet" href="../node_modules\bootstrap\dist\css\bootstrap.min.css">
+
+<!-- Required includes -->
+<script src="../dist/LeafletEnvironmentalLayers.js"></script>
+<link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet" />
+<link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet" />
+<link href="../node_modules\@fortawesome\fontawesome-free\css\all.min.css" rel="stylesheet" />
 ```
 
 #### Usage example
@@ -339,8 +346,7 @@ The optional options object can be passed in with any of the following propertie
         <script src="../node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js"></script>
         <script src="../node_modules/leaflet.blurred-location-display/dist/Leaflet.BlurredLocationDisplay.js"></script>
 
-
-### _Real Time Layers_
+### _Real Time Layers
 
 #### city (by openWeather)
 
