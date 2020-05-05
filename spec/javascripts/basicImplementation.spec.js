@@ -11,6 +11,11 @@ describe('Basic LEL Implementation', function() {
     mapContainer = document.createElement('div');
     mapContainer.id = 'map';
     map = L.map(mapContainer, { }).setView([43, -83], 8);
+    window.L.Control.GPlaceAutocomplete = L.Control.extend({ // Mock the GPlaceAutocomplete plugin
+      initialize: function (options) {},
+      onAdd: function () {},
+      addTo: function (map) {}
+    })
   });
 
   it('leaflet is created', function() {
