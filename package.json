@@ -54,7 +54,7 @@
     "grunt-template-jasmine-requirejs": "^0.2.3",
     "http-server": "^0.12.1",
     "jasmine": "^2.5.3",
-    "jasmine-ajax": "^3.3.1",
+    "jasmine-ajax": "^4.0.0",
     "jasmine-jquery": "^2.1.1",
     "matchdep": "^1.0.1",
     "require": "^2.4.20",
