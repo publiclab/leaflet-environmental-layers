@@ -223,7 +223,7 @@ L.OWM.Current = L.Layer.extend({
     minZoom: 7,
     interval: 0, // interval for rereading city data in minutes
     progressControl: true, // available: true, false
-    imageLoadingUrl: 'owmloading.gif', // URL of loading image relative to HTML document
+    imageLoadingUrl: 'images/owmloading.gif', // URL of loading image relative to HTML document
     imageLoadingBgUrl: null, // URL of background image for progress control
     temperatureUnit: 'C', // available: 'K' (Kelvin), 'C' (Celsius), 'F' (Fahrenheit)
     temperatureDigits: 1,
@@ -1506,5 +1506,3 @@ L.OWM.Utils = {
     },
   },
 };
-
-
