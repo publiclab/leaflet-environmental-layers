@@ -6,7 +6,7 @@ jobs:
     steps:
       - name: 
         run: |
-          npm install -g grunt-cli
+          npm install grunt-cli
           grunt build
           grunt transpile
           grunt jasmine
