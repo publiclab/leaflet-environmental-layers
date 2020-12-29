@@ -7,9 +7,9 @@ jobs:
       - name: 
         run: |
           npm install grunt-cli
-          grunt build
-          grunt transpile
-          grunt jasmine
+          node_modules/grunt-cli/bin/grunt build
+          node_modules/grunt-cli/bin/grunt transpile
+          node_modules/grunt-cli/bin/grunt jasmine
           npm run start:ci
 
   cypress-run:
@@ -21,6 +21,9 @@ jobs:
       # and run all Cypress tests
       - name: Cypress run
         uses: cypress-io/github-action@v2
+        run: |
+          npm run start:ci &
+          npm run cy:run:chrome
 
 ## Cache NPM folder and Cypress binary
 ## to avoid downloading Cypress again and again
