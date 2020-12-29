@@ -4,7 +4,6 @@ jobs:
   test-runner:
     runs-on: ubuntu-16.04
     steps:
-
     - uses: actions/checkout@v2
     - name: Setup node
       uses: actions/setup-node@v2
@@ -20,7 +19,6 @@ jobs:
   cypress-run:
     runs-on: ubuntu-16.04
     steps:
-    - uses: cypress-io/github-action@v2
     - uses: actions/checkout@v2
     - name: Setup node
       uses: actions/setup-node@v2
@@ -29,6 +27,7 @@ jobs:
         check-latest: true
       # Install NPM dependencies, cache them correctly
       # and run all Cypress tests
+    - uses: cypress-io/github-action@v2
     - name: Cypress run
       run: |
         npm run start:ci &
