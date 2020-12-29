@@ -1,0 +1,19 @@
+tasks:
+  - init: npm install
+    command: |
+      npm run start
+      gp await-port 8080
+      gp preview http://localhost:8080/examples
+ports:
+  - port: 8080
+    onOpen: open-preview
+
+github:
+  prebuilds:
+    branches: true
+    pullRequests: true
+    pullRequestsFromForks: true
+    addCheck: true
+    addComment: true
+    addBadge: false
+    addLabel: false
