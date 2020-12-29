@@ -3,7 +3,7 @@ tasks:
     command: |
       npm run start
       gp await-port 8080
-      gp preview http://localhost:8080/examples
+      gp preview http://localhost:8080/example/
 ports:
   - port: 8080
     onOpen: open-preview
