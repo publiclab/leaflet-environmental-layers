@@ -6,7 +6,7 @@ jobs:
     steps:
       - name: 
         run: |
-          npm install grunt-cli
+          npm install grunt grunt-cli
           node_modules/grunt-cli/bin/grunt build
           node_modules/grunt-cli/bin/grunt transpile
           node_modules/grunt-cli/bin/grunt jasmine
