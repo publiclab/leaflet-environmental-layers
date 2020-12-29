@@ -7,7 +7,7 @@
     "example": "example"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "grunt jasmine && cypress run",
     "start": "http-server -p 8080 -c-1",
     "start:ci": "http-server -p 8080 -c-1 --silent",
     "cy:open": "cypress open",

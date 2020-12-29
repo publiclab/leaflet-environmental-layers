@@ -1,0 +1,30 @@
+name: continuous-integration
+on: [pull_request]
+jobs:
+  test-runner:
+    runs-on: ubuntu-16.04
+    steps:
+      - name: 
+        run: |
+          npm install -g grunt-cli
+          grunt build
+          grunt transpile
+          grunt jasmine
+          npm run start:ci
+
+  cypress-run:
+    runs-on: ubuntu-16.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      # Install NPM dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+
+## Cache NPM folder and Cypress binary
+## to avoid downloading Cypress again and again
+# cache:
+#   directories:
+#     - ~/.npm
+#     - ~/.cache
