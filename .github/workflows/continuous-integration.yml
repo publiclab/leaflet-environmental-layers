@@ -15,12 +15,12 @@ jobs:
   cypress-run:
     runs-on: ubuntu-16.04
     steps:
+      - uses: cypress-io/github-action@v2
       - name: Checkout
         uses: actions/checkout@v1
       # Install NPM dependencies, cache them correctly
       # and run all Cypress tests
       - name: Cypress run
-        uses: cypress-io/github-action@v2
         run: |
           npm run start:ci &
           npm run cy:run:chrome
