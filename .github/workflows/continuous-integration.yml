@@ -4,14 +4,18 @@ jobs:
   test-runner:
     runs-on: ubuntu-16.04
     steps:
-      - name:
-      - uses: actions/setup-node@v1
-        run: |
-          npm install grunt grunt-cli
-          ./node_modules/grunt-cli/bin/grunt build
-          ./node_modules/grunt-cli/bin/grunt transpile
-          ./node_modules/grunt-cli/bin/grunt jasmine
-          npm run start:ci
+
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '12'
+        check-latest: true
+    - run: npm install
+    - run: npm install grunt grunt-cli
+    - run: ./node_modules/grunt-cli/bin/grunt build
+    - run: ./node_modules/grunt-cli/bin/grunt transpile
+    - run: ./node_modules/grunt-cli/bin/grunt jasmine
+    - run: npm run start:ci
 
   cypress-run:
     runs-on: ubuntu-16.04
