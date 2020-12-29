@@ -7,9 +7,9 @@ jobs:
       - name: 
         run: |
           npm install grunt grunt-cli
-          node_modules/grunt-cli/bin/grunt build
-          node_modules/grunt-cli/bin/grunt transpile
-          node_modules/grunt-cli/bin/grunt jasmine
+          ./node_modules/grunt-cli/bin/grunt build
+          ./node_modules/grunt-cli/bin/grunt transpile
+          ./node_modules/grunt-cli/bin/grunt jasmine
           npm run start:ci
 
   cypress-run:
