@@ -30,7 +30,7 @@ jobs:
     - uses: cypress-io/github-action@v2
     - name: Cypress run
       run: |
-        npm run start:ci &
+        npm run start:ci
         npm run cy:run:chrome
 
 ## Cache NPM folder and Cypress binary
