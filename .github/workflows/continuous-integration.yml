@@ -30,6 +30,11 @@ jobs:
     - run: npm install
     - run: npm run start:ci &
     - uses: cypress-io/github-action@v2
+        with:
+          # just for full picture after installing Cypress
+          # print information about detected browsers, etc
+          # see https://on.cypress.io/command-line#cypress-info
+          build: npx cypress info
 
 ## Cache NPM folder and Cypress binary
 ## to avoid downloading Cypress again and again
