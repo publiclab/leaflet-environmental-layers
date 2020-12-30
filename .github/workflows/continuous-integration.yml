@@ -27,7 +27,7 @@ jobs:
         check-latest: true
       # Install NPM dependencies, cache them correctly
       # and run all Cypress tests
-    - run: npm run start:ci
+    - run: node_modules/http-server/bin/http-server -p 8080 -c-1 --silent
     - uses: cypress-io/github-action@v2
     - name: Cypress run
       run: npm run cy:run:chrome
