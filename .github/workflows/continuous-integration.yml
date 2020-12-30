@@ -27,11 +27,10 @@ jobs:
         check-latest: true
       # Install NPM dependencies, cache them correctly
       # and run all Cypress tests
+    - run: npm run start:ci
     - uses: cypress-io/github-action@v2
     - name: Cypress run
-      run: |
-        npm run start:ci
-        npm run cy:run:chrome
+      run: npm run cy:run:chrome
 
 ## Cache NPM folder and Cypress binary
 ## to avoid downloading Cypress again and again
