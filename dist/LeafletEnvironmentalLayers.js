@@ -25905,11 +25905,13 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       this._map = map;
       this.overlayMaps = {};
       this.groupedOverlayMaps = {}; // For grouping layers in the new menu
-	  var defaultBaseLayer = L.tileLayer('https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      var defaultBaseLayer = L.tileLayer('https://api.mapbox.com/styles/v1/jywarren/ckj06ujnc1nmi19nuelh46pr9/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoianl3YXJyZW4iLCJhIjoiVzVZcGg3NCJ9.BJ6ArUPuTs1JT9Ssu3K8ig', {
+        tileSize: 512,
+        zoomOffset: -1,
+        attribution: '© <a href="https://apps.mapbox.com/feedback/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       });
-	  var baseMaps = this.options.baseLayers ? this.options.baseLayers : { "Grey-scale": defaultBaseLayer.addTo(map) };
-		
+      var baseMaps = this.options.baseLayers ? this.options.baseLayers : { "Grey-scale": defaultBaseLayer.addTo(map) };
+
       for (let layer of this.options.layers.include) {
         if (this.options.layers0.includes(layer)) {
           this.overlayMaps[layer] = window['L']['layerGroup'][layer]();
@@ -27266,12 +27268,11 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
       }
 
       if (this.layer == 'skytruth') {
-        var redDotIcon =new L.icon.skyTruthIcon();
         var lat = data.lat;
         var lng = data.lng;
         var title = data.title;
         var url = data.link;
-        var defaultMarker = L.marker([lat, lng], {icon: redDotIcon});
+        var defaultMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 8, weight: 2, fillOpacity: 0.6, color: '#d20000', fillColor: '#f00' });
         var minimalMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#f00' });
         var content = '<a href='+url+'>' +title + '</a><br>' +
         '<br><strong> lat: ' + lat +
@@ -27594,19 +27595,6 @@ L.Icon.FracTrackerIcon = L.Icon.extend({
 
 L.icon.fracTrackerIcon = function() {
   return new L.Icon.FracTrackerIcon();
-};
-
-L.Icon.SkyTruthIcon = L.Icon.extend({
-  options: {
-    iconUrl: 'https://www.clker.com/cliparts/T/G/b/7/r/A/red-dot.svg',
-    iconSize: [30, 20],
-    iconAnchor: [20, 0],
-    popupAnchor: [-5, -5],
-  },
-});
-
-L.icon.skyTruthIcon = function() {
-  return new L.Icon.SkyTruthIcon();
 };
 
 L.Icon.OdorReportIcon = L.Icon.extend({
