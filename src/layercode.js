@@ -175,8 +175,8 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         var url = data.fields.link;
         var defaultMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 8, weight: 2, fillOpacity: 0.6, color: '#d20000', fillColor: '#f00' });
         var minimalMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#f00' });
-        var content = '<a href='+url+'>' +title + '</a><br>' +
-        '<p>' + data.fields.content + '</p>'
+        var content = '<h3><a _target="blank" href="'+url+'">' +title + '</a></h3>' +
+        '<p>' + data.fields.content + '</p>' +
         '</strong> <br><br>Data provided by <a href=\'http://alerts.skytruth.org/\'>alerts.skytruth.org/</a>';
         var skymarker;
         if (!isNaN(lat) && !isNaN(lng) ) {
@@ -199,8 +199,12 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         '</strong><br><strong> lon: ' + lng +
         '</strong><br><br>Data provided by <a href=\'https://odorlog.ushahidi.io\'>https://odorlog.ushahidi.io</a>';
         var odormarker;
+        var popupOptions = {
+          maxWidth: 500,
+          maxHeight: 500
+        }
         if (!isNaN(lat) && !isNaN(lng) ) {
-          odormarker = this._map && this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
+          odormarker = this._map && this._map._minimalMode ? minimalMarker.bindPopup(content, popupOptions) : defaultMarker.bindPopup(content, popupOptions);
         }
         // oms.addMarker(odormarker);
         return odormarker;
@@ -338,7 +342,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         var content = '<strong>' + item['name'] + '</strong> ';
         if (item['website']) content += '(<a href=' + item['website'] + '>website</a>' + ')';
         content += '<hr>';
-        if (!!item['Descrition']) content += 'Description: <i>' + item['summary'] + '</i><br>';
+        if (!!item['Description']) content += 'Description: <i>' + item['summary'] + '</i><br>';
         if (!!item['contact']) content += '<strong>Contact: ' + item['contact'] + '<br></strong>';
         var generics = ['phone', 'email', 'street', 'city', 'state', 'zipcode', 'timestamp', 'latitude', 'longitude'];
         for (var i = 0; i < generics.length; i++) {
@@ -412,8 +416,8 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         }
       }
       if (this.layer == 'skytruth') {
-        if (!!data.feed) {
-          for (i = 0; i < data.feed.length; i++) {
+        if (!!data) {
+          for (i = 0; i < data.length; i++) {
             this.addMarker(data[i]);
           }
           if (this.options.clearOutsideBounds && this._map) {
