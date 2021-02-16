@@ -176,8 +176,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         var defaultMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 8, weight: 2, fillOpacity: 0.6, color: '#d20000', fillColor: '#f00' });
         var minimalMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#f00' });
         var content = '<a href='+url+'>' +title + '</a><br>' +
-        '<br><strong> lat: ' + lat +
-        '</strong><br><strong> lon: ' + lng +
+        '<p>' + data.fields.content + '</p>'
         '</strong> <br><br>Data provided by <a href=\'http://alerts.skytruth.org/\'>alerts.skytruth.org/</a>';
         var skymarker;
         if (!isNaN(lat) && !isNaN(lng) ) {
