@@ -26,7 +26,9 @@ describe('Purple layer - markers', function() {
 
   it('has circle markers in minimal mode', function() {
     cy.server()
-    cy.route('GET', 'https://www.purpleair.com/data.json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat=45.67548217560647&selat=41.79179268262892&nwlng=-101.03576660156251&selng=-93.93310546875001', 'fixture:purpleMarker.json')
+    cy.route('GET', 
+             'https://www.purpleair.com/data.json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat=45.67548217560647&selat=41.79179268262892&nwlng=-101.03576660156251&selng=-93.93310546875001', 
+             'fixture:purpleLayer.json')
     const spy = cy.spy(window.top.aut.PurpleAirMarkerLayer, 'requestData')
     cy.get('[title="Show minimal markers"]').click().then(() => {
       expect(spy).to.be.called
