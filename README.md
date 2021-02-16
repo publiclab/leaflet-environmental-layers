@@ -124,6 +124,10 @@ When specifying layers to include or exclude, use [their names as listed in the 
 7. Run `npm run cy:run:chrome` to run e2e and integration tests.
 8. Test your changes on a browser by opening `examples/index.html`.
 
+#### Testing in GitPod
+
+To run Cypress tests in GitPod, you'll need to use `npm run start:ci & cypress run --browser electron`
+
 ## Features
 
 ### _Zoom or Pan_
