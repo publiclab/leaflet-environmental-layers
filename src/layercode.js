@@ -309,13 +309,14 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
       if (this.layer == 'purpleairmarker')
       {
         var redDotIcon =new L.icon.purpleAirMarkerIcon();
-        var lat = data[25];
-        var lng = data[26];
+        // ["ID","pm","pm_cf_1","pm_atm","age","pm_0","pm_1","pm_2","pm_3","pm_4","pm_5","pm_6","conf","pm1","pm_10","p1","p2","p3","p4","p5","p6","Humidity","Temperature","Pressure","Elevation","Type","Label","Lat","Lon","Icon","isOwner","Flags","Voc","Ozone1","Adc","CH"],
+        var lat = data[27];
+        var lng = data[28];
         var value = parseFloat(data[16]);
-        var Label = data[24];
-        var temp_f = data[21];
-        var humidity = data[20];
-        var pressure = data[22];
+        var Label = data[26];
+        var temp_f = data[22];
+        var humidity = data[21];
+        var pressure = data[23];
         var defaultMarker = L.marker([lat, lng], {icon: redDotIcon});
         var minimalMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#7c22b5' });
         var content = '<i style=\'color: purple ; size : 20px\'>Label : ' + Label + '</i><br><br> <strong>PM2.5 Value : ' + value +'</strong><br><strong> Lat: ' + lat + '</strong><br><strong> Lon: ' + lng + '<br>Temp (F) : '+temp_f+'<br>Humidity : ' + humidity + '<br>Pressure : ' + pressure +'<br><br> <i>Data provided by <a href=\'www.purpleair.com\'>www.purpleair.com</a></i>';
