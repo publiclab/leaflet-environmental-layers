@@ -94,7 +94,12 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         }
         if (self.layer === 'skytruth') {
           zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast(), southwest = self._map.getBounds().getSouthWest();
-          Layer_URL = info.skytruth.api_url + '?n=100&l='+(southwest.lat)+','+(southwest.lng)+','+(northeast.lat)+','+(northeast.lng);
+          Layer_URL = info.skytruth.api_url + '?l='
+            +(southwest.lat)+','
+            +(southwest.lng)+','
+            +(northeast.lat)+','
+            +(northeast.lng)
+            +'&dates=undefined,undefined&selected=1,4,5,9&n=100';
         }
         if (self.layer === 'odorreport') {
           zoom = self._map.getZoom(), origin = self._map.getCenter();
