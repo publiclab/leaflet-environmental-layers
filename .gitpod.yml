@@ -4,6 +4,7 @@ image:
 tasks:
   - init: npm install
     command: |
+      npm install -g cypress
       npm run start
       gp await-port 8080
       gp preview http://localhost:8080/example/
