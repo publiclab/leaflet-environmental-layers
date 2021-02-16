@@ -241,7 +241,7 @@
   "skytruth": {
     "name": "SkyTruth Alerts",
     "url": "https://alerts.skytruth.org/",
-    "api_url": "https://alerts1.skytruth.org/json",
+    "api_url": "https://skytruth-alerts2.appspot.com/api/getalerts/",
     "data": {
       "type": "",
       "disclaimer": "SkyTruth’s Alerts application reads environmental incidents from multiple websites"

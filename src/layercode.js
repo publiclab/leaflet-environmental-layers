@@ -99,7 +99,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
             +(southwest.lng)+','
             +(northeast.lat)+','
             +(northeast.lng)
-            +'&dates=undefined,undefined&selected=1,4,5,9&n=100';
+            +'&selected=1,4,5,9,1020,1072,1060,2001,1058,9,5,1052,1073,1042,4,7,8,1001,1021,1051,1071,1041&n=100&&keyword=';
         }
         if (self.layer === 'odorreport') {
           zoom = self._map.getZoom(), origin = self._map.getCenter();
@@ -169,10 +169,10 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
       }
 
       if (this.layer == 'skytruth') {
-        var lat = data.lat;
-        var lng = data.lng;
-        var title = data.title;
-        var url = data.link;
+        var lat = data.fields.lat;
+        var lng = data.fields.lng;
+        var title = data.fields.title;
+        var url = data.fields.link;
         var defaultMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 8, weight: 2, fillOpacity: 0.6, color: '#d20000', fillColor: '#f00' });
         var minimalMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#f00' });
         var content = '<a href='+url+'>' +title + '</a><br>' +
@@ -415,7 +415,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
       if (this.layer == 'skytruth') {
         if (!!data.feed) {
           for (i = 0; i < data.feed.length; i++) {
-            this.addMarker(data.feed[i]);
+            this.addMarker(data[i]);
           }
           if (this.options.clearOutsideBounds && this._map) {
             this.clearOutsideBounds();
