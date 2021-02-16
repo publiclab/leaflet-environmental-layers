@@ -309,6 +309,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
       if (this.layer == 'purpleairmarker')
       {
         var redDotIcon =new L.icon.purpleAirMarkerIcon();
+        // ref https://www.purpleair.com/data.json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat=45.67548217560647&selat=41.79179268262892&nwlng=-101.03576660156251&selng=-93.93310546875001
         // ["ID","pm","pm_cf_1","pm_atm","age","pm_0","pm_1","pm_2","pm_3","pm_4","pm_5","pm_6","conf","pm1","pm_10","p1","p2","p3","p4","p5","p6","Humidity","Temperature","Pressure","Elevation","Type","Label","Lat","Lon","Icon","isOwner","Flags","Voc","Ozone1","Adc","CH"],
         var lat = data[27];
         var lng = data[28];
