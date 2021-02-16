@@ -126,7 +126,7 @@ When specifying layers to include or exclude, use [their names as listed in the 
 
 #### Testing in GitPod
 
-To run Cypress tests in GitPod, you'll need to use `npm run start:ci & cypress run --browser electron`
+To run Cypress tests in GitPod, you'll need to do `npm install -g cypress` and then use: `npm run start:ci & cypress run --browser electron`
 
 ## Features
 
