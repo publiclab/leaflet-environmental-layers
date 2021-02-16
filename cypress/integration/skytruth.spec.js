@@ -3,13 +3,14 @@ describe('Skytruth layer', function() {
     cy.openWindow('/example/index.html#lat=41.6283&lon=-91.7235&zoom=10&layers=Standard')
     cy.wait(300)
     cy.window().then((win) => {
+      cy.get('.leaflet-overlay-pane').children().should('have.length', 0)
       cy.fixture('skytruth').then((data) => {
         cy.stub(win.SkyTruth, 'requestData', function() {
           win.SkyTruth.parseData(data);
         })
       })
       cy.get('#map-menu-skytruth label').click({ force: true })
-      cy.get('.leaflet-marker-pane').children().should('have.length', 2)
+      cy.get('.leaflet-overlay-pane').children().should('have.length', 1)
     }) 
   })
 
@@ -18,8 +19,7 @@ describe('Skytruth layer', function() {
   })
 
   it('has default markers in default mode', function() {
-    cy.get('.leaflet-marker-pane img').invoke('attr', 'src').should('eq', 'https://www.clker.com/cliparts/T/G/b/7/r/A/red-dot.svg')
-    cy.get('.leaflet-marker-pane img[src="https://www.clker.com/cliparts/T/G/b/7/r/A/red-dot.svg"]').should('have.length', 2)
+    cy.get('.leaflet-overlay-pane svg').should('have.length', 1)
   })
 
   it('has circle markers in minimal mode', function() {
