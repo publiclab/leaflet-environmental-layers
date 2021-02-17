@@ -27151,7 +27151,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
       var self = this;
       var info = require('./info.json');
       (function() {
-        var zoom;
+        var zoom, northeast, southwest;
         var Layer_URL;
         var $ = window.jQuery;
 
@@ -27159,7 +27159,9 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
           Layer_URL = info.fractracker.api_url; ;
         }
         if (self.layer === 'skytruth') {
-          zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast(), southwest = self._map.getBounds().getSouthWest();
+          zoom = self._map.getZoom();
+          northeast = self._map.getBounds().getNorthEast();
+          southwest = self._map.getBounds().getSouthWest();
           Layer_URL = info.skytruth.api_url + '?l='
             +(southwest.lat)+','
             +(southwest.lng)+','
@@ -27172,8 +27174,14 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
           Layer_URL = info.odorreport.api_url;
         }
         if (self.layer === 'mapknitter') {
-          zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast(), southwest = self._map.getBounds().getSouthWest();
-          Layer_URL = info.mapknitter.api_url + '?minlon='+(southwest.lng)+'&minlat='+(southwest.lat)+'&maxlon='+(northeast.lng)+'&maxlat='+(northeast.lat);
+          zoom = self._map.getZoom();
+          northeast = self._map.getBounds().getNorthEast();
+          southwest = self._map.getBounds().getSouthWest();
+          Layer_URL = info.mapknitter.api_url 
+            + '?minlon='+(southwest.lng)
+            + '&minlat='+(southwest.lat)
+            + '&maxlon='+(northeast.lng)
+            + '&maxlat='+(northeast.lat);
         }
         if (self.layer === 'luftdaten') {
           Layer_URL = 'https://maps.luftdaten.info/data/v2/data.dust.min.json';
@@ -27238,6 +27246,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         var lat = data.fields.lat;
         var lng = data.fields.lng;
         var title = data.fields.title;
+        data.id = data.pk; // required for uniqueness of Leaflet markers
         var url = data.fields.link;
         var defaultMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 8, weight: 2, fillOpacity: 0.6, color: '#d20000', fillColor: '#f00' });
         var minimalMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#f00' });

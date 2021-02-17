@@ -1,5 +1,6 @@
 [
   {
+    "pk": "uniqueid1",
     "fields":  {
       "source_id": 1,
       "lat": 41.4769322952459,
@@ -11,6 +12,7 @@
   },
   {
     "fields":  {
+      "pk": "uniqueid2",
       "source_id": 2,
       "lat": 41.4570009,
       "lng": -92.1419134,
