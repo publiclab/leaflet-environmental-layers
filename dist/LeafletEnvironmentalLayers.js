@@ -26970,7 +26970,7 @@ module.exports={
   "skytruth": {
     "name": "SkyTruth Alerts",
     "url": "https://alerts.skytruth.org/",
-    "api_url": "https://alerts1.skytruth.org/json",
+    "api_url": "https://skytruth-alerts2.appspot.com/api/getalerts/",
     "data": {
       "type": "",
       "disclaimer": "SkyTruth’s Alerts application reads environmental incidents from multiple websites"
@@ -27151,7 +27151,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
       var self = this;
       var info = require('./info.json');
       (function() {
-        var zoom;
+        var zoom, northeast, southwest;
         var Layer_URL;
         var $ = window.jQuery;
 
@@ -27159,16 +27159,29 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
           Layer_URL = info.fractracker.api_url; ;
         }
         if (self.layer === 'skytruth') {
-          zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast(), southwest = self._map.getBounds().getSouthWest();
-          Layer_URL = info.skytruth.api_url + '?n=100&l='+(southwest.lat)+','+(southwest.lng)+','+(northeast.lat)+','+(northeast.lng);
+          zoom = self._map.getZoom();
+          northeast = self._map.getBounds().getNorthEast();
+          southwest = self._map.getBounds().getSouthWest();
+          Layer_URL = info.skytruth.api_url + '?l='
+            +(southwest.lat)+','
+            +(southwest.lng)+','
+            +(northeast.lat)+','
+            +(northeast.lng)
+            +'&selected=1,4,5,9,1020,1072,1060,2001,1058,9,5,1052,1073,1042,4,7,8,1001,1021,1051,1071,1041&n=100&&keyword=';
         }
         if (self.layer === 'odorreport') {
           zoom = self._map.getZoom(), origin = self._map.getCenter();
           Layer_URL = info.odorreport.api_url;
         }
         if (self.layer === 'mapknitter') {
-          zoom = self._map.getZoom(), northeast = self._map.getBounds().getNorthEast(), southwest = self._map.getBounds().getSouthWest();
-          Layer_URL = info.mapknitter.api_url + '?minlon='+(southwest.lng)+'&minlat='+(southwest.lat)+'&maxlon='+(northeast.lng)+'&maxlat='+(northeast.lat);
+          zoom = self._map.getZoom();
+          northeast = self._map.getBounds().getNorthEast();
+          southwest = self._map.getBounds().getSouthWest();
+          Layer_URL = info.mapknitter.api_url 
+            + '?minlon='+(southwest.lng)
+            + '&minlat='+(southwest.lat)
+            + '&maxlon='+(northeast.lng)
+            + '&maxlat='+(northeast.lat);
         }
         if (self.layer === 'luftdaten') {
           Layer_URL = 'https://maps.luftdaten.info/data/v2/data.dust.min.json';
@@ -27230,15 +27243,15 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
       }
 
       if (this.layer == 'skytruth') {
-        var lat = data.lat;
-        var lng = data.lng;
-        var title = data.title;
-        var url = data.link;
+        var lat = data.fields.lat;
+        var lng = data.fields.lng;
+        var title = data.fields.title;
+        data.id = data.pk; // required for uniqueness of Leaflet markers
+        var url = data.fields.link;
         var defaultMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 8, weight: 2, fillOpacity: 0.6, color: '#d20000', fillColor: '#f00' });
         var minimalMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#f00' });
-        var content = '<a href='+url+'>' +title + '</a><br>' +
-        '<br><strong> lat: ' + lat +
-        '</strong><br><strong> lon: ' + lng +
+        var content = '<h3><a _target="blank" href="'+url+'">' +title + '</a></h3>' +
+        '<p>' + data.fields.content + '</p>' +
         '</strong> <br><br>Data provided by <a href=\'http://alerts.skytruth.org/\'>alerts.skytruth.org/</a>';
         var skymarker;
         if (!isNaN(lat) && !isNaN(lng) ) {
@@ -27261,8 +27274,12 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         '</strong><br><strong> lon: ' + lng +
         '</strong><br><br>Data provided by <a href=\'https://odorlog.ushahidi.io\'>https://odorlog.ushahidi.io</a>';
         var odormarker;
+        var popupOptions = {
+          maxWidth: 500,
+          maxHeight: 500
+        }
         if (!isNaN(lat) && !isNaN(lng) ) {
-          odormarker = this._map && this._map._minimalMode ? minimalMarker.bindPopup(content) : defaultMarker.bindPopup(content);
+          odormarker = this._map && this._map._minimalMode ? minimalMarker.bindPopup(content, popupOptions) : defaultMarker.bindPopup(content, popupOptions);
         }
         // oms.addMarker(odormarker);
         return odormarker;
@@ -27375,13 +27392,15 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
       if (this.layer == 'purpleairmarker')
       {
         var redDotIcon =new L.icon.purpleAirMarkerIcon();
-        var lat = data[25];
-        var lng = data[26];
+        // ref https://www.purpleair.com/data.json?fetchData=true&minimize=true&sensorsActive2=10080&orderby=L&nwlat=45.67548217560647&selat=41.79179268262892&nwlng=-101.03576660156251&selng=-93.93310546875001
+        // ["ID","pm","pm_cf_1","pm_atm","age","pm_0","pm_1","pm_2","pm_3","pm_4","pm_5","pm_6","conf","pm1","pm_10","p1","p2","p3","p4","p5","p6","Humidity","Temperature","Pressure","Elevation","Type","Label","Lat","Lon","Icon","isOwner","Flags","Voc","Ozone1","Adc","CH"],
+        var lat = data[27];
+        var lng = data[28];
         var value = parseFloat(data[16]);
-        var Label = data[24];
-        var temp_f = data[21];
-        var humidity = data[20];
-        var pressure = data[22];
+        var Label = data[26];
+        var temp_f = data[22];
+        var humidity = data[21];
+        var pressure = data[23];
         var defaultMarker = L.marker([lat, lng], {icon: redDotIcon});
         var minimalMarker = L.circleMarker(L.latLng([lat, lng]), { radius: 5, weight: 1, fillOpacity: 1, color: '#7c7c7c', fillColor: '#7c22b5' });
         var content = '<i style=\'color: purple ; size : 20px\'>Label : ' + Label + '</i><br><br> <strong>PM2.5 Value : ' + value +'</strong><br><strong> Lat: ' + lat + '</strong><br><strong> Lon: ' + lng + '<br>Temp (F) : '+temp_f+'<br>Humidity : ' + humidity + '<br>Pressure : ' + pressure +'<br><br> <i>Data provided by <a href=\'www.purpleair.com\'>www.purpleair.com</a></i>';
@@ -27398,7 +27417,7 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         var content = '<strong>' + item['name'] + '</strong> ';
         if (item['website']) content += '(<a href=' + item['website'] + '>website</a>' + ')';
         content += '<hr>';
-        if (!!item['Descrition']) content += 'Description: <i>' + item['summary'] + '</i><br>';
+        if (!!item['Description']) content += 'Description: <i>' + item['summary'] + '</i><br>';
         if (!!item['contact']) content += '<strong>Contact: ' + item['contact'] + '<br></strong>';
         var generics = ['phone', 'email', 'street', 'city', 'state', 'zipcode', 'timestamp', 'latitude', 'longitude'];
         for (var i = 0; i < generics.length; i++) {
@@ -27472,9 +27491,9 @@ L.LayerGroup.LayerCode = L.LayerGroup.extend(
         }
       }
       if (this.layer == 'skytruth') {
-        if (!!data.feed) {
-          for (i = 0; i < data.feed.length; i++) {
-            this.addMarker(data.feed[i]);
+        if (!!data) {
+          for (i = 0; i < data.length; i++) {
+            this.addMarker(data[i]);
           }
           if (this.options.clearOutsideBounds && this._map) {
             this.clearOutsideBounds();

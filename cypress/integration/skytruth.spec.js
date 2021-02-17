@@ -24,7 +24,8 @@ describe('Skytruth layer', function() {
 
   it('has circle markers in minimal mode', function() {
     cy.server()
-    cy.route('GET', 'https://alerts1.skytruth.org/json?n=100&l=41.31185540579858,-92.41012573242189,41.94314874732696,-91.03683471679688', 'fixture:skytruth.json')
+    // cy.intercept('https://skytruth-alerts2.appspot.com/api/getalerts/', { fixture: 'skytruth.json' }) // future versions of Cypress
+    cy.route('GET', 'https://skytruth-alerts2.appspot.com/api/getalerts/*', 'fixture:skytruth.json')
     const spy = cy.spy(window.top.aut.SkyTruth, 'requestData')
     cy.get('[title="Show minimal markers"]').click().then(() => {
       expect(spy).to.be.called
