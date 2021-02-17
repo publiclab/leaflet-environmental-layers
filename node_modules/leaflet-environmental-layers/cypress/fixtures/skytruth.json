@@ -1,0 +1,24 @@
+[
+  {
+    "pk": "uniqueid1",
+    "fields":  {
+      "source_id": 1,
+      "lat": 41.4769322952459,
+      "lng": -91.5836990530581,
+      "title": "NRC Report: Oil: Diesel near Riverside, IA",
+      "content": "<b>Report Details</b><br/>NRC Report ID: <a href=\"http://nrc.uscg.mil/\" target=\"_blank\">1297531</a><br/>Incident Time: 2021-02-07 10:30:00<br/>Nearest City: Coffeyville, KS<br/>Location: 701 E. MARTIN ST.<br/>Incident Type: FIXED<br/>Material: HYDROGEN SULFIDE<br/>Medium Affected: AIR<br/>Suspected Responsible Party: CVR PTRS.- COFFEYVILLE RESOURCES<br/><b>SkyTruth Analysis</b><br/>Lat/Long: 37.045339, -95.605131 (Approximated from street_address) <a href=\"https://www.skytruth.org/section/alerts-geocoding/\" target=\"_blank\"><img src=\"/images/icons8-info-20.png\" align=\"center\" /></a><br/><b>Report Description</b>CALLER IS REPORTING A RELEASE OF HYDROGEN SULFIDE TO THE AIR AT THE FACILITY DUE TO A PROCESS UPSET.",
+      "link": "alerts.skytruth.org/"
+    }
+  },
+  {
+    "fields":  {
+      "pk": "uniqueid2",
+      "source_id": 2,
+      "lat": 41.4570009,
+      "lng": -92.1419134,
+      "title": "NRC Report: Unknown near Webster, IA",
+      "content": "<b>Report Details</b><br/>NRC Report ID: <a href=\"http://nrc.uscg.mil/\" target=\"_blank\">1297531</a><br/>Incident Time: 2021-02-07 10:30:00<br/>Nearest City: Coffeyville, KS<br/>Location: 701 E. MARTIN ST.<br/>Incident Type: FIXED<br/>Material: HYDROGEN SULFIDE<br/>Medium Affected: AIR<br/>Suspected Responsible Party: CVR PTRS.- COFFEYVILLE RESOURCES<br/><b>SkyTruth Analysis</b><br/>Lat/Long: 37.045339, -95.605131 (Approximated from street_address) <a href=\"https://www.skytruth.org/section/alerts-geocoding/\" target=\"_blank\"><img src=\"/images/icons8-info-20.png\" align=\"center\" /></a><br/><b>Report Description</b>CALLER IS REPORTING A RELEASE OF HYDROGEN SULFIDE TO THE AIR AT THE FACILITY DUE TO A PROCESS UPSET.",
+      "link": "alerts.skytruth.org/"
+    }
+  }
+]

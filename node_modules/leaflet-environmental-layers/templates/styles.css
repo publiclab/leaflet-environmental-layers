@@ -1,0 +1,22 @@
+.marker_size {
+    width: 18px;
+    height: 18px;
+}
+.fractracker_marker {
+  background-color: lightblue;
+}
+.justicemap_marker {
+  background-color: orange;
+}
+.odor_log_marker {
+  background-color: blueviolet;
+}
+.openaq_marker {
+  background-color: crimson;
+}
+.toxic_release_marker {
+  background-color: mediumseagreen;
+}
+.skytruth_marker {
+  background-color: cadetblue;
+}

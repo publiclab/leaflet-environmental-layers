@@ -1,0 +1,55 @@
+{
+  "name": "@esri/arcgis-to-geojson-utils",
+  "description": "Tools to convert ArcGIS JSON geometries to GeoJSON geometries and vica-versa.",
+  "version": "1.3.0",
+  "author": "Patrick Arlt <patrick.arlt@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/Esri/arcgis-to-geojson-utils/issues"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.3.17",
+    "babel-preset-es2015": "^6.1.18",
+    "babelify": "^7.2.0",
+    "browserify": "^12.0.1",
+    "faucet": "0.0.1",
+    "gh-release": "^2.0.2",
+    "rollup": "^0.21.0",
+    "semistandard": "*",
+    "snazzy": "^2.0.1",
+    "tape": "^4.0.0",
+    "tape-run": "^2.1.0"
+  },
+  "files": [
+    "index.js",
+    "dist/arcgis-to-geojson.js.map"
+  ],
+  "homepage": "https://github.com/Esri/arcgis-to-geojson-utils",
+  "keywords": [
+    "arcgis",
+    "convert",
+    "geo",
+    "geojson",
+    "geometry"
+  ],
+  "license": "Apache-2.0",
+  "main": "dist/arcgis-to-geojson.js",
+  "module": "index.js",
+  "jspm": {
+    "main": "index.js",
+    "registry": "npm",
+    "format": "es6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Esri/arcgis-to-geojson-utils"
+  },
+  "scripts": {
+    "lint": "semistandard | snazzy",
+    "test:node": "babel-node test/index.js [ babelify --presets es2015 ] | faucet",
+    "test:browser": "browserify test/index.js -t [ babelify --presets es2015 ] --debug | tape-run | faucet",
+    "test": "npm run lint && npm run test:node && npm run test:browser",
+    "release": "./release.sh",
+    "bundle": "rollup index.js -m dist/arcgis-to-geojson.js.map -f umd -o dist/arcgis-to-geojson.js -n ArcgisToGeojsonUtils",
+    "prepare": "npm run bundle"
+  }
+}

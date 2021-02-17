@@ -1,0 +1,7 @@
+{
+  "port": 8080,
+  "include": [
+    "./node_modules/cypress",
+    "cypress/**/*.js"
+  ]
+}
