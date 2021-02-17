@@ -1,0 +1,27 @@
+{
+  "name": "leaflet-google-places-autocomplete",
+  "version": "0.0.8",
+  "description": "Add google places autocomplete to your leaflet map",
+  "main": "src/js/leaflet-gplaces-autocomplete.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Twista/leaflet-google-places-autocomplete.git"
+  },
+  "keywords": [
+    "leaflet",
+    "map",
+    "autocomplete"
+  ],
+  "author": "Michal Haták",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Twista/leaflet-google-places-autocomplete/issues"
+  },
+  "homepage": "https://github.com/Twista/leaflet-google-places-autocomplete#readme"
+}
