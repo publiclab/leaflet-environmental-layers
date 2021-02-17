@@ -153,7 +153,12 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
           }
           if (layer === 'city') {
             layer = 'current';
-            obj = {intervall: 15, minZoom: 3};
+console.log(this.options.imageLoadingUrl)
+            obj = {
+              intervall: 15,
+              minZoom: 3,
+              imageLoadingUrl: this.options.imageLoadingUrl || "example/owmloading.gif"
+            };
             this.overlayMaps[layer] = window['L']['OWM'][layer](obj).on('owmloadingend', function() {
               this.onError(layer, true);
             })

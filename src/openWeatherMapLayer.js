@@ -139,6 +139,7 @@ L.OWM = L.TileLayer.extend({
   L.OWM.Wind = L.OWM.extend({
     _owmLayerName: 'wind',
   });
+  /////////
   L.OWM.wind = function(options) {
     var layer = new L.OWM.Wind(options);
     if (layer.options.legendImagePath == null) {

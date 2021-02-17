@@ -25999,7 +25999,12 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
           }
           if (layer === 'city') {
             layer = 'current';
-            obj = {intervall: 15, minZoom: 3};
+console.log(this.options.imageLoadingUrl)
+            obj = {
+              intervall: 15,
+              minZoom: 3,
+              imageLoadingUrl: this.options.imageLoadingUrl || "example/owmloading.gif"
+            };
             this.overlayMaps[layer] = window['L']['OWM'][layer](obj).on('owmloadingend', function() {
               this.onError(layer, true);
             })
@@ -27816,6 +27821,7 @@ L.OWM = L.TileLayer.extend({
   L.OWM.Wind = L.OWM.extend({
     _owmLayerName: 'wind',
   });
+  /////////
   L.OWM.wind = function(options) {
     var layer = new L.OWM.Wind(options);
     if (layer.options.legendImagePath == null) {
@@ -27900,7 +27906,7 @@ L.OWM.Current = L.Layer.extend({
     minZoom: 7,
     interval: 0, // interval for rereading city data in minutes
     progressControl: true, // available: true, false
-    imageLoadingUrl: 'owmloading.gif', // URL of loading image relative to HTML document
+    imageLoadingUrl: 'images/owmloading.gif', // URL of loading image relative to HTML document
     imageLoadingBgUrl: null, // URL of background image for progress control
     temperatureUnit: 'C', // available: 'K' (Kelvin), 'C' (Celsius), 'F' (Fahrenheit)
     temperatureDigits: 1,
@@ -27932,6 +27938,7 @@ L.OWM.Current = L.Layer.extend({
   },
 
   initialize: function(options) {
+    options.imageLoadingUrl = this.options.imageLoadingUrl || "owmloading.gif";
     L.setOptions(this, options);
     this._layer = L.layerGroup();
     this._timeoutId = null;
@@ -29183,8 +29190,6 @@ L.OWM.Utils = {
     },
   },
 };
-
-
 
 },{}],17:[function(require,module,exports){
 L.LayerGroup.OSMLandfillMineQuarryLayer = L.LayerGroup.extend(
