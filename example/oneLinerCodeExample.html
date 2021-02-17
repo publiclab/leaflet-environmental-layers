@@ -71,16 +71,18 @@
       }).setView([43, -83], 3);
       map.options.minZoom = 3;
 
-      L.LayerGroup.EnvironmentalLayers({
+      var LEL = L.LayerGroup.EnvironmentalLayers({
         // simpleLayerControl: true,
         addLayersToMap: true,
-        include: ['skytruth', 'odorreport', 'asian', 'clouds', 'eonetFiresLayer', 'Unearthing', 'PLpeople'],
+        include: ['skytruth', 'odorreport', 'asian', 'wind', 'city', 'eonetFiresLayer', 'Unearthing', 'PLpeople'],
         // exclude: ['mapknitter', 'clouds'],
         // display: ['eonetFiresLayer'],
         hash: true,
         embed: true,
+        imageLoadingUrl: "https://raw.githubusercontent.com/buche/leaflet-openweathermap/master/owmloading.gif",
         // hostname: 'domain name goes here'
-      }).addTo(map);
+      });
+      LEL.addTo(map);
 
     </script>
     

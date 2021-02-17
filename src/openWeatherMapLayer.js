@@ -139,6 +139,7 @@ L.OWM = L.TileLayer.extend({
   L.OWM.Wind = L.OWM.extend({
     _owmLayerName: 'wind',
   });
+  /////////
   L.OWM.wind = function(options) {
     var layer = new L.OWM.Wind(options);
     if (layer.options.legendImagePath == null) {
@@ -255,7 +256,7 @@ L.OWM.Current = L.Layer.extend({
   },
 
   initialize: function(options) {
-    options.imageLoadingUrl = this.options.imageLoadingUrl || "owmloading.gif";
+    options.imageLoadingUrl = options.imageLoadingUrl || this.options.imageLoadingUrl;
     L.setOptions(this, options);
     this._layer = L.layerGroup();
     this._timeoutId = null;
