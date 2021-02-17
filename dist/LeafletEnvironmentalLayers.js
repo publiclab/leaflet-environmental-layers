@@ -25999,11 +25999,10 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
           }
           if (layer === 'city') {
             layer = 'current';
-console.log(this.options.imageLoadingUrl)
             obj = {
               intervall: 15,
               minZoom: 3,
-              imageLoadingUrl: this.options.imageLoadingUrl || "example/owmloading.gif"
+              imageLoadingUrl: this.options.imageLoadingUrl
             };
             this.overlayMaps[layer] = window['L']['OWM'][layer](obj).on('owmloadingend', function() {
               this.onError(layer, true);
@@ -27938,7 +27937,7 @@ L.OWM.Current = L.Layer.extend({
   },
 
   initialize: function(options) {
-    options.imageLoadingUrl = this.options.imageLoadingUrl || "owmloading.gif";
+    options.imageLoadingUrl = options.imageLoadingUrl || this.options.imageLoadingUrl;
     L.setOptions(this, options);
     this._layer = L.layerGroup();
     this._timeoutId = null;

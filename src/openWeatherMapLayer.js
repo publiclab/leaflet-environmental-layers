@@ -256,7 +256,7 @@ L.OWM.Current = L.Layer.extend({
   },
 
   initialize: function(options) {
-    options.imageLoadingUrl = this.options.imageLoadingUrl || "owmloading.gif";
+    options.imageLoadingUrl = options.imageLoadingUrl || this.options.imageLoadingUrl;
     L.setOptions(this, options);
     this._layer = L.layerGroup();
     this._timeoutId = null;
