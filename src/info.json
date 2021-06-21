@@ -24,7 +24,7 @@
   "fractracker": {
     "name": "FracTracker",
     "url": "https://www.fractracker.org/",
-    "api_url": "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json" ,
+    "api_url": "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json",
     "data": {
       "type": "",
       "disclaimer": "Data from agency data sets to crowd-sourced data"
@@ -54,7 +54,11 @@
   },
   "indigenousLands": {
     "name": "Indigenous Lands",
-    "layers": ["Territories", "Languages", "Treaties"],
+    "layers": [
+      "Territories",
+      "Languages",
+      "Treaties"
+    ],
     "url": "https://native-land.ca/",
     "data": {
       "type": "Historical data",
@@ -70,7 +74,17 @@
   },
   "justiceMap": {
     "name": "Justice Map",
-    "layers": ["income", "americanIndian", "asian", "black", "multi", "hispanic", "nonWhite", "white", "plurality"],
+    "layers": [
+      "income",
+      "americanIndian",
+      "asian",
+      "black",
+      "multi",
+      "hispanic",
+      "nonWhite",
+      "white",
+      "plurality"
+    ],
     "url": "http://www.justicemap.org/index.php?giAdvanced=0#instruction_div",
     "data": {
       "type": "",
@@ -81,9 +95,15 @@
     "icon": "#f3a482",
     "extents": {
       "bounds": [
-                  [16.97274101999902, -172.880859375],
-                  [71.27259471233448, -38.05664062500001]
-                ],
+        [
+          16.97274101999902,
+          -172.880859375
+        ],
+        [
+          71.27259471233448,
+          -38.05664062500001
+        ]
+      ],
       "minZoom": 5,
       "maxZoom": 15
     }
@@ -145,7 +165,12 @@
   },
   "openInfraMap": {
     "name": "Open Infra Map",
-    "layers": ["Power", "Petroleum", "Telecom", "Water"],
+    "layers": [
+      "Power",
+      "Petroleum",
+      "Telecom",
+      "Water"
+    ],
     "url": "https://openinframap.org/about.html",
     "contribute_url": "https://openinframap.org/about.html",
     "data": {
@@ -170,7 +195,20 @@
   },
   "openWeatherMap": {
     "name": "Open Weather Map",
-    "layers": ["clouds", "cloudsClassic", "precipitation", "precipitationClassic", "rain", "rainClassic", "snow", "pressure", "pressureContour", "temperature", "wind", "city"],
+    "layers": [
+      "clouds",
+      "cloudsClassic",
+      "precipitation",
+      "precipitationClassic",
+      "rain",
+      "rainClassic",
+      "snow",
+      "pressure",
+      "pressureContour",
+      "temperature",
+      "wind",
+      "city"
+    ],
     "url": "https://openweathermap.org/guide",
     "data": {
       "type": "RT",
@@ -209,9 +247,15 @@
     "icon": "#b52822",
     "extents": {
       "bounds": [
-                  [16.97274101999902, -172.880859375],
-                  [71.27259471233448, -38.05664062500001]
-                ],
+        [
+          16.97274101999902,
+          -172.880859375
+        ],
+        [
+          71.27259471233448,
+          -38.05664062500001
+        ]
+      ],
       "minZoom": 5,
       "maxZoom": 15
     }
@@ -232,9 +276,9 @@
       "purpleLayer": {},
       "purpleairmarker": {
         "extents": {
-           "minZoom": 8,
-           "maxZoom": 15
-         }
+          "minZoom": 8,
+          "maxZoom": 15
+        }
       }
     }
   },
@@ -267,9 +311,15 @@
     "icon": "#6ccc00",
     "extents": {
       "bounds": [
-                  [60.54377524118842, -21.708984375000004],
-                  [13.66733825965496, -148.27148437500003]
-                ],
+        [
+          60.54377524118842,
+          -21.708984375000004
+        ],
+        [
+          13.66733825965496,
+          -148.27148437500003
+        ]
+      ],
       "minZoom": 5,
       "maxZoom": 15
     }
@@ -287,9 +337,15 @@
     "icon": "#4f4fff",
     "extents": {
       "bounds": [
-                  [42.2102, -72.0204],
-                  [41.2272, -70.9618]
-                ],
+        [
+          42.2102,
+          -72.0204
+        ],
+        [
+          41.2272,
+          -70.9618
+        ]
+      ],
       "minZoom": 6,
       "maxZoom": 18
     }
@@ -307,9 +363,15 @@
     "icon": "#739ccf",
     "extents": {
       "bounds": [
-              [43.689721907017194, -93.12835693359376],
-              [45.60250901510299, -89.54956054687501]
-                ],
+        [
+          43.689721907017194,
+          -93.12835693359376
+        ],
+        [
+          45.60250901510299,
+          -89.54956054687501
+        ]
+      ],
       "minZoom": 10,
       "maxZoom": 15
     }
@@ -326,11 +388,28 @@
     "icon": "#096",
     "extents": {
       "bounds": [
-                  [-44.087585028245165, -148.88671875000003],
-                  [76.63922560965888, 140.62500000000003]
-                ],
+        [
+          -44.087585028245165,
+          -148.88671875000003
+        ],
+        [
+          76.63922560965888,
+          140.62500000000003
+        ]
+      ],
       "minZoom": 3,
       "maxZoom": 18
     }
+  },
+  "testSpreadsheetLayer": {
+    "name": "testSpreadsheetLayer",
+    "url": "",
+    "data": {
+      "type": "",
+      "disclaimer": ""
+    },
+    "description": "",
+    "layer_desc": "Spreadsheet data",
+    "icon": "#cc12cc"
   }
 }
