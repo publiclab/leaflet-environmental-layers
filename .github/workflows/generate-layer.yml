@@ -1,0 +1,16 @@
+name: "New Spreadsheet Layer"
+on:
+  issue_comment:
+    types: [created, edited]
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Checkout and install dependencies
+        run: npm install @actions/core @actions/github marked
+
+      - name: Checks the PR title
+        run: node ./scripts/actionGenLayer
