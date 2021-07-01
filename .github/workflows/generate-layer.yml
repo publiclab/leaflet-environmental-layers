@@ -12,5 +12,7 @@ jobs:
       - name: Checkout and install dependencies
         run: npm install @actions/core @actions/github marked
 
-      - name: Checks the PR title
+      - name: Generate New Spreadsheet Layer
         run: node ./scripts/actionGenLayer
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

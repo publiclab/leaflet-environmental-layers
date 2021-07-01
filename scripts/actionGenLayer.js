@@ -42,16 +42,9 @@ async function run() {
         exec(`git commit -m "layer: new layer ${layerData.name}"`);
         exec(`git push -fu origin ${prBranchName}`);
 
-        //Set token secret
-        // const githubClient = new github(githubToken)
-        // await githubClient.pulls.create({
-        //   base: baseBranchName,
-        //   head: prBranchName,
-        //   owner: context.repo.owner,
-        //   repo: context.repo.repo,
-        //   title: `new-layer: ${layerData.name}`,
-        //   body: `Ref ${github.context.payload.comment.url}`,
-        // });
+        exec(
+          `gh pr create --title "new-layer: ${layerData.name}" --body "Ref ${github.context.payload.comment.url}" --head "${prBranchName}" --base "${baseBranchName}"`
+        );
       }
     }
   }
