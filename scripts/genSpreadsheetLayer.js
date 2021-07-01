@@ -1,79 +1,60 @@
-const fs = require("fs");
+const { writeFile, readFile } = require("fs").promises;
 const path = require("path");
 
-function generateSpreadsheetLayer(layerData, confirm) {
-  console.log("layerData: inside function call",layerData)
+async function generateSpreadsheetLayer(layerData, confirm) {
   let newSpreadsheetLayers, newLayerInfo;
-  fs.readFile(
-    path.resolve(__dirname, "../src/spreadsheetLayers/layers.json"),
-    "utf8",
-    (err, data) => {
-      if (err) {
-        console.log(`Error reading file from disk: ${err}`);
-      } else {
-        // parse JSON string to JSON object
-        let spreadsheetLayers = JSON.parse(data);
-        spreadsheetLayers.push({
-          name: layerData.name,
-          url: layerData.url,
-        });
-        newSpreadsheetLayers = spreadsheetLayers;
-        if (confirm) {
-          fs.writeFile(
-            path.resolve(__dirname, "../src/spreadsheetLayers/layers.json"),
-            JSON.stringify(spreadsheetLayers, null, 2),
-            "utf8",
-            (err) => {
-              if (err) {
-                console.log(`Error writing file: ${err}`);
-              } else {
-                console.log(`File is written successfully!`);
-              }
-            }
-          );
-        }
-      }
+  try {
+    const data = await readFile(
+      path.resolve(__dirname, "../src/spreadsheetLayers/layers.json"),
+      "utf8"
+    );
+    let spreadsheetLayers = JSON.parse(data);
+    spreadsheetLayers.push({
+      name: layerData.name,
+      url: layerData.url,
+    });
+    newSpreadsheetLayers = spreadsheetLayers;
+    if (confirm) {
+      await writeFile(
+        path.resolve(__dirname, "../src/spreadsheetLayers/layers.json"),
+        JSON.stringify(spreadsheetLayers, null, 2),
+        "utf8"
+      );
     }
-  );
+    console.log("Successful");
+  } catch (error) {
+    console.error(e);
+  }
 
-  fs.readFile(
-    path.resolve(__dirname, "../src/info.json"),
-    "utf8",
-    (err, data) => {
-      if (err) {
-        console.log(`Error reading file from disk: ${err}`);
-      } else {
-        // parse JSON string to JSON object
-        let layerInfo = JSON.parse(data);
-        layerInfo[layerData.name] = {
-          name: layerData.name,
-          url: "",
-          data: {
-            type: "",
-            disclaimer: "",
-          },
-          description: "",
-          layer_desc: layerData.description,
-          icon: "#cc12cc",
-        };
-        newLayerInfo = layerInfo;
-        if (confirm) {
-          fs.writeFile(
-            path.resolve(__dirname, "../src/info.json"),
-            JSON.stringify(layerInfo, null, 2),
-            "utf8",
-            (err) => {
-              if (err) {
-                console.log(`Error writing file: ${err}`);
-              } else {
-                console.log(`File is written successfully!`);
-              }
-            }
-          );
-        }
-      }
+  try {
+    const data = await readFile(
+      path.resolve(__dirname, "../src/info.json"),
+      "utf8"
+    );
+    let layerInfo = JSON.parse(data);
+    layerInfo[layerData.name] = {
+      name: layerData.name,
+      url: "",
+      data: {
+        type: "",
+        disclaimer: "",
+      },
+      description: "",
+      layer_desc: layerData.description,
+      icon: "#cc12cc",
+    };
+    newLayerInfo = layerInfo;
+    if (confirm) {
+      await writeFile(
+        path.resolve(__dirname, "../src/info.json"),
+        JSON.stringify(layerInfo, null, 2),
+        "utf8"
+      );
     }
-  );
+    console.log("Successful");
+  } catch (error) {
+    console.error(e);
+  }
   return { newSpreadsheetLayers, newLayerInfo };
 }
 

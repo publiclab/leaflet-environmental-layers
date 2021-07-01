@@ -2,5 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const { generateSpreadsheetLayer } = require("./genSpreadsheetLayer");
 
-let layerData = JSON.parse(fs.readFileSync("input.json", "utf8"));
-generateSpreadsheetLayer(layerData, true);
+(async () => {
+  let layerData = await JSON.parse(fs.readFileSync("input.json", "utf8"));
+  await generateSpreadsheetLayer(layerData, true);
+})();
