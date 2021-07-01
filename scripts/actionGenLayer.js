@@ -24,7 +24,7 @@ async function run() {
       if (token.lang === "json") {
         const layerData = JSON.parse(token.text);
         console.log(layerData);
-        generateSpreadsheetLayer(layerData, true);
+        await generateSpreadsheetLayer(layerData, true);
         const gitUserEmail = "github-actions[bot]@users.noreply.github.com";
         const gitUserName = "github-actions[bot]";
         const prBranchName = `new-gen-layer/${layerData.name}`;
@@ -37,7 +37,8 @@ async function run() {
         exec(`git checkout -b ${prBranchName}`);
 
         exec("git status");
-        exec("git add .");
+        exec("git add **/layers.json");
+        exec("git add **/info.json");
         exec(`git commit -m "layer: new layer ${layerData.name}"`);
         exec(`git push -fu origin ${prBranchName}`);
 
