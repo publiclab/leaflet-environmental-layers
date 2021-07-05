@@ -11,12 +11,18 @@ function exec(cmd) {
 }
 
 async function run() {
-  const comment = github.context.payload.comment.body;
-  if (!comment.startsWith(commentPrefix)) {
-    console.log(
-      `HINT: Comment-run is triggered when your comment start with "${commentPrefix}"`
-    );
-    return;
+  let comment;
+
+  if (github.context.payload.action == "opened") {
+    comment = github.context.payload.issue.body;
+  } else {
+    comment = github.context.payload.comment.body;
+    if (!comment.startsWith(commentPrefix)) {
+      console.log(
+        `HINT: Comment-run is triggered when your comment start with "${commentPrefix}"`
+      );
+      return;
+    }
   }
   const tokens = marked.lexer(comment);
   for (const token of tokens) {
@@ -43,7 +49,7 @@ async function run() {
         exec(`git push -fu origin ${prBranchName}`);
 
         exec(
-          `gh pr create --title "new-layer: ${layerData.name}" --body "Ref ${github.context.payload.comment.url}" --head "${prBranchName}" --base "${baseBranchName}"`
+          `gh pr create --title "new-layer: ${layerData.name}" --body "Ref ${github.context.payload.issue.html_url}" --head "${prBranchName}" --base "${baseBranchName}"`
         );
       }
     }
