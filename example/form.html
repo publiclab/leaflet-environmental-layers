@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New Spreadsheet Layer</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body class="container">
+    <h3>New Spreadsheet Layer</h3>
+    <p>
+      Automatically Generate Spreadsheet Layer for Leaflet-Environmental-Layers.
+    </p>
+    <form id="form" class="form">
+      <label for="layerName">Layer Name: </label>
+      <input
+        type="text"
+        id="layerName"
+        name="name"
+        placeholder="Enter name of the new Layer"
+        class="form-control mb-2"
+        required
+      />
+      <label for="layerURL">Spreadsheet URL: </label>
+      <input
+        type="text"
+        id="layerURL"
+        name="url"
+        placeholder="Enter Spreadsheet URL of the new Layer"
+        class="form-control mb-2"
+        required
+      />
+      <button class="btn btn-primary" type="submit" id="go">Go</button>
+    </form>
+    <br />
+    <div style="display: none" id="steps">
+      <p>
+        <textarea class="form-control" id="json-textarea">
+        Loading JSON Data  . . .</textarea
+        >
+      </p>
+      <p>
+        Kindly copy the contents on the above block and
+        <a
+          href="https://github.com/daemon1024/leaflet-environmental-layers/issues/new?assignees=&labels=new+layer&template=new-spreadsheet-layer.md&title=%5BNew+Spreadsheet+Layer%5D%3A+"
+          ><button class="btn btn-primary">Open a Github Issue Here</button></a
+        >
+      </p>
+    </div>
+    <script>
+      window.addEventListener("load", function () {
+        function sendData() {
+          const FD = new FormData(form);
+          let result = JSON.stringify(Object.fromEntries(FD));
+          steps.style.display = "block";
+          textarea.value = result;
+        }
+
+        // Access the form element...
+        const form = document.getElementById("form");
+        let textarea = document.getElementById("json-textarea");
+        let steps = document.getElementById("steps");
+
+        // ...and take over its submit event.
+        form.addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          sendData();
+        });
+      });
+    </script>
+  </body>
+</html>
