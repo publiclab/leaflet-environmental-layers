@@ -29,12 +29,14 @@ async function run() {
     if (token.type === "code") {
       if (token.lang === "json") {
         const layerData = JSON.parse(token.text);
+        //Handle names with spaces
+        layerData.name = layerData.split(" ").join("_");
         console.log(layerData);
         await generateSpreadsheetLayer(layerData, true);
         const gitUserEmail = "github-actions[bot]@users.noreply.github.com";
         const gitUserName = "github-actions[bot]";
         const prBranchName = `new-gen-layer/${layerData.name}`;
-
+        exec("grunt build");
         const baseBranchName = github.context.payload.repository.default_branch;
         exec(`git config --global user.email "${gitUserEmail}"`);
         exec(`git config --global user.name "${gitUserName}"`);
