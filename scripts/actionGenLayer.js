@@ -59,5 +59,15 @@ async function run() {
 }
 
 run().catch((e) => {
-  core.setFailed(e);
+  try {
+    exec(
+      `git config --global user.email "github-actions[bot]@users.noreply.github.com"`
+    );
+    exec(`git config --global user.name "github-actions[bot]"`);
+    exec(
+      `gh issue comment ${github.context.payload.issue.html_url} --body 'Action Failed to execute. \n > This is auto-generared'`
+    );
+  } finally {
+    core.setFailed(e);
+  }
 });
