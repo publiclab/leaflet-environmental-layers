@@ -30,7 +30,7 @@ async function run() {
       if (token.lang === "json") {
         const layerData = JSON.parse(token.text);
         //Handle names with spaces
-        layerData.name = layerData.split(" ").join("_");
+        layerData.name = layerData.name.split(" ").join("_");
         console.log(layerData);
         await generateSpreadsheetLayer(layerData, true);
         const gitUserEmail = "github-actions[bot]@users.noreply.github.com";
@@ -47,6 +47,7 @@ async function run() {
         exec("git status");
         exec("git add **/layers.json");
         exec("git add **/info.json");
+        exec("git add **/LeafletEnvironmentalLayers.js -f");
         exec(`git commit -m "layer: new layer ${layerData.name}"`);
         exec(`git push -fu origin ${prBranchName}`);
 
