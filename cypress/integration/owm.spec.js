@@ -6,7 +6,7 @@ describe('OpenWeatherMap layer', function() {
       cy.get('.leaflet-tile-pane').children().should('have.length', 1)
       cy.get('#map-Clouds label').click({ force: true })
       cy.get('.leaflet-tile-pane').children().should('have.length', 2)
-      cy.get('.img')
+      cy.get('img')
     }) 
   })
   
