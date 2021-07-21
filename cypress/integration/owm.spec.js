@@ -13,8 +13,13 @@ describe('OpenWeatherMap layer', function() {
   it('loads correct owmloading.gif with config option set', function() {
     cy.openWindow('/example/oneLinerCodeExample.html')
     cy.wait(300)
-    cy.window().then((win) => {
-      expect(LEL.overlayMaps.current.options.imageLoadingUrl).to.equal('https://raw.githubusercontent.com/buche/leaflet-openweathermap/master/owmloading.gif')
-    })
+    let LEL;
+    cy.window()
+      .then((win) => {
+        LEL = win.LEL
+      })
+      .then(() => {
+        expect(LEL.overlayMaps.current.options.imageLoadingUrl).to.equal('https://raw.githubusercontent.com/buche/leaflet-openweathermap/master/owmloading.gif')
+      })
   })
 });
