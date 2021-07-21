@@ -43,7 +43,7 @@ describe('Purple layer - markers', function() {
   it('shows popup', function() {
     cy.get('.leaflet-overlay-pane svg g').children().last().click({ force: true })
     cy.get('.leaflet-popup-pane').children().should('have.length', 1)
-    cy.get('.leaflet-popup-content').should('contain', 'MandMnorth40')
+    cy.get('.leaflet-popup-content').should('contain', 'www.purpleair.com')
   })
 
   it('removes markers from the map and the layer name from the hash when clicked again', function() {
