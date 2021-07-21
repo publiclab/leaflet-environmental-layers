@@ -32,7 +32,7 @@ describe('Purple layer - markers', function() {
     const spy = cy.spy(window.top.aut.PurpleAirMarkerLayer, 'requestData')
     cy.get('[title="Show minimal markers"]').click().then(() => {
       expect(spy).to.be.called
-      cy.get('.leaflet-overlay-pane svg g').children().should('have.length', 2)
+      cy.get('.leaflet-overlay-pane svg g').children().should('have.length.gt', 0)
       cy.get('.leaflet-overlay-pane svg g path').invoke('attr', 'stroke').should('eq', '#7c7c7c')
       cy.get('.leaflet-overlay-pane svg g path').invoke('attr', 'fill').should('eq', '#7c22b5')
       cy.get('.leaflet-overlay-pane svg g path').invoke('attr', 'stroke-linecap').should('eq', 'round')
