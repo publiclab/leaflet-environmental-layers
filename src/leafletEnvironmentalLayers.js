@@ -13,3 +13,4 @@ require('./PLpeopleLayer.js');
 require('./layercode.js');
 require('./eonetFiresLayer');
 require('./AllLayers.js');
+require('./spreadsheetLayers')
