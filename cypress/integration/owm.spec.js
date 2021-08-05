@@ -4,17 +4,22 @@ describe('OpenWeatherMap layer', function() {
     cy.wait(300)
     cy.window().then((win) => {
       cy.get('.leaflet-tile-pane').children().should('have.length', 1)
-      cy.get('#map-city label').click({ force: true })
+      cy.get('#map-Clouds label').click({ force: true })
       cy.get('.leaflet-tile-pane').children().should('have.length', 2)
-      cy.get('.img')
+      cy.get('div.leaflet-layer:nth-child(2) > div > img').should('have.attr', 'src').and('contains', 'openweathermap.org/map/clouds')
     }) 
   })
   
   it('loads correct owmloading.gif with config option set', function() {
     cy.openWindow('/example/oneLinerCodeExample.html')
     cy.wait(300)
-    cy.window().then((win) => {
-      expect(LEL.overlayMaps.current.options.imageLoadingUrl).to.equal('https://raw.githubusercontent.com/buche/leaflet-openweathermap/master/owmloading.gif')
-    })
+    let LEL;
+    cy.window()
+      .then((win) => {
+        LEL = win.LEL
+      })
+      .then(() => {
+        expect(LEL.overlayMaps.current.options.imageLoadingUrl).to.equal('https://raw.githubusercontent.com/buche/leaflet-openweathermap/master/owmloading.gif')
+      })
   })
 });
