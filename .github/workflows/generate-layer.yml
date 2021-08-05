@@ -17,4 +17,4 @@ jobs:
       - name: Generate New Spreadsheet Layer
         run: node ./scripts/actionGenLayer
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
