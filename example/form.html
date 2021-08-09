@@ -48,7 +48,7 @@
         >
       </p>
       <p>
-        Kindly copy the contents on the above block and
+        Kindly <button class="copy btn btn-success">Copy</button> the contents on the above block and
         <a
           href="https://github.com/daemon1024/leaflet-environmental-layers/issues/new?assignees=&labels=new+layer&template=new-spreadsheet-layer.md&title=%5BNew+Spreadsheet+Layer%5D%3A+"
           ><button class="btn btn-primary">Open a Github Issue Here</button></a
@@ -75,6 +75,13 @@
 
           sendData();
         });
+
+        const copyText=document.querySelector('.copy');
+        copyText.addEventListener('click', ()=>{
+            textarea.select();
+            document.execCommand('copy');
+        });
+
       });
     </script>
   </body>
