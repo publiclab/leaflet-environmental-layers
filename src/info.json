@@ -1,6 +1,7 @@
 {
   "aqicnLayer": {
     "name": "Air Quality Index",
+    "layer_group": 0,
     "url": "http://aqicn.org/json-api/doc/",
     "data": {
       "type": "RT",
@@ -12,6 +13,7 @@
   },
   "eonetFiresLayer": {
     "name": "EONET Fires",
+    "layer_group": 6,
     "url": "https://eonet.sci.gsfc.nasa.gov/",
     "data": {
       "type": "NRT",
@@ -23,6 +25,7 @@
   },
   "fractracker": {
     "name": "FracTracker",
+    "layer_group": 1,
     "url": "https://www.fractracker.org/",
     "api_url": "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json",
     "data": {
@@ -39,6 +42,7 @@
   },
   "fracTrackerMobile": {
     "name": "FracTracker Mobile",
+    "layer_group": 6,
     "url": "https://www.fractracker.org/",
     "data": {
       "type": "",
@@ -110,6 +114,7 @@
   },
   "luftdaten": {
     "name": "Luftdaten",
+    "layer_group": 1,
     "url": "https://maps.luftdaten.info",
     "data": {
       "type": "",
@@ -121,6 +126,7 @@
   },
   "mapknitter": {
     "name": "MapKnitter",
+    "layer_group": 1,
     "url": "https://mapknitter.org/",
     "api_url": "https://mapknitter.org/map/region/Gulf-Coast.json",
     "data": {
@@ -137,6 +143,7 @@
   },
   "odorreport": {
     "name": "Odor Reports",
+    "layer_group": 1,
     "url": "https://odorlog.ushahidi.io/views/map",
     "api_url": "https://odorlog.api.ushahidi.io/api/v3/posts/",
     "report_url": "http://www.odorcomplaint.com/",
@@ -154,6 +161,7 @@
   },
   "openaq": {
     "name": "OpenAQ",
+    "layer_group": 1,
     "url": "https://openaq.org/",
     "data": {
       "type": "RT",
@@ -183,6 +191,7 @@
   },
   "opensense": {
     "name": "OpenSenseMap",
+    "layer_group": 1,
     "url": "https://opensensemap.org/",
     "report_url": "https://opensensemap.org/register",
     "data": {
@@ -220,6 +229,7 @@
   },
   "osmLandfillMineQuarryLayer": {
     "name": "Landfill, Mine, Quarry",
+    "layer_group": 0,
     "url": "https://wiki.openstreetmap.org/wiki/Map_Features",
     "api_url": "http://www.overpass-api.de/api/xapi",
     "data": {
@@ -236,6 +246,7 @@
   },
   "pfasLayer": {
     "name": "PFAS",
+    "layer_group": 0,
     "url": "https://pfasproject.com/",
     "report_url": "mailto:pfasproject@gmail.com",
     "data": {
@@ -262,6 +273,7 @@
   },
   "purpleair": {
     "name": "Purple Air",
+    "layer_group": 0,
     "url": "https://www.purpleair.com",
     "api_url": "https://www.purpleair.com/data.json",
     "report_url": "https://www.purpleair.com/register",
@@ -284,6 +296,7 @@
   },
   "skytruth": {
     "name": "SkyTruth Alerts",
+    "layer_group": 1,
     "url": "https://alerts.skytruth.org/",
     "api_url": "https://skytruth-alerts2.appspot.com/api/getalerts/",
     "data": {
@@ -300,6 +313,7 @@
   },
   "toxicReleaseLayer": {
     "name": "TRI",
+    "layer_group": 0,
     "url": "https://www.epa.gov/enviro/tri-search",
     "api_url": "https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/",
     "data": {
@@ -326,6 +340,7 @@
   },
   "Unearthing": {
     "name": "Unearthing Providence",
+    "layer_group": 0,
     "url": "https://publiclab.org/unearthing-pvd",
     "api_url": "",
     "data": {
@@ -352,6 +367,7 @@
   },
   "wisconsin": {
     "name": "Wisconsin Non-Metallic Mining",
+    "layer_group": 3,
     "url": "https://services.arcgis.com/jDGuO8tYggdCCnUJ/ArcGIS/rest/services/Nonmetallic_and_Potential_frac_sand_mine_proposals_in_West_Central_Wisconsin/FeatureServer/info/itemInfo?f=pjson",
     "api_url": "https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/Nonmetallic_and_Potential_frac_sand_mine_proposals_in_West_Central_Wisconsin/FeatureServer/0/",
     "data": {
@@ -378,6 +394,7 @@
   },
   "PLpeople": {
     "name": "PLpeople",
+    "layer_group": 0,
     "url": "http://publiclab.org",
     "data": {
       "type": "",
@@ -403,6 +420,7 @@
   },
   "testSpreadsheetLayer": {
     "name": "testSpreadsheetLayer",
+    "layer_group": 0,
     "url": "",
     "data": {
       "type": "",
