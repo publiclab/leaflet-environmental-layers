@@ -41,6 +41,7 @@ async function generateSpreadsheetLayer(layerData, confirm) {
       },
       description: "",
       layer_desc: layerData.description,
+      layer_group: 0,
       icon: "#cc12cc",
     };
     newLayerInfo = layerInfo;
