@@ -273,7 +273,6 @@
   },
   "purpleair": {
     "name": "Purple Air",
-    "layer_group": 0,
     "url": "https://www.purpleair.com",
     "api_url": "https://www.purpleair.com/data.json",
     "report_url": "https://www.purpleair.com/register",

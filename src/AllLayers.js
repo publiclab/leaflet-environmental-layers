@@ -19,7 +19,8 @@ for (let key in layers) {
     }
   }
 }
-
+layers0.push("purpleLayer")
+layers1.push("purpleairmarker")
 layers2 = layers.openInfraMap.layers;
 layers4 = layers.justiceMap.layers;
 layers5 = layers.openWeatherMap.layers;
