@@ -1,3 +1,30 @@
+const layers = require("./info.json");
+
+let layers0 = [],layers1 = [],layers2 = [],layers3 = [],layers4 = [],layers5 = [],layers6 = [];
+
+for (let key in layers) {
+  if (layers.hasOwnProperty(key)) {
+    let layer = layers[key];
+    if(layer.layer_group == 0){
+      layers0.push(key)
+    }
+    if(layer.layer_group == 1){
+      layers1.push(key)
+    }
+    if(layer.layer_group == 3){
+      layers3.push(key)
+    }
+    if(layer.layer_group == 6){
+      layers6.push(key)
+    }
+  }
+}
+layers0.push("purpleLayer")
+layers1.push("purpleairmarker")
+layers2 = layers.openInfraMap.layers;
+layers4 = layers.justiceMap.layers;
+layers5 = layers.openWeatherMap.layers;
+
 L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 
   {
@@ -9,13 +36,13 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       currentHash: location.hash,
       // Source of Truth of Layers name .
       // please put name of Layers carefully in the the appropriate layer group.
-      layers0: ['PLpeople', 'purpleLayer', 'toxicReleaseLayer', 'pfasLayer', 'aqicnLayer', 'osmLandfillMineQuarryLayer', 'Unearthing'],
-      layers1: ['purpleairmarker', 'skytruth', 'fractracker', 'odorreport', 'mapknitter', 'openaq', 'luftdaten', 'opensense'],
-      layers2: ['Power', 'Petroleum', 'Telecom', 'Water'],
-      layers3: ['wisconsin'],
-      layers4: ['income', 'americanIndian', 'asian', 'black', 'multi', 'hispanic', 'nonWhite', 'white', 'plurality'],
-      layers5: ['clouds', 'cloudsClassic', 'precipitation', 'precipitationClassic', 'rain', 'rainClassic', 'snow', 'pressure', 'pressureContour', 'temperature', 'wind', 'city'],
-      layers6: ['eonetFiresLayer', 'fracTrackerMobile'],
+      layers0: layers0,
+      layers1: layers1,
+      layers2: layers2,
+      layers3: layers3,
+      layers4: layers4,
+      layers5: layers5,
+      layers6: layers6,
 
     },
 
