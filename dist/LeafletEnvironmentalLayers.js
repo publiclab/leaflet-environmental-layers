@@ -26767,6 +26767,7 @@ L.LayerGroup.PLpeopleLayer = L.LayerGroup.extend(
             let obj = {} ;
             obj["id"] = data.items[i].doc_id ;
             obj["url"] = data.items[i].doc_url;
+            obj["title"] = data.items[i].doc_title; 
             obj["latitude"] = parseFloat(data.items[i].latitude) ;
             obj["longitude"] = parseFloat(data.items[i].longitude) ;
             obj["name"] = data.items[i].doc_title ;
