@@ -59,7 +59,7 @@
     "jasmine-jquery": "^2.1.1",
     "matchdep": "^2.0.0",
     "require": "^2.4.20",
-    "resig-class": "^1.0.0"
+    "resig-class": "^2.0.0"
   },
   "dependencies": {
     "esri-leaflet": "^2.3.3",
