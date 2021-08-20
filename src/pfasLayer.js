@@ -43,7 +43,6 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend({
   requestData: function () {
     var self = this;
     (function () {
-      var $ = window.jQuery;
       var PFAS_ID = "1h1DnptLQSejQ8nx_wCykGytSqSABXC238RUfuhuweAc";
       if (typeof self._map.spin === "function") {
         self._map.spin(true);

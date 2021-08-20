@@ -1,3 +1,6 @@
+const PublicGoogleSheetsParser = require("public-google-sheets-parser");
+const parser = new PublicGoogleSheetsParser();
+
 L.SpreadsheetLayer = L.LayerGroup.extend({
   // options: {
   // Must be supplied:
@@ -18,7 +21,6 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
     this._columns = [];
     this.options.imageOptions = this.options.imageOptions || {};
     this.options.sheetNum = this.options.sheetNum || 0;
-    this._parsedToOrig = {};
     this._lat = this.options.lat;
     this._lon = this.options.lon;
   },
@@ -26,7 +28,6 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
   onAdd: function (map) {
     this._map = map;
     var self = this;
-    this._getURL();
     self.requestData();
   },
 
@@ -34,18 +35,6 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
     this.clearLayers();
     map.spin(false);
     this._layers = {};
-  },
-
-  _getURL: function () {
-    var spreadsheetID = this._getSpreadsheetID(); // To find the URL we need, we first need to find the spreadsheetID
-    var self = this;
-    // Then we have to make another request in order to find the worksheet ID, which is changed by the sheet within the spreadsheet we want
-    var spreadsheetFeedURL =
-      "https://sheets.googleapis.com/v4/spreadsheets/" +
-      spreadsheetID +
-      "/values/Sheet1?key=AIzaSyASUPXHvLt2N9fKvI5CnRI6EjV3P39YsMc";
-    self.options.url = spreadsheetFeedURL;
-    return spreadsheetFeedURL;
   },
 
   _getSpreadsheetID: function () {
@@ -62,48 +51,33 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
     return spreadsheetID;
   },
 
-  // _getWorksheetID: function (spreadsheetID, spreadsheetFeedURL) {
-  //   var self = this;
-  //   return $.getJSON(spreadsheetFeedURL, function (data) {
-  //     // The worksheetID we want is dependent on which sheet we are looking for
-  //     var tmpLink = data.feed.entry[self.options.sheetNum].id.$t;
-  //     var sections = tmpLink.split("/");
-  //     // It is always the last section of the URL
-  //     var sheetID = sections[sections.length - 1];
-  //     // Set the URL to the final one.
-  //     self.options.url =
-  //       "https://spreadsheets.google.com/feeds/list/" +
-  //       spreadsheetID +
-  //       "/" +
-  //       sheetID +
-  //       "/public/values?alt=json";
-  //   });
-  // },
-
   requestData: function () {
     var self = this;
-    (function () {
-      var $ = window.jQuery;
-      var ssURL = self.options.url || "";
-      self._map.spin(true);
-      // start fetching data from the URL
-      $.getJSON(ssURL, function (data) {
-        self.parseData(data.values);
-        self._map.spin(false);
+    var spreadsheetID = this._getSpreadsheetID();
+    parser.id = spreadsheetID;
+    parser
+      .parse()
+      .then((data) => {
+        self.parseData(data);
+        if (typeof self._map.spin === "function") {
+          self._map.spin(false);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+        self.onError("pfasLayer");
       });
-    })();
   },
 
   parseData: function (data) {
-    //Zeroth element contains column names
-    this._columns = data[0];
-    for (var i = 1; i < data.length; i++) {
+    for (var i = 0; i < data.length; i++) {
       this.addMarker(data[i]);
     }
   },
 
   addMarker: function (data) {
-    var key = data[0];
+    //Set key to data in first column
+    var key = data[Object.keys(data)[0]];
     if (!this._layers[key]) {
       var marker = this.getMarker(data);
       this._layers[key] = marker;
@@ -112,10 +86,7 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
   },
 
   getMarker: function (data) {
-    var info = {};
-    for (var i = 0; i < this._columns.length; i++) {
-      info[this._columns[i]] = data[i] || ""; // Map column name to item index
-    }
+    var info = data;
     // Get coordinates the coordinates; remember that _lat and _lon are the column names, not the actual values
     var latlon = [parseInt(info[this._lat]), parseInt(info[this._lon])];
     var generatePopup =
@@ -123,23 +94,9 @@ L.SpreadsheetLayer = L.LayerGroup.extend({
       function () {
         return;
       };
-    // Generate an object using the original column names as keys
-    var origInfo = this._createOrigInfo(info);
     return L.marker(latlon, this.options.imageOptions).bindPopup(
-      generatePopup(origInfo)
+      generatePopup(info)
     );
-  },
-
-  _createOrigInfo: function (info) {
-    // The user will most likely give their generatePopup in terms of the column names typed in,
-    // not the parsed names. So this creates a new object that uses the original typed column
-    // names as the keys
-    var origInfo = {};
-    for (var key in info) {
-      var origKey = this._parsedToOrig[key];
-      origInfo[origKey] = info[key];
-    }
-    return origInfo;
   },
 });
 
