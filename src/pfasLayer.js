@@ -1,3 +1,6 @@
+const PublicGoogleSheetsParser = require("public-google-sheets-parser");
+const parser = new PublicGoogleSheetsParser();
+
 L.Icon.PfasLayerIcon = L.Icon.extend({
   options: {
     iconUrl:
@@ -41,64 +44,35 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend({
     var self = this;
     (function () {
       var $ = window.jQuery;
-      var PFAS_URL =
-        "https://sheets.googleapis.com/v4/spreadsheets/1h1DnptLQSejQ8nx_wCykGytSqSABXC238RUfuhuweAc/values/Sheet1?key=AIzaSyASUPXHvLt2N9fKvI5CnRI6EjV3P39YsMc";
+      var PFAS_ID = "1h1DnptLQSejQ8nx_wCykGytSqSABXC238RUfuhuweAc";
       if (typeof self._map.spin === "function") {
         self._map.spin(true);
       }
-      $.getJSON(PFAS_URL, function (data) {
-        self.parseData(data.values);
-        if (typeof self._map.spin === "function") {
-          self._map.spin(false);
-        }
-      }).fail(function () {
-        self.onError("pfasLayer");
-      });
+      parser.id = PFAS_ID;
+      parser
+        .parse()
+        .then((data) => {
+          self.parseData(data);
+          if (typeof self._map.spin === "function") {
+            self._map.spin(false);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+          self.onError("pfasLayer");
+        });
     })();
   },
 
   getMarker: function (data) {
     var redDotIcon = new L.icon.pfasLayerIcon();
-    // added the column names which are formatted here and called in the generatePopup function
-    var props = [
-      "Contamination Site",
-      "State",
-      "Location",
-      "Latitude",
-      "Longitude",
-      "Nature of source(s)",
-      "Litigation (Yes/No)",
-      "PFOA_PFOS",
-      "Other_PFAS",
-      "Date_of_discovery",
-      "Suspected contamination source",
-      "Suspected source URL",
-      "Notes",
-      "Date",
-      "Reg / Gov Response",
-      "Litigation details",
-      "Notes_1",
-      "Community Response",
-      "Last Updated",
-      "URL_1",
-      "URL_2",
-      "URL_3",
-      "URL_4",
-      "URL_5",
-    ];
-    var item = {};
-    props.forEach(function (element, i) {
-      item[element] = data[i];
-    });
+    var item = data;
 
-    item["Latitude"] = item["Latitude"].replace(/[^\d.-]/g, "");
-    item["Latitude"] = item["Latitude"].replace(/[^\d.-]/g, "");
-
-    var defaultMarker = L.marker([item["Latitude"], item["Longitude"]], {
+    var defaultMarker = L.marker([item["Latitude "], item["Longitude "]], {
       icon: redDotIcon,
     });
     var minimalMarker = L.circleMarker(
-      L.latLng([item["Latitude"], item["Longitude"]]),
+      L.latLng([item["Latitude "], item["Longitude "]]),
       {
         radius: 5,
         weight: 1,
@@ -122,57 +96,67 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend({
   generatePopup: function (item) {
     var content =
       "<strong><center>" +
-      item["Contamination Site"] +
+      item[
+        "Contamination Site Geographic location of contamination/ DOD site name / entity sampled"
+      ] +
       "</strong></center><hr /><br />";
 
-    var regResponse = item["Reg / Gov Response"];
+    var regResponse = item["Reg / Gov Response "];
     var regResponseTruncate = regResponse.split(" ").splice(0, 30).join(" ");
-    var litigation = item["Litigation details"];
+    var litigation = item["Litigation details "];
     var litigationTruncate = litigation.split(" ").splice(0, 30).join(" ");
 
-    if (item["Date_of_discovery"])
+    if (item["Date_of_discovery "])
       content +=
         "<strong> Date of Discovery:</strong> " +
-        item["Date_of_discovery"] +
+        item["Date_of_discovery "] +
         "</span>" +
         "<br>";
 
-    if (item["PFOA_PFOS"])
+    if (
+      item[
+        "PFOA_PFOS Affected water body/source (groundwater/drinking water/surface water):\n-PFOA: detection level in ppt (date sampled/reported)\n-PFOS: detection level in ppt (date sampled/reported)"
+      ]
+    )
       content +=
-        "<strong>Contamination type: </strong>" + item["PFOA_PFOS"] + "<br>";
+        "<strong>Contamination type: </strong>" +
+        item[
+          "PFOA_PFOS Affected water body/source (groundwater/drinking water/surface water):\n-PFOA: detection level in ppt (date sampled/reported)\n-PFOS: detection level in ppt (date sampled/reported)"
+        ] +
+        "<br>";
 
-    if (item["Other_PFAS"])
+    if (item["Other_PFAS "])
       content +=
-        "<strong>Other contaminant: </strong>" + item["Other_PFAS"] + "<br>";
+        "<strong>Other contaminant: </strong>" + item["Other_PFAS "] + "<br>";
 
-    if (item["Suspected contamination source"]) {
+    if (item["Suspected contamination source "]) {
       content +=
         "<strong>Suspected source:</strong> " +
         "<a href=" +
         item["Suspected source URL"] +
         ">" +
-        item["Suspected contamination source"] +
+        item["Suspected contamination source "] +
         "</a>" +
         "<br>";
     }
 
-    if (item["Nature of source(s)"])
+    if (item["Nature of source(s) "])
       content +=
         "<strong>Nature of Sources:</strong> " +
-        item["Nature of source(s)"] +
+        item["Nature of source(s) "] +
         "<br>";
 
-    if (item["Reg / Gov Response"])
+    if (item["Reg / Gov Response "])
       content +=
         "<strong>Regulatory Response:</strong> " +
         "<a href='https://pfasproject.com/pfas-contamination-site-tracker/'> " +
         regResponseTruncate +
         " [...]</a><br>";
 
-    if (item["Litigation details"] == "No data") {
+    if (item["Litigation details "] == "No data") {
       content +=
         "<strong>Litigation:</strong> " + litigationTruncate + "<br><hr>";
-    } else if (item["Litigation details"] == "No Data") {
+    } else if (item["Litigation details "] == "No Data") {
       content +=
         "<strong>Litigation:</strong> " + litigationTruncate + "<br><hr>";
     } else {
@@ -201,7 +185,10 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend({
   addMarker: function (data) {
     // changed this to the value from my dataset
     // var key = data.gsx$name.$t;
-    var key = data[0];
+    var key =
+      data[
+        "Contamination Site Geographic location of contamination/ DOD site name / entity sampled"
+      ];
     if (!this._layers[key]) {
       var marker = this.getMarker(data);
       this._layers[key] = marker;
@@ -210,7 +197,7 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend({
   },
 
   parseData: function (data) {
-    for (i = 2; i < data.length; i++) {
+    for (i = 0; i < data.length; i++) {
       this.addMarker(data[i]);
     }
   },
