@@ -419,14 +419,13 @@
   },
   "testSpreadsheetLayer": {
     "name": "testSpreadsheetLayer",
-    "layer_group": 0,
     "url": "",
     "data": {
       "type": "",
       "disclaimer": ""
     },
     "description": "",
-    "layer_desc": "Spreadsheet data",
+    "layer_group": 0,
     "icon": "#cc12cc"
   }
 }
