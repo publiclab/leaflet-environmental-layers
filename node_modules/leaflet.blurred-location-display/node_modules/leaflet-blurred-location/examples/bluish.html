@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <title>Leaflet.BlurredLocation</title>
+
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&language=en&key=AIzaSyAOLUQngEmJv0_zcG1xkGq-CXIPpLQY8iQ"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet">
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../dist/Leaflet.BlurredLocation.js"></script>
+
+  </head>
+
+  <body>
+
+    <!-- START OF EXAMPLE -->
+    <div class="container" >
+        <div class="row" >
+            <div class="col-md-6">
+                <h3 class="font-size-small">Drag map to select location </h3>
+                <hr>
+                <br />
+                <div id="map" class="leaflet-map" style="width: 600px; height: 400px;"></div>
+                <br/>
+                <h3 class="font-size-small">In Text</h3><br/>
+                <input id="placenameDisplay" type="text" class="form-control"><br/>
+            </div>
+
+            <div class="col-md-5 col-md-offset-1">
+                <label class="h2 font-size-big">&nbsp;&nbsp;Add location to your content</label>
+                <br/>
+                <hr>
+                <h4 class="font-size-small">Option 1 : By Placename</h4>
+                </br>
+                <input id="placenameInput" type="text" class="form-control"><br/>
+                <h4 class="font-size-small">Option 2 : By dragging the map</h4></br>
+                <h4 class="font-size-small">Option 3 : By giving co-ordinates</h4></br>
+                <div class="col-md-6">
+                    <input id="lat" type="text" class="form-control" placeholder="Latitude"><br/>
+                </div>
+                <div class="col-md-6">
+                    <input id="lng" type="text" class="form-control" placeholder="Longitude"><br/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END OF EXAMPLE -->
+    <script>
+    options = {}
+
+  // We can add Interface Options as follows:
+    InterfaceOptions = {};
+    InterfaceOptions.latId = 'lat';
+    InterfaceOptions.lngId = 'lng';
+
+    options.InterfaceOptions = InterfaceOptions;
+    var token = "pk.eyJ1Ijoianl3YXJyZW4iLCJhIjoiVzVZcGg3NCJ9.BJ6ArUPuTs1JT9Ssu3K8ig";
+
+
+    var token = "pk.eyJ1Ijoianl3YXJyZW4iLCJhIjoiVzVZcGg3NCJ9.BJ6ArUPuTs1JT9Ssu3K8ig";
+  // options.tileLayerUrl = options.tileLayerUrl || 'https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png';
+    options.tileLayerUrl = 'https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/tiles/{z}/{x}/{y}?access_token=' + token;
+    var blurredLocation = new BlurredLocation(options);
+    blurredLocation.panMapToGeocodedLocation("placenameInput");
+    blurredLocation.gridSystem.removeGrid();
+    blurredLocation.disableCenterShade();
+
+  </script>
+  </body>
+</html>
