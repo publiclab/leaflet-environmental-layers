@@ -1,0 +1,54 @@
+{
+  "name": "tiny-binary-search",
+  "description": "Very small binary search index implimentation.",
+  "version": "1.0.3",
+  "author": "Patrick Arlt <patrick.arlt@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/patrickarlt/tiny-binary-search/issues"
+  },
+  "devDependencies": {
+    "babel": "^5.8.34",
+    "babelify": "^5.0.5",
+    "browserify": "^12.0.1",
+    "faucet": "0.0.1",
+    "gh-release": "^2.0.2",
+    "rollup": "^0.21.0",
+    "semistandard": "*",
+    "snazzy": "^2.0.1",
+    "tape": "^4.0.0",
+    "tape-run": "^2.1.0"
+  },
+  "files": [
+    "index.js",
+    "dist/binary-search-index.js.map"
+  ],
+  "homepage": "https://github.com/patrickarlt/tiny-binary-search",
+  "keywords": [
+    "arcgis",
+    "convert",
+    "geo",
+    "geojson",
+    "geometry"
+  ],
+  "license": "Apache-2.0",
+  "main": "dist/binary-search-index.js",
+  "module": "index.js",
+  "jspm": {
+    "main": "index.js",
+    "registry": "npm",
+    "format": "es6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:patrickarlt/tiny-binary-search.git"
+  },
+  "scripts": {
+    "lint": "semistandard | snazzy",
+    "test:node": "babel-node test/index.js | faucet",
+    "test:browser": "browserify test/index.js -t [ babelify --loose ] --debug | tape-run | faucet",
+    "test": "npm run lint && npm run test:node && npm run test:browser",
+    "release": "./release.sh",
+    "bundle": "rollup index.js -m dist/binary-search-index.js.map -f umd -o dist/binary-search-index.js -n BinarySearchIndex",
+    "prepublish": "npm run bundle"
+  }
+}

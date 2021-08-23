@@ -1,0 +1,17 @@
+{
+  "name": "Blurred Location Display",
+  "homepage": "https://github.com/mridulnagpal/Leaflet.BlurredLocationDisplay",
+  "authors": [
+    "Mridul Nagpal <mridulnagpal07@gmail.com>"
+  ],
+  "description": "",
+  "main": "dist/Leaflet.BlurredLocationDisplay.js",
+  "license": "GPL-3.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
