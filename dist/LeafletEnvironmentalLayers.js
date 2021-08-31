@@ -38868,6 +38868,8 @@ L.layerGroup.osmLandfillMineQuarryLayer = function(options) {
 };
 
 },{"./info.json":53}],58:[function(require,module,exports){
+"use strict";
+
 const PublicGoogleSheetsParser = require("../node_modules/public-google-sheets-parser/dist/index.js");
 const parser = new PublicGoogleSheetsParser();
 
@@ -39577,6 +39579,8 @@ L.Control.Layers.include({
 });
 
 },{}],67:[function(require,module,exports){
+"use strict";
+
 const PublicGoogleSheetsParser = require("../../node_modules/public-google-sheets-parser/dist/index.js");
 const parser = new PublicGoogleSheetsParser();
 

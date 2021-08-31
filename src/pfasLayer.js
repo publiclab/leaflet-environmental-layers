@@ -1,3 +1,5 @@
+"use strict";
+
 const PublicGoogleSheetsParser = require("../node_modules/public-google-sheets-parser/dist/index.js");
 const parser = new PublicGoogleSheetsParser();
 
