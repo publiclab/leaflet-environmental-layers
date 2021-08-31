@@ -37,6 +37,7 @@ module.exports = function(grunt) {
             presets: ['@babel/preset-env'],
             plugins: [
               "transform-remove-strict-mode",
+              "@babel/plugin-transform-runtime"
             ]        
           },
           dist: {
