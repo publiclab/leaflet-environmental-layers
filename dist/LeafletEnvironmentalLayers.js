@@ -27811,6 +27811,17 @@ module.exports={
     "description": "",
     "layer_desc": "Spreadsheet data",
     "icon": "#cc12cc"
+  },
+  "Public_Lab": {
+    "name": "Public_Lab",
+    "url": "",
+    "data": {
+      "type": "",
+      "disclaimer": ""
+    },
+    "description": "",
+    "layer_group": 0,
+    "icon": "#cc12cc"
   }
 }
 },{}],14:[function(require,module,exports){
@@ -30435,6 +30446,10 @@ module.exports=[
   {
     "name": "testSpreadsheetLayer",
     "url": "https://docs.google.com/spreadsheets/d/1AR2KRuvxgruqLSCzJoIWxcyLDfPAE3tCifQthTHhpFo/"
+  },
+  {
+    "name": "Public_Lab",
+    "url": "https://docs.google.com/spreadsheets/d/1J9rqD-JfbGt5AdBYIpkeBZxetURSnIjlajkEX-aYvSk/edit?usp=sharing"
   }
 ]
 },{}],22:[function(require,module,exports){
