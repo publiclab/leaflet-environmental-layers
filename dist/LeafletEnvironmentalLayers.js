@@ -29301,6 +29301,120 @@ process.chdir = function (dir) {
 process.umask = function() { return 0; };
 
 },{}],16:[function(require,module,exports){
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+const isBrowser = typeof require === 'undefined';
+const fetch = isBrowser ?
+/* istanbul ignore next */
+window.fetch : require('../src/fetch');
+
+let PublicGoogleSheetsParser = /*#__PURE__*/function () {
+  function PublicGoogleSheetsParser(spreadsheetId, sheetName) {
+    _classCallCheck(this, PublicGoogleSheetsParser);
+
+    this.id = spreadsheetId;
+    this.sheetName = sheetName;
+  }
+
+  _createClass(PublicGoogleSheetsParser, [{
+    key: "getSpreadsheetDataUsingFetch",
+    value: function getSpreadsheetDataUsingFetch() {
+      // Read data from the first sheet of the target document.
+      // It cannot be used unless everyone has been given read permission.
+      // It must be a spreadsheet document with a header, as in the example document below.
+      // spreadsheet document for example: https://docs.google.com/spreadsheets/d/10WDbAPAY7Xl5DT36VuMheTPTTpqx9x0C5sDCnh4BGps/edit#gid=1719755213
+      // Sheet selection from: https://stackoverflow.com/a/44592363/1649917
+      if (!this.id) return null;
+      let url = `https://docs.google.com/spreadsheets/d/${this.id}/gviz/tq?`;
+
+      if (this.sheetName) {
+        url = url.concat(`sheet=${this.sheetName}`);
+      }
+
+      return fetch(url).then(r => r && r.ok && r.text ? r.text() : null).catch(
+      /* istanbul ignore next */
+      _ => null);
+    }
+  }, {
+    key: "filterUselessRows",
+    value: function filterUselessRows(rows) {
+      return rows.filter(row => row && row.v !== null && row.v !== undefined);
+    }
+  }, {
+    key: "applyHeaderIntoRows",
+    value: function applyHeaderIntoRows(header, rows) {
+      return rows.map(({
+        c: row
+      }) => this.filterUselessRows(row)).map(row => row.reduce((p, c, i) => Object.assign(p, {
+        [header[i]]: c.v
+      }), {}));
+    }
+  }, {
+    key: "getItems",
+    value: function getItems(spreadsheetResponse) {
+      let rows = [];
+
+      try {
+        const parsedJSON = JSON.parse(spreadsheetResponse.split('\n')[1].replace(/google.visualization.Query.setResponse\(|\);/g, ''));
+        const hasSomeLabelPropertyInCols = parsedJSON.table.cols.some(({
+          label
+        }) => !!label);
+
+        if (hasSomeLabelPropertyInCols) {
+          const header = parsedJSON.table.cols.map(({
+            label
+          }) => label);
+          rows = this.applyHeaderIntoRows(header, parsedJSON.table.rows);
+        } else {
+          const [headerRow, ...originalRows] = parsedJSON.table.rows;
+          const header = this.filterUselessRows(headerRow.c).map(row => row.v);
+          rows = this.applyHeaderIntoRows(header, originalRows);
+        }
+      } catch (e) {}
+
+      return rows;
+    }
+  }, {
+    key: "parse",
+    value: function () {
+      var _parse = _asyncToGenerator(function* (spreadsheetId, sheetName) {
+        if (spreadsheetId) this.id = spreadsheetId;
+        if (sheetName) this.sheetName = sheetName;
+        if (!this.id) throw new Error('SpreadsheetId is required.');
+        const spreadsheetResponse = yield this.getSpreadsheetDataUsingFetch();
+        if (spreadsheetResponse === null) return [];
+        return this.getItems(spreadsheetResponse);
+      });
+
+      function parse(_x, _x2) {
+        return _parse.apply(this, arguments);
+      }
+
+      return parse;
+    }()
+  }]);
+
+  return PublicGoogleSheetsParser;
+}();
+/* istanbul ignore next */
+
+
+if (isBrowser) {
+  window.PublicGoogleSheetsParser = PublicGoogleSheetsParser;
+} else {
+  module.exports = PublicGoogleSheetsParser;
+  module.exports.default = PublicGoogleSheetsParser;
+}
+
+},{"../src/fetch":17}],17:[function(require,module,exports){
 (function (Buffer){(function (){
 const https = require('https')
 
@@ -29332,88 +29446,7 @@ module.exports = nodeFetch
 module.exports.default = nodeFetch
 
 }).call(this)}).call(this,require("buffer").Buffer)
-},{"buffer":3,"https":7}],17:[function(require,module,exports){
-const isBrowser = typeof require === 'undefined'
-const fetch = isBrowser ? /* istanbul ignore next */window.fetch : require('./fetch')
-
-class PublicGoogleSheetsParser {
-  constructor (spreadsheetId, sheetName) {
-    this.id = spreadsheetId
-    this.sheetName = sheetName
-  }
-
-  getSpreadsheetDataUsingFetch () {
-    // Read data from the first sheet of the target document.
-    // It cannot be used unless everyone has been given read permission.
-    // It must be a spreadsheet document with a header, as in the example document below.
-    // spreadsheet document for example: https://docs.google.com/spreadsheets/d/10WDbAPAY7Xl5DT36VuMheTPTTpqx9x0C5sDCnh4BGps/edit#gid=1719755213
-    // Sheet selection from: https://stackoverflow.com/a/44592363/1649917
-
-    if (!this.id) return null
-    let url = `https://docs.google.com/spreadsheets/d/${this.id}/gviz/tq?`
-    if (this.sheetName) {
-      url = url.concat(`sheet=${this.sheetName}`)
-    }
-
-    return fetch(url)
-      .then((r) => r && r.ok && r.text ? r.text() : null)
-      .catch(/* istanbul ignore next */(_) => null)
-  }
-
-  filterUselessRows (rows) {
-    return rows.filter((row) => row && (row.v !== null && row.v !== undefined))
-  }
-
-  applyHeaderIntoRows (header, rows) {
-    return rows
-      .map(({ c: row }) => this.filterUselessRows(row))
-      .map((row) => row.reduce((p, c, i) => Object.assign(p, { [header[i]]: c.v }), {}))
-  }
-
-  getItems (spreadsheetResponse) {
-    let rows = []
-
-    try {
-      const parsedJSON = JSON.parse(spreadsheetResponse.split('\n')[1].replace(/google.visualization.Query.setResponse\(|\);/g, ''))
-      const hasSomeLabelPropertyInCols = parsedJSON.table.cols.some(({ label }) => !!label)
-      if (hasSomeLabelPropertyInCols) {
-        const header = parsedJSON.table.cols.map(({ label }) => label)
-
-        rows = this.applyHeaderIntoRows(header, parsedJSON.table.rows)
-      } else {
-        const [headerRow, ...originalRows] = parsedJSON.table.rows
-        const header = this.filterUselessRows(headerRow.c).map((row) => row.v)
-
-        rows = this.applyHeaderIntoRows(header, originalRows)
-      }
-    } catch (e) {}
-
-    return rows
-  }
-
-  async parse (spreadsheetId, sheetName) {
-    if (spreadsheetId) this.id = spreadsheetId
-    if (sheetName) this.sheetName = sheetName
-
-    if (!this.id) throw new Error('SpreadsheetId is required.')
-
-    const spreadsheetResponse = await this.getSpreadsheetDataUsingFetch()
-
-    if (spreadsheetResponse === null) return []
-
-    return this.getItems(spreadsheetResponse)
-  }
-}
-
-/* istanbul ignore next */
-if (isBrowser) {
-  window.PublicGoogleSheetsParser = PublicGoogleSheetsParser
-} else {
-  module.exports = PublicGoogleSheetsParser
-  module.exports.default = PublicGoogleSheetsParser
-}
-
-},{"./fetch":16}],18:[function(require,module,exports){
+},{"buffer":3,"https":7}],18:[function(require,module,exports){
 (function (global){(function (){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -30402,6 +30435,8 @@ var ClientRequest = module.exports = function (opts) {
 	}
 	self._mode = decideMode(preferBinary, useFetch)
 	self._fetchTimer = null
+	self._socketTimeout = null
+	self._socketTimer = null
 
 	self.on('finish', function () {
 		self._onFinish()
@@ -30444,6 +30479,10 @@ ClientRequest.prototype._onFinish = function () {
 		return
 	var opts = self._opts
 
+	if ('timeout' in opts && opts.timeout !== 0) {
+		self.setTimeout(opts.timeout)
+	}
+
 	var headersObj = self._headers
 	var body = null
 	if (opts.method !== 'GET' && opts.method !== 'HEAD') {
@@ -30468,7 +30507,6 @@ ClientRequest.prototype._onFinish = function () {
 
 	if (self._mode === 'fetch') {
 		var signal = null
-		var fetchTimer = null
 		if (capability.abortController) {
 			var controller = new AbortController()
 			signal = controller.signal
@@ -30492,9 +30530,10 @@ ClientRequest.prototype._onFinish = function () {
 			signal: signal
 		}).then(function (response) {
 			self._fetchResponse = response
+			self._resetTimers(false)
 			self._connect()
 		}, function (reason) {
-			global.clearTimeout(self._fetchTimer)
+			self._resetTimers(true)
 			if (!self._destroyed)
 				self.emit('error', reason)
 		})
@@ -30550,6 +30589,7 @@ ClientRequest.prototype._onFinish = function () {
 		xhr.onerror = function () {
 			if (self._destroyed)
 				return
+			self._resetTimers(true)
 			self.emit('error', new Error('XHR error'))
 		}
 
@@ -30581,13 +30621,15 @@ function statusValid (xhr) {
 ClientRequest.prototype._onXHRProgress = function () {
 	var self = this
 
+	self._resetTimers(false)
+
 	if (!statusValid(self._xhr) || self._destroyed)
 		return
 
 	if (!self._response)
 		self._connect()
 
-	self._response._onXHRProgress()
+	self._response._onXHRProgress(self._resetTimers.bind(self))
 }
 
 ClientRequest.prototype._connect = function () {
@@ -30596,7 +30638,7 @@ ClientRequest.prototype._connect = function () {
 	if (self._destroyed)
 		return
 
-	self._response = new IncomingMessage(self._xhr, self._fetchResponse, self._mode, self._fetchTimer)
+	self._response = new IncomingMessage(self._xhr, self._fetchResponse, self._mode, self._resetTimers.bind(self))
 	self._response.on('error', function(err) {
 		self.emit('error', err)
 	})
@@ -30611,16 +30653,35 @@ ClientRequest.prototype._write = function (chunk, encoding, cb) {
 	cb()
 }
 
-ClientRequest.prototype.abort = ClientRequest.prototype.destroy = function () {
+ClientRequest.prototype._resetTimers = function (done) {
+	var self = this
+
+	global.clearTimeout(self._socketTimer)
+	self._socketTimer = null
+
+	if (done) {
+		global.clearTimeout(self._fetchTimer)
+		self._fetchTimer = null
+	} else if (self._socketTimeout) {
+		self._socketTimer = global.setTimeout(function () {
+			self.emit('timeout')
+		}, self._socketTimeout)
+	}
+}
+
+ClientRequest.prototype.abort = ClientRequest.prototype.destroy = function (err) {
 	var self = this
 	self._destroyed = true
-	global.clearTimeout(self._fetchTimer)
+	self._resetTimers(true)
 	if (self._response)
 		self._response._destroyed = true
 	if (self._xhr)
 		self._xhr.abort()
 	else if (self._fetchAbortController)
 		self._fetchAbortController.abort()
+
+	if (err)
+		self.emit('error', err)
 }
 
 ClientRequest.prototype.end = function (data, encoding, cb) {
@@ -30633,8 +30694,17 @@ ClientRequest.prototype.end = function (data, encoding, cb) {
 	stream.Writable.prototype.end.call(self, data, encoding, cb)
 }
 
+ClientRequest.prototype.setTimeout = function (timeout, cb) {
+	var self = this
+
+	if (cb)
+		self.once('timeout', cb)
+
+	self._socketTimeout = timeout
+	self._resetTimers(false)
+}
+
 ClientRequest.prototype.flushHeaders = function () {}
-ClientRequest.prototype.setTimeout = function () {}
 ClientRequest.prototype.setNoDelay = function () {}
 ClientRequest.prototype.setSocketKeepAlive = function () {}
 
@@ -30677,7 +30747,7 @@ var rStates = exports.readyStates = {
 	DONE: 4
 }
 
-var IncomingMessage = exports.IncomingMessage = function (xhr, response, mode, fetchTimer) {
+var IncomingMessage = exports.IncomingMessage = function (xhr, response, mode, resetTimers) {
 	var self = this
 	stream.Readable.call(self)
 
@@ -30710,6 +30780,7 @@ var IncomingMessage = exports.IncomingMessage = function (xhr, response, mode, f
 		if (capability.writableStream) {
 			var writable = new WritableStream({
 				write: function (chunk) {
+					resetTimers(false)
 					return new Promise(function (resolve, reject) {
 						if (self._destroyed) {
 							reject()
@@ -30721,11 +30792,12 @@ var IncomingMessage = exports.IncomingMessage = function (xhr, response, mode, f
 					})
 				},
 				close: function () {
-					global.clearTimeout(fetchTimer)
+					resetTimers(true)
 					if (!self._destroyed)
 						self.push(null)
 				},
 				abort: function (err) {
+					resetTimers(true)
 					if (!self._destroyed)
 						self.emit('error', err)
 				}
@@ -30733,7 +30805,7 @@ var IncomingMessage = exports.IncomingMessage = function (xhr, response, mode, f
 
 			try {
 				response.body.pipeTo(writable).catch(function (err) {
-					global.clearTimeout(fetchTimer)
+					resetTimers(true)
 					if (!self._destroyed)
 						self.emit('error', err)
 				})
@@ -30746,15 +30818,15 @@ var IncomingMessage = exports.IncomingMessage = function (xhr, response, mode, f
 			reader.read().then(function (result) {
 				if (self._destroyed)
 					return
+				resetTimers(result.done)
 				if (result.done) {
-					global.clearTimeout(fetchTimer)
 					self.push(null)
 					return
 				}
 				self.push(Buffer.from(result.value))
 				read()
 			}).catch(function (err) {
-				global.clearTimeout(fetchTimer)
+				resetTimers(true)
 				if (!self._destroyed)
 					self.emit('error', err)
 			})
@@ -30813,7 +30885,7 @@ IncomingMessage.prototype._read = function () {
 	}
 }
 
-IncomingMessage.prototype._onXHRProgress = function () {
+IncomingMessage.prototype._onXHRProgress = function (resetTimers) {
 	var self = this
 
 	var xhr = self._xhr
@@ -30860,6 +30932,7 @@ IncomingMessage.prototype._onXHRProgress = function () {
 				}
 			}
 			reader.onload = function () {
+				resetTimers(true)
 				self.push(null)
 			}
 			// reader.onerror = ??? // TODO: this
@@ -30869,6 +30942,7 @@ IncomingMessage.prototype._onXHRProgress = function () {
 
 	// The ms-stream case handles end separately in reader.onload()
 	if (self._xhr.readyState === rStates.DONE && self._mode !== 'ms-stream') {
+		resetTimers(true)
 		self.push(null)
 	}
 }
@@ -38795,7 +38869,7 @@ L.layerGroup.osmLandfillMineQuarryLayer = function(options) {
 };
 
 },{"./info.json":53}],58:[function(require,module,exports){
-const PublicGoogleSheetsParser = require("public-google-sheets-parser");
+const PublicGoogleSheetsParser = require("../node_modules/public-google-sheets-parser/dist/index.js");
 const parser = new PublicGoogleSheetsParser();
 
 L.Icon.PfasLayerIcon = L.Icon.extend({
@@ -39003,7 +39077,7 @@ L.layerGroup.pfasLayer = function (options) {
   return new L.LayerGroup.PfasLayer(options);
 };
 
-},{"public-google-sheets-parser":17}],59:[function(require,module,exports){
+},{"../node_modules/public-google-sheets-parser/dist/index.js":16}],59:[function(require,module,exports){
 require('heatmap.js');
 require('leaflet-heatmap');
 
@@ -39504,7 +39578,7 @@ L.Control.Layers.include({
 });
 
 },{}],67:[function(require,module,exports){
-const PublicGoogleSheetsParser = require("public-google-sheets-parser");
+const PublicGoogleSheetsParser = require("../../node_modules/public-google-sheets-parser/dist/index.js");
 const parser = new PublicGoogleSheetsParser();
 
 L.SpreadsheetLayer = L.LayerGroup.extend({
@@ -39610,7 +39684,7 @@ L.spreadsheetLayer = function (options) {
   return new L.SpreadsheetLayer(options);
 };
 
-},{"public-google-sheets-parser":17}],68:[function(require,module,exports){
+},{"../../node_modules/public-google-sheets-parser/dist/index.js":16}],68:[function(require,module,exports){
 L.Layer.include({
   onError: function(layerName, group) {
     const mapId = this._map._container.id;

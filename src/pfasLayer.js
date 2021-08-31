@@ -1,4 +1,4 @@
-const PublicGoogleSheetsParser = require("public-google-sheets-parser");
+const PublicGoogleSheetsParser = require("../node_modules/public-google-sheets-parser/dist/index.js");
 const parser = new PublicGoogleSheetsParser();
 
 L.Icon.PfasLayerIcon = L.Icon.extend({
