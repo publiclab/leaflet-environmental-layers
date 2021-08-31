@@ -1,5 +1,4 @@
 import * as Browser from '../core/Browser';
-import {_pointersCount} from './DomEvent.Pointer';
 
 /*
  * Extends the event handling code with double tap support for mobile browsers.
@@ -16,16 +15,13 @@ export function addDoubleTapListener(obj, handler, id) {
 	    delay = 250;
 
 	function onTouchStart(e) {
-		var count;
 
 		if (Browser.pointer) {
-			if ((!Browser.edge) || e.pointerType === 'mouse') { return; }
-			count = _pointersCount;
-		} else {
-			count = e.touches.length;
+			if (!e.isPrimary) { return; }
+			if (e.pointerType === 'mouse') { return; } // mouse fires native dblclick
+		} else if (e.touches.length > 1) {
+			return;
 		}
-
-		if (count > 1) { return; }
 
 		var now = Date.now(),
 		    delta = now - (last || now);
@@ -38,7 +34,7 @@ export function addDoubleTapListener(obj, handler, id) {
 	function onTouchEnd(e) {
 		if (doubleTap && !touch.cancelBubble) {
 			if (Browser.pointer) {
-				if ((!Browser.edge) || e.pointerType === 'mouse') { return; }
+				if (e.pointerType === 'mouse') { return; }
 				// work around .type being readonly with MSPointer* events
 				var newTouch = {},
 				    prop, i;
@@ -50,6 +46,7 @@ export function addDoubleTapListener(obj, handler, id) {
 				touch = newTouch;
 			}
 			touch.type = 'dblclick';
+			touch.button = 0;
 			handler(touch);
 			last = null;
 		}
@@ -59,8 +56,8 @@ export function addDoubleTapListener(obj, handler, id) {
 	obj[_pre + _touchend + id] = onTouchEnd;
 	obj[_pre + 'dblclick' + id] = handler;
 
-	obj.addEventListener(_touchstart, onTouchStart, false);
-	obj.addEventListener(_touchend, onTouchEnd, false);
+	obj.addEventListener(_touchstart, onTouchStart, Browser.passiveEvents ? {passive: false} : false);
+	obj.addEventListener(_touchend, onTouchEnd, Browser.passiveEvents ? {passive: false} : false);
 
 	// On some platforms (notably, chrome<55 on win10 + touchscreen + mouse),
 	// the browser doesn't fire touchend/pointerup events but does fire
@@ -76,11 +73,9 @@ export function removeDoubleTapListener(obj, id) {
 	    touchend = obj[_pre + _touchend + id],
 	    dblclick = obj[_pre + 'dblclick' + id];
 
-	obj.removeEventListener(_touchstart, touchstart, false);
-	obj.removeEventListener(_touchend, touchend, false);
-	if (!Browser.edge) {
-		obj.removeEventListener('dblclick', dblclick, false);
-	}
+	obj.removeEventListener(_touchstart, touchstart, Browser.passiveEvents ? {passive: false} : false);
+	obj.removeEventListener(_touchend, touchend, Browser.passiveEvents ? {passive: false} : false);
+	obj.removeEventListener('dblclick', dblclick, false);
 
 	return this;
 }

@@ -4,7 +4,6 @@ import {DivOverlay} from './DivOverlay';
 import {toPoint} from '../geometry/Point';
 import {Map} from '../map/Map';
 import {Layer} from './Layer';
-import {FeatureGroup} from './FeatureGroup';
 import * as Util from '../core/Util';
 import * as DomUtil from '../dom/DomUtil';
 
@@ -132,7 +131,8 @@ export var Tooltip = DivOverlay.extend({
 	_adjustPan: function () {},
 
 	_setPosition: function (pos) {
-		var map = this._map,
+		var subX, subY,
+		    map = this._map,
 		    container = this._container,
 		    centerPoint = map.latLngToContainerPoint(map.getCenter()),
 		    tooltipPoint = map.layerPointToContainerPoint(pos),
@@ -143,18 +143,31 @@ export var Tooltip = DivOverlay.extend({
 		    anchor = this._getAnchor();
 
 		if (direction === 'top') {
-			pos = pos.add(toPoint(-tooltipWidth / 2 + offset.x, -tooltipHeight + offset.y + anchor.y, true));
+			subX = tooltipWidth / 2;
+			subY = tooltipHeight;
 		} else if (direction === 'bottom') {
-			pos = pos.subtract(toPoint(tooltipWidth / 2 - offset.x, -offset.y, true));
+			subX = tooltipWidth / 2;
+			subY = 0;
 		} else if (direction === 'center') {
-			pos = pos.subtract(toPoint(tooltipWidth / 2 + offset.x, tooltipHeight / 2 - anchor.y + offset.y, true));
-		} else if (direction === 'right' || direction === 'auto' && tooltipPoint.x < centerPoint.x) {
+			subX = tooltipWidth / 2;
+			subY = tooltipHeight / 2;
+		} else if (direction === 'right') {
+			subX = 0;
+			subY = tooltipHeight / 2;
+		} else if (direction === 'left') {
+			subX = tooltipWidth;
+			subY = tooltipHeight / 2;
+		} else if (tooltipPoint.x < centerPoint.x) {
 			direction = 'right';
-			pos = pos.add(toPoint(offset.x + anchor.x, anchor.y - tooltipHeight / 2 + offset.y, true));
+			subX = 0;
+			subY = tooltipHeight / 2;
 		} else {
 			direction = 'left';
-			pos = pos.subtract(toPoint(tooltipWidth + anchor.x - offset.x, tooltipHeight / 2 - anchor.y - offset.y, true));
+			subX = tooltipWidth + (offset.x + anchor.x) * 2;
+			subY = tooltipHeight / 2;
 		}
+
+		pos = pos.subtract(toPoint(subX, subY, true)).add(offset).add(anchor);
 
 		DomUtil.removeClass(container, 'leaflet-tooltip-right');
 		DomUtil.removeClass(container, 'leaflet-tooltip-left');
@@ -312,29 +325,8 @@ Layer.include({
 	// @method openTooltip(latlng?: LatLng): this
 	// Opens the bound tooltip at the specified `latlng` or at the default tooltip anchor if no `latlng` is passed.
 	openTooltip: function (layer, latlng) {
-		if (!(layer instanceof Layer)) {
-			latlng = layer;
-			layer = this;
-		}
-
-		if (layer instanceof FeatureGroup) {
-			for (var id in this._layers) {
-				layer = this._layers[id];
-				break;
-			}
-		}
-
-		if (!latlng) {
-			latlng = layer.getCenter ? layer.getCenter() : layer.getLatLng();
-		}
-
 		if (this._tooltip && this._map) {
-
-			// set tooltip source to this layer
-			this._tooltip._source = layer;
-
-			// update the tooltip (content, layout, ect...)
-			this._tooltip.update();
+			latlng = this._tooltip._prepareOpen(this, layer, latlng);
 
 			// open the tooltip on the map
 			this._map.openTooltip(this._tooltip, latlng);

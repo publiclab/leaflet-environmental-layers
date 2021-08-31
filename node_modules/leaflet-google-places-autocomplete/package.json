@@ -1,6 +1,6 @@
 {
   "name": "leaflet-google-places-autocomplete",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Add google places autocomplete to your leaflet map",
   "main": "src/js/leaflet-gplaces-autocomplete.js",
   "directories": {

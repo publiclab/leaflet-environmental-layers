@@ -6,6 +6,7 @@
             position: "topright",
             prepend: true,
             collapsed_mode: false,
+            placeholder: null,
             autocomplete_options: {}
         },
 
@@ -32,6 +33,10 @@
             var searchWrapper = L.DomUtil.create("div", "leaflet-gac-wrapper");
             this.searchBox = L.DomUtil.create("input", "leaflet-gac-control");
             this.autocomplete = new google.maps.places.Autocomplete(this.searchBox, this.options.autocomplete_options);
+
+            if (this.options.placeholder) {
+                this.searchBox.setAttribute("placeholder", this.options.placeholder)
+            }
 
             // if collapse mode set - create icon and register events
             if (this.options.collapsed_mode) {

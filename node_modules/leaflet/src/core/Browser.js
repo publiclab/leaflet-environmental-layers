@@ -1,3 +1,4 @@
+import * as Util from './Util';
 import {svgCreate} from '../layer/vector/SVG.Util';
 
 /*
@@ -46,7 +47,7 @@ export var androidStock = android && userAgentContains('Google') && webkitVer < 
 export var opera = !!window.opera;
 
 // @property chrome: Boolean; `true` for the Chrome browser.
-export var chrome = userAgentContains('chrome');
+export var chrome = !edge && userAgentContains('chrome');
 
 // @property gecko: Boolean; `true` for gecko-based browsers like Firefox.
 export var gecko = userAgentContains('gecko') && !webkit && !opera && !ie;
@@ -110,9 +111,26 @@ export var mobileOpera = mobile && opera;
 export var mobileGecko = mobile && gecko;
 
 // @property retina: Boolean
-// `true` for browsers on a high-resolution "retina" screen.
+// `true` for browsers on a high-resolution "retina" screen or on any screen when browser's display zoom is more than 100%.
 export var retina = (window.devicePixelRatio || (window.screen.deviceXDPI / window.screen.logicalXDPI)) > 1;
 
+// @property passiveEvents: Boolean
+// `true` for browsers that support passive events.
+export var passiveEvents = (function () {
+	var supportsPassiveOption = false;
+	try {
+		var opts = Object.defineProperty({}, 'passive', {
+			get: function () { // eslint-disable-line getter-return
+				supportsPassiveOption = true;
+			}
+		});
+		window.addEventListener('testPassiveEventSupport', Util.falseFn, opts);
+		window.removeEventListener('testPassiveEventSupport', Util.falseFn, opts);
+	} catch (e) {
+		// Errors can safely be ignored since this is only a browser support test.
+	}
+	return supportsPassiveOption;
+}());
 
 // @property canvas: Boolean
 // `true` when the browser supports [`<canvas>`](https://developer.mozilla.org/docs/Web/API/Canvas_API).

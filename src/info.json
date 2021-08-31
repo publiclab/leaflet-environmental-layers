@@ -1,6 +1,7 @@
 {
   "aqicnLayer": {
     "name": "Air Quality Index",
+    "layer_group": 0,
     "url": "http://aqicn.org/json-api/doc/",
     "data": {
       "type": "RT",
@@ -12,6 +13,7 @@
   },
   "eonetFiresLayer": {
     "name": "EONET Fires",
+    "layer_group": 6,
     "url": "https://eonet.sci.gsfc.nasa.gov/",
     "data": {
       "type": "NRT",
@@ -23,8 +25,9 @@
   },
   "fractracker": {
     "name": "FracTracker",
+    "layer_group": 1,
     "url": "https://www.fractracker.org/",
-    "api_url": "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json" ,
+    "api_url": "https://spreadsheets.google.com/feeds/list/19j4AQmjWuELuzn1GIn0TFRcK42HjdHF_fsIa8jtM1yw/o4rmdye/public/values?alt=json",
     "data": {
       "type": "",
       "disclaimer": "Data from agency data sets to crowd-sourced data"
@@ -39,6 +42,7 @@
   },
   "fracTrackerMobile": {
     "name": "FracTracker Mobile",
+    "layer_group": 6,
     "url": "https://www.fractracker.org/",
     "data": {
       "type": "",
@@ -54,7 +58,11 @@
   },
   "indigenousLands": {
     "name": "Indigenous Lands",
-    "layers": ["Territories", "Languages", "Treaties"],
+    "layers": [
+      "Territories",
+      "Languages",
+      "Treaties"
+    ],
     "url": "https://native-land.ca/",
     "data": {
       "type": "Historical data",
@@ -70,7 +78,17 @@
   },
   "justiceMap": {
     "name": "Justice Map",
-    "layers": ["income", "americanIndian", "asian", "black", "multi", "hispanic", "nonWhite", "white", "plurality"],
+    "layers": [
+      "income",
+      "americanIndian",
+      "asian",
+      "black",
+      "multi",
+      "hispanic",
+      "nonWhite",
+      "white",
+      "plurality"
+    ],
     "url": "http://www.justicemap.org/index.php?giAdvanced=0#instruction_div",
     "data": {
       "type": "",
@@ -81,15 +99,22 @@
     "icon": "#f3a482",
     "extents": {
       "bounds": [
-                  [16.97274101999902, -172.880859375],
-                  [71.27259471233448, -38.05664062500001]
-                ],
+        [
+          16.97274101999902,
+          -172.880859375
+        ],
+        [
+          71.27259471233448,
+          -38.05664062500001
+        ]
+      ],
       "minZoom": 5,
       "maxZoom": 15
     }
   },
   "luftdaten": {
     "name": "Luftdaten",
+    "layer_group": 1,
     "url": "https://maps.luftdaten.info",
     "data": {
       "type": "",
@@ -101,6 +126,7 @@
   },
   "mapknitter": {
     "name": "MapKnitter",
+    "layer_group": 1,
     "url": "https://mapknitter.org/",
     "api_url": "https://mapknitter.org/map/region/Gulf-Coast.json",
     "data": {
@@ -117,6 +143,7 @@
   },
   "odorreport": {
     "name": "Odor Reports",
+    "layer_group": 1,
     "url": "https://odorlog.ushahidi.io/views/map",
     "api_url": "https://odorlog.api.ushahidi.io/api/v3/posts/",
     "report_url": "http://www.odorcomplaint.com/",
@@ -134,6 +161,7 @@
   },
   "openaq": {
     "name": "OpenAQ",
+    "layer_group": 1,
     "url": "https://openaq.org/",
     "data": {
       "type": "RT",
@@ -145,7 +173,12 @@
   },
   "openInfraMap": {
     "name": "Open Infra Map",
-    "layers": ["Power", "Petroleum", "Telecom", "Water"],
+    "layers": [
+      "Power",
+      "Petroleum",
+      "Telecom",
+      "Water"
+    ],
     "url": "https://openinframap.org/about.html",
     "contribute_url": "https://openinframap.org/about.html",
     "data": {
@@ -158,6 +191,7 @@
   },
   "opensense": {
     "name": "OpenSenseMap",
+    "layer_group": 1,
     "url": "https://opensensemap.org/",
     "report_url": "https://opensensemap.org/register",
     "data": {
@@ -170,7 +204,20 @@
   },
   "openWeatherMap": {
     "name": "Open Weather Map",
-    "layers": ["clouds", "cloudsClassic", "precipitation", "precipitationClassic", "rain", "rainClassic", "snow", "pressure", "pressureContour", "temperature", "wind", "city"],
+    "layers": [
+      "clouds",
+      "cloudsClassic",
+      "precipitation",
+      "precipitationClassic",
+      "rain",
+      "rainClassic",
+      "snow",
+      "pressure",
+      "pressureContour",
+      "temperature",
+      "wind",
+      "city"
+    ],
     "url": "https://openweathermap.org/guide",
     "data": {
       "type": "RT",
@@ -182,6 +229,7 @@
   },
   "osmLandfillMineQuarryLayer": {
     "name": "Landfill, Mine, Quarry",
+    "layer_group": 0,
     "url": "https://wiki.openstreetmap.org/wiki/Map_Features",
     "api_url": "http://www.overpass-api.de/api/xapi",
     "data": {
@@ -198,6 +246,7 @@
   },
   "pfasLayer": {
     "name": "PFAS",
+    "layer_group": 0,
     "url": "https://pfasproject.com/",
     "report_url": "mailto:pfasproject@gmail.com",
     "data": {
@@ -209,9 +258,15 @@
     "icon": "#b52822",
     "extents": {
       "bounds": [
-                  [16.97274101999902, -172.880859375],
-                  [71.27259471233448, -38.05664062500001]
-                ],
+        [
+          16.97274101999902,
+          -172.880859375
+        ],
+        [
+          71.27259471233448,
+          -38.05664062500001
+        ]
+      ],
       "minZoom": 5,
       "maxZoom": 15
     }
@@ -232,14 +287,15 @@
       "purpleLayer": {},
       "purpleairmarker": {
         "extents": {
-           "minZoom": 8,
-           "maxZoom": 15
-         }
+          "minZoom": 8,
+          "maxZoom": 15
+        }
       }
     }
   },
   "skytruth": {
     "name": "SkyTruth Alerts",
+    "layer_group": 1,
     "url": "https://alerts.skytruth.org/",
     "api_url": "https://skytruth-alerts2.appspot.com/api/getalerts/",
     "data": {
@@ -256,6 +312,7 @@
   },
   "toxicReleaseLayer": {
     "name": "TRI",
+    "layer_group": 0,
     "url": "https://www.epa.gov/enviro/tri-search",
     "api_url": "https://iaspub.epa.gov/enviro/efservice/tri_facility/pref_latitude/BEGINNING/",
     "data": {
@@ -267,15 +324,22 @@
     "icon": "#6ccc00",
     "extents": {
       "bounds": [
-                  [60.54377524118842, -21.708984375000004],
-                  [13.66733825965496, -148.27148437500003]
-                ],
+        [
+          60.54377524118842,
+          -21.708984375000004
+        ],
+        [
+          13.66733825965496,
+          -148.27148437500003
+        ]
+      ],
       "minZoom": 5,
       "maxZoom": 15
     }
   },
   "Unearthing": {
     "name": "Unearthing Providence",
+    "layer_group": 0,
     "url": "https://publiclab.org/unearthing-pvd",
     "api_url": "",
     "data": {
@@ -287,15 +351,22 @@
     "icon": "#4f4fff",
     "extents": {
       "bounds": [
-                  [42.2102, -72.0204],
-                  [41.2272, -70.9618]
-                ],
+        [
+          42.2102,
+          -72.0204
+        ],
+        [
+          41.2272,
+          -70.9618
+        ]
+      ],
       "minZoom": 6,
       "maxZoom": 18
     }
   },
   "wisconsin": {
     "name": "Wisconsin Non-Metallic Mining",
+    "layer_group": 3,
     "url": "https://services.arcgis.com/jDGuO8tYggdCCnUJ/ArcGIS/rest/services/Nonmetallic_and_Potential_frac_sand_mine_proposals_in_West_Central_Wisconsin/FeatureServer/info/itemInfo?f=pjson",
     "api_url": "https://services.arcgis.com/jDGuO8tYggdCCnUJ/arcgis/rest/services/Nonmetallic_and_Potential_frac_sand_mine_proposals_in_West_Central_Wisconsin/FeatureServer/0/",
     "data": {
@@ -307,15 +378,22 @@
     "icon": "#739ccf",
     "extents": {
       "bounds": [
-              [43.689721907017194, -93.12835693359376],
-              [45.60250901510299, -89.54956054687501]
-                ],
+        [
+          43.689721907017194,
+          -93.12835693359376
+        ],
+        [
+          45.60250901510299,
+          -89.54956054687501
+        ]
+      ],
       "minZoom": 10,
       "maxZoom": 15
     }
   },
   "PLpeople": {
     "name": "PLpeople",
+    "layer_group": 0,
     "url": "http://publiclab.org",
     "data": {
       "type": "",
@@ -326,11 +404,29 @@
     "icon": "#096",
     "extents": {
       "bounds": [
-                  [-44.087585028245165, -148.88671875000003],
-                  [76.63922560965888, 140.62500000000003]
-                ],
+        [
+          -44.087585028245165,
+          -148.88671875000003
+        ],
+        [
+          76.63922560965888,
+          140.62500000000003
+        ]
+      ],
       "minZoom": 3,
       "maxZoom": 18
     }
+  },
+  "testSpreadsheetLayer": {
+    "name": "testSpreadsheetLayer",
+    "layer_group": 0,
+    "url": "",
+    "data": {
+      "type": "",
+      "disclaimer": ""
+    },
+    "description": "",
+    "layer_desc": "Spreadsheet data",
+    "icon": "#cc12cc"
   }
 }

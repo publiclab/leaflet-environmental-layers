@@ -29,7 +29,7 @@ BlurredLocation = function BlurredLocation(options) {
 
   options.Geocoding = options.Geocoding || require('./core/Geocoding.js');
 
-  options.tileLayerUrl = options.tileLayerUrl || 'https://a.tiles.mapbox.com/v3/jywarren.map-lmrwb2em/{z}/{x}/{y}.png';
+  options.tileLayerUrl = options.tileLayerUrl || 'https://api.mapbox.com/styles/v1/jywarren/ckj06ujnc1nmi19nuelh46pr9/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoianl3YXJyZW4iLCJhIjoiVzVZcGg3NCJ9.BJ6ArUPuTs1JT9Ssu3K8ig';
 
   var gridSystemOptions = options.gridSystemOptions || {};
   gridSystemOptions.map = options.map;
@@ -57,7 +57,11 @@ BlurredLocation = function BlurredLocation(options) {
 
   var Interface = options.Interface(InterfaceOptions);
 
-  var tileLayer = L.tileLayer(options.tileLayerUrl).addTo(options.map);
+  var tileLayer = L.tileLayer(options.tileLayerUrl, {
+      tileSize: 512,
+      zoomOffset: -1,
+      attribution: '© <a href="https://apps.mapbox.com/feedback/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(options.map);
 
   options.map.options.scrollWheelZoom = "center";
   options.map.options.touchZoom = "center";

@@ -78,6 +78,9 @@ export var GeoJSON = FeatureGroup.extend({
 	 * @option coordsToLatLng: Function = *
 	 * A `Function` that will be used for converting GeoJSON coordinates to `LatLng`s.
 	 * The default is the `coordsToLatLng` static method.
+	 *
+	 * @option markersInheritOptions: Boolean = false
+	 * Whether default Markers for "Point" type Features inherit from group options.
 	 */
 
 	initialize: function (geojson, options) {
@@ -127,9 +130,13 @@ export var GeoJSON = FeatureGroup.extend({
 		return this.addLayer(layer);
 	},
 
-	// @method resetStyle( <Path> layer ): this
+	// @method resetStyle( <Path> layer? ): this
 	// Resets the given vector layer's style to the original GeoJSON style, useful for resetting style after hover events.
+	// If `layer` is omitted, the style of all features in the current layer is reset.
 	resetStyle: function (layer) {
+		if (layer === undefined) {
+			return this.eachLayer(this.resetStyle, this);
+		}
 		// reset any custom styles
 		layer.options = Util.extend({}, layer.defaultOptions);
 		this._setLayerStyle(layer, this.options.style);
@@ -145,10 +152,10 @@ export var GeoJSON = FeatureGroup.extend({
 	},
 
 	_setLayerStyle: function (layer, style) {
-		if (typeof style === 'function') {
-			style = style(layer.feature);
-		}
 		if (layer.setStyle) {
+			if (typeof style === 'function') {
+				style = style(layer.feature);
+			}
 			layer.setStyle(style);
 		}
 	}
@@ -177,12 +184,12 @@ export function geometryToLayer(geojson, options) {
 	switch (geometry.type) {
 	case 'Point':
 		latlng = _coordsToLatLng(coords);
-		return pointToLayer ? pointToLayer(geojson, latlng) : new Marker(latlng);
+		return _pointToLayer(pointToLayer, geojson, latlng, options);
 
 	case 'MultiPoint':
 		for (i = 0, len = coords.length; i < len; i++) {
 			latlng = _coordsToLatLng(coords[i]);
-			layers.push(pointToLayer ? pointToLayer(geojson, latlng) : new Marker(latlng));
+			layers.push(_pointToLayer(pointToLayer, geojson, latlng, options));
 		}
 		return new FeatureGroup(layers);
 
@@ -213,6 +220,12 @@ export function geometryToLayer(geojson, options) {
 	default:
 		throw new Error('Invalid GeoJSON object.');
 	}
+}
+
+function _pointToLayer(pointToLayerFn, geojson, latlng, options) {
+	return pointToLayerFn ?
+		pointToLayerFn(geojson, latlng) :
+		new Marker(latlng, options && options.markersInheritOptions && options);
 }
 
 // @function coordsToLatLng(coords: Array): LatLng
@@ -298,19 +311,26 @@ var PointToGeoJSON = {
 };
 
 // @namespace Marker
-// @method toGeoJSON(): Object
+// @section Other methods
+// @method toGeoJSON(precision?: Number): Object
+// `precision` is the number of decimal places for coordinates.
+// The default value is 6 places.
 // Returns a [`GeoJSON`](http://en.wikipedia.org/wiki/GeoJSON) representation of the marker (as a GeoJSON `Point` Feature).
 Marker.include(PointToGeoJSON);
 
 // @namespace CircleMarker
-// @method toGeoJSON(): Object
+// @method toGeoJSON(precision?: Number): Object
+// `precision` is the number of decimal places for coordinates.
+// The default value is 6 places.
 // Returns a [`GeoJSON`](http://en.wikipedia.org/wiki/GeoJSON) representation of the circle marker (as a GeoJSON `Point` Feature).
 Circle.include(PointToGeoJSON);
 CircleMarker.include(PointToGeoJSON);
 
 
 // @namespace Polyline
-// @method toGeoJSON(): Object
+// @method toGeoJSON(precision?: Number): Object
+// `precision` is the number of decimal places for coordinates.
+// The default value is 6 places.
 // Returns a [`GeoJSON`](http://en.wikipedia.org/wiki/GeoJSON) representation of the polyline (as a GeoJSON `LineString` or `MultiLineString` Feature).
 Polyline.include({
 	toGeoJSON: function (precision) {
@@ -326,7 +346,9 @@ Polyline.include({
 });
 
 // @namespace Polygon
-// @method toGeoJSON(): Object
+// @method toGeoJSON(precision?: Number): Object
+// `precision` is the number of decimal places for coordinates.
+// The default value is 6 places.
 // Returns a [`GeoJSON`](http://en.wikipedia.org/wiki/GeoJSON) representation of the polygon (as a GeoJSON `Polygon` or `MultiPolygon` Feature).
 Polygon.include({
 	toGeoJSON: function (precision) {
@@ -362,7 +384,9 @@ LayerGroup.include({
 		});
 	},
 
-	// @method toGeoJSON(): Object
+	// @method toGeoJSON(precision?: Number): Object
+	// `precision` is the number of decimal places for coordinates.
+	// The default value is 6 places.
 	// Returns a [`GeoJSON`](http://en.wikipedia.org/wiki/GeoJSON) representation of the layer group (as a GeoJSON `FeatureCollection`, `GeometryCollection`, or `MultiPoint`).
 	toGeoJSON: function (precision) {
 
@@ -409,7 +433,7 @@ LayerGroup.include({
 // @namespace GeoJSON
 // @factory L.geoJSON(geojson?: Object, options?: GeoJSON options)
 // Creates a GeoJSON layer. Optionally accepts an object in
-// [GeoJSON format](http://geojson.org/geojson-spec.html) to display on the map
+// [GeoJSON format](https://tools.ietf.org/html/rfc7946) to display on the map
 // (you can alternatively add it later with `addData` method) and an `options` object.
 export function geoJSON(geojson, options) {
 	return new GeoJSON(geojson, options);

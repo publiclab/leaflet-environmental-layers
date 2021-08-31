@@ -59,7 +59,7 @@ module.exports = function Geocoding(options) {
   }
 
   function panMapToGeocodedLocation(selector) {
-    
+
     var input = document.getElementById(selector);
 
     var autocomplete = new google.maps.places.Autocomplete(input);
@@ -83,27 +83,46 @@ module.exports = function Geocoding(options) {
   };
 
   function geocodeWithBrowser(success) {
-    if(success) {
-      var label = document.createElement("label");
-      label.classList.add("spinner");
-      var i = document.createElement("i");
-      i.classList.add("fa");
-      i.classList.add("fa-spinner");
-      i.classList.add("fa-spin");
-      label.appendChild(i);
-      var element = document.getElementById(options.geocodeButtonId);
-      element.appendChild(label);
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-        options.goTo(position.coords.latitude, position.coords.longitude,options.zoom);
-        i.classList.remove("fa") ;
-        i.classList.remove("fa-spinner") ;
-        i.classList.remove("fa-spin") ;
-        }, function(error) {
-          console.log(error);
-        });
-      }
+    if (!success) return;
+
+    if (!isSpinnerPresent(options.geocodeButtonId))
+      renderSpinner(options.geocodeButtonId);
+
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        options.goTo(position.coords.latitude, position.coords.longitude, options.zoom);
+        removeSpinner(options.geocodeButtonId);
+      }, function (error) {
+        console.log(error);
+        removeSpinner(options.geocodeButtonId);
+      });
     }
+  }
+
+  function isSpinnerPresent(elementID) {
+    var spinner = document.querySelector("#" + elementID + " .spinner");
+
+    if (spinner) return true;
+    return false;
+  }
+
+  function renderSpinner(elementID) {
+    var element = document.getElementById(elementID);
+    var label = document.createElement("label");
+    label.classList.add("spinner");
+
+    var i = document.createElement("i");
+    i.classList.add("fa");
+    i.classList.add("fa-spinner");
+    i.classList.add("fa-spin");
+
+    label.appendChild(i);
+    element.appendChild(label);
+  }
+
+  function removeSpinner(elementID) {
+    var spinner = document.querySelector("#" + elementID + " .spinner");
+    spinner.remove();
   }
 
   function geocodeStringAndPan(string, onComplete) {

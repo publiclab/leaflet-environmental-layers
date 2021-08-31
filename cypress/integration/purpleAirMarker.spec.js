@@ -32,7 +32,7 @@ describe('Purple layer - markers', function() {
     const spy = cy.spy(window.top.aut.PurpleAirMarkerLayer, 'requestData')
     cy.get('[title="Show minimal markers"]').click().then(() => {
       expect(spy).to.be.called
-      cy.get('.leaflet-overlay-pane svg g').children().should('have.length', 2)
+      cy.get('.leaflet-overlay-pane svg g').children().should('have.length.gt', 0)
       cy.get('.leaflet-overlay-pane svg g path').invoke('attr', 'stroke').should('eq', '#7c7c7c')
       cy.get('.leaflet-overlay-pane svg g path').invoke('attr', 'fill').should('eq', '#7c22b5')
       cy.get('.leaflet-overlay-pane svg g path').invoke('attr', 'stroke-linecap').should('eq', 'round')
@@ -43,7 +43,7 @@ describe('Purple layer - markers', function() {
   it('shows popup', function() {
     cy.get('.leaflet-overlay-pane svg g').children().last().click({ force: true })
     cy.get('.leaflet-popup-pane').children().should('have.length', 1)
-    cy.get('.leaflet-popup-content').should('contain', 'MandMnorth40')
+    cy.get('.leaflet-popup-content').should('contain', 'www.purpleair.com')
   })
 
   it('removes markers from the map and the layer name from the hash when clicked again', function() {

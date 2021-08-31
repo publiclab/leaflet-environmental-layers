@@ -1,0 +1,54 @@
+{
+  "name": "grunt-babel",
+  "version": "8.0.0",
+  "description": "Use next generation JavaScript, today",
+  "license": "MIT",
+  "repository": "babel/grunt-babel",
+  "author": {
+    "name": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com"
+  },
+  "engines": {
+    "node": ">=6.9"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "format": "eslint . --fix",
+    "test": "yarn lint && grunt"
+  },
+  "files": [
+    "tasks"
+  ],
+  "keywords": [
+    "gruntplugin",
+    "babel",
+    "transpiler",
+    "es2015",
+    "rewriting",
+    "transformation",
+    "syntax",
+    "codegen",
+    "desugaring",
+    "javascript",
+    "compiler"
+  ],
+  "peerDependencies": {
+    "@babel/core": "^7.0.0",
+    "grunt": ">=0.4.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "babel-eslint": "^8.0.0",
+    "eslint": "^4.19.0",
+    "eslint-config-babel": "^7.0.2",
+    "eslint-plugin-flowtype": "^2.46.1",
+    "eslint-plugin-prettier": "^2.6.0",
+    "grunt": "^1.0.1",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-nodeunit": "^1.0.0",
+    "prettier": "^1.11.1"
+  }
+}

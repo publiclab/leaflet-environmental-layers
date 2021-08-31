@@ -17,7 +17,7 @@
     <script src="../src/js/leaflet-gplaces-autocomplete.js"></script>
     <link rel="stylesheet" href="../src/css/leaflet-gplaces-autocomplete.css" />
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=<YOUR API KEY>&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
 </head>
 <body>
 
@@ -32,7 +32,13 @@
 		    });
             map.addLayer(tiles);
 
-            new L.Control.GPlaceAutocomplete().addTo(map);
+            new L.Control.GPlaceAutocomplete({
+                callback: function(place){
+                    var loc = place.geometry.location;
+                    map.panTo([loc.lat(), loc.lng()]);
+                    map.setZoom(18);
+                }
+            }).addTo(map);
 
 	</script>
 

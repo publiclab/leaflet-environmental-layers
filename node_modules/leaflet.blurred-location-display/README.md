@@ -86,6 +86,7 @@ var options_display = {
 *    `locations` : You can pass some local data directly to LBLD API in the form of array .
 *    `source_url`: URL to external API to fetch data and show on map .
 *    `JSONparser`: JSON parser function for your API URL provided .
+*    `popupDisplay`: Function to build the display for the marker popup content .
 *    `zoom_filter` : An array signifying the range of zoom levels where particular precision markers should be visible .
 *    `color_code_markers` : If `true` , then markers would be color coded according to the precision of its coordinates . 
 *    `style` : can be `both` where markers and heatmap both are drawn , `markers` for showing only markers and `heatmap` for                showing  only heatmap .
@@ -147,6 +148,19 @@ function JSONparser(data) {
     }
   }
   return parsed_data; 
+}
+```
+
+* popupDisplay for external API:
+    1. Make a string containing the HTML elements you want displayed for each marker popup.
+    2. Can use all the parameters from JSONparser by referencing the object.
+    4. The below is also the default popupDisplay which will be used automatically if you do not provide your own.
+
+```js
+function popupDisplay(obj) {
+  var popup_content = "";
+  popup_content += "<h5><a href='" + obj.url + "'>@" + obj.title + "</a></h5>";
+  return popup_content
 }
 ```
 

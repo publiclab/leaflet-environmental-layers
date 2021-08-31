@@ -1,25 +1,75 @@
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+/*!
+  * Bootstrap modal.js v4.3.1 (https://getbootstrap.com/)
+  * Copyright 2011-2019 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
+  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+  */
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('jquery'), require('./util.js')) :
+  typeof define === 'function' && define.amd ? define(['jquery', './util.js'], factory) :
+  (global = global || self, global.Modal = factory(global.jQuery, global.Util));
+}(this, function ($, Util) { 'use strict';
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+  $ = $ && $.hasOwnProperty('default') ? $['default'] : $;
+  Util = Util && Util.hasOwnProperty('default') ? Util['default'] : Util;
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+  function _defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+  function _createClass(Constructor, protoProps, staticProps) {
+    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) _defineProperties(Constructor, staticProps);
+    return Constructor;
+  }
 
-/**
- * --------------------------------------------------------------------------
- * Bootstrap (v4.1.1): modal.js
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- * --------------------------------------------------------------------------
- */
-var Modal = function ($) {
+  function _defineProperty(obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
+
+    return obj;
+  }
+
+  function _objectSpread(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i] != null ? arguments[i] : {};
+      var ownKeys = Object.keys(source);
+
+      if (typeof Object.getOwnPropertySymbols === 'function') {
+        ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
+          return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+        }));
+      }
+
+      ownKeys.forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    }
+
+    return target;
+  }
+
   /**
    * ------------------------------------------------------------------------
    * Constants
    * ------------------------------------------------------------------------
    */
+
   var NAME = 'modal';
-  var VERSION = '4.1.1';
+  var VERSION = '4.3.1';
   var DATA_KEY = 'bs.modal';
   var EVENT_KEY = "." + DATA_KEY;
   var DATA_API_KEY = '.data-api';
@@ -52,6 +102,7 @@ var Modal = function ($) {
     CLICK_DATA_API: "click" + EVENT_KEY + DATA_API_KEY
   };
   var ClassName = {
+    SCROLLABLE: 'modal-dialog-scrollable',
     SCROLLBAR_MEASURER: 'modal-scrollbar-measure',
     BACKDROP: 'modal-backdrop',
     OPEN: 'modal-open',
@@ -60,11 +111,11 @@ var Modal = function ($) {
   };
   var Selector = {
     DIALOG: '.modal-dialog',
+    MODAL_BODY: '.modal-body',
     DATA_TOGGLE: '[data-toggle="modal"]',
     DATA_DISMISS: '[data-dismiss="modal"]',
     FIXED_CONTENT: '.fixed-top, .fixed-bottom, .is-fixed, .sticky-top',
-    STICKY_CONTENT: '.sticky-top',
-    NAVBAR_TOGGLER: '.navbar-toggler'
+    STICKY_CONTENT: '.sticky-top'
     /**
      * ------------------------------------------------------------------------
      * Class Definition
@@ -79,11 +130,12 @@ var Modal = function ($) {
     function Modal(element, config) {
       this._config = this._getConfig(config);
       this._element = element;
-      this._dialog = $(element).find(Selector.DIALOG)[0];
+      this._dialog = element.querySelector(Selector.DIALOG);
       this._backdrop = null;
       this._isShown = false;
       this._isBodyOverflowing = false;
       this._ignoreBackdropClick = false;
+      this._isTransitioning = false;
       this._scrollbarWidth = 0;
     } // Getters
 
@@ -98,7 +150,7 @@ var Modal = function ($) {
     _proto.show = function show(relatedTarget) {
       var _this = this;
 
-      if (this._isTransitioning || this._isShown) {
+      if (this._isShown || this._isTransitioning) {
         return;
       }
 
@@ -122,8 +174,6 @@ var Modal = function ($) {
       this._setScrollbar();
 
       this._adjustDialog();
-
-      $(document.body).addClass(ClassName.OPEN);
 
       this._setEscapeEvent();
 
@@ -152,7 +202,7 @@ var Modal = function ($) {
         event.preventDefault();
       }
 
-      if (this._isTransitioning || !this._isShown) {
+      if (!this._isShown || this._isTransitioning) {
         return;
       }
 
@@ -190,8 +240,17 @@ var Modal = function ($) {
     };
 
     _proto.dispose = function dispose() {
+      [window, this._element, this._dialog].forEach(function (htmlElement) {
+        return $(htmlElement).off(EVENT_KEY);
+      });
+      /**
+       * `document` has 2 events `Event.FOCUSIN` and `Event.CLICK_DATA_API`
+       * Do not move `document` in `htmlElements` array
+       * It will remove `Event.CLICK_DATA_API` event that should remain
+       */
+
+      $(document).off(Event.FOCUSIN);
       $.removeData(this._element, DATA_KEY);
-      $(window, document, this._element, this._backdrop).off(EVENT_KEY);
       this._config = null;
       this._element = null;
       this._dialog = null;
@@ -199,13 +258,14 @@ var Modal = function ($) {
       this._isShown = null;
       this._isBodyOverflowing = null;
       this._ignoreBackdropClick = null;
+      this._isTransitioning = null;
       this._scrollbarWidth = null;
     };
 
     _proto.handleUpdate = function handleUpdate() {
       this._adjustDialog();
-    }; // Private
-
+    } // Private
+    ;
 
     _proto._getConfig = function _getConfig(config) {
       config = _objectSpread({}, Default, config);
@@ -227,7 +287,13 @@ var Modal = function ($) {
 
       this._element.removeAttribute('aria-hidden');
 
-      this._element.scrollTop = 0;
+      this._element.setAttribute('aria-modal', true);
+
+      if ($(this._dialog).hasClass(ClassName.SCROLLABLE)) {
+        this._dialog.querySelector(Selector.MODAL_BODY).scrollTop = 0;
+      } else {
+        this._element.scrollTop = 0;
+      }
 
       if (transition) {
         Util.reflow(this._element);
@@ -253,7 +319,7 @@ var Modal = function ($) {
       };
 
       if (transition) {
-        var transitionDuration = Util.getTransitionDurationFromElement(this._element);
+        var transitionDuration = Util.getTransitionDurationFromElement(this._dialog);
         $(this._dialog).one(Util.TRANSITION_END, transitionComplete).emulateTransitionEnd(transitionDuration);
       } else {
         transitionComplete();
@@ -306,6 +372,8 @@ var Modal = function ($) {
 
       this._element.setAttribute('aria-hidden', true);
 
+      this._element.removeAttribute('aria-modal');
+
       this._isTransitioning = false;
 
       this._showBackdrop(function () {
@@ -336,7 +404,7 @@ var Modal = function ($) {
         this._backdrop.className = ClassName.BACKDROP;
 
         if (animate) {
-          $(this._backdrop).addClass(animate);
+          this._backdrop.classList.add(animate);
         }
 
         $(this._backdrop).appendTo(document.body);
@@ -395,11 +463,11 @@ var Modal = function ($) {
       } else if (callback) {
         callback();
       }
-    }; // ----------------------------------------------------------------------
+    } // ----------------------------------------------------------------------
     // the following methods are used to handle overflowing modals
     // todo (fat): these should probably be refactored out of modal.js
     // ----------------------------------------------------------------------
-
+    ;
 
     _proto._adjustDialog = function _adjustDialog() {
       var isModalOverflowing = this._element.scrollHeight > document.documentElement.clientHeight;
@@ -430,42 +498,40 @@ var Modal = function ($) {
       if (this._isBodyOverflowing) {
         // Note: DOMNode.style.paddingRight returns the actual value or '' if not set
         //   while $(DOMNode).css('padding-right') returns the calculated value or 0 if not set
-        // Adjust fixed content padding
-        $(Selector.FIXED_CONTENT).each(function (index, element) {
-          var actualPadding = $(element)[0].style.paddingRight;
+        var fixedContent = [].slice.call(document.querySelectorAll(Selector.FIXED_CONTENT));
+        var stickyContent = [].slice.call(document.querySelectorAll(Selector.STICKY_CONTENT)); // Adjust fixed content padding
+
+        $(fixedContent).each(function (index, element) {
+          var actualPadding = element.style.paddingRight;
           var calculatedPadding = $(element).css('padding-right');
           $(element).data('padding-right', actualPadding).css('padding-right', parseFloat(calculatedPadding) + _this9._scrollbarWidth + "px");
         }); // Adjust sticky content margin
 
-        $(Selector.STICKY_CONTENT).each(function (index, element) {
-          var actualMargin = $(element)[0].style.marginRight;
+        $(stickyContent).each(function (index, element) {
+          var actualMargin = element.style.marginRight;
           var calculatedMargin = $(element).css('margin-right');
           $(element).data('margin-right', actualMargin).css('margin-right', parseFloat(calculatedMargin) - _this9._scrollbarWidth + "px");
-        }); // Adjust navbar-toggler margin
-
-        $(Selector.NAVBAR_TOGGLER).each(function (index, element) {
-          var actualMargin = $(element)[0].style.marginRight;
-          var calculatedMargin = $(element).css('margin-right');
-          $(element).data('margin-right', actualMargin).css('margin-right', parseFloat(calculatedMargin) + _this9._scrollbarWidth + "px");
         }); // Adjust body padding
 
         var actualPadding = document.body.style.paddingRight;
         var calculatedPadding = $(document.body).css('padding-right');
         $(document.body).data('padding-right', actualPadding).css('padding-right', parseFloat(calculatedPadding) + this._scrollbarWidth + "px");
       }
+
+      $(document.body).addClass(ClassName.OPEN);
     };
 
     _proto._resetScrollbar = function _resetScrollbar() {
       // Restore fixed content padding
-      $(Selector.FIXED_CONTENT).each(function (index, element) {
+      var fixedContent = [].slice.call(document.querySelectorAll(Selector.FIXED_CONTENT));
+      $(fixedContent).each(function (index, element) {
         var padding = $(element).data('padding-right');
+        $(element).removeData('padding-right');
+        element.style.paddingRight = padding ? padding : '';
+      }); // Restore sticky content
 
-        if (typeof padding !== 'undefined') {
-          $(element).css('padding-right', padding).removeData('padding-right');
-        }
-      }); // Restore sticky content and navbar-toggler margin
-
-      $(Selector.STICKY_CONTENT + ", " + Selector.NAVBAR_TOGGLER).each(function (index, element) {
+      var elements = [].slice.call(document.querySelectorAll("" + Selector.STICKY_CONTENT));
+      $(elements).each(function (index, element) {
         var margin = $(element).data('margin-right');
 
         if (typeof margin !== 'undefined') {
@@ -474,10 +540,8 @@ var Modal = function ($) {
       }); // Restore body padding
 
       var padding = $(document.body).data('padding-right');
-
-      if (typeof padding !== 'undefined') {
-        $(document.body).css('padding-right', padding).removeData('padding-right');
-      }
+      $(document.body).removeData('padding-right');
+      document.body.style.paddingRight = padding ? padding : '';
     };
 
     _proto._getScrollbarWidth = function _getScrollbarWidth() {
@@ -488,8 +552,8 @@ var Modal = function ($) {
       var scrollbarWidth = scrollDiv.getBoundingClientRect().width - scrollDiv.clientWidth;
       document.body.removeChild(scrollDiv);
       return scrollbarWidth;
-    }; // Static
-
+    } // Static
+    ;
 
     Modal._jQueryInterface = function _jQueryInterface(config, relatedTarget) {
       return this.each(function () {
@@ -542,7 +606,7 @@ var Modal = function ($) {
     var selector = Util.getSelectorFromElement(this);
 
     if (selector) {
-      target = $(selector)[0];
+      target = document.querySelector(selector);
     }
 
     var config = $(target).data(DATA_KEY) ? 'toggle' : _objectSpread({}, $(target).data(), $(this).data());
@@ -581,5 +645,6 @@ var Modal = function ($) {
   };
 
   return Modal;
-}($);
+
+}));
 //# sourceMappingURL=modal.js.map
