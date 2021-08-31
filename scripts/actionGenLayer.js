@@ -52,7 +52,7 @@ async function run() {
         exec(`git push -fu origin ${prBranchName}`);
 
         exec(
-          `gh pr create --title "new-layer: ${layerData.name}" --body "Ref ${github.context.payload.issue.html_url}" --head "${prBranchName}" --base "${baseBranchName}"`
+          `gh pr create --title "new-layer: ${layerData.name}" --body "This PR creates a new layer based on the info at ${github.context.payload.issue.html_url}. Please try it out in GitPod to test, and/or make necessary changes to the description, etc. in this PR." --head "${prBranchName}" --base "${baseBranchName}"`
         );
       }
     }
