@@ -62,6 +62,8 @@
     "resig-class": "^2.0.0"
   },
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "babel-polyfill": "^6.0.16",
     "esri-leaflet": "^2.3.3",
     "fetch": "^1.1.0",
     "jquery": "^3.3.1",
