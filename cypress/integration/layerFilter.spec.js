@@ -6,7 +6,7 @@ describe('Layer filtering in LEL layers menu', function() {
     cy.get('[data-cy=layer]').should('have.css', 'display', 'block').then((layers) => {
       const layersArray = Array.prototype.slice.call(layers)
       console.log(layersArray.filter(layer => layer.style.display === 'block'))
-      expect(layersArray.filter(layer => layer.style.display === 'block').length).to.equal(9)
+      expect(layersArray.filter(layer => layer.style.display === 'block').length).to.equal(10)
     })
     cy.get('#map-menu-aqicnLayer').parent().should('have.css', 'display', 'block')
     cy.get('#map-menu-eonetFiresLayer').parent().should('have.css', 'display', 'block')
@@ -36,7 +36,7 @@ describe('Layer filtering in LEL layers menu', function() {
     cy.wait(300)
     cy.get('[data-cy=layer]').should('have.css', 'display', 'block').then((layers) => {
       const layersArray = Array.prototype.slice.call(layers)
-      expect(layersArray.filter(layer => layer.style.display === 'block').length).to.equal(14)
+      expect(layersArray.filter(layer => layer.style.display === 'block').length).to.equal(15)
     })
     cy.get('#map-menu-fractracker').parent().should('have.css', 'display', 'block')
     cy.get('#map-menu-fracTrackerMobile').parent().should('have.css', 'display', 'block')
@@ -54,7 +54,7 @@ describe('Layer filtering in LEL layers menu', function() {
     cy.wait(300)
     cy.get('[data-cy=layer]').should('have.css', 'display', 'block').then((layers) => {
       const layersArray = Array.prototype.slice.call(layers)
-      expect(layersArray.filter(layer => layer.style.display === 'block').length).to.equal(16)
+      expect(layersArray.filter(layer => layer.style.display === 'block').length).to.equal(17)
     })
     cy.get('#map-menu-indigenousLands').should('have.css', 'display', 'block')
     cy.get('#map-indigenousLands.layers-sub-list.collapse').children().then((layers) => {
@@ -70,7 +70,7 @@ describe('Layer filtering in LEL layers menu', function() {
     cy.get('[data-cy=layer]').should('have.css', 'display', 'block').then((layers) => {
       const layersArray = Array.prototype.slice.call(layers)
       console.log(layersArray.filter(layer => layer.style.display === 'block'))
-      expect(layersArray.filter(layer => layer.style.display === 'block').length).to.equal(16)
+      expect(layersArray.filter(layer => layer.style.display === 'block').length).to.equal(17)
     }) 
     cy.get('#map-menu-odorreport').parent().should('have.css', 'display', 'block')
     cy.get('#map-menu-Unearthing').parent().should('have.css', 'display', 'none')
