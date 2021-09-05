@@ -5,7 +5,7 @@ describe('Layers menu filters and displays layers on map', function() {
     cy.get('.leaflet-control-layers').trigger('mouseover')
     cy.get('[data-cy=layer]').should('have.css', 'display', 'block').then((layers) => {
       const layersArray = Array.prototype.slice.call(layers)
-      expect(layersArray.filter(layer => layer.style.display === 'block').length).to.equal(9)
+      expect(layersArray.filter(layer => layer.style.display === 'block').length).to.equal(10)
     })
     cy.get('.leaflet-control-layers').trigger('mouseout')
   })
@@ -22,7 +22,7 @@ describe('Layers menu filters and displays layers on map', function() {
     cy.get('.leaflet-control-layers').trigger('mouseover')
     cy.get('[data-cy=layer]').should('have.css', 'display', 'block').then((layers) => {
       const layersArray = Array.prototype.slice.call(layers)
-      expect(layersArray.filter(layer => layer.style.display === 'block').length).to.equal(14)
+      expect(layersArray.filter(layer => layer.style.display === 'block').length).to.equal(15)
     })
   })
 
@@ -39,7 +39,7 @@ describe('Layers menu filters and displays layers on map', function() {
     cy.get('.leaflet-control-layers').trigger('mouseover')
     cy.get('[data-cy=layer]').should('have.css', 'display', 'block').then((layers) => {
       const layersArray = Array.prototype.slice.call(layers)
-      expect(layersArray.filter(layer => layer.style.display === 'block').length).to.equal(9)
+      expect(layersArray.filter(layer => layer.style.display === 'block').length).to.equal(10)
     })
   })
 
