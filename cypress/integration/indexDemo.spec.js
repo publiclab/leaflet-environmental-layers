@@ -79,7 +79,7 @@ describe('Loads demo page', function() {
     cy.get('.leaflet-control-layers-menu').contains('h3', 'Environmental data near here')
     cy.get('.leaflet-control-layers-overlays')
       .find('.layer-info-container')
-      .should('have.length', 21) // Checks if all overlay layer groups are added
+      .should('have.length', 22) // Checks if all overlay layer groups are added
   })
 
   it('displays layers menu on hover', function() {
