@@ -53,7 +53,7 @@
     "grunt-contrib-uglify": "^5.0.1",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-template-jasmine-requirejs": "^0.2.3",
-    "http-server": "^13.0.0",
+    "http-server": "^14.1.0",
     "jasmine": "^3.8.0",
     "jasmine-ajax": "^4.0.0",
     "jasmine-jquery": "^2.1.1",
