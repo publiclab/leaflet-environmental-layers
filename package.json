@@ -76,6 +76,6 @@
     "leaflet-spin": "1.1.2",
     "leaflet.blurred-location-display": "^1.3.2",
     "leaflet.glify": "github:robertleeplummerjr/Leaflet.glify#aa2b356",
-    "public-google-sheets-parser": "github:jywarren/public-google-sheets-parser#patch-1"
+    "public-google-sheets-parser": "^1.2.6"
   }
 }
