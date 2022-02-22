@@ -198,6 +198,7 @@ L.LayerGroup.PfasLayer = L.LayerGroup.extend({
   },
 
   parseData: function (data) {
+    var i;
     for (i = 0; i < data.length; i++) {
       this.addMarker(data[i]);
     }
