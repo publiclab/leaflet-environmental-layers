@@ -77,6 +77,8 @@ When specifying layers to include or exclude, use [their names as listed in the 
 <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet" />
 <link href="../dist/LeafletEnvironmentalLayers.css" rel="stylesheet" />
 <link href="../node_modules\@fortawesome\fontawesome-free\css\all.min.css" rel="stylesheet" />
+<script type="module" src="node_modules/spin.js/spin.js"></script>
+<link rel="stylesheet" href="node_modules/spin.js/spin.css">
 
 <!-- Bootstrap - not needed if you use simpleLayerControl:true -->
 <script src="../node_modules\bootstrap\dist\js\bootstrap.min.js"></script>
