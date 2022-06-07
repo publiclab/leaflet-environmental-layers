@@ -26468,30 +26468,44 @@ return jQuery;
 },{}],7:[function(require,module,exports){
 const layers = require("./info.json");
 
-let layers0 = [],layers1 = [],layers2 = [],layers3 = [],layers4 = [],layers5 = [],layers6 = [];
+let layers0 = [],
+    layers1 = [],
+    layers2 = [],
+    layers3 = [],
+    layers4 = [],
+    layers5 = [],
+    layers6 = [],
+    layers7 = [];
 
+// This section deals with different layers in customized ways. 
+// I think we could restructure to detect some layers which are groups 
+// containing multiple other layers, or most other layouts, automatically.
+
+// handle simpler layers which have a layer_group defined in info.json 
 for (let key in layers) {
   if (layers.hasOwnProperty(key)) {
     let layer = layers[key];
-    if(layer.layer_group == 0){
+    if (layer.layer_group == 0) {
       layers0.push(key)
-    }
-    if(layer.layer_group == 1){
+    } else if (layer.layer_group == 1) {
       layers1.push(key)
-    }
-    if(layer.layer_group == 3){
+    } else if (layer.layer_group == 3) {
       layers3.push(key)
-    }
-    if(layer.layer_group == 6){
+    } else if (layer.layer_group == 6) {
       layers6.push(key)
     }
   }
 }
+
+// handle special cases later with a special key
 layers0.push("purpleLayer")
 layers1.push("purpleairmarker")
+
+// handle grouped layers which have a layers property (an array of sublayers)
 layers2 = layers.openInfraMap.layers;
 layers4 = layers.justiceMap.layers;
 layers5 = layers.openWeatherMap.layers;
+layers7 = layers.indigenousLands.layers;
 
 L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 
@@ -26511,6 +26525,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
       layers4: layers4,
       layers5: layers5,
       layers6: layers6,
+      layers7: layers7
 
     },
 
@@ -26520,7 +26535,17 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 
       this.options.addLayersToMap = !!param.include ? param.addLayersToMap : false;
 
-      param.all = [...this.options.layers0, ...this.options.layers1, ...this.options.layers2, ...this.options.layers3, ...this.options.layers4, ...this.options.layers5, ...this.options.layers6];
+      param.all = [
+        ...this.options.layers0,
+        ...this.options.layers1,
+        ...this.options.layers2,
+        ...this.options.layers3,
+        ...this.options.layers4,
+        ...this.options.layers5,
+        ...this.options.layers6,
+        ...this.options.layers7
+      ];
+
       if (!param.include || !param.include.length) {
         param.include = param.all;
       }
@@ -26532,6 +26557,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
 
       this.options.layers = param;
 
+      // define layers from OpenInfraMap for later use
       this._OpenInfraMap_Power = L.tileLayer('https://tiles-{s}.openinframap.org/power/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://www.openinframap.org/about.html">About OpenInfraMap</a>',
@@ -26600,8 +26626,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
             default:
               this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
           }
-        }
-        else if (this.options.layers2.includes(layer)) {
+        } else if (this.options.layers2.includes(layer)) {
           if(!this.groupedOverlayMaps.OpenInfraMap) {
             this.groupedOverlayMaps.OpenInfraMap = { category: 'group', layers: {} };
           }
@@ -26624,12 +26649,10 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
             this.groupedOverlayMaps.OpenInfraMap.layers[layer] = this.overlayMaps[layer];
             break;
           }
-        }
-        else if (this.options.layers3.includes(layer)) {
+        } else if (this.options.layers3.includes(layer)) {
           this.overlayMaps[layer] = window[layer + 'Layer'](map);
           this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
-        }
-        else if (this.options.layers4.includes(layer)) {
+        } else if (this.options.layers4.includes(layer)) {
           if(!this.groupedOverlayMaps.Justicemap) {
             this.groupedOverlayMaps.Justicemap = { category: 'group', layers: {} };
           }
@@ -26637,8 +26660,7 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
             this.onError(layer, true);
           });
           this.groupedOverlayMaps.Justicemap.layers[layer] = this.overlayMaps[layer];
-        }
-        else if (this.options.layers5.includes(layer)) {
+        } else if (this.options.layers5.includes(layer)) {
           if(!this.groupedOverlayMaps['Open Weather Map']) {
             this.groupedOverlayMaps['Open Weather Map'] = { category: 'group', layers: {} };
           }
@@ -26661,15 +26683,19 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
               this.onError(layer, true);
             });
           }
-          
           this.groupedOverlayMaps['Open Weather Map'].layers[layer] = this.overlayMaps[layer];
-        }
-        else if (this.options.layers6.includes(layer)) {
+        } else if (this.options.layers6.includes(layer)) {
           this.overlayMaps[layer] = window['L']['geoJSON'][layer]();
           this.groupedOverlayMaps[layer] = this.overlayMaps[layer];
-        }
-        else {
-          console.log('Incorrect Layer Name');
+        } else if (this.options.layers7.includes(layer)) {
+          if(!this.groupedOverlayMaps.indigenousLands) {
+            this.groupedOverlayMaps.indigenousLands = { category: 'group', layers: {} };
+          }
+          
+          this.overlayMaps[layer] = L.layerGroup.indigenousLayers(layer);
+          this.groupedOverlayMaps.indigenousLands.layers[layer] = this.overlayMaps[layer];
+        } else {
+          console.log('Incorrect Layer Name: ', layer);
         }
       }
 
@@ -26731,7 +26757,6 @@ L.LayerGroup.environmentalLayers = L.LayerGroup.extend(
     onRemove: function(map) {},
   },
 );
-
 
 L.LayerGroup.EnvironmentalLayers = function(options) {
   return new L.LayerGroup.environmentalLayers(options);
