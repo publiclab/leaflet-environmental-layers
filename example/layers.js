@@ -39,6 +39,7 @@ var PLpeople = L.layerGroup.PLpeople();
 var PurpleLayer = L.layerGroup.purpleLayer();
 var ToxicRelease = L.layerGroup.toxicReleaseLayer();
 var PFASTracker = L.layerGroup.pfasLayer();
+var testSpreadsheetLayer = L.layerGroup.testSpreadsheetLayer();
 var AQICNLayer = L.layerGroup.aqicnLayer();
 var OSMLandfillMineQuarryLayer = L.layerGroup.osmLandfillMineQuarryLayer();
 
@@ -239,7 +240,7 @@ var overlayMaps = {
     },
   },
   'pfasLayer': PFASTracker,
-  
+  'testSpreadsheetLayer' : testSpreadsheetLayer,
   'aqicnLayer': AQICNLayer,
   'openaq': OpenAqLayer,
   'luftdaten': LuftdatenLayer,
@@ -263,6 +264,7 @@ var allMapLayers = {
   'skytruth': SkyTruth,
   'fractracker': Fractracker,
   'pfasLayer': PFASTracker,
+  'testSpreadsheetLayer' : testSpreadsheetLayer,
   'toxicReleaseLayer': ToxicRelease,
   'odorreport': OdorReport,
   'mapknitter': MapKnitter,
