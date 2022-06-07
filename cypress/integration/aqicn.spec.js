@@ -1,6 +1,6 @@
 describe('Aqicn layer', function() {
   it('adds markers on click', function() {
-    cy.openWindow('/example/index.html#40.4168&lon=-3.7029&zoom=16&layers=Standard')
+    cy.openWindow('/example/index.html#lat=51.15&lon=13.45&zoom=4&layers=Standard')
     cy.wait(300)
     cy.window().then((win) => {
       cy.fixture('aqicn').then((data) => {
@@ -10,12 +10,12 @@ describe('Aqicn layer', function() {
       })
 
       cy.get('#map-menu-aqicnLayer label').click({ force: true })
-      cy.get('.leaflet-marker-pane').children().should('have.length', 1)
+      cy.get('.leaflet-marker-pane').children().should('have.length', 2)
     }) 
   })
 
   it('should have the layer name added to the hash', function() {
-    cy.hash().should('eq', 'lat=40.4168&lon=-3.7029&zoom=16&layers=Standard,aqicnLayer')
+    cy.hash().should('eq', '#lat=51.15&lon=13.45&zoom=4&layers=Standard,aqicnLayer')
   })
 
   it('has default markers in default mode', function() {
@@ -39,12 +39,12 @@ describe('Aqicn layer', function() {
   it('shows popup', function() {
     cy.get('.leaflet-overlay-pane svg g').children().last().click({ force: true })
     cy.get('.leaflet-popup-pane').children().should('have.length', 1)
-    cy.get('.leaflet-popup-content').should('contain', 'Madrid')
+    cy.get('.leaflet-popup-content').should('contain', 'Spain')
   })
 
   it('removes markers from the map and the layer name from the hash when clicked again', function() {
     cy.get('#map-menu-aqicnLayer label').click({ force: true })
-    cy.hash().should('eq', '#lat=40.4168&lon=-3.7029&zoom=16&layers=Standard')
+    cy.hash().should('eq', '#lat=51.15&lon=13.45&zoom=4&layers=Standard')
     cy.get('.leaflet-marker-pane').children().should('have.length', 0)
     cy.get('.leaflet-overlay-pane svg g').children().should('have.length', 0)
   })
