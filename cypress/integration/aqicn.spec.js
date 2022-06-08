@@ -25,7 +25,7 @@ describe('Aqicn layer', function() {
 
   it('has circle markers in minimal mode', function() {
     cy.server()
-    cy.route('GET', 'https://api.waqi.info/map/bounds/?latlng=31.052933985705163,-30.498046875000004,65.18303007291382,57.39257812500001&token=566331c289f0aeacd78e0b18362b4bcfa5097572', 'fixture:aqicn.json')
+    cy.route('GET', 'https://api.waqi.info/map/bounds/**', 'fixture:aqicn.json')
     const spy = cy.spy(window.top.aut.AQICNLayer, 'requestRegionData')
     cy.get('[title="Show minimal markers"]').click().then(() => {
       expect(spy).to.be.called
