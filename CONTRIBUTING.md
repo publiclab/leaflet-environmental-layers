@@ -43,6 +43,8 @@ The library consists of multiple layers. It needs to add several other layers. T
 * OSM landfill mine quarry : [#94](https://github.com/publiclab/leaflet-environmental-layers/pull/94)
 * Indigenous Lands Treaties Layer : [#78](https://github.com/publiclab/leaflet-environmental-layers/pull/78)
 
+## Leaflet Plugin Authoring Guide
+* https://github.com/Leaflet/Leaflet/blob/master/PLUGIN-GUIDE.md#code-conventions
 
 ## Bug reports
 
