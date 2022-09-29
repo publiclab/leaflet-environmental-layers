@@ -27827,14 +27827,13 @@ module.exports={
   },
   "testSpreadsheetLayer": {
     "name": "testSpreadsheetLayer",
-    "layer_group": 0,
     "url": "",
     "data": {
       "type": "",
       "disclaimer": ""
     },
     "description": "",
-    "layer_desc": "Spreadsheet data",
+    "layer_group": 0,
     "icon": "#cc12cc"
   }
 }
@@ -30460,6 +30459,10 @@ module.exports=[
   {
     "name": "testSpreadsheetLayer",
     "url": "https://docs.google.com/spreadsheets/d/1AR2KRuvxgruqLSCzJoIWxcyLDfPAE3tCifQthTHhpFo/"
+  },
+  {
+    "name": "testSpreadsheetLayer",
+    "url": "https://docs.google.com/spreadsheets/d/1J9rqD-JfbGt5AdBYIpkeBZxetURSnIjlajkEX-aYvSk/edit#gid=0"
   }
 ]
 },{}],22:[function(require,module,exports){
